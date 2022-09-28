@@ -30,26 +30,26 @@ void ST::Window::Render(){
     glfwPollEvents();
 }
 
-bool ST::Window::isInputDown(ST_INPUT input){
-    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {
-        if (lastInput != input) {
-            lastInput = input;
-            return true;
-        }
-        return false;
-    }
-    return false;
-}
-
-bool ST::Window::isInputPressed(ST_INPUT input){
-    
-    return false;
-}
-
-bool ST::Window::isInputReless(ST_INPUT input){
-    
-    return false;
-}
+//bool ST::Window::isInputDown(ST_INPUT input){
+//    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {
+//        if (lastInput != input) {
+//            lastInput = input;
+//            return true;
+//        }
+//        return false;
+//    }
+//    return false;
+//}
+//
+//bool ST::Window::isInputPressed(ST_INPUT input){
+//    
+//    return false;
+//}
+//
+//bool ST::Window::isInputReless(ST_INPUT input){
+//    
+//    return false;
+//}
 
 bool ST::Window::isKeyDown(int key){
     if (glfwGetKey(glWindow, key) == GLFW_PRESS) {

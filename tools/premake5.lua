@@ -5,15 +5,14 @@ ROOT = path.getabsolute("./../")
 solution("3VGP_SpaceTurtle" .. _ACTION)
     location( ROOT .. "/build/")
     language "C++"
-    kind "WindowedApp"
     startproject "SpaceTurtle"
 
 
     configurations { "Debug", "Release" }
     platforms      { "x64" }
 
-    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On"
-    filter "configurations:Release"  defines { "NDEBUG" } optimize "On"
+    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp"
+    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp"
     
     filter { "platforms:*64" } architecture "x64"
 
