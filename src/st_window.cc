@@ -1,12 +1,16 @@
 #include "st_window.h"
 
 ST::Window::Window(){
+    glWindow = NULL;
+    for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
     }
 }
 
 ST::Window::Window(int width, int height){
+    glWindow = NULL;
+    for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
     }
@@ -16,7 +20,12 @@ ST::Window::Window(int width, int height){
 //    return glWindow;
 //}
 
-ST::Window::Window(const Window& o){}
+ST::Window::Window(const Window& o){
+    glWindow = o.glWindow;
+    for (int i = 0; i < 4; i++){
+        color[i] = o.color[i];
+    }
+}
 
 void ST::Window::Focus() {
     glfwMakeContextCurrent(glWindow);
@@ -24,11 +33,18 @@ void ST::Window::Focus() {
 
 void ST::Window::Render(){
     
-
     glfwSwapBuffers(glWindow);
 
     glfwPollEvents();
 }
+
+//bool ST::Window::isPressed(ST_INPUT input){
+//    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {
+//        lastKeyPressed = input;
+//        return true;
+//    }
+//    return false;
+//}
 
 //bool ST::Window::isInputDown(ST_INPUT input){
 //    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {

@@ -16,12 +16,12 @@ int main(){
 		
 		w->ColorBg(sin(c[0]), sin(c[1]), sin(c[2]));
 
-		//if (w->isKeyDown(GLFW_KEY_J)) {
+		//if (w->isDown(ST::ST_INPUT::ST_INPUT_UP)) {
 		//	printf("Aprieto\n");
 		//}
 		
 		if (w->isKeyPressed(GLFW_KEY_R)) {
-			//printf("Mantengo\n");
+			printf("Mantengo\n");
 			c[0] += 0.1f;
 		}
 		if (w->isKeyPressed(GLFW_KEY_G)) {
@@ -54,6 +54,12 @@ int main(){
 		//}
 
 		//printf("Mouse x: %f  -  y: %f \n", w->mousePosX(), w->mousePosY());
+
+		glBegin(GL_TRIANGLES);
+		glVertex2f( 0.2f,  0.2f);
+		glVertex2f(-0.2f,  0.2f);
+		glVertex2f( 0.0f, -0.2f);
+		glEnd();
 
 		w->Render();
 	}

@@ -6,11 +6,10 @@
 namespace ST {
 
 	//enum ST_INPUT{
-	//	ST_INPUT_NONE = -1,
-	//	ST_INPUT_KEY_UP = GLFW_KEY_W | GLFW_KEY_UP,
-	//	ST_INPUT_KEY_DOWN = GLFW_KEY_S | GLFW_KEY_DOWN,
-	//	ST_INPUT_KEY_RIGHT = GLFW_KEY_D | GLFW_KEY_RIGHT,
-	//	ST_INPUT_KEY_LEFT = GLFW_KEY_A | GLFW_KEY_LEFT
+	//	ST_INPUT_UP = GLFW_KEY_W,
+	//	ST_INPUT_DOWN = GLFW_KEY_S,
+	//	ST_INPUT_RIGHT = GLFW_KEY_D,
+	//	ST_INPUT_LEFT = GLFW_KEY_A,
 	//};
 
 	class Window{
@@ -27,7 +26,7 @@ namespace ST {
 		
 		// ------ Inputs ------
 		//bool isInputDown(ST_INPUT input);
-		//bool isInputPressed(ST_INPUT input);
+		//bool isPressed(ST_INPUT input);
 		//bool isInputReless(ST_INPUT input);
 		
 		// Keyboard
@@ -57,7 +56,6 @@ namespace ST {
 		float color[4];
 
 		double mouseX=0.0f, mouseY=0.0f;
-		//ST_INPUT lastInput = ST_INPUT_NONE;
 		int lastKeyPressed = -1;
 		int lastMousePressed = -1;
 	};

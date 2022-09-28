@@ -68,6 +68,8 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         links {
             "glfw3_mt",
             "opengl32",
+            --"glew32",
+            --"glew32s"
         }
 
         filter  {"Debug","x64"}
