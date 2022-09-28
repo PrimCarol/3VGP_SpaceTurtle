@@ -1,0 +1,9 @@
+<h1 align="center"> Space Turtle </h1>
+<h4 align="center"> An engine built from scratch. </h4>
+
+![Turtle](https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png)
+
+<h2>Implemented things</h2>
+  · GLFW (https://github.com/glfw/glfw)<br>
+  · ImGui (https://github.com/ocornut/imgui)<br>
+</p>
