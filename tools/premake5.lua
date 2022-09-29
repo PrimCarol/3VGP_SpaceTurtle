@@ -4,6 +4,7 @@ ROOT = path.getabsolute("./../")
 
 solution("3VGP_SpaceTurtle" .. _ACTION)
     location( ROOT .. "/build/")
+    targetdir(ROOT .. "/bin/")
     language "C++"
     startproject "SpaceTurtle"
 
@@ -18,7 +19,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
     filter {}
 
-    -- Dependiendo de que version de Visual utilice.
+    -- Dependiendo de que version de Visual utilice. (Para el GLFW)
     visualVersion = "UNDEFINED"
     if _ACTION == "vs2019" then
         visualVersion = "vc2019"
@@ -41,6 +42,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             --path.join(ROOT, "./deps/glfw-3.3.8.bin.WIN64/include"),
             "../deps/glfw-3.3.8.bin.WIN64/include",
 
+            --OpenGl - GLAD
+            "../deps/OpenGL",
+
             --ImGui
             --path.join(ROOT, "./deps/imgui-docking"),
             --path.join(ROOT, "./deps/imgui-docking/backends")
@@ -53,7 +57,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             --path.join(ROOT, "./include/*.h"),
             --path.join(ROOT, "./src/*.cc")
             "../include/*.h",
-            "../src/*.cc"
+            "../src/*.cc",
+
+            "../deps/OpenGL/glad.c"
         }
 
         --ignoredefaultlibraries { "LIBCMT" }
@@ -69,13 +75,15 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "glfw3_mt",
             "opengl32",
             --"glew32",
-            --"glew32s"
+            --"glew32s",
         }
 
         filter  {"Debug","x64"}
-            targetdir (path.join(ROOT, "bin/Debug/x64"))
-            objdir(path.join(ROOT, "./build/SpaceTurtle/Debug" ))
+            --targetdir (ROOT .. "bin/Debug/x64")
+            targetdir(ROOT .. "/bin/Debug/")
+            objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
             targetsuffix "_d"
         filter  {"Release","x64"}
-            targetdir (path.join(ROOT, "bin/Release/x64"))
-            objdir(path.join(ROOT, "./build/SpaceTurtle/Release" ))
+            --targetdir (ROOT .. "bin/Release/x64")
+            targetdir(ROOT .. "/bin/Release/")
+            objdir(ROOT .. "/build/SpaceTurtle/Release/" )
