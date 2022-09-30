@@ -6,7 +6,7 @@
 
 
 // -----------------------------------------------------------------------------------------------------------
-#include <glad.h>
+
 
 static GLuint gShaderProgram = 0;
 static GLuint gVBO = 0, gVAO = 0;
@@ -30,9 +30,9 @@ unsigned int indices[] = { 0,1,2  ,  0,2,3 };
 float rotation = 0.0f;
 
 void onInit() {
-	gladLoadGL();
+	//ST::OpenGl& op = ST::OpenGL::Instance();
 
-	GLuint v_shader = glCreateShader(GL_VERTEX_SHADER);
+	/*GLuint v_shader = glCreateShader(GL_VERTEX_SHADER);
 	GLchar* v_text = (GLchar*)ST::readFile("../shaders/vertex.glslv");
 	glShaderSource(v_shader, 1, &v_text, 0);
 	glCompileShader(v_shader);
@@ -42,17 +42,17 @@ void onInit() {
 	GLchar* f_text = (GLchar*)ST::readFile("../shaders/fragment.glslf");
 	glShaderSource(f_shader, 1, &f_text, 0);
 	glCompileShader(f_shader);
-	assert(glGetError() == GL_NO_ERROR);
+	assert(glGetError() == GL_NO_ERROR);*/
 
 
-	gShaderProgram = glCreateProgram();
-	glAttachShader(gShaderProgram, v_shader);
-	glAttachShader(gShaderProgram, f_shader);
-	glLinkProgram(gShaderProgram);
-	assert(glGetError() == GL_NO_ERROR);
+	//gShaderProgram = glCreateProgram();
+	//glAttachShader(gShaderProgram, v_shader);
+	//glAttachShader(gShaderProgram, f_shader);
+	//glLinkProgram(gShaderProgram);
+	//assert(glGetError() == GL_NO_ERROR);
 
 
-	glGenVertexArrays(1, &gVAO);
+	/*glGenVertexArrays(1, &gVAO);
 	glBindVertexArray(gVAO);
 
 	glGenBuffers(1, &gVBO);
@@ -71,11 +71,11 @@ void onInit() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 
 	assert(glGetError() == GL_NO_ERROR);
-	printf("Shaders y cositas done.");
+	printf("Shaders y cositas done.");*/
 }
 
 void onFrame() {
-	glUseProgram(gShaderProgram);
+	/*glUseProgram(gShaderProgram);
 	glBindVertexArray(gVAO);
 
 	GLint location = glGetUniformLocation(gShaderProgram, "CustomData");
@@ -84,7 +84,7 @@ void onFrame() {
 
 
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);*/
 }
 
 // -----------------------------------------------------------------------------------------------------------
