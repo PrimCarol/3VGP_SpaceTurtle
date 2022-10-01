@@ -24,13 +24,20 @@ namespace ST {
 
 	class OpenGl{
 
+	public:	
+		struct VertexInfo{
+			float x, y, z; // Position
+			//float nx, ny, nz; // Normals
+			float r, g, b; // Color
+			//float u, v; // UVs
+		};
+
 		enum ShaderType{
 			SHADER_VERTEX,
 			SHADER_FRAGMENT
 		};
 
-	public:	
-		static OpenGl& instance() {
+		static OpenGl& Instance() {
 			static OpenGl* instance = new OpenGl();
 			return *instance;
 		}
@@ -41,13 +48,21 @@ namespace ST {
 		// para las validaciones??
 		GLuint loadProgram(GLuint vertex_shader, GLuint fragment_shader);
 
+		// De momento to feo, asumiendo que el usuario nos enviara los datos
+		// de la forma esperada.
+		// Quizas hacer una estructura¿?
+		GLuint loadMesh(VertexInfo* meshInfo, unsigned int* indices);
+
+		//void useProgram(GLuint program);
+		void drawObj(GLuint program, GLuint mesh);
+
 	private:
 		OpenGl();
 		~OpenGl();
 	
-		GLuint basic_program_shader;
-		GLuint basic_vertex_shader;
-		GLuint basic_fragment_shader;
+		//GLuint basic_program_shader;
+		//GLuint basic_vertex_shader;
+		//GLuint basic_fragment_shader;
 	};	
 }
 
