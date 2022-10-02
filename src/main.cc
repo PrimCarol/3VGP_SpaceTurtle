@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------------------------------------
 
 
-/*static GLuint gShaderProgram = 0;
+static GLuint gShaderProgram = 0;
 static GLuint gMesh = 0;
 
 ST::OpenGl::VertexInfo vertices[] = {
@@ -20,16 +20,34 @@ ST::OpenGl::VertexInfo vertices[] = {
 unsigned int indices[] = { 0,1,2  ,  0,2,3 };
 
 void onInit() {
-
+	gladLoadGL();
 	GLuint vShader, fShader;
 	vShader = ST::OpenGl::Instance().loadShader("../shaders/vertex.vert", ST::OpenGl::SHADER_VERTEX);
 	fShader = ST::OpenGl::Instance().loadShader("../shaders/fragment.frag", ST::OpenGl::SHADER_FRAGMENT);
+	
 	printf("Shaders -> %d - %d \n", vShader, fShader);
 
 	gShaderProgram = ST::OpenGl::Instance().loadProgram(vShader,fShader);
 	printf("Program -> %d \n", gShaderProgram);
 
-	gMesh = ST::OpenGl::Instance().loadMesh(vertices, indices);
+	//gMesh = ST::OpenGl::Instance().loadMesh(vertices, indices);
+	glGenVertexArrays(1, &gMesh);
+	glBindVertexArray(gMesh);
+
+	GLuint gVBO = 0;
+	glGenBuffers(1, &gVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ST::OpenGl::VertexInfo), 0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ST::OpenGl::VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+
+	GLuint gEBO = 0;
+	glGenBuffers(1, &gEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 	printf("Mesh -> %d \n", gMesh);
 
 	printf("Shaders y cositas done.\n");
@@ -37,12 +55,12 @@ void onInit() {
 
 void onFrame() {
 	ST::OpenGl::Instance().drawObj(gShaderProgram, gMesh);
-}*/
+}
 
-static GLuint gShaderProgram = 0;
+/*static GLuint gShaderProgram = 0;
 static GLuint gVBO = 0, gVAO = 0;
 static GLuint gEBO = 0;
-static GLuint gTextureID = 0;
+//static GLuint gTextureID = 0;
 
 struct Vertex {
 	float x, y, z;
@@ -58,11 +76,12 @@ Vertex vertices[] = {
 
 unsigned int indices[] = { 0,1,2  ,  0,2,3 };
 
-float rotation = 0.0f;
+//float rotation = 0.0f;
 
 void onInit() {
 	gladLoadGL();
 
+	// Shader
 	GLuint v_shader = glCreateShader(GL_VERTEX_SHADER);
 	GLchar* v_text = "#version 330\n"
 		"layout (location=0) in vec3 a_position;\n"
@@ -88,6 +107,7 @@ void onInit() {
 	//assert(glGetError() == GL_NO_ERROR);
 
 
+	// Program
 	gShaderProgram = glCreateProgram();
 	glAttachShader(gShaderProgram, v_shader);
 	glAttachShader(gShaderProgram, f_shader);
@@ -95,6 +115,7 @@ void onInit() {
 	//assert(glGetError() == GL_NO_ERROR);
 
 
+	// Mesh
 	glGenVertexArrays(1, &gVAO);
 	glBindVertexArray(gVAO);
 
@@ -121,14 +142,14 @@ void onFrame() {
 	glUseProgram(gShaderProgram);
 	glBindVertexArray(gVAO);
 
-	GLint location = glGetUniformLocation(gShaderProgram, "CustomData");
-	glUniform1f(location, rotation);
+	//GLint location = glGetUniformLocation(gShaderProgram, "CustomData");
+	//glUniform1f(location, rotation);
 	//assert(glGetError() == GL_NO_ERROR);
 
 
 	//glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
+}*/
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -192,11 +213,11 @@ int main(){
 
 		// -------------- TRIANGLE ------------------
 
-		glBegin(GL_TRIANGLES);
-		glVertex2f( 0.2f,  0.2f);
-		glVertex2f(-0.2f,  0.2f);
-		glVertex2f( 0.0f, -0.2f);
-		glEnd();
+		//glBegin(GL_TRIANGLES);
+		//glVertex2f( 0.2f,  0.2f);
+		//glVertex2f(-0.2f,  0.2f);
+		//glVertex2f( 0.0f, -0.2f);
+		//glEnd();
 
 		onFrame();
 

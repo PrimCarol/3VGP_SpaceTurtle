@@ -35,7 +35,7 @@ GLuint ST::OpenGl::loadShader(const char* path, ShaderType t){
 		"out vec4 FragColor;\n"
 		"in vec3 color;\n"
 		"void main() {\n"
-		"FragColor = vec4(1.0, 1.0, 0.0, 1.0);\n"
+		"FragColor = vec4(color, 1.0);\n"
 		"}\n";
 
 	switch (t){
@@ -85,7 +85,7 @@ GLuint ST::OpenGl::loadMesh(VertexInfo* meshInfo, unsigned int* indices){
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 
-	//GLuint gVBO = 0;
+	GLuint gVBO = 0;
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(meshInfo), &meshInfo, GL_STATIC_DRAW);
@@ -99,7 +99,7 @@ GLuint ST::OpenGl::loadMesh(VertexInfo* meshInfo, unsigned int* indices){
 
 	assert(glGetError() == GL_NO_ERROR);
 	
-	//GLuint gEBO = 0;
+	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);

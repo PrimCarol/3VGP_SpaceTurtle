@@ -60,8 +60,8 @@ namespace ST {
 		OpenGl();
 		~OpenGl();
 	
-		GLuint gEBO = 0;
-		GLuint gVBO = 0;
+		//static GLuint gEBO;
+		//static GLuint gVBO;
 		//GLuint basic_program_shader;
 		//GLuint basic_vertex_shader;
 		//GLuint basic_fragment_shader;
