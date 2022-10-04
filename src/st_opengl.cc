@@ -89,7 +89,7 @@ GLuint ST::OpenGl::loadMesh(VertexInfo* meshInfo, unsigned int* indices){
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(meshInfo), &meshInfo, GL_STATIC_DRAW);
-
+	//int a = sizeof(meshInfo);
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
@@ -103,7 +103,7 @@ GLuint ST::OpenGl::loadMesh(VertexInfo* meshInfo, unsigned int* indices){
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
+	//int b = sizeof(indices);
 	assert(glGetError() == GL_NO_ERROR);
 	
 	//glBindVertexArray(0);

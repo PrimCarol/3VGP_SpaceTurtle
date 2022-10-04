@@ -70,7 +70,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         -- Librerias standard y .lib
         links {
-            "glfw3_mt",
+            "glfw3_mt", -- Version Multithreading
             "opengl32",
         }
 

@@ -92,6 +92,12 @@ bool ST::Window::isPressed(ST_INPUT input){
             return true;
         }
         break;
+    case ST::ST_INPUT_ESCAPE:
+        if (glfwGetKey(glWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
     }
     
     return false;

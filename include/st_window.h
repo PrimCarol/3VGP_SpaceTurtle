@@ -12,7 +12,8 @@ namespace ST {
 		ST_INPUT_RIGHT,
 		ST_INPUT_LEFT,
 		ST_INPUT_FIRE,
-		ST_INPUT_JUMP
+		ST_INPUT_JUMP,
+		ST_INPUT_ESCAPE,
 	};
 
 	class Window{
