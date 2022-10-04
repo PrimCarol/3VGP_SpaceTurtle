@@ -38,13 +38,64 @@ void ST::Window::Render(){
     glfwPollEvents();
 }
 
-//bool ST::Window::isPressed(ST_INPUT input){
-//    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {
-//        lastKeyPressed = input;
-//        return true;
-//    }
-//    return false;
-//}
+bool ST::Window::isPressed(ST_INPUT input){
+    
+    switch (input){
+    case ST::ST_INPUT_UP:
+        if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }else if (glfwGetKey(glWindow, GLFW_KEY_UP) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_DOWN:
+        if (glfwGetKey(glWindow, GLFW_KEY_S) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_RIGHT:
+        if (glfwGetKey(glWindow, GLFW_KEY_D) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_LEFT:
+        if (glfwGetKey(glWindow, GLFW_KEY_A) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_FIRE:
+        if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            lastMousePressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_JUMP:
+        if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    }
+    
+    return false;
+}
 
 //bool ST::Window::isInputDown(ST_INPUT input){
 //    if (glfwGetKey(glWindow, input) == GLFW_PRESS) {

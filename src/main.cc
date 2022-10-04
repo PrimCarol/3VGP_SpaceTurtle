@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <ctime>
 
 #include <st_engine.h>
 
 // -----------------------------------------------------------------------------------------------------------
-
 
 static GLuint gShaderProgram = 0;
 static GLuint gMesh = 0;
@@ -21,15 +21,19 @@ unsigned int indices[] = { 0,1,2  ,  0,2,3 };
 
 void onInit() {
 	gladLoadGL();
+
+	// ------- Shaders -------
 	GLuint vShader, fShader;
 	vShader = ST::OpenGl::Instance().loadShader("../shaders/vertex.vert", ST::OpenGl::SHADER_VERTEX);
 	fShader = ST::OpenGl::Instance().loadShader("../shaders/fragment.frag", ST::OpenGl::SHADER_FRAGMENT);
 	
 	printf("Shaders -> %d - %d \n", vShader, fShader);
 
+	// ------- Program -------
 	gShaderProgram = ST::OpenGl::Instance().loadProgram(vShader,fShader);
 	printf("Program -> %d \n", gShaderProgram);
 
+	// ------- Mesh -------
 	//gMesh = ST::OpenGl::Instance().loadMesh(vertices, indices);
 	glGenVertexArrays(1, &gMesh);
 	glBindVertexArray(gMesh);
@@ -153,9 +157,10 @@ void onFrame() {
 
 // -----------------------------------------------------------------------------------------------------------
 
+clock_t lastTime;
 
 int main(){
-	printf("-- Welcome to Space Turtle --\n");
+	printf("-- Welcome to Space Turtle Engine --\n");
 	
 	// Window
 	ST::Window* w = new ST::Window(1090, 720);
@@ -164,20 +169,34 @@ int main(){
 	float c[3] = {1.0f,0.8f,0.9f};
 
 
-
 	onInit();
 
-
+	
+	clock_t deltaTime;
+	//int MaxFPSWant = 10;
+	//double MaxFPS = 1000.0f / MaxFPSWant;
 
 	while (w->isOpen()){
-		
+		deltaTime = clock() - lastTime;
+		double fps = (1.0f / deltaTime) * 1000;
+		lastTime = clock();
+
+		printf("DeltaTime-> %d ms \n", deltaTime);
+		printf("FPS-> %f \n", fps);
+		//printf("LastTime-> %d \n", lastTime);
+
 		w->ColorBg(sin(c[0]), sin(c[1]), sin(c[2]));
 
-		//if (w->isDown(ST::ST_INPUT::ST_INPUT_UP)) {
-		//	printf("Aprieto\n");
+		//if (deltaTime < MaxFPS) {
+			if (w->isPressed(ST::ST_INPUT_UP)) {
+				printf("Voy arriba!\n");
+			}
+			if (w->isPressed(ST::ST_INPUT_DOWN)) {
+				printf("Voy abajo!\n");
+			}
 		//}
 		
-		if (w->isKeyPressed(GLFW_KEY_R)) {
+		/*if (w->isKeyPressed(GLFW_KEY_R)) {
 			//printf("Mantengo\n");
 			c[0] += 0.1f;
 		}
@@ -188,11 +207,8 @@ int main(){
 		if (w->isKeyPressed(GLFW_KEY_B)) {
 			//printf("Mantengo\n");
 			c[2] += 0.1f;
-		}
-		//if (w->isKeyReless(GLFW_KEY_J)) {
-		//	printf("Suelto\n");
-		//}
-		
+		}*/
+
 		//if (w->isMouseDown(0) || w->isMouseDown(1)) {
 		//	printf("Mouse-> Aprieto\n");
 		//}

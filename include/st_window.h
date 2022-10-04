@@ -3,14 +3,17 @@
 
 #include <GLFW/glfw3.h>
 
+
 namespace ST {
 
-	//enum ST_INPUT{
-	//	ST_INPUT_UP = GLFW_KEY_W,
-	//	ST_INPUT_DOWN = GLFW_KEY_S,
-	//	ST_INPUT_RIGHT = GLFW_KEY_D,
-	//	ST_INPUT_LEFT = GLFW_KEY_A,
-	//};
+	enum ST_INPUT{
+		ST_INPUT_UP,
+		ST_INPUT_DOWN,
+		ST_INPUT_RIGHT,
+		ST_INPUT_LEFT,
+		ST_INPUT_FIRE,
+		ST_INPUT_JUMP
+	};
 
 	class Window{
 	public:
@@ -26,7 +29,7 @@ namespace ST {
 		
 		// ------ Inputs ------
 		//bool isInputDown(ST_INPUT input);
-		//bool isPressed(ST_INPUT input);
+		bool isPressed(ST_INPUT input);
 		//bool isInputReless(ST_INPUT input);
 		
 		// Keyboard

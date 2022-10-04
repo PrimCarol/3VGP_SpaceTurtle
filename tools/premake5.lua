@@ -31,15 +31,15 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
     project "SpaceTurtle"
         location(ROOT .. "/build/" .. _ACTION)
         entrypoint "mainCRTStartup"
+        --ignoredefaultlibraries { "LIBCMT" }
+
 
         -- Donde estan los includes
         includedirs{
             --Personal
-            --path.join(ROOT, "./include"),
             "../include",
             
             --GLFW
-            --path.join(ROOT, "./deps/glfw-3.3.8.bin.WIN64/include"),
             "../deps/glfw-3.3.8.bin.WIN64/include",
 
             --OpenGl - GLAD
@@ -60,9 +60,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../src/*.cc",
 
             "../deps/OpenGL/glad.c"
-        }
-
-        --ignoredefaultlibraries { "LIBCMT" }
+        }  
 
         -- Donde estan las librerias
         libdirs {
@@ -74,8 +72,6 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         links {
             "glfw3_mt",
             "opengl32",
-            --"glew32",
-            --"glew32s",
         }
 
         filter  {"Debug","x64"}
