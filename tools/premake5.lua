@@ -38,6 +38,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         includedirs{
             --Personal
             "../include",
+
+            --Math Library
+            --"../deps/SrPrmMath/include",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",

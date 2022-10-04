@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <ctime>
+//#include <math.h>
+//#include <ctime>
 
 #include <st_engine.h>
 
+#include <st_triangle.h>
+
 // -----------------------------------------------------------------------------------------------------------
 
-static GLuint gShaderProgram = 0;
+/*static GLuint gShaderProgram = 0;
 static GLuint gMesh = 0;
 
 ST::OpenGl::VertexInfo vertices[] = {
@@ -113,7 +115,7 @@ int main(){
 			}
 		//}
 		
-		/*if (w->isKeyPressed(GLFW_KEY_R)) {
+		if (w->isKeyPressed(GLFW_KEY_R)) {
 			//printf("Mantengo\n");
 			c[0] += 0.1f;
 		}
@@ -124,7 +126,7 @@ int main(){
 		if (w->isKeyPressed(GLFW_KEY_B)) {
 			//printf("Mantengo\n");
 			c[2] += 0.1f;
-		}*/
+		}
 
 		//if (w->isMouseDown(0) || w->isMouseDown(1)) {
 		//	printf("Mouse-> Aprieto\n");
@@ -154,7 +156,7 @@ int main(){
 	return 0;
 }
 
-
+*/
 /*
 int main(){
 
@@ -178,7 +180,8 @@ int main(){
 
 	return 0;
 }
-
+*/
+/*
 int main(){
 	ST::Engine engine;
 	w = engine.CreateWindow(1090,720);
@@ -202,5 +205,27 @@ int main(){
 
 	return 0;
 }
-
 */
+
+int main() {
+	ST::Window w;
+	w.Focus();
+
+	gladLoadGL();
+
+	ST::Triangle tri;
+
+	while (w.isOpen()) {
+		w.ColorBg(0.2f,0.2f,0.2f);
+
+		if (w.isPressed(ST::ST_INPUT_JUMP)) {
+			tri.Draw();
+		}
+
+		w.Render();
+	}
+
+
+	return 0;
+}
+

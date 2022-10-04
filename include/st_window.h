@@ -2,7 +2,7 @@
 #define _SPACE_TURTLE_WINDOW_H_ 1
 
 #include <GLFW/glfw3.h>
-
+//#include <st_triangle.h>
 
 namespace ST {
 
@@ -27,6 +27,7 @@ namespace ST {
 
 		void Focus();
 		void Render();
+		//void Draw(Triangle t);
 		
 		// ------ Inputs ------
 		//bool isInputDown(ST_INPUT input);
