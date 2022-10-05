@@ -218,9 +218,17 @@ int main() {
 	while (w.isOpen()) {
 		w.ColorBg(0.2f,0.2f,0.2f);
 
-		if (w.isPressed(ST::ST_INPUT_JUMP)) {
-			tri.Draw();
+
+		if (w.isPressed(ST::ST_INPUT_RIGHT)) {
+			tri.Move(Vector3::right);
 		}
+		if (w.isPressed(ST::ST_INPUT_LEFT)) {
+			tri.Move(Vector3::left);
+		}
+
+		
+		tri.Draw();
+		
 
 		w.Render();
 	}

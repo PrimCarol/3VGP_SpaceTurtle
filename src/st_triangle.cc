@@ -6,10 +6,12 @@ ST::Triangle::Triangle(){
 		"#version 330\n"
 		"layout (location=0) in vec3 a_position;\n"
 		"layout (location=1) in vec3 a_color;\n"
+		"uniform mat4 u_m_trans;\n"
 		"out vec3 color;\n"
 		"void main() {\n"
 		"color = a_color;\n"
-		"gl_Position = vec4(a_position, 1.0);\n"
+		//"gl_Position = vec4(a_position, 1.0);\n"
+		"gl_Position = u_m_trans * vec4(a_position, 1);\n"
 		"}\n";
 	GLchar* fragmentText =
 		"#version 330\n"
@@ -63,11 +65,36 @@ ST::Triangle::Triangle(){
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	m_transform.print();
+	Scale({ 1.0f,1.0f,1.0f });
+	Rotate({ 0.0f,0.0f,0.0f });
+	Move({ 0.0f,0.0f,0.0f });
+	m_transform.print();
+}
+
+void ST::Triangle::Move(Vector3 newPos){
+	m_transform = m_transform.Multiply( Matrix4x4::Translate(newPos));
+	m_transform.print();
+}
+
+void ST::Triangle::Scale(Vector3 newScale){
+	m_transform = m_transform.Multiply(Matrix4x4::Scale(newScale));
+}
+
+void ST::Triangle::Rotate(Vector3 newRot){
+	m_transform = m_transform.Multiply(Matrix4x4::RotateX(newRot.x));
+	m_transform = m_transform.Multiply(Matrix4x4::RotateY(newRot.y));
+	m_transform = m_transform.Multiply(Matrix4x4::RotateZ(newRot.z));
 }
 
 void ST::Triangle::Draw(){
 	glUseProgram(program);
 	glBindVertexArray(mesh);
+
+	GLuint uniform = -1;
+	glGetUniformLocation(uniform, "u_m_matrix");
+	glUniformMatrix4fv(uniform, 1, GL_FALSE, &m_transform.m[0]);
 
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 }

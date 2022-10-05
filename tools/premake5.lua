@@ -40,7 +40,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include",
 
             --Math Library
-            --"../deps/SrPrmMath/include",
+            "../deps/SrPrmMath/include",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
@@ -62,7 +62,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include/*.h",
             "../src/*.cc",
 
-            "../deps/OpenGL/glad.c"
+            "../deps/SrPrmMath/src/*.cc",
+
+            "../deps/OpenGL/glad.c",
         }  
 
         -- Donde estan las librerias
