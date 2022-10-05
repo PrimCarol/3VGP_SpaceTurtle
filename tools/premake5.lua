@@ -40,7 +40,10 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include",
 
             --Math Library
-            "../deps/SrPrmMath/include",
+            --"../deps/SrPrmMath/include",
+            "../deps/glm",
+            "../deps/glm/gtx",
+            --"../deps/glm/gtc",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
@@ -62,7 +65,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include/*.h",
             "../src/*.cc",
 
-            "../deps/SrPrmMath/src/*.cc",
+            --"../deps/SrPrmMath/src/*.cc",
 
             "../deps/OpenGL/glad.c",
         }  

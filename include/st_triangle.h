@@ -2,7 +2,9 @@
 #define _SPACE_TURTLE_TRIANGLE_H_ 1
 
 #include <glad.h>
-#include <matrix_4.h>
+//#include <matrix_4.h>
+#include <glm.hpp>
+#include <transform.hpp>
 
 namespace ST {
 
@@ -16,18 +18,25 @@ namespace ST {
 	class Triangle{
 	public:
 		Triangle();
+		Triangle(glm::vec3 pos, glm::vec3 scale);
 
-		void Move(Vector3 newPos);
-		void Scale(Vector3 newScale);
-		void Rotate(Vector3 newRot);
+		void Move(glm::vec3 newPos);
+		void Scale(glm::vec3 newScale);
+		void RotateX(float r);
+		void RotateY(float r);
+		void RotateZ(float r);
+		
+		glm::vec3 getPosition();
+
 		void Draw();
-
 
 		~Triangle();
 	private:
+		void init();
 		GLuint mesh;
 		GLuint program;
-		Matrix4x4 m_transform;
+		//Matrix4x4 m_transform;
+		glm::mat4 m_transform;
 
 		Triangle(const Triangle& o);
 	};

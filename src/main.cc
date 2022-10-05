@@ -211,28 +211,21 @@ int main() {
 	ST::Window w;
 	w.Focus();
 
-	gladLoadGL();
-
 	ST::Triangle tri;
 
 	while (w.isOpen()) {
 		w.ColorBg(0.2f,0.2f,0.2f);
 
+		if (w.isPressed(ST::ST_INPUT_RIGHT)) { tri.Move({ 0.3f,0.0f,0.0f }); }
+		if (w.isPressed(ST::ST_INPUT_LEFT)) {tri.Move({ -0.3f,0.0f,0.0f });}
+		if (w.isPressed(ST::ST_INPUT_UP)) {tri.Move({ 0.0f,0.3f,0.0f });}
+		if (w.isPressed(ST::ST_INPUT_DOWN)) {tri.Move({ 0.0f,-0.3f,0.0f });}
+		printf("X: %f - Y %f - Z %f\n", tri.getPosition().x, tri.getPosition().y, tri.getPosition().z);
+		if (w.isPressed(ST::ST_INPUT_FIRE)) { tri.RotateY(0.4f); }
 
-		if (w.isPressed(ST::ST_INPUT_RIGHT)) {
-			tri.Move(Vector3::right);
-		}
-		if (w.isPressed(ST::ST_INPUT_LEFT)) {
-			tri.Move(Vector3::left);
-		}
-
-		
 		tri.Draw();
-		
-
 		w.Render();
 	}
-
 
 	return 0;
 }
