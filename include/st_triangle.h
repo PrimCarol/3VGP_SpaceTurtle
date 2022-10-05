@@ -35,7 +35,7 @@ namespace ST {
 		void init();
 		GLuint mesh;
 		GLuint program;
-		//Matrix4x4 m_transform;
+
 		glm::mat4 m_transform;
 
 		Triangle(const Triangle& o);

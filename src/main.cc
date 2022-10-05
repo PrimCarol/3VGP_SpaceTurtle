@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 //#include <math.h>
-//#include <ctime>
 
 #include <st_engine.h>
 
@@ -90,9 +89,7 @@ int main(){
 	//double MaxFPS = 1000.0f / MaxFPSWant;
 
 	while (w.isOpen() && !w.isPressed(ST::ST_INPUT_ESCAPE)){
-		deltaTime = clock() - lastTime;
-		double fps = (1.0f / deltaTime) * 1000.0f;
-		lastTime = clock();
+
 
 		//printf("DeltaTime-> %d ms \n", deltaTime);
 		//printf("FPS-> %f \n", fps);
@@ -207,21 +204,22 @@ int main(){
 }
 */
 
+
+
 int main() {
 	ST::Window w;
-	w.Focus();
-
+	
 	ST::Triangle tri;
 
-	while (w.isOpen()) {
+	while (w.isOpen() && !w.isPressed(ST::ST_INPUT_ESCAPE)) {
+		
+
 		w.ColorBg(0.2f,0.2f,0.2f);
 
-		if (w.isPressed(ST::ST_INPUT_RIGHT)) { tri.Move({ 0.3f,0.0f,0.0f }); }
-		if (w.isPressed(ST::ST_INPUT_LEFT)) {tri.Move({ -0.3f,0.0f,0.0f });}
-		if (w.isPressed(ST::ST_INPUT_UP)) {tri.Move({ 0.0f,0.3f,0.0f });}
-		if (w.isPressed(ST::ST_INPUT_DOWN)) {tri.Move({ 0.0f,-0.3f,0.0f });}
-		printf("X: %f - Y %f - Z %f\n", tri.getPosition().x, tri.getPosition().y, tri.getPosition().z);
-		if (w.isPressed(ST::ST_INPUT_FIRE)) { tri.RotateY(0.4f); }
+		if (w.isPressed(ST::ST_INPUT_RIGHT)) { tri.Move({ 6.0f * w.DeltaTime(),0.0f,0.0f }); }
+		if (w.isPressed(ST::ST_INPUT_LEFT)) {tri.Move({ -6.0f * w.DeltaTime(),0.0f,0.0f });}
+		if (w.isPressed(ST::ST_INPUT_UP)) {tri.Move({ 0.0f, 6.0f * w.DeltaTime(),0.0f });}
+		if (w.isPressed(ST::ST_INPUT_DOWN)) {tri.Move({ 0.0f, -6.0f * w.DeltaTime(),0.0f });}
 
 		tri.Draw();
 		w.Render();

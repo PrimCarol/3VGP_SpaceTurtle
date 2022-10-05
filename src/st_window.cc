@@ -5,6 +5,7 @@ ST::Window::Window(){
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
+        Focus();
     }
 }
 
@@ -13,6 +14,7 @@ ST::Window::Window(int width, int height){
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
+        Focus();
     }
 }
 
@@ -32,7 +34,10 @@ void ST::Window::Focus() {
 }
 
 void ST::Window::Render(){
-    
+
+    deltaTime = clock() - lastTime;
+    lastTime = clock();
+
     glfwSwapBuffers(glWindow);
 
     glfwPollEvents();
@@ -207,6 +212,14 @@ void ST::Window::ColorBg(float c[4]) {
 void ST::Window::ColorBg(float r, float g, float b, float a){
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(r, g, b, a);
+}
+
+float ST::Window::DeltaTime() {
+    return ((float)deltaTime)/1000;
+}
+
+double ST::Window::FPS(){
+    return (1.0f / deltaTime) * 1000.0f;
 }
 
 ST::Window::~Window(){

@@ -83,6 +83,8 @@ void ST::Triangle::init() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	if (glGetError() != GL_NO_ERROR) { printf("Error OpenGL\n"); }
 }
 
 void ST::Triangle::Move(glm::vec3 newPos){

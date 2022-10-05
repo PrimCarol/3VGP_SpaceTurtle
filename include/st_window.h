@@ -2,7 +2,7 @@
 #define _SPACE_TURTLE_WINDOW_H_ 1
 
 #include <GLFW/glfw3.h>
-//#include <st_triangle.h>
+#include <ctime>
 
 namespace ST {
 
@@ -53,12 +53,19 @@ namespace ST {
 		void ColorBg(float c[4]);
 		void ColorBg(float r, float g, float b, float a = 0);
 
+		/* Delta Time */
+		float DeltaTime();
+		double FPS();
+
 		~Window();
 
 		GLFWwindow* glWindow;
 	private:
 		Window(const Window& o);
 		float color[4];
+
+		clock_t lastTime;
+		clock_t deltaTime;
 
 		double mouseX=0.0f, mouseY=0.0f;
 		int lastKeyPressed = -1;
