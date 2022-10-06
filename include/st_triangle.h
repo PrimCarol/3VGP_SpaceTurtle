@@ -1,10 +1,10 @@
 #ifndef _SPACE_TURTLE_TRIANGLE_H_
 #define _SPACE_TURTLE_TRIANGLE_H_ 1
 
-#include <glad.h>
-
 #include <glm.hpp>
 #include <transform.hpp>
+
+#include "st_program.h"
 
 namespace ST {
 
@@ -36,7 +36,7 @@ namespace ST {
 	private:
 		void init();
 		GLuint mesh;
-		GLuint program;
+		ST::Program program;
 
 		glm::mat4 m_transform;
 

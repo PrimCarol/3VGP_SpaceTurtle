@@ -1,58 +1,32 @@
 #include "st_triangle.h"
+#include "st_shader.h"
 
 ST::Triangle::Triangle() {
 	init();
 	
 	m_transform = glm::mat4(1);
 	Move({ 0.0f,0.0f,0.0f });
-	Scale({ 0.5f,0.5f,1.0f });
+	Scale({ 1.0f,1.0f,1.0f });
 }
 
 ST::Triangle::Triangle(glm::vec3 pos, glm::vec3 scale){
 	init();
 
+	m_transform = glm::mat4(1);
 	Move(pos);
 	Scale(scale);
 }
 
 void ST::Triangle::init() {
-	gladLoadGL();
+	ST::Shader vShader(ST::E_VERTEX_SHADER);
+	vShader.loadSource(ST::basic_vShader_text);
 
-	GLchar* vertexText =
-		"#version 330\n"
-		"layout (location=0) in vec3 a_position;\n"
-		"layout (location=1) in vec3 a_color;\n"
-		"uniform mat4 u_m_trans;\n"
-		"uniform mat4 u_m_view;\n"
-		"out vec3 color;\n"
-		"void main() {\n"
-		"color = a_color;\n"
-		//"gl_Position = vec4(a_position, 1.0);\n"
-		//"gl_Position = u_m_view * u_m_trans * vec4(a_position, 1);\n"
-		"gl_Position = u_m_trans * vec4(a_position, 1);\n"
-		"}\n";
-	GLchar* fragmentText =
-		"#version 330\n"
-		"out vec4 FragColor;\n"
-		"in vec3 color;\n"
-		"void main() {\n"
-		"FragColor = vec4(color, 1.0);\n"
-		"}\n";
+	ST::Shader fShader(ST::E_FRAGMENT_SHADER);
+	fShader.loadSource(ST::basic_fShader_text);
 
-	GLuint vshader = 0;
-	vshader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vshader, 1, &vertexText, 0);
-	glCompileShader(vshader);
-
-	GLuint fshader = 0;
-	fshader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fshader, 1, &fragmentText, 0);
-	glCompileShader(fshader);
-
-	program = glCreateProgram();
-	glAttachShader(program, vshader);
-	glAttachShader(program, fshader);
-	glLinkProgram(program);
+	program.attach(vShader);
+	program.attach(fShader);
+	program.link();
 
 	VertexInfo vertices[] = {
 		{ 0.0f, 0.5f,0.0f  ,  1.0f,0.0f,0.0f},
@@ -105,8 +79,7 @@ void ST::Triangle::RotateZ(float r) {
 	m_transform = glm::rotate(m_transform, r, { 0.0f,0.0f,1.0f });
 }
 
-glm::vec3 ST::Triangle::getPosition(){	
-	//return glm::vec3(m_transform[0][3], m_transform[1][3], m_transform[2][3]);
+glm::vec3 ST::Triangle::getPosition(){
 	return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
 }
 
@@ -121,7 +94,7 @@ glm::vec3 ST::Triangle::getRotation(){
 }
 
 void ST::Triangle::Draw(){
-	glUseProgram(program);
+	program.use();
 	glBindVertexArray(mesh);
 
 	GLuint uniform = 0;

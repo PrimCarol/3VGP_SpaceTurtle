@@ -25,37 +25,37 @@ namespace ST {
 
 		//GLFWwindow* GetWindow();
 
-		void Focus();
+		void Focus() const;
 		void Render();
-		//void Draw(Triangle t);
+		void Clear() const;
 		
 		// ------ Inputs ------
-		//bool isInputDown(ST_INPUT input);
+		bool isDown(ST_INPUT input);
 		bool isPressed(ST_INPUT input);
-		//bool isInputReless(ST_INPUT input);
+		bool isUp(ST_INPUT input);
 		
 		// Keyboard
-		bool isKeyDown(int keyboard);
-		bool isKeyPressed(int keyboard);
-		bool isKeyReless(int keyboard);
+		//bool isKeyDown(int keyboard);
+		//bool isKeyPressed(int keyboard);
+		//bool isKeyReless(int keyboard);
 		
 		// Mouse
 		double mousePosX();
 		double mousePosY();
-		bool isMouseDown(int button);
-		bool isMousePressed(int button);
-		bool isMouseReless(int button);
+		//bool isMouseDown(int button);
+		//bool isMousePressed(int button);
+		//bool isMouseReless(int button);
 
 		/* Return if window is opened */
-		bool isOpen();
+		bool isOpen() const;
 
 		/* Change the Background Color */
 		void ColorBg(float c[4]);
 		void ColorBg(float r, float g, float b, float a = 0);
 
 		/* Delta Time */
-		float DeltaTime();
-		double FPS();
+		float DeltaTime() const;
+		double FPS(const float time) const;
 
 		~Window();
 
