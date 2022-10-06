@@ -2,16 +2,19 @@
 #define _SPACE_TURTLE_WINDOW_H_ 1
 
 #include <GLFW/glfw3.h>
+#include <ctime>
 
 namespace ST {
 
-	//enum ST_INPUT{
-	//	ST_INPUT_NONE = -1,
-	//	ST_INPUT_KEY_UP = GLFW_KEY_W | GLFW_KEY_UP,
-	//	ST_INPUT_KEY_DOWN = GLFW_KEY_S | GLFW_KEY_DOWN,
-	//	ST_INPUT_KEY_RIGHT = GLFW_KEY_D | GLFW_KEY_RIGHT,
-	//	ST_INPUT_KEY_LEFT = GLFW_KEY_A | GLFW_KEY_LEFT
-	//};
+	enum ST_INPUT{
+		ST_INPUT_UP,
+		ST_INPUT_DOWN,
+		ST_INPUT_RIGHT,
+		ST_INPUT_LEFT,
+		ST_INPUT_FIRE,
+		ST_INPUT_JUMP,
+		ST_INPUT_ESCAPE,
+	};
 
 	class Window{
 	public:
@@ -24,10 +27,11 @@ namespace ST {
 
 		void Focus();
 		void Render();
+		//void Draw(Triangle t);
 		
 		// ------ Inputs ------
 		//bool isInputDown(ST_INPUT input);
-		//bool isInputPressed(ST_INPUT input);
+		bool isPressed(ST_INPUT input);
 		//bool isInputReless(ST_INPUT input);
 		
 		// Keyboard
@@ -49,6 +53,10 @@ namespace ST {
 		void ColorBg(float c[4]);
 		void ColorBg(float r, float g, float b, float a = 0);
 
+		/* Delta Time */
+		float DeltaTime();
+		double FPS();
+
 		~Window();
 
 		GLFWwindow* glWindow;
@@ -56,8 +64,10 @@ namespace ST {
 		Window(const Window& o);
 		float color[4];
 
+		clock_t lastTime;
+		clock_t deltaTime;
+
 		double mouseX=0.0f, mouseY=0.0f;
-		//ST_INPUT lastInput = ST_INPUT_NONE;
 		int lastKeyPressed = -1;
 		int lastMousePressed = -1;
 	};

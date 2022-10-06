@@ -1,14 +1,20 @@
 #include "st_window.h"
 
 ST::Window::Window(){
+    glWindow = NULL;
+    for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
+        Focus();
     }
 }
 
 ST::Window::Window(int width, int height){
+    glWindow = NULL;
+    for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
+        Focus();
     }
 }
 
@@ -16,18 +22,90 @@ ST::Window::Window(int width, int height){
 //    return glWindow;
 //}
 
-ST::Window::Window(const Window& o){}
+ST::Window::Window(const Window& o){
+    glWindow = o.glWindow;
+    for (int i = 0; i < 4; i++){
+        color[i] = o.color[i];
+    }
+}
 
 void ST::Window::Focus() {
     glfwMakeContextCurrent(glWindow);
 }
 
 void ST::Window::Render(){
-    
+
+    deltaTime = clock() - lastTime;
+    lastTime = clock();
 
     glfwSwapBuffers(glWindow);
 
     glfwPollEvents();
+}
+
+bool ST::Window::isPressed(ST_INPUT input){
+    
+    switch (input){
+    case ST::ST_INPUT_UP:
+        if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }else if (glfwGetKey(glWindow, GLFW_KEY_UP) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_DOWN:
+        if (glfwGetKey(glWindow, GLFW_KEY_S) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_RIGHT:
+        if (glfwGetKey(glWindow, GLFW_KEY_D) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_LEFT:
+        if (glfwGetKey(glWindow, GLFW_KEY_A) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_FIRE:
+        if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+            lastMousePressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_JUMP:
+        if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_ESCAPE:
+        if (glfwGetKey(glWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            lastKeyPressed = input;
+            return true;
+        }
+        break;
+    }
+    
+    return false;
 }
 
 //bool ST::Window::isInputDown(ST_INPUT input){
@@ -134,6 +212,14 @@ void ST::Window::ColorBg(float c[4]) {
 void ST::Window::ColorBg(float r, float g, float b, float a){
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(r, g, b, a);
+}
+
+float ST::Window::DeltaTime() {
+    return ((float)deltaTime)/1000;
+}
+
+double ST::Window::FPS(){
+    return (1.0f / deltaTime) * 1000.0f;
 }
 
 ST::Window::~Window(){

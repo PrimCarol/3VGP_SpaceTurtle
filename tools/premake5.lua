@@ -4,6 +4,7 @@ ROOT = path.getabsolute("./../")
 
 solution("3VGP_SpaceTurtle" .. _ACTION)
     location( ROOT .. "/build/")
+    targetdir(ROOT .. "/bin/")
     language "C++"
     startproject "SpaceTurtle"
 
@@ -18,7 +19,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
     filter {}
 
-    -- Dependiendo de que version de Visual utilice.
+    -- Dependiendo de que version de Visual utilice. (Para el GLFW)
     visualVersion = "UNDEFINED"
     if _ACTION == "vs2019" then
         visualVersion = "vc2019"
@@ -30,16 +31,25 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
     project "SpaceTurtle"
         location(ROOT .. "/build/" .. _ACTION)
         entrypoint "mainCRTStartup"
+        --ignoredefaultlibraries { "LIBCMT" }
+
 
         -- Donde estan los includes
         includedirs{
             --Personal
-            --path.join(ROOT, "./include"),
             "../include",
+
+            --Math Library
+            --"../deps/SrPrmMath/include",
+            "../deps/glm",
+            "../deps/glm/gtx",
+            --"../deps/glm/gtc",
             
             --GLFW
-            --path.join(ROOT, "./deps/glfw-3.3.8.bin.WIN64/include"),
             "../deps/glfw-3.3.8.bin.WIN64/include",
+
+            --OpenGl - GLAD
+            "../deps/OpenGL",
 
             --ImGui
             --path.join(ROOT, "./deps/imgui-docking"),
@@ -53,10 +63,12 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             --path.join(ROOT, "./include/*.h"),
             --path.join(ROOT, "./src/*.cc")
             "../include/*.h",
-            "../src/*.cc"
-        }
+            "../src/*.cc",
 
-        --ignoredefaultlibraries { "LIBCMT" }
+            --"../deps/SrPrmMath/src/*.cc",
+
+            "../deps/OpenGL/glad.c",
+        }  
 
         -- Donde estan las librerias
         libdirs {
@@ -66,14 +78,16 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         -- Librerias standard y .lib
         links {
-            "glfw3_mt",
+            "glfw3_mt", -- Version Multithreading
             "opengl32",
         }
 
         filter  {"Debug","x64"}
-            targetdir (path.join(ROOT, "bin/Debug/x64"))
-            objdir(path.join(ROOT, "./build/SpaceTurtle/Debug" ))
+            --targetdir (ROOT .. "bin/Debug/x64")
+            targetdir(ROOT .. "/bin/Debug/")
+            objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
             targetsuffix "_d"
         filter  {"Release","x64"}
-            targetdir (path.join(ROOT, "bin/Release/x64"))
-            objdir(path.join(ROOT, "./build/SpaceTurtle/Release" ))
+            --targetdir (ROOT .. "bin/Release/x64")
+            targetdir(ROOT .. "/bin/Release/")
+            objdir(ROOT .. "/build/SpaceTurtle/Release/" )
