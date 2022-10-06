@@ -110,6 +110,16 @@ glm::vec3 ST::Triangle::getPosition(){
 	return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
 }
 
+glm::vec3 ST::Triangle::getScale(){
+	//return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
+	return glm::vec3();
+}
+
+glm::vec3 ST::Triangle::getRotation(){
+	//return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
+	return glm::vec3();
+}
+
 void ST::Triangle::Draw(){
 	glUseProgram(program);
 	glBindVertexArray(mesh);

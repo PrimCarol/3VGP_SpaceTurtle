@@ -4,7 +4,6 @@
 // Declarar los includes ?
 
 #include <st_window.h>
-#include <st_opengl.h>
 
 namespace ST {
 
