@@ -1,5 +1,9 @@
 #include "st_window.h"
 
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 ST::Window::Window(){
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
@@ -7,6 +11,18 @@ ST::Window::Window(){
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         Focus();
     }
+
+    // Imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(glWindow, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
 }
 
 ST::Window::Window(int width, int height){
@@ -16,24 +32,42 @@ ST::Window::Window(int width, int height){
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
         Focus();
     }
+
+    // Imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(glWindow, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
 }
 
-//GLFWwindow* ST::Window::GetWindow(){
-//    return glWindow;
-//}
-
-ST::Window::Window(const Window& o){
-    glWindow = o.glWindow;
-    for (int i = 0; i < 4; i++){
-        color[i] = o.color[i];
-    }
-}
+ST::Window::Window(const Window& o){}
 
 void ST::Window::Focus() const{
     glfwMakeContextCurrent(glWindow);
 }
 
 void ST::Window::Render(){
+
+    ImGui::Render();
+
+    //int display_w, display_h;
+    //glfwGetFramebufferSize(w.glWindow, &display_w, &display_h);
+    //glViewport(0, 0, display_w, display_h);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        GLFWwindow* backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
 
     deltaTime = clock() - lastTime;
     lastTime = clock();
@@ -46,6 +80,25 @@ void ST::Window::Render(){
 void ST::Window::Clear() const{
     glClearColor(color[0], color[1], color[2], color[3]);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // ImGui
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    //ImGui::DockSpaceOverViewport();
+}
+
+void ST::Window::initImGuiWindow(const char* t){
+    ImGui::Begin(t);
+}
+
+void ST::Window::textImGui(const char* t){
+    ImGui::Text(t);
+}
+
+void ST::Window::endImGuiWindow(){
+    ImGui::End();
 }
 
 bool ST::Window::isPressed(ST_INPUT input){

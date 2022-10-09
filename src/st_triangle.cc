@@ -1,6 +1,7 @@
 #include "st_triangle.h"
 #include "st_shader.h"
 
+
 ST::Triangle::Triangle() {
 	init();
 	
@@ -28,6 +29,7 @@ void ST::Triangle::init() {
 	program.attach(fShader);
 	program.link();
 
+	// Geometry
 	VertexInfo vertices[] = {
 		{ 0.0f, 0.5f,0.0f  ,  1.0f,0.0f,0.0f},
 		{ 0.5f,-0.5f,0.0f  ,  0.0f,1.0f,0.0f},
@@ -57,6 +59,28 @@ void ST::Triangle::init() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	
+
+	/*float vertex[] = {0.5f, 1.0f,0.0f,
+					   1.0f,-1.0f,0.0f,
+					  -1.0f,-1.0f,0.0f,
+
+					   0.0f, 0.0f, 1.0f,
+					   0.0f, 0.0f, 1.0f,
+					   0.0f, 0.0f, 1.0f,
+	};
+
+	unsigned short indices[] = { 2,1,0 };
+
+	b_vertex.bind(ST::Buffer::E_TARGET_VERTEX);
+
+	b_vertex.init(sizeof(vertex));
+	b_vertex.uploadData((void*)vertex, sizeof(vertex));
+
+	b_indices.bind(ST::Buffer::E_TARGET_ELEMENTS);
+
+	b_indices.init(sizeof(indices));
+	b_indices.uploadData((void*)indices, sizeof(indices));*/
 
 	if (glGetError() != GL_NO_ERROR) { printf("Error OpenGL\n"); }
 }
@@ -96,12 +120,20 @@ glm::vec3 ST::Triangle::getRotation(){
 void ST::Triangle::Draw(){
 	program.use();
 	glBindVertexArray(mesh);
-
+	//b_vertex.bind(ST::Buffer::E_TARGET_VERTEX);
+	/*
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 18 * sizeof(float), 0);
+	glEnableVertexAttribArray(0);
+	// Color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 18 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	*/
 	GLuint uniform = 0;
 	glGetUniformLocation(uniform, "u_m_trans");
 	glUniformMatrix4fv(uniform, 1, GL_FALSE, &m_transform[0][0]);
-
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+	
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Triangle::~Triangle(){

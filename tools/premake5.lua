@@ -40,10 +40,8 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include",
 
             --Math Library
-            --"../deps/SrPrmMath/include",
             "../deps/glm",
             "../deps/glm/gtx",
-            --"../deps/glm/gtc",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
@@ -52,34 +50,36 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/OpenGL",
 
             --ImGui
-            --path.join(ROOT, "./deps/imgui-docking"),
-            --path.join(ROOT, "./deps/imgui-docking/backends")
-            --"../deps/imgui-docking",
-            --"../deps/imgui-docking/backends"
+            "../deps/imgui-docking",
+            "../deps/imgui-docking/backends",
+
+            -- OpenAL
+            -- "../deps/openal-soft/include",
         }
 
         -- Los ficheros a incluir en la solucion
         files {
-            --path.join(ROOT, "./include/*.h"),
-            --path.join(ROOT, "./src/*.cc")
             "../include/*.h",
             "../src/*.cc",
 
-            --"../deps/SrPrmMath/src/*.cc",
+            "../deps/imgui-docking/*.cpp",
+            "../deps/imgui-docking/backends/imgui_impl_glfw.cpp",
+            "../deps/imgui-docking/backends/imgui_impl_opengl3.cpp",
 
             "../deps/OpenGL/glad.c",
         }  
 
         -- Donde estan las librerias
         libdirs {
-            --path.join(ROOT, "./deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion)
-            "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion
+            "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion,
+            -- "../deps/openal-soft/libs/Win64"
         }
 
         -- Librerias standard y .lib
         links {
             "glfw3_mt", -- Version Multithreading
             "opengl32",
+            -- "OpenAL32"
         }
 
         filter  {"Debug","x64"}

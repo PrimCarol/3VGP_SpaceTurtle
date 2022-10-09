@@ -5,14 +5,13 @@
 #include <transform.hpp>
 
 #include "st_program.h"
+#include "st_buffer.h"
 
 namespace ST {
 
-	struct VertexInfo {
-		float x, y, z; // Position
-		//float nx, ny, nz; // Normals
-		float r, g, b; // Color
-		//float u, v; // UVs
+	struct VertexInfo{
+		float x, y, z;
+		float r, g, b;
 	};
 
 	class Triangle{ // Imaginando que esto es un nodo general.
@@ -34,8 +33,11 @@ namespace ST {
 
 		~Triangle();
 	private:
-		void init();
-		GLuint mesh;
+		void init(); // Esto iria en otro sitio.
+		
+		GLuint mesh; // Esto seria un geometry.
+		//ST::Buffer b_vertex;
+		//ST::Buffer b_indices;
 		ST::Program program;
 
 		glm::mat4 m_transform;

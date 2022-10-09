@@ -23,12 +23,15 @@ namespace ST {
 		/* Constructor with witdh and height */
 		Window(int width, int height);
 
-		//GLFWwindow* GetWindow();
 
 		void Focus() const;
 		void Render();
 		void Clear() const;
-		
+
+		void initImGuiWindow(const char* t);
+		void textImGui(const char* t);
+		void endImGuiWindow();
+
 		// ------ Inputs ------
 		bool isDown(ST_INPUT input);
 		bool isPressed(ST_INPUT input);

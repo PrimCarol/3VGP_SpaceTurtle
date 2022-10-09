@@ -19,7 +19,7 @@ namespace ST {
 
 		~Mesh();
 	private:
-
+		GLuint mesh;
 		unsigned short* indices;
 		Mesh(const Mesh& o);
 	};
