@@ -12,8 +12,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
     configurations { "Debug", "Release" }
     platforms      { "x64" }
 
-    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp"
-    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp"
+
+    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp" debugdir(ROOT.."/bin")
+    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp" debugdir(ROOT.."/bin")
     
     filter { "platforms:*64" } architecture "x64"
 
@@ -53,8 +54,8 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/imgui-docking",
             "../deps/imgui-docking/backends",
 
-            -- OpenAL
-            -- "../deps/openal-soft/include",
+            -- MiniAudio
+            "../deps/MiniAudio",
         }
 
         -- Los ficheros a incluir en la solucion
@@ -72,14 +73,12 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         -- Donde estan las librerias
         libdirs {
             "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion,
-            -- "../deps/openal-soft/libs/Win64"
         }
 
         -- Librerias standard y .lib
         links {
             "glfw3_mt", -- Version Multithreading
             "opengl32",
-            -- "OpenAL32"
         }
 
         filter  {"Debug","x64"}

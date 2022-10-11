@@ -17,7 +17,7 @@ ST::Window::Window(){
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     ImGui::StyleColorsDark();
 
@@ -38,7 +38,7 @@ ST::Window::Window(int width, int height){
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     ImGui::StyleColorsDark();
 
@@ -56,9 +56,9 @@ void ST::Window::Render(){
 
     ImGui::Render();
 
-    //int display_w, display_h;
-    //glfwGetFramebufferSize(w.glWindow, &display_w, &display_h);
-    //glViewport(0, 0, display_w, display_h);
+    int display_w, display_h;
+    glfwGetFramebufferSize(glWindow, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -86,6 +86,7 @@ void ST::Window::Clear() const{
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    // Para que toda la ventana tenga la posibilidad de hacer Dock
     //ImGui::DockSpaceOverViewport();
 }
 

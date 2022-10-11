@@ -1,6 +1,7 @@
 #include "st_triangle.h"
 #include "st_shader.h"
 
+#include "st_utilities.h"
 
 ST::Triangle::Triangle() {
 	init();
@@ -20,10 +21,12 @@ ST::Triangle::Triangle(glm::vec3 pos, glm::vec3 scale){
 
 void ST::Triangle::init() {
 	ST::Shader vShader(ST::E_VERTEX_SHADER);
-	vShader.loadSource(ST::basic_vShader_text);
+	GLchar* v_text = (GLchar*)readFile("../shaders/vertex.vert");
+	vShader.loadSource(v_text);
 
 	ST::Shader fShader(ST::E_FRAGMENT_SHADER);
-	fShader.loadSource(ST::basic_fShader_text);
+	GLchar* f_text = (GLchar*)readFile("../shaders/fragment.frag");
+	fShader.loadSource(f_text);
 
 	program.attach(vShader);
 	program.attach(fShader);

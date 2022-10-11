@@ -3,7 +3,7 @@
 
 // Declarar los includes ?
 
-#include <st_utilities.h>
+//#include <st_utilities.h>
 
 #include <st_window.h>
 
