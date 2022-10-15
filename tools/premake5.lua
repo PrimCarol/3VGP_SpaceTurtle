@@ -60,8 +60,30 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         -- Los ficheros a incluir en la solucion
         files {
-            "../include/*.h",
-            "../src/*.cc",
+            --"../include/*.h",
+            --"../src/*.cc",
+
+            -- Includes a mano.
+            --"../include/st_engine.h",
+            "../include/st_node.h",
+            "../include/st_emptyobj.h",
+            "../include/st_drawobj.h",
+            "../include/st_window.h",
+            "../include/st_program.h",
+            "../include/st_shader.h",
+            "../include/st_mesh.h",
+
+
+            "../src/st_node.cc",
+            "../src/st_emptyobj.cc",
+            "../src/st_drawobj.cc",
+            "../src/st_window.cc",
+            "../src/st_program.cc",
+            "../src/st_shader.cc",
+            "../src/st_mesh.cc",
+            "../src/main.cc",
+
+
 
             "../deps/imgui-docking/*.cpp",
             "../deps/imgui-docking/backends/imgui_impl_glfw.cpp",

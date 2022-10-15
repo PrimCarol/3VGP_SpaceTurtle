@@ -32,6 +32,21 @@ void ST::Triangle::init() {
 	program.attach(fShader);
 	program.link();
 
+	/*
+		Geometry -> tiene el mesh, y habra distintos meshes
+		createMeshBuffer(vertices, indices);
+		
+		--- detect Shader Attributs ---
+		glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
+		printf("Active Attributes: %d\n", count);
+		
+		for (i = 0; i < count; i++){
+			glGetActiveAttrib(program, (GLuint)i, bufSize, &length, &size, &type, name);
+			printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+		}
+
+	*/
+
 	// Geometry
 	VertexInfo vertices[] = {
 		{ 0.0f, 0.8f,0.0f  ,  1.0f,0.0f,0.0f},
@@ -40,6 +55,7 @@ void ST::Triangle::init() {
 	};
 
 	unsigned int indices[] = { 0,1,2 };
+
 
 	// Mesh
 	glGenVertexArrays(1, &mesh);

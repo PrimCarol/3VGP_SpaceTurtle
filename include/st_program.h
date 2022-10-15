@@ -20,9 +20,9 @@ namespace ST {
 		int getUniform(const char* location) const;
 
 		~Program();
+		Program(const Program& o);
 	private:
 		GLuint internalID;
-		Program(const Program& o);
 	};
 }
 
