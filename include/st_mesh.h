@@ -38,6 +38,16 @@ namespace ST {
 		void render() override;
 		~Quad();
 	};
+
+	class Circle : public Mesh {
+	public:
+		Circle();
+		void render() override;
+		//void setRobolutions(int v);
+		~Circle();
+	//private:
+		//void reload();
+	};
 }
 
 #endif
