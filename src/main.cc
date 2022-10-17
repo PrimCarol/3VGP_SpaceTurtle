@@ -4,9 +4,7 @@
 #include <random.hpp>
 
 #include <st_window.h>
-
 #include <st_drawobj.h>
-#include <st_node.h>
 
 void RandomPos(ST::DrawObj obj[], int size) {
 	for (int i = 0; i < size; i++){
@@ -27,8 +25,9 @@ int main() {
 	a.setMesh(&geometry);
 	a.setScale({ 0.1f, 0.1f, 0.1f });
 	a.getMaterial()->setColor({1.0f, 0.7f, 0.9f});
+	a.setName("A");
 
-	const int howManyObjs = 100;
+	const int howManyObjs = 500;
 	ST::DrawObj b[howManyObjs];
 	ST::Circle circle;
 	ST::Quad quad;
@@ -38,12 +37,12 @@ int main() {
 		case 0: b[i].setMesh(&circle); break;
 		case 1: b[i].setMesh(&quad); break;
 		}
-		//b[i].setScale({ glm::linearRand(0.01f,0.8f), glm::linearRand(0.01f,0.8f), 1.0f });
-		//b[i].setPosition({ glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f });
 		b[i].getMaterial()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
 	}
 	RandomPos(b,howManyObjs);
 
+	a.addChild(&b[0]);
+	printf("Parent-> %s \n", b[0].getParent()->getName());
 	// ----------------------------------------------------------------
 
 	float timerForInput = 0.0f;
@@ -53,27 +52,29 @@ int main() {
 		w.Clear();
 
 		timerForInput += w.DeltaTime();
-		if (timerForInput >= 0.03f) {
-			printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
-			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({ -6.0f * w.DeltaTime() }); }
-			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 6.0f * w.DeltaTime() }); }
-			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 10.0f * w.DeltaTime(),0.0f }); }
-			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -10.0f * w.DeltaTime(),0.0f }); }
+		if (timerForInput >= 1.0f/20) {
+			//printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
+			printf("Input\n");
+			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({ -10.0f * w.DeltaTime() }); }
+			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 10.0f * w.DeltaTime() }); }
+			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 20.0f * w.DeltaTime(),0.0f }); }
+			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -20.0f * w.DeltaTime(),0.0f }); }
 			timerForInput = 0.0f;
 		}
 
 		// ----------------------------------------------------------------
-		printf("Normal FPS: %d\n", (int)w.FPS(w.DeltaTime()));
+		//printf("Normal FPS: %d\n", (int)w.FPS(w.DeltaTime()));
 
 		for (int i = 0; i < howManyObjs; i++){
 			b[i].draw();
 		}
 
 		a.draw();
+		//printf("NumChilds: %d \n", a.getChildCount());
 		
 		timerForSomething += w.DeltaTime();
-		if (timerForSomething >= 0.07f) {
-			printf("Other FPS: %d \n", (int)w.FPS(timerForSomething));
+		if (timerForSomething >= 1.0f/10) {
+			printf("AI\n");
 			timerForSomething = 0.0f;
 		}
 
@@ -82,10 +83,6 @@ int main() {
 			RandomPos(b,howManyObjs);
 		}
 		w.endImGuiWindow();
-
-		/*w.initImGuiWindow("Ventana UWU");
-		w.textImGui("Adios");
-		w.endImGuiWindow();*/
 		// ----------------------------------------------------------------
 
 		w.Render();	
