@@ -37,7 +37,11 @@ namespace ST {
 		// ------ Inputs ------
 		bool isDown(ST_INPUT input);
 		bool isPressed(ST_INPUT input);
-		bool isUp(ST_INPUT input);
+		//bool isReleased(ST_INPUT input);
+		//bool isUp(ST_INPUT input);
+		bool isDown(const char key);
+		bool isPressed(const char key);
+		//bool isUp(const char key);
 				
 		// Mouse
 		double mousePosX();

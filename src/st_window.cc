@@ -200,7 +200,7 @@ bool ST::Window::isPressed(ST_INPUT input){
         }
         break;
     }
-    
+    lastKeyPressed = -1;
     return false;
 }
 
@@ -269,7 +269,7 @@ bool ST::Window::isDown(ST_INPUT input) {
     return false;
 }
 
-bool ST::Window::isUp(ST_INPUT input){
+/*bool ST::Window::isUp(ST_INPUT input) {
     switch (input) {
     case ST::ST_INPUT_UP:
         if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_RELEASE) {
@@ -355,6 +355,39 @@ bool ST::Window::isUp(ST_INPUT input){
 
     return false;
 }
+*/
+
+bool ST::Window::isDown(const char key){
+    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
+        lastKeyPressed = key;
+        return true;
+    }
+    else {
+        lastKeyPressed = -1;
+    }
+}
+
+bool ST::Window::isPressed(const char key){
+    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
+        if (lastKeyPressed != key) {
+            lastKeyPressed = key;
+            return true;
+        }
+        return false;
+    }
+     
+    return false;
+}
+
+//bool ST::Window::isUp(const char key){
+//    if (glfwGetKey(glWindow, key) == GLFW_RELEASE) {
+//        if (lastKeyPressed == key) {
+//            lastKeyPressed = -1;
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 double ST::Window::mousePosX(){
     glfwGetCursorPos(glWindow, &mouseX, &mouseY);

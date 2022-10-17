@@ -55,7 +55,7 @@ int main() {
 		if (timerForInput >= 1.0f/20) {
 			//printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
 			printf("Input\n");
-			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({ -10.0f * w.DeltaTime() }); }
+			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({-10.0f * w.DeltaTime()}); }
 			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 10.0f * w.DeltaTime() }); }
 			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 20.0f * w.DeltaTime(),0.0f }); }
 			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -20.0f * w.DeltaTime(),0.0f }); }
@@ -71,6 +71,10 @@ int main() {
 
 		a.draw();
 		//printf("NumChilds: %d \n", a.getChildCount());
+		if (w.isPressed('P')) {
+			printf("Parent-> %s \n", b[0].getParent()->getName());
+			printf("NumChilds: %d \n", a.getChildCount());
+		}
 		
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {
