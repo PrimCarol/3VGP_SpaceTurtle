@@ -8,11 +8,19 @@
 #include <st_drawobj.h>
 #include <st_node.h>
 
+void RandomPos(ST::DrawObj obj[], int size) {
+	for (int i = 0; i < size; i++){
+		obj[i].setPosition({glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f});
+		obj[i].setScale({ glm::linearRand(0.01f,0.3f), glm::linearRand(0.01f,0.3f), 1.0f });
+	}
+}
 
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f);
 
+	// ----------------------------------------------------------------
+	srand(time(0));
 
 	ST::DrawObj a;
 	ST::Triangle geometry;
@@ -30,10 +38,13 @@ int main() {
 		case 0: b[i].setMesh(&circle); break;
 		case 1: b[i].setMesh(&quad); break;
 		}
-		b[i].setScale({ 0.1f, 0.1f, 0.1f });
-		b[i].setPosition({ glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f });
+		//b[i].setScale({ glm::linearRand(0.01f,0.8f), glm::linearRand(0.01f,0.8f), 1.0f });
+		//b[i].setPosition({ glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f });
 		b[i].getMaterial()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
 	}
+	RandomPos(b,howManyObjs);
+
+	// ----------------------------------------------------------------
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
@@ -51,8 +62,8 @@ int main() {
 			timerForInput = 0.0f;
 		}
 
+		// ----------------------------------------------------------------
 		printf("Normal FPS: %d\n", (int)w.FPS(w.DeltaTime()));
-
 
 		for (int i = 0; i < howManyObjs; i++){
 			b[i].draw();
@@ -66,13 +77,16 @@ int main() {
 			timerForSomething = 0.0f;
 		}
 
-		/*w.initImGuiWindow("Ventana Guay");
-		w.textImGui("Holita");
+		w.initImGuiWindow("Ventana Guay");
+		if (w.buttonImGui("ReGenerate")) {
+			RandomPos(b,howManyObjs);
+		}
 		w.endImGuiWindow();
 
-		w.initImGuiWindow("Ventana UWU");
+		/*w.initImGuiWindow("Ventana UWU");
 		w.textImGui("Adios");
 		w.endImGuiWindow();*/
+		// ----------------------------------------------------------------
 
 		w.Render();	
 

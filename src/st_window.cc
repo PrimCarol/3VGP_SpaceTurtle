@@ -98,6 +98,10 @@ void ST::Window::textImGui(const char* t){
     ImGui::Text(t);
 }
 
+bool ST::Window::buttonImGui(const char* t) {
+    return ImGui::Button(t);
+}
+
 void ST::Window::endImGuiWindow(){
     ImGui::End();
 }
