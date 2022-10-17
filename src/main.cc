@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <random.hpp>
 
-//#include <st_engine.h>
 #include <st_window.h>
 
 #include <st_drawobj.h>
 #include <st_node.h>
+
 
 int main() {
 	ST::Window w;
@@ -14,16 +15,25 @@ int main() {
 
 
 	ST::DrawObj a;
-	ST::Circle geometry;
+	ST::Triangle geometry;
 	a.setMesh(&geometry);
-	a.Scale({0.1f, 0.1f, 0.1f});
-	//ST::Program basicProgram;
-	//a.setMaterial(basicProgram);
+	a.setScale({ 0.1f, 0.1f, 0.1f });
+	a.getMaterial()->setColor({1.0f, 0.7f, 0.9f});
 
-	ST::DrawObj b;
-	ST::Circle geometry_2;
-	b.setMesh(&geometry_2);
-	b.Scale({ 0.1f, 0.1f, 0.1f });
+	const int howManyObjs = 100;
+	ST::DrawObj b[howManyObjs];
+	ST::Circle circle;
+	ST::Quad quad;
+	for (int i = 0; i < howManyObjs; i++){
+		int geometry = glm::linearRand(0,1);
+		switch (geometry){
+		case 0: b[i].setMesh(&circle); break;
+		case 1: b[i].setMesh(&quad); break;
+		}
+		b[i].setScale({ 0.1f, 0.1f, 0.1f });
+		b[i].setPosition({ glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f });
+		b[i].getMaterial()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
+	}
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
@@ -34,22 +44,21 @@ int main() {
 		timerForInput += w.DeltaTime();
 		if (timerForInput >= 0.03f) {
 			printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
-			//if (w.isDown(ST::ST_INPUT_RIGHT)) { tri.RotateZ({ -6.0f * w.DeltaTime()}); }
-			//if (w.isDown(ST::ST_INPUT_LEFT)) { tri.RotateZ({ 6.0f * w.DeltaTime()}); }
-			//if (w.isDown(ST::ST_INPUT_UP)) { tri.Move({ 0.0f, 10.0f * w.DeltaTime(),0.0f }); }
-			//if (w.isDown(ST::ST_INPUT_DOWN)) { tri.Move({ 0.0f, -10.0f * w.DeltaTime(),0.0f }); }
 			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({ -6.0f * w.DeltaTime() }); }
 			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 6.0f * w.DeltaTime() }); }
 			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 10.0f * w.DeltaTime(),0.0f }); }
 			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -10.0f * w.DeltaTime(),0.0f }); }
-			//printf("Position -> X: %f - Y: %f - Z: %f\n", a.getPosition().x, a.getPosition().y, a.getPosition().z);
 			timerForInput = 0.0f;
 		}
 
 		printf("Normal FPS: %d\n", (int)w.FPS(w.DeltaTime()));
 
+
+		for (int i = 0; i < howManyObjs; i++){
+			b[i].draw();
+		}
+
 		a.draw();
-		b.draw();
 		
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 0.07f) {
@@ -65,10 +74,7 @@ int main() {
 		w.textImGui("Adios");
 		w.endImGuiWindow();*/
 
-		w.Render();
-
-		
-		
+		w.Render();	
 
 	}
 

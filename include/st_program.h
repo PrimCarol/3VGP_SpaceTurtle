@@ -17,7 +17,7 @@ namespace ST {
 		void use() const;
 
 		int getAttrib(const char* location) const;
-		int getUniform(const char* location) const;
+		GLuint getUniform(const char* location) const;
 
 		~Program();
 		Program(const Program& o);

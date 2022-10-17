@@ -1,4 +1,5 @@
 #include "st_shader.h"
+#include <assert.h>
 
 GLenum ShaderTypeToEnum(ST::ShaderType t) {
 	switch (t){
@@ -22,7 +23,8 @@ bool ST::Shader::loadSource(const char* shaderText){
 		glShaderSource(internalID, 1, &shaderText, 0);
 		glCompileShader(internalID);
 	}
-	if (glGetError() != GL_NO_ERROR) { return false; }
+	//if (glGetError() != GL_NO_ERROR) { return false; }
+	assert(glGetError() == GL_NO_ERROR);
 	return true;
 }
 

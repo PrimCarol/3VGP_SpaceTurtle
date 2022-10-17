@@ -10,10 +10,12 @@ namespace ST {
 	public:
 	
 		void Move(glm::vec3 newPos);
-		void Scale(glm::vec3 newScale);
 		void RotateX(float r);
 		void RotateY(float r);
 		void RotateZ(float r);
+
+		void setPosition(const glm::vec3 pos);
+		void setScale(const glm::vec3 newScale);
 
 		glm::vec3 getPosition();
 		glm::vec3 getScale();

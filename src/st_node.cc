@@ -4,8 +4,8 @@ ST::Node::Node(){
 	
 	m_transform = glm::mat4(1);
 
-	Move({ 0.0f,0.0f,0.0f });
-	Scale({ 1.0f,1.0f,1.0f });
+	setPosition({ 0.0f,0.0f,0.0f });
+	setScale({ 1.0f,1.0f,1.0f });
 }
 
 // ------------------------- Transforms -------------------------
@@ -13,9 +13,6 @@ void ST::Node::Move(glm::vec3 newPos) {
 	m_transform = glm::translate(m_transform, newPos);
 }
 
-void ST::Node::Scale(glm::vec3 newScale) {
-	m_transform = glm::scale(m_transform, newScale);
-}
 
 void ST::Node::RotateX(float r) {
 	m_transform = glm::rotate(m_transform, r, { 1.0f,0.0f,0.0f });
@@ -25,6 +22,19 @@ void ST::Node::RotateY(float r) {
 }
 void ST::Node::RotateZ(float r) {
 	m_transform = glm::rotate(m_transform, r, { 0.0f,0.0f,1.0f });
+}
+
+// ------------------------- Setters -------------------------
+void ST::Node::setPosition(const glm::vec3 pos){
+	m_transform[3][0] = pos.x;
+	m_transform[3][1] = pos.y;
+	m_transform[3][2] = pos.z;
+}
+void ST::Node::setScale(const glm::vec3 newScale) {
+	//m_transform = glm::scale(m_transform, newScale);
+	m_transform[0][0] = newScale.x;
+	m_transform[1][1] = newScale.y;
+	m_transform[2][2] = newScale.z;
 }
 
 // ------------------------- Getters -------------------------

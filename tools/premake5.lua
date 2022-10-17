@@ -43,6 +43,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             --Math Library
             "../deps/glm",
             "../deps/glm/gtx",
+            "../deps/glm/gtc",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",

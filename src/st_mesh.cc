@@ -27,7 +27,7 @@ ST::Triangle::Triangle() {
 	VertexInfo vertices[] = {
 		 0.0f, 0.5f,0.0f,
 		 0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f,
+		-0.5f,-0.5f,0.0f
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -112,13 +112,9 @@ ST::Circle::Circle() {
 		float x, y, z;
 	};
 
-	const int rebolutions = 11;
+	const int rebolutions = 10 + 1;
 
 	VertexInfo vertices[rebolutions];
-
-	
-	//VertexInfo* points = (VertexInfo*)malloc(sizeof(VertexInfo) * rebolutions);
-	//if (points == NULL) { return NULL; }
 
 	float angle = (3.1415926535f * 2.0f) / rebolutions;
 

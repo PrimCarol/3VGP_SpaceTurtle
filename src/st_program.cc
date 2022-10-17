@@ -1,4 +1,5 @@
 #include "st_program.h"
+#include <assert.h>
 
 ST::Program::Program(){
 	gladLoadGL();
@@ -11,12 +12,14 @@ GLuint ST::Program::getID() const{
 
 void ST::Program::attach(Shader &s){
 	glAttachShader(internalID, s.getID());
+	assert(glGetError() == GL_NO_ERROR);
 }
 
 bool ST::Program::link(){
 	glLinkProgram(internalID);
-	if (glGetError() != GL_NO_ERROR) { return true; }
-	return false;
+	assert(glGetError() == GL_NO_ERROR);
+	if (glGetError() != GL_NO_ERROR) { return false; }
+	return true;
 }
 
 void ST::Program::use() const{
@@ -27,10 +30,14 @@ int ST::Program::getAttrib(const char* location) const{
 	return glGetAttribLocation(internalID, location);
 }
 
-int ST::Program::getUniform(const char* location) const{
+GLuint ST::Program::getUniform(const char* location) const{
 	return glGetUniformLocation(internalID, location);
 }
 
 ST::Program::~Program(){
 	glDeleteProgram(internalID);
+}
+
+ST::Program::Program(const Program& o){
+	internalID = o.internalID;
 }

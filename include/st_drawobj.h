@@ -3,7 +3,7 @@
 
 #include <st_node.h>
 
-#include <st_program.h>
+#include <st_material.h>
 #include <st_mesh.h>
 
 namespace ST {
@@ -14,14 +14,15 @@ namespace ST {
 
 		void draw();
 		void setMesh(ST::Mesh *m);
-		void setMaterial(ST::Program *p);
+		void setMaterial(ST::Material *m);
+		ST::Material* getMaterial();
 
 		~DrawObj();
 
 	private:
 		DrawObj(const DrawObj& o);
 
-		ST::Program* program;
+		ST::Material* material;
 		ST::Mesh* mesh;
 	};
 }

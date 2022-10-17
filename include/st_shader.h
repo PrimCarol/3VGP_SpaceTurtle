@@ -10,11 +10,13 @@ namespace ST {
 		E_FRAGMENT_SHADER
 	};
 
+	/*
 	static GLchar* basic_vShader_text =
 		"#version 330\n"
 		"layout (location=0) in vec3 a_position;\n"
 		"layout (location=1) in vec3 a_color;\n"
 		"uniform mat4 u_m_trans;\n"
+		"uniform vec3 u_color;\n"
 		"out vec3 color;\n"
 		"void main() {\n"
 		"color = a_color;\n"
@@ -27,6 +29,7 @@ namespace ST {
 		"void main() {\n"
 		"FragColor = vec4(color, 1.0);\n"
 		"}\n";
+	*/
 
 	class Shader{
 	public:
