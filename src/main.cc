@@ -22,13 +22,18 @@ int main() {
 
 	ST::DrawObj a;
 	ST::Triangle geometry;
+	//ST::Material mat;
+	//ST::Material::Settings settings;
 	a.setMesh(&geometry);
+	//a.setMaterial(&mat);
+	//a.getMaterial()->setSettings(&settings);
 	a.setScale({ 0.1f, 0.1f, 0.1f });
-	a.getMaterial()->setColor({1.0f, 0.7f, 0.9f});
+	//a.getMaterial()->getSettings()->setColor({1.0f, 0.7f, 0.9f});
 	a.setName("A");
 
-	const int howManyObjs = 500;
+	const int howManyObjs = 200;
 	ST::DrawObj b[howManyObjs];
+	//ST::Material::Settings settings_b[howManyObjs];
 	ST::Circle circle;
 	ST::Quad quad;
 	for (int i = 0; i < howManyObjs; i++){
@@ -37,7 +42,11 @@ int main() {
 		case 0: b[i].setMesh(&circle); break;
 		case 1: b[i].setMesh(&quad); break;
 		}
-		b[i].getMaterial()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
+		
+		//b[i].setMaterial(&mat);
+		//b[i].getMaterial()->setSettings(&settings_b[i]);
+		//b[i].getMaterial()->getSettings()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
+		b[i].getMaterial()->setColor({glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f)});
 	}
 	RandomPos(b,howManyObjs);
 

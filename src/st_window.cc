@@ -362,9 +362,6 @@ bool ST::Window::isDown(const char key){
         lastKeyPressed = key;
         return true;
     }
-    else {
-        lastKeyPressed = -1;
-    }
 }
 
 bool ST::Window::isPressed(const char key){

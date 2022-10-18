@@ -4,7 +4,7 @@ ST::DrawObj::DrawObj() {
 	
 	setName("DrawObject");
 	
-	material = new ST::Material();
+	material = new Material();
 	mesh = NULL;
 }
 
@@ -15,6 +15,7 @@ void ST::DrawObj::draw(){
 		glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &m_transform_[0][0]);
 		
 		GLuint u_color = material->getProgram()->getUniform("u_color");;
+		//glm::vec3 c = material->getSettings()->getColor();
 		glm::vec3 c = material->getColor();
 		glUniform3fv(u_color, 1, &c[0]);
 	}

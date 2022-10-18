@@ -2,6 +2,7 @@
 #include <math.h>
 
 ST::Mesh::Mesh(){
+	gladLoadGL();
 	internalId = 0;
 }
 
@@ -19,7 +20,8 @@ void ST::Mesh::render(){}
 
 
 // ----------------- Triangle ------------------
-ST::Triangle::Triangle() {
+ST::Triangle::Triangle() : Mesh() {
+	
 	struct VertexInfo {
 		float x, y, z;
 	};
@@ -62,7 +64,7 @@ void ST::Triangle::render(){
 ST::Triangle::~Triangle() {}
 
 // ----------------- Quad ------------------
-ST::Quad::Quad() {
+ST::Quad::Quad() : Mesh() {
 	struct VertexInfo {
 		float x, y, z;
 	};
@@ -107,7 +109,7 @@ void ST::Quad::render() {
 ST::Quad::~Quad() {}
 
 // ----------------- Circle ------------------
-ST::Circle::Circle() {
+ST::Circle::Circle() : Mesh() {
 	struct VertexInfo {
 		float x, y, z;
 	};
