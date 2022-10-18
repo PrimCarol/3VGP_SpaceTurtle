@@ -134,3 +134,87 @@ int main{
 
 
 */
+
+
+
+
+
+/*
+class Component {
+	//void enable();
+	//void disable();
+	//bool isEnabled();
+};
+
+// Entity component system
+
+// Entity tiene referencia a las listas de los componentes ??
+
+// Shaders fuera de todo. <<<<-------------
+
+class Entity{
+public:
+	Entity(std::initializer_list<Component>); 
+	int getId() const;
+
+	Entity& getParent();
+	std::vector<Entity&> getChildrens();
+
+	//addComponent(Component&&);
+	//std::optional<Component> getComponent() const;
+
+
+	~Entity();
+private:
+	int id;
+};
+
+class RenderComponent : public Component{
+
+};
+
+class TransformComponent : public Component {
+
+};
+
+class MaterialComponet : public Component {
+
+};
+
+// Crear un manager.
+
+class EntityManager{
+public:
+	//EntityManager();
+	//Se le puede pasar todos los componentes que se quieran
+		template<typename... Patata>
+	Entity& createEntity(Patata... patata);
+	Entity &root();
+	//~EntityManager();
+private:
+	std::vector<RenderComponent> renders;
+	std::vector<TransformComponent> transforms;
+	std::vector<MaterialComponet> materials;
+};
+
+template<typename... Patata>
+Entity& EntityManager::createEntity(Patata... patata) {
+	static_assert(true && ... && std::is_base_of<Component,Patata>::value); // En tiempo de compilacion    // SFINAE
+	Entity e{ std::fordware<Patata>(patata)... };
+}
+
+void main() {
+	EntityManager em;
+
+	auto entity = em.createEntity(MaterialComponet{}, RenderComponent{});
+
+	auto& tri_mat = triangle.GetComponent<TriangleMaterialComponent>();
+	tri_mat.apply(program); // el program pide las variables que necesita, el material vera si se las puede dar.
+	if(tri_mat.apply(program)){} // Para comprobar si el material le puede dar todos los valores que necesita el program.
+
+	//program.apply(tri_mat); esta no; Seria como que el material se apunta para que este shader lo renderice.
+	//program.renderList();
+
+	triangle.render();
+}
+*/
