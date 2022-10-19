@@ -31,7 +31,7 @@ int main() {
 	//a.getMaterial()->getSettings()->setColor({1.0f, 0.7f, 0.9f});
 	a.setName("A");
 
-	const int howManyObjs = 200;
+	const int howManyObjs = 500;
 	ST::DrawObj b[howManyObjs];
 	//ST::Material::Settings settings_b[howManyObjs];
 	ST::Circle circle;
@@ -61,11 +61,11 @@ int main() {
 		w.Clear();
 
 		timerForInput += w.DeltaTime();
-		if (timerForInput >= 1.0f/20) {
+		if (timerForInput >= 1.0f/60) {
 			//printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
 			printf("Input\n");
-			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({-10.0f * w.DeltaTime()}); }
-			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 10.0f * w.DeltaTime() }); }
+			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({-8.0f * w.DeltaTime()}); }
+			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 8.0f * w.DeltaTime() }); }
 			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 20.0f * w.DeltaTime(),0.0f }); }
 			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -20.0f * w.DeltaTime(),0.0f }); }
 			timerForInput = 0.0f;
@@ -217,4 +217,52 @@ void main() {
 
 	triangle.render();
 }
+*/
+
+/*
+ // ----------------- Apuntes punteros ------------------
+// Tener en cuenta, lectura o escritura, owner, tiempo de vida...
+class A
+{
+public:
+	void A1(int); // Hace una copia. No modifica al original
+	void A2(int*); // No crea una copia.  Es el original, podiendo modificarlo. Normalmente usado como salida.
+	void A3(int&); // No puede ser null. Salidas.
+	void A3_1(int&&); // Solo puede recibir objetos temporales, y se lo puede quedar. Se llama MUR. Mas eficiente que una copia. Se mueve.
+	void A4(const int*); // No es una copia. Te asegura que no la cambiara. Normalmente usado como entrada
+	void A5(const int&); // 
+	void A6(std::unique_ptr<int>); // No pueden existir 2 referencias de ese puntero. Tienes que hacer std::move(). Se mueve. Mejor este que el share.
+	
+	//A a;
+	//auto myint = std::make_unique<int>()
+	//auto myint_2 = std::move(myint);
+	//a.A6(std::move(myint));
+	
+	void A7(std::shared_ptr<int>); // Crea una copia, crea un conteo de referencias. Mientras haya una copia activa, no se destruye. Hace que sea mas lento.
+	void A8(std::weak_ptr<int>); // Parecido al shared pointer, pero no augmenta el contador. Dar acceso, pero no dar propiedad.
+	
+	//std::weak_ptr<int> R8(void);
+	//auto weak_return = a.R8();
+	//auto strong_return = weak_return.lock();
+	
+
+	//compile_shader(const std::string&)
+	class Program
+	{
+	public:
+		void add_shader(Shader&&);
+
+		
+		//Shader s;
+		//program.add_shader(std::move(s));
+		
+	};
+
+
+};
+
+std::optional<float> divide_2_numeros(float, float);
+auto res = divide_2_numeros(3.0f,0.0f);
+
+// Puede ser null. puedes tener mas cuidado.
 */
