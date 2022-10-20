@@ -6,4 +6,5 @@
 <h2>Implemented things</h2>
   · GLFW (https://github.com/glfw/glfw)<br>
   · ImGui (https://github.com/ocornut/imgui)<br>
+  · MiniAudio (https://github.com/mackron/miniaudio)<br>
 </p>
