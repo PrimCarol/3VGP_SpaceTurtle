@@ -23,39 +23,40 @@ namespace ST {
 		/* Constructor with witdh and height */
 		Window(int width, int height);
 
-		//GLFWwindow* GetWindow();
-
-		void Focus();
+		// ------ Basics ------
+		void Focus() const;
 		void Render();
-		//void Draw(Triangle t);
-		
+		void Clear() const;
+
+		// ------ ImGui ------
+		void initImGuiWindow(const char* t);
+		void textImGui(const char* t);
+		bool buttonImGui(const char* t);
+		void endImGuiWindow();
+
 		// ------ Inputs ------
-		//bool isInputDown(ST_INPUT input);
+		bool isDown(ST_INPUT input);
 		bool isPressed(ST_INPUT input);
-		//bool isInputReless(ST_INPUT input);
-		
-		// Keyboard
-		bool isKeyDown(int keyboard);
-		bool isKeyPressed(int keyboard);
-		bool isKeyReless(int keyboard);
-		
+		//bool isReleased(ST_INPUT input);
+		//bool isUp(ST_INPUT input);
+		bool isDown(const char key);
+		bool isPressed(const char key);
+		//bool isUp(const char key);
+				
 		// Mouse
 		double mousePosX();
 		double mousePosY();
-		bool isMouseDown(int button);
-		bool isMousePressed(int button);
-		bool isMouseReless(int button);
 
 		/* Return if window is opened */
-		bool isOpen();
+		bool isOpen() const;
 
 		/* Change the Background Color */
 		void ColorBg(float c[4]);
 		void ColorBg(float r, float g, float b, float a = 0);
 
-		/* Delta Time */
-		float DeltaTime();
-		double FPS();
+		// ------ Delta Time ------
+		float DeltaTime() const;
+		double FPS(const float time) const;
 
 		~Window();
 

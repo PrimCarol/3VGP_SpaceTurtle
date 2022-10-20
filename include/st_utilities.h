@@ -21,7 +21,6 @@ namespace ST {
         }
         return file_contents;
     }
-
 }
 
 #endif

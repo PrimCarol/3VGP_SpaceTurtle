@@ -12,8 +12,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
     configurations { "Debug", "Release" }
     platforms      { "x64" }
 
-    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp"
-    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp"
+
+    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp" debugdir(ROOT.."/bin")
+    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp" debugdir(ROOT.."/bin")
     
     filter { "platforms:*64" } architecture "x64"
 
@@ -40,10 +41,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include",
 
             --Math Library
-            --"../deps/SrPrmMath/include",
             "../deps/glm",
             "../deps/glm/gtx",
-            --"../deps/glm/gtc",
+            "../deps/glm/gtc",
             
             --GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
@@ -52,28 +52,50 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/OpenGL",
 
             --ImGui
-            --path.join(ROOT, "./deps/imgui-docking"),
-            --path.join(ROOT, "./deps/imgui-docking/backends")
-            --"../deps/imgui-docking",
-            --"../deps/imgui-docking/backends"
+            "../deps/imgui-docking",
+            "../deps/imgui-docking/backends",
+
+            -- MiniAudio
+            "../deps/MiniAudio",
         }
 
         -- Los ficheros a incluir en la solucion
         files {
-            --path.join(ROOT, "./include/*.h"),
-            --path.join(ROOT, "./src/*.cc")
             "../include/*.h",
             "../src/*.cc",
 
-            --"../deps/SrPrmMath/src/*.cc",
+            -- Includes a mano.
+            --"../include/st_engine.h",
+            --"../include/st_node.h",
+            --"../include/st_emptyobj.h",
+            --"../include/st_drawobj.h",
+            --"../include/st_window.h",
+            --"../include/st_program.h",
+            --"../include/st_shader.h",
+            --"../include/st_mesh.h",
+
+
+            --"../src/st_node.cc",
+            --"../src/st_emptyobj.cc",
+            --"../src/st_drawobj.cc",
+            --"../src/st_window.cc",
+            --"../src/st_program.cc",
+            --"../src/st_shader.cc",
+            --"../src/st_mesh.cc",
+            --"../src/main.cc",
+
+
+
+            "../deps/imgui-docking/*.cpp",
+            "../deps/imgui-docking/backends/imgui_impl_glfw.cpp",
+            "../deps/imgui-docking/backends/imgui_impl_opengl3.cpp",
 
             "../deps/OpenGL/glad.c",
         }  
 
         -- Donde estan las librerias
         libdirs {
-            --path.join(ROOT, "./deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion)
-            "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion
+            "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion,
         }
 
         -- Librerias standard y .lib
