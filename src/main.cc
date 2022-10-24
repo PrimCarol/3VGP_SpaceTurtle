@@ -265,4 +265,5 @@ std::optional<float> divide_2_numeros(float, float);
 auto res = divide_2_numeros(3.0f,0.0f);
 
 // Puede ser null. puedes tener mas cuidado.
+
 */
