@@ -3,15 +3,16 @@
 
 namespace ST {
 
-	class Component{
-	protected:
-		Component();
-		~Component();
+	class Components{
+	public:
+		Components();
+		~Components();
+
 	private:
-		Component(const Component& o);
+		//Components(const Components& o);
 	};
 
-	class MaterialComponent : public Component{
+	class MaterialComponent : public Components{
 	public:
 		MaterialComponent();
 		~MaterialComponent();
@@ -19,7 +20,7 @@ namespace ST {
 		MaterialComponent(const MaterialComponent& o);
 	};
 
-	class TransformComponent : public Component {
+	class TransformComponent : public Components {
 	public:
 		TransformComponent();
 		~TransformComponent();
@@ -27,7 +28,7 @@ namespace ST {
 		TransformComponent(const TransformComponent& o);
 	};
 
-	class MeshComponent : public Component {
+	class MeshComponent : public Components {
 	public:
 		MeshComponent();
 		~MeshComponent();
