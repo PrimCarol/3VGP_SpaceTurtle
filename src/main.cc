@@ -4,7 +4,8 @@
 #include <random.hpp>
 
 #include <st_window.h>
-#include <st_gameobj.h>
+//#include <st_gameobj.h>
+#include <st_gameobj_manager.h>
 
 int main() {
 	ST::Window w;
@@ -12,15 +13,39 @@ int main() {
 
 	srand(time(0));
 	// ----------------------------------------------------------------
-	ST::GameObj obj1;
-	ST::TransformComponent trans;
-	obj1.addComponent(&trans);
-	ST::MeshComponent mesh;
-	obj1.addComponent(&mesh);
-
-	printf("OBJ1 Components -> %d \n", obj1.numComponents());
+	//ST::GameObj obj1;
+	//ST::TransformComponent trans;
+	//obj1.addComponent(&trans);
+	//ST::MeshComponent mesh;
+	//obj1.addComponent(&mesh);
+	//
+	//printf("Obj1 Components -> %d \n", obj1.numComponents());
 
 	//auto a = obj1.getComponent<ST::TransformComponent>();
+
+	ST::GameObj_Manager gm;
+	std::vector<ST::ComponentId> c;
+	c.push_back(gm.createMeshComponent());
+	c.push_back(gm.createMaterialComponent());
+
+	if (gm.createGameObj(c)) {
+		printf("Obj Creado\n");
+		printf("Tiene los Componentes de: \n");
+		for (int i = 0; i < c.size(); i++){
+			
+			switch (c[i].type){
+			case ST::kComp_Trans:
+				printf("Transform\n");
+				break;
+			case ST::kComp_Mesh:
+				printf("Mesh\n");
+				break;
+			case ST::kComp_Material:
+				printf("Material\n");
+				break;
+			}
+		}
+	}
 
 	// --------------------------
 

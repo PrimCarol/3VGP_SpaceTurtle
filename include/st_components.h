@@ -7,7 +7,6 @@ namespace ST {
 	public:
 		Components();
 		~Components();
-
 	private:
 		//Components(const Components& o);
 	};
@@ -17,7 +16,7 @@ namespace ST {
 		MaterialComponent();
 		~MaterialComponent();
 	private:
-		MaterialComponent(const MaterialComponent& o);
+		//MaterialComponent(const MaterialComponent& o);
 	};
 
 	class TransformComponent : public Components {
@@ -25,7 +24,7 @@ namespace ST {
 		TransformComponent();
 		~TransformComponent();
 	private:
-		TransformComponent(const TransformComponent& o);
+		//TransformComponent(const TransformComponent& o);
 	};
 
 	class MeshComponent : public Components {
@@ -33,7 +32,7 @@ namespace ST {
 		MeshComponent();
 		~MeshComponent();
 	private:
-		MeshComponent(const MeshComponent& o);
+		//MeshComponent(const MeshComponent& o);
 	};
 }
 
