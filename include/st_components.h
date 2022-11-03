@@ -3,6 +3,25 @@
 
 namespace ST {
 
+	// --------------------------- Struct Comps ID ----------------------------
+	enum CompType {
+		kComp_None,
+		kComp_Trans,
+		kComp_Mesh,
+		kComp_Material,
+	};
+
+	struct ComponentId {
+		size_t value = 0;
+		CompType type = ST::kComp_None;
+	};
+
+	struct TransformComponentId : ComponentId {	};
+	struct MeshComponentId : ComponentId {};
+	struct MaterialComponentId : ComponentId {};
+
+	// --------------------------- Usability ----------------------------
+
 	class Components{
 	public:
 		Components();

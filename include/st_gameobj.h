@@ -13,11 +13,14 @@ namespace ST {
 
 		//void addComponent(const ST::Components* c);
 		//int numComponents() const;
+		//ST::Components getComponent(ST::CompType t);
+
+		void checkComponents();
 
 		~GameObj();
-	private:
+	//private:
 		GameObj(const GameObj& o);
-		std::vector<ST::Components> components;
+		std::vector<ST::ComponentId> components;
 	};
 }
 

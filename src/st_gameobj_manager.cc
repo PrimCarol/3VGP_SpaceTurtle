@@ -9,9 +9,24 @@
 //}
 
 ST::GameObj_Manager::GameObj_Manager(){
-	transformComponentList_.reserve(10);
-	meshComponentList_.reserve(10);
-	materialComponentList_.reserve(10);
+
+	// ******************** Duda *********************
+	// Mejor manera de pre reservar la memoria para los componentes??
+
+	//transformComponentList_.reserve(10);
+	//meshComponentList_.reserve(10);
+	//materialComponentList_.reserve(10);
+
+	for (size_t i = 0; i < 10; i++){
+		transformComponentList_.push_back(&ST::TransformComponent());
+	}
+	for (size_t i = 0; i < 10; i++) {
+		meshComponentList_.push_back(&ST::MeshComponent());
+	}
+	for (size_t i = 0; i < 10; i++) {
+		materialComponentList_.push_back(&ST::MaterialComponent());
+	}
+	// ******************** Duda *********************
 
 	TransCompIndex_ = 0;
 	MeshCompIndex_ = 0;
@@ -57,28 +72,30 @@ ST::ComponentId ST::GameObj_Manager::createMaterialComponent() {
 	return result;
 }
 
-bool ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
+ST::GameObj* ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
 
 	// do something ??
+	ST::GameObj* go = new ST::GameObj();
+	go->components = c;
 
-	return true;
+	return go;
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 
 ST::TransformComponent* ST::GameObj_Manager::getTransformComponent(size_t id){
 	if (id == -1) { return NULL; }
-	return &transformComponentList_.at(id);
+	return transformComponentList_.at(id);
 }
 
 ST::MeshComponent* ST::GameObj_Manager::getMeshComponent(size_t id){
 	if (id == -1) { return NULL; }
-	return &meshComponentList_.at(id);
+	return meshComponentList_.at(id);
 }
 
 ST::MaterialComponent* ST::GameObj_Manager::getMaterialComponent(size_t id){
 	if (id == -1) { return NULL; }
-	return &materialComponentList_.at(id);
+	return materialComponentList_.at(id);
 }
 
 ST::GameObj_Manager::~GameObj_Manager(){}
