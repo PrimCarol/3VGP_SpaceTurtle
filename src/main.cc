@@ -23,26 +23,27 @@ int main() {
 
 	//auto a = obj1.getComponent<ST::TransformComponent>();
 
-	ST::GameObj_Manager gm;
+	//ST::GameObj_Manager::instance();
 	
 	printf("---------------------------\n");
 
 	std::vector<ST::ComponentId> c1;
-	c1.push_back(gm.createMeshComponent());
-	c1.push_back(gm.createMaterialComponent());
+	c1.push_back(ST::GameObj_Manager::instance().createTransformComponent());
+	//c1.push_back(gm.createMeshComponent());
+	//c1.push_back(gm.createMaterialComponent());
 
-	ST::GameObj* obj1 = gm.createGameObj(c1);
+	ST::GameObj* obj1 = ST::GameObj_Manager::instance().createGameObj(c1);
 	if (obj1) {
-		printf("** Obj Creado **\n");
 		obj1->checkComponents();
 	}
 
 	std::vector<ST::ComponentId> c2;
-	c2.push_back(gm.createTransformComponent());
+	c2.push_back(ST::GameObj_Manager::instance().createTransformComponent());
+	//c2.push_back(gm.createMeshComponent());
+	//c2.push_back(gm.createMaterialComponent());
 
-	ST::GameObj* obj2 = gm.createGameObj(c2);
+	ST::GameObj* obj2 = ST::GameObj_Manager::instance().createGameObj(c2);
 	if (obj2) {
-		printf("** Obj Creado **\n");
 		obj2->checkComponents();
 	}
 

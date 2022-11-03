@@ -8,7 +8,13 @@
 //	return e;
 //}
 
+#define MAX_TRANSFORM_COMPONENTS 5
+#define MAX_MESH_COMPONENTS 5
+#define MAX_MATERIAL_COMPONENTS 5
+
 ST::GameObj_Manager::GameObj_Manager(){
+
+	printf("***** GameObj Manager Created *****\n");
 
 	// ******************** Duda *********************
 	// Mejor manera de pre reservar la memoria para los componentes??
@@ -17,13 +23,13 @@ ST::GameObj_Manager::GameObj_Manager(){
 	//meshComponentList_.reserve(10);
 	//materialComponentList_.reserve(10);
 
-	for (size_t i = 0; i < 10; i++){
+	for (size_t i = 0; i < MAX_TRANSFORM_COMPONENTS; i++){
 		transformComponentList_.push_back(&ST::TransformComponent());
 	}
-	for (size_t i = 0; i < 10; i++) {
+	for (size_t i = 0; i < MAX_MESH_COMPONENTS; i++) {
 		meshComponentList_.push_back(&ST::MeshComponent());
 	}
-	for (size_t i = 0; i < 10; i++) {
+	for (size_t i = 0; i < MAX_MATERIAL_COMPONENTS; i++) {
 		materialComponentList_.push_back(&ST::MaterialComponent());
 	}
 	// ******************** Duda *********************
@@ -38,7 +44,7 @@ ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
 	result.value = TransCompIndex_++;
 	result.type = ST::kComp_Trans;
 	
-	if (result.value > 10) {
+	if (result.value >= MAX_TRANSFORM_COMPONENTS) {
 		result.value = -1;
 		result.type = kComp_None;
 	}
@@ -51,7 +57,7 @@ ST::ComponentId ST::GameObj_Manager::createMeshComponent(){
 	result.value = MeshCompIndex_++;
 	result.type = ST::kComp_Mesh;
 
-	if (result.value > 10) {
+	if (result.value >= MAX_MESH_COMPONENTS) {
 		result.value = -1;
 		result.type = kComp_None;
 	}
@@ -64,7 +70,7 @@ ST::ComponentId ST::GameObj_Manager::createMaterialComponent() {
 	result.value = MatCompIndex_++;
 	result.type = ST::kComp_Material;
 
-	if (result.value > 10) {
+	if (result.value >= MAX_MATERIAL_COMPONENTS) {
 		result.value = -1;
 		result.type = kComp_None;
 	}
@@ -76,26 +82,32 @@ ST::GameObj* ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
 
 	// do something ??
 	ST::GameObj* go = new ST::GameObj();
-	go->components = c;
+	if (go) {
+		printf("***** Obj Created *****\n");
+		go->components = c;
+	}
 
 	return go;
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 
-ST::TransformComponent* ST::GameObj_Manager::getTransformComponent(size_t id){
-	if (id == -1) { return NULL; }
-	return transformComponentList_.at(id);
-}
+//ST::TransformComponent* ST::GameObj_Manager::getTransformComponent(size_t id){
+//	if (id == -1) { return NULL; }
+//	if (id > transformComponentList_.size()) { return NULL; }
+//	return transformComponentList_.at(id);
+//}
 
-ST::MeshComponent* ST::GameObj_Manager::getMeshComponent(size_t id){
-	if (id == -1) { return NULL; }
-	return meshComponentList_.at(id);
-}
+//ST::MeshComponent* ST::GameObj_Manager::getMeshComponent(size_t id){
+//	if (id == -1) { return NULL; }
+//  if (id > meshComponentList_.size()) { return NULL; }
+//	return meshComponentList_.at(id);
+//}
 
-ST::MaterialComponent* ST::GameObj_Manager::getMaterialComponent(size_t id){
-	if (id == -1) { return NULL; }
-	return materialComponentList_.at(id);
-}
+//ST::MaterialComponent* ST::GameObj_Manager::getMaterialComponent(size_t id){
+//	if (id == -1) { return NULL; }
+//  if (id > materialComponentList_.size()) { return NULL; }
+//	return materialComponentList_.at(id);
+//}
 
 ST::GameObj_Manager::~GameObj_Manager(){}

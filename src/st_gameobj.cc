@@ -13,21 +13,22 @@ ST::GameObj::GameObj(){
 //}
 
 void ST::GameObj::checkComponents(){
-	printf("Tiene los Componentes de: \n");
+	printf("<- Components ->\n");
 	for (int i = 0; i < components.size(); i++) {
 
 		switch (components[i].type) {
 		case ST::kComp_Trans:
-			printf("Transform\n");
+			printf("- Transform\n");
 			break;
 		case ST::kComp_Mesh:
-			printf("Mesh\n");
+			printf("- Mesh\n");
 			break;
 		case ST::kComp_Material:
-			printf("Material\n");
+			printf("- Material\n");
 			break;
 		}
 	}
+	printf("\n");
 }
 
 ST::GameObj::~GameObj(){
