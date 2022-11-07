@@ -47,10 +47,11 @@ int main() {
 	}
 
 	// --------------------------
+	bool apretado = false;
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
-	while (w.isOpen() && !w.isPressed(ST::ST_INPUT_ESCAPE)) {
+	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		
 		w.Clear();
 
@@ -59,10 +60,20 @@ int main() {
 		if (timerForInput >= 1.0f/60) {
 			//printf("Input\n");
 
+			if (w.inputPressed('P') && !apretado) {
+				printf("Apreto input.\n");
+				apretado = true;
+			}
+
+			if (w.inputReleased('P') && apretado) {
+				printf("Suelto input.\n");
+				apretado = false;
+			}
 
 			timerForInput = 0.0f;
 		}
 
+		
 
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {
