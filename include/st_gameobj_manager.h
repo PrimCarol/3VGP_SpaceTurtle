@@ -6,11 +6,29 @@
 
 namespace ST {
 
+	/*
+		class Singleton
+		{
+		private:
+		   Singleton();
+		
+		public:
+		   static Singleton& instance()
+		   {
+		      static Singleton INSTANCE;
+		      return INSTANCE;
+		   }
+		};
+	*/
+
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 	public:
 
-		GameObj_Manager();
+		static GameObj_Manager& instance(){
+			static GameObj_Manager INSTANCE;
+			return INSTANCE;
+		}
 
 		//template<typename... Component>
 		//GameObj& createGameObj(Component... comp);
@@ -21,14 +39,17 @@ namespace ST {
 
 		GameObj* createGameObj(std::vector<ComponentId> c);
 
-		TransformComponent* getTransformComponent(size_t id);
-		MeshComponent* getMeshComponent(size_t id);
-		MaterialComponent* getMaterialComponent(size_t id);
+		//TransformComponent* getTransformComponent(size_t id);
+		//MeshComponent* getMeshComponent(size_t id);
+		//MaterialComponent* getMaterialComponent(size_t id);
 
 		//GameObj& root();
 
-		~GameObj_Manager();
+		
 	private:
+		GameObj_Manager();
+		~GameObj_Manager();
+
 		size_t TransCompIndex_;
 		size_t MeshCompIndex_;
 		size_t MatCompIndex_;
