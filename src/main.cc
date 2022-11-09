@@ -4,7 +4,6 @@
 #include <random.hpp>
 
 #include <st_window.h>
-//#include <st_gameobj.h>
 #include <st_gameobj_manager.h>
 
 int main() {
@@ -13,40 +12,39 @@ int main() {
 
 	srand(time(0));
 	// ----------------------------------------------------------------
-	//ST::GameObj obj1;
-	//ST::TransformComponent trans;
-	//obj1.addComponent(&trans);
-	//ST::MeshComponent mesh;
-	//obj1.addComponent(&mesh);
-	//
-	//printf("Obj1 Components -> %d \n", obj1.numComponents());
-
-	//auto a = obj1.getComponent<ST::TransformComponent>();
-
-	//ST::GameObj_Manager::instance();
 	
 	printf("---------------------------\n");
+	ST::GameObj_Manager gm;
 
 	std::vector<ST::ComponentId> c1;
-	c1.push_back(ST::GameObj_Manager::instance().createTransformComponent());
-	//c1.push_back(gm.createMeshComponent());
-	//c1.push_back(gm.createMaterialComponent());
+	c1.push_back(gm.createTransformComponent());
+	c1.push_back(gm.createRenderComponent());
 
-	ST::GameObj* obj1 = ST::GameObj_Manager::instance().createGameObj(c1);
+	std::unique_ptr<ST::GameObj> obj1 = gm.createGameObj(c1);
 	if (obj1) {
 		obj1->checkComponents();
 	}
 
-	std::vector<ST::ComponentId> c2;
-	c2.push_back(ST::GameObj_Manager::instance().createTransformComponent());
-	//c2.push_back(gm.createMeshComponent());
-	//c2.push_back(gm.createMaterialComponent());
+	//ST::TransformComponent* t = (ST::TransformComponent*)obj1->getComponent(ST::kComp_Trans);
+	//if (t) {
+	//	printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+	//	t->Move(glm::vec3(10.0f, 0.0f, 0.0f));
+	//	printf("Muevo al Obj1\n");
+	//	printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+	//	printf("\n");
+	//}
+	//obj1.release();
 
-	ST::GameObj* obj2 = ST::GameObj_Manager::instance().createGameObj(c2);
+	std::vector<ST::ComponentId> c2;
+	c2.push_back(gm.createTransformComponent());
+	c2.push_back(gm.createRenderComponent());
+
+	std::unique_ptr<ST::GameObj> obj2 = gm.createGameObj(c2);
 	if (obj2) {
 		obj2->checkComponents();
 	}
 
+	
 	// --------------------------
 	bool apretado = false;
 
@@ -74,7 +72,7 @@ int main() {
 			timerForInput = 0.0f;
 		}
 
-		
+		gm.UpdateTransforms();
 
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {
@@ -253,5 +251,13 @@ std::optional<float> divide_2_numeros(float, float);
 auto res = divide_2_numeros(3.0f,0.0f);
 
 // Puede ser null. puedes tener mas cuidado.
+
+*/
+
+/*
+Recorrer un Template ...  
+
+	?????
+	(mi(packDeComponentes),...);
 
 */

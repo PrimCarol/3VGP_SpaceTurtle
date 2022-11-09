@@ -9,18 +9,17 @@ namespace ST {
 	enum CompType {
 		kComp_None,
 		kComp_Trans,
-		kComp_Mesh,
-		kComp_Material,
+		kComp_Render,
+		//kComp_Material,
 	};
 
 	struct ComponentId {
-		size_t value = 0;
+		size_t value = -1;
 		CompType type = ST::kComp_None;
 	};
 
 	struct TransformComponentId : ComponentId {	};
-	struct MeshComponentId : ComponentId {};
-	struct MaterialComponentId : ComponentId {};
+	struct RenderComponentId : ComponentId {};
 
 	// --------------------------- Usability ----------------------------
 
@@ -30,14 +29,6 @@ namespace ST {
 		~Components();
 	private:
 		//Components(const Components& o);
-	};
-
-	class MaterialComponent : public Components{
-	public:
-		MaterialComponent();
-		~MaterialComponent();
-	private:
-		//MaterialComponent(const MaterialComponent& o);
 	};
 
 	class TransformComponent : public Components {
@@ -66,12 +57,12 @@ namespace ST {
 		//TransformComponent(const TransformComponent& o);
 	};
 
-	class MeshComponent : public Components {
+	class RenderComponent : public Components {
 	public:
-		MeshComponent();
-		~MeshComponent();
+		RenderComponent();
+		~RenderComponent();
 	private:
-		//MeshComponent(const MeshComponent& o);
+		//RenderComponent(const RenderComponent& o);
 	};
 }
 

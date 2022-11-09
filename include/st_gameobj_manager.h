@@ -4,61 +4,35 @@
 #include <st_gameobj.h>
 #include <st_components.h>
 
-namespace ST {
+#include <memory>
 
-	/*
-		class Singleton
-		{
-		private:
-		   Singleton();
-		
-		public:
-		   static Singleton& instance()
-		   {
-		      static Singleton INSTANCE;
-		      return INSTANCE;
-		   }
-		};
-	*/
+namespace ST {
 
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 	public:
 
-		static GameObj_Manager& instance(){
-			static GameObj_Manager INSTANCE;
-			return INSTANCE;
-		}
-
-		//template<typename... Component>
-		//GameObj& createGameObj(Component... comp);
-
+		GameObj_Manager();
+		~GameObj_Manager();
+		
 		ComponentId createTransformComponent();
-		ComponentId createMeshComponent();
-		ComponentId createMaterialComponent();
+		ComponentId createRenderComponent();
 
-		GameObj* createGameObj(std::vector<ComponentId> c);
+		std::unique_ptr<ST::GameObj> createGameObj(std::vector<ComponentId> c);
 
-		//TransformComponent* getTransformComponent(size_t id);
-		//MeshComponent* getMeshComponent(size_t id);
-		//MaterialComponent* getMaterialComponent(size_t id);
+		void UpdateTransforms();
 
 		//GameObj& root();
 
-		
+		std::vector<TransformComponent> transformComponentList_;
+		std::vector<RenderComponent> renderComponentList_;
 	private:
-		GameObj_Manager();
-		~GameObj_Manager();
 
 		size_t TransCompIndex_;
-		size_t MeshCompIndex_;
-		size_t MatCompIndex_;
+		size_t RenderCompIndex_;
 		
-		std::vector<TransformComponent*> transformComponentList_;
-		std::vector<MeshComponent*> meshComponentList_;
-		std::vector<MaterialComponent*> materialComponentList_;
-
 		GameObj_Manager(const GameObj_Manager& o);
+
 	};
 }
 

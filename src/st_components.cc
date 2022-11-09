@@ -3,21 +3,25 @@
 
 // -------------------- Parent ---------------------
 ST::Components::Components(){
-	printf("Component: Parent\n");
+	//printf("Create Component: Parent\n");
 }
 
-ST::Components::~Components(){ }
+ST::Components::~Components(){ 
+	//printf("Destroy Component: Parent\n");
+}
 
 // -------------------- Mesh ---------------------
-ST::MeshComponent::MeshComponent(){
-	printf("Component: Mesh\n");
+ST::RenderComponent::RenderComponent(){
+	printf("Create Component: Render\n");
 }
 
-ST::MeshComponent::~MeshComponent(){ }
+ST::RenderComponent::~RenderComponent(){
+	//printf("Destroy Component: Render\n");
+}
 
 // -------------------- Transform ---------------------
 ST::TransformComponent::TransformComponent(){
-	printf("Component: Transform\n");
+	printf("Create Component: Transform\n");
 
 	m_transform_ = glm::mat4(1);
 
@@ -80,11 +84,7 @@ glm::vec3 ST::TransformComponent::getRotation() {
 	return glm::vec3();
 }
 
-ST::TransformComponent::~TransformComponent(){ }
-
-// -------------------- Material ---------------------
-ST::MaterialComponent::MaterialComponent(){
-	printf("Component: Material\n");
+ST::TransformComponent::~TransformComponent(){
+	//printf("Destroy Component: Transform\n");
 }
 
-ST::MaterialComponent::~MaterialComponent(){ }

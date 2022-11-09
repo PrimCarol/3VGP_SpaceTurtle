@@ -1,6 +1,5 @@
 #include <st_gameobj_manager.h>
 
-
 //template<typename ...Component>
 //inline ST::GameObj& ST::GameObj_Manager::createGameObj(Component ...comp){
 //	static_assert(true && ... && std::is_base_of<Component, Component>::value);
@@ -9,8 +8,7 @@
 //}
 
 #define MAX_TRANSFORM_COMPONENTS 5
-#define MAX_MESH_COMPONENTS 5
-#define MAX_MATERIAL_COMPONENTS 5
+#define MAX_RENDER_COMPONENTS 5
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -19,75 +17,71 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ******************** Duda *********************
 	// Mejor manera de pre reservar la memoria para los componentes??
 
-	//transformComponentList_.reserve(10);
-	//meshComponentList_.reserve(10);
-	//materialComponentList_.reserve(10);
+	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
+	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
 
-	for (size_t i = 0; i < MAX_TRANSFORM_COMPONENTS; i++){
-		transformComponentList_.push_back(&ST::TransformComponent());
-	}
-	for (size_t i = 0; i < MAX_MESH_COMPONENTS; i++) {
-		meshComponentList_.push_back(&ST::MeshComponent());
-	}
-	for (size_t i = 0; i < MAX_MATERIAL_COMPONENTS; i++) {
-		materialComponentList_.push_back(&ST::MaterialComponent());
-	}
+	//for (size_t i = 0; i < MAX_TRANSFORM_COMPONENTS; i++){
+	//	transformComponentList_.push_back(ST::TransformComponent());
+	//}
+	//for (size_t i = 0; i < MAX_RENDER_COMPONENTS; i++) {
+	//	renderComponentList_.push_back(ST::RenderComponent());
+	//}
+	
 	// ******************** Duda *********************
 
 	TransCompIndex_ = 0;
-	MeshCompIndex_ = 0;
-	MatCompIndex_ = 0;
+	RenderCompIndex_ = 0;
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
+	
+	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
+		return ST::TransformComponentId();
+	}
+
 	ST::TransformComponentId result;
 	result.value = TransCompIndex_++;
 	result.type = ST::kComp_Trans;
-	
-	if (result.value >= MAX_TRANSFORM_COMPONENTS) {
-		result.value = -1;
-		result.type = kComp_None;
-	}
 
+	transformComponentList_.push_back(ST::TransformComponent());
 	return result;
 }
 
-ST::ComponentId ST::GameObj_Manager::createMeshComponent(){
-	ST::MeshComponentId result;
-	result.value = MeshCompIndex_++;
-	result.type = ST::kComp_Mesh;
-
-	if (result.value >= MAX_MESH_COMPONENTS) {
-		result.value = -1;
-		result.type = kComp_None;
+ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
+	if (RenderCompIndex_ >= MAX_RENDER_COMPONENTS) {
+		return ST::RenderComponentId();
 	}
 
+	ST::RenderComponentId result;
+	result.value = RenderCompIndex_++;
+	result.type = ST::kComp_Render;
+
+	renderComponentList_.push_back(ST::RenderComponent());
 	return result;
 }
 
-ST::ComponentId ST::GameObj_Manager::createMaterialComponent() {
-	ST::MaterialComponentId result;
-	result.value = MatCompIndex_++;
-	result.type = ST::kComp_Material;
+std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
 
-	if (result.value >= MAX_MATERIAL_COMPONENTS) {
-		result.value = -1;
-		result.type = kComp_None;
-	}
-
-	return result;
-}
-
-ST::GameObj* ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
-
-	// do something ??
-	ST::GameObj* go = new ST::GameObj();
+	auto go = std::make_unique<ST::GameObj>();
 	if (go) {
-		printf("***** Obj Created *****\n");
+		printf("\n***** Obj Created *****\n");
 		go->components = c;
+		go->gm_ = this;
 	}
 
 	return go;
+}
+
+void ST::GameObj_Manager::UpdateTransforms(){
+	for (int i = 0; i < transformComponentList_.size(); i++){
+		transformComponentList_[i].Move(glm::vec3(0.0f,1.0f,0.0f));
+		if (transformComponentList_[i].getPosition().y > 100.0f) {
+			transformComponentList_[i].setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+		}
+		printf("Obj[%d] Pos-> %f - %f - %f\n", i, transformComponentList_[i].getPosition().x,
+											      transformComponentList_[i].getPosition().y,
+											      transformComponentList_[i].getPosition().z);
+	}
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
