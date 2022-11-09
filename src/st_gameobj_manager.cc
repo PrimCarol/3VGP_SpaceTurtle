@@ -14,20 +14,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	printf("***** GameObj Manager Created *****\n");
 
-	// ******************** Duda *********************
-	// Mejor manera de pre reservar la memoria para los componentes??
-
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
-
-	//for (size_t i = 0; i < MAX_TRANSFORM_COMPONENTS; i++){
-	//	transformComponentList_.push_back(ST::TransformComponent());
-	//}
-	//for (size_t i = 0; i < MAX_RENDER_COMPONENTS; i++) {
-	//	renderComponentList_.push_back(ST::RenderComponent());
-	//}
-	
-	// ******************** Duda *********************
 
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
@@ -78,9 +66,27 @@ void ST::GameObj_Manager::UpdateTransforms(){
 		if (transformComponentList_[i].getPosition().y > 100.0f) {
 			transformComponentList_[i].setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
-		printf("Obj[%d] Pos-> %f - %f - %f\n", i, transformComponentList_[i].getPosition().x,
-											      transformComponentList_[i].getPosition().y,
-											      transformComponentList_[i].getPosition().z);
+		//printf("Obj[%d] Pos-> %f - %f - %f\n", i, transformComponentList_[i].getPosition().x,
+		//									      transformComponentList_[i].getPosition().y,
+		//									      transformComponentList_[i].getPosition().z);
+	}
+}
+
+void ST::GameObj_Manager::UpdateRender(){
+	for (size_t i = 0; i < renderComponentList_.size(); i++){
+		if (renderComponentList_[i].material) {
+			renderComponentList_[i].material->getProgram()->use();
+			//GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
+			//glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &m_transform_[0][0]);
+
+			//GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");;
+			////glm::vec3 c = material->getSettings()->getColor();
+			//glm::vec3 c = renderComponentList_[i].material->getColor();
+			//glUniform3fv(u_color, 1, &c[0]);
+		}
+		if (renderComponentList_[i].mesh) {
+			renderComponentList_[i].mesh->render();
+		}
 	}
 }
 

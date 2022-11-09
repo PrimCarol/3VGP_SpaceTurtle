@@ -7,13 +7,15 @@
 ST::Material::Material(){
 	ST::Shader vertex(E_VERTEX_SHADER);
 
-	GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
-	vertex.loadSource(textVertex);
+	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
+	//vertex.loadSource(textVertex);
+	vertex.loadSource(basic_vShader_text);
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
 
-	GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
-	fragment.loadSource(textFragment);
+	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
+	//fragment.loadSource(textFragment);
+	fragment.loadSource(basic_fShader_text);
 
 	program = new ST::Program();
 	program->attach(vertex);

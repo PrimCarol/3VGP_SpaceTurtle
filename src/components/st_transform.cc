@@ -1,23 +1,4 @@
-#include <st_components.h>
-#include <stdio.h>
-
-// -------------------- Parent ---------------------
-ST::Components::Components(){
-	//printf("Create Component: Parent\n");
-}
-
-ST::Components::~Components(){ 
-	//printf("Destroy Component: Parent\n");
-}
-
-// -------------------- Mesh ---------------------
-ST::RenderComponent::RenderComponent(){
-	printf("Create Component: Render\n");
-}
-
-ST::RenderComponent::~RenderComponent(){
-	//printf("Destroy Component: Render\n");
-}
+#include <components/st_transform.h>
 
 // -------------------- Transform ---------------------
 ST::TransformComponent::TransformComponent(){

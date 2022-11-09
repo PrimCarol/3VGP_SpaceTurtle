@@ -73,6 +73,7 @@ int main() {
 		}
 
 		gm.UpdateTransforms();
+		gm.UpdateRender();
 
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {

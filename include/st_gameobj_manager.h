@@ -2,7 +2,8 @@
 #define _SPACE_TURTLE_GAMEOBJ_MANAGER_H_ 1
 
 #include <st_gameobj.h>
-#include <st_components.h>
+#include <components/st_transform.h>
+#include <components/st_render.h>
 
 #include <memory>
 
@@ -21,6 +22,7 @@ namespace ST {
 		std::unique_ptr<ST::GameObj> createGameObj(std::vector<ComponentId> c);
 
 		void UpdateTransforms();
+		void UpdateRender();
 
 		//GameObj& root();
 
