@@ -5,26 +5,11 @@
 #include <st_program.h>
 
 ST::Material::Material(){
-	ST::Shader vertex(E_VERTEX_SHADER);
 
-	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
-	//vertex.loadSource(textVertex);
-	vertex.loadSource(basic_vShader_text);
-
-	ST::Shader fragment(E_FRAGMENT_SHADER);
-
-	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
-	//fragment.loadSource(textFragment);
-	fragment.loadSource(basic_fShader_text);
-
-	program = new ST::Program();
-	program->attach(vertex);
-	program->attach(fragment);
-	program->link();
 
 	//settings_ = new Settings();
 	//settings_ = NULL;
-	color = { 1.0f,0.0f,1.0f };
+	color = { 1.0f,0.8f,0.9f };
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -46,6 +31,12 @@ const glm::vec3 ST::Material::getColor() {
 
 const ST::Program* ST::Material::getProgram(){
 	return program;
+}
+
+void ST::Material::setProgram(ST::Program* p){
+	if (p) {
+		program = p;
+	}
 }
 
 ST::Material::Material(const Material& o){

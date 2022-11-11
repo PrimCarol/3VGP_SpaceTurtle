@@ -33,6 +33,8 @@ namespace ST {
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
 		
+		ST::Program* basicProgram;
+
 		GameObj_Manager(const GameObj_Manager& o);
 
 	};

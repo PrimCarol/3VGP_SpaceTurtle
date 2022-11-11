@@ -7,7 +7,7 @@ ST::RenderComponent::RenderComponent(){
 	mesh = nullptr;
 	material = nullptr;
 
-	mesh = new ST::Triangle();
+	mesh = new ST::Circle();
 	material = new ST::Material();
 }
 

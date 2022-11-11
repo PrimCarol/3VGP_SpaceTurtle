@@ -18,9 +18,9 @@ namespace ST {
 		"uniform vec3 u_color;\n"
 		"out vec3 color;\n"
 		"void main() {\n"
-		"color = a_color;\n"
-		//"gl_Position = u_m_trans * vec4(a_position, 1);\n"
-		"gl_Position = vec4(a_position, 1);\n"
+		"color = u_color;\n"
+		"gl_Position = u_m_trans * vec4(a_position, 1);\n"
+		//"gl_Position = vec4(a_position, 1);\n"
 		"}\n";
 	static GLchar* basic_fShader_text =
 		"#version 330\n"

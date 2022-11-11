@@ -7,8 +7,8 @@
 //	return e;
 //}
 
-#define MAX_TRANSFORM_COMPONENTS 5
-#define MAX_RENDER_COMPONENTS 5
+#define MAX_TRANSFORM_COMPONENTS 10000
+#define MAX_RENDER_COMPONENTS 10000
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -19,6 +19,23 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
+
+	ST::Shader vertex(E_VERTEX_SHADER);
+
+	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
+	//vertex.loadSource(textVertex);
+	vertex.loadSource(basic_vShader_text);
+
+	ST::Shader fragment(E_FRAGMENT_SHADER);
+
+	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
+	//fragment.loadSource(textFragment);
+	fragment.loadSource(basic_fShader_text);
+
+	basicProgram = new ST::Program();
+	basicProgram->attach(vertex);
+	basicProgram->attach(fragment);
+	basicProgram->link();
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -45,6 +62,7 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 	result.type = ST::kComp_Render;
 
 	renderComponentList_.push_back(ST::RenderComponent());
+	renderComponentList_[RenderCompIndex_ - 1].material->setProgram(basicProgram);
 	return result;
 }
 
@@ -62,9 +80,13 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(std::vector<Comp
 
 void ST::GameObj_Manager::UpdateTransforms(){
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].Move(glm::vec3(0.0f,1.0f,0.0f));
-		if (transformComponentList_[i].getPosition().y > 100.0f) {
-			transformComponentList_[i].setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+		transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
+		if (transformComponentList_[i].getPosition().y < -1.0f) {
+			
+			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
+			transformComponentList_[i].setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
+
+			//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
 		}
 		//printf("Obj[%d] Pos-> %f - %f - %f\n", i, transformComponentList_[i].getPosition().x,
 		//									      transformComponentList_[i].getPosition().y,
@@ -79,10 +101,14 @@ void ST::GameObj_Manager::UpdateRender(){
 			//GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
 			//glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &m_transform_[0][0]);
 
-			//GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");;
+			GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
+			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &transformComponentList_[i].m_transform_[0][0]);
+
+
+			GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");;
 			////glm::vec3 c = material->getSettings()->getColor();
-			//glm::vec3 c = renderComponentList_[i].material->getColor();
-			//glUniform3fv(u_color, 1, &c[0]);
+			glm::vec3 c = renderComponentList_[i].material->getColor();
+			glUniform3fv(u_color, 1, &c[0]);
 		}
 		if (renderComponentList_[i].mesh) {
 			renderComponentList_[i].mesh->render();

@@ -16,33 +16,54 @@ int main() {
 	printf("---------------------------\n");
 	ST::GameObj_Manager gm;
 
-	std::vector<ST::ComponentId> c1;
-	c1.push_back(gm.createTransformComponent());
-	c1.push_back(gm.createRenderComponent());
+	std::unique_ptr<ST::GameObj> obj1[200];
 
-	std::unique_ptr<ST::GameObj> obj1 = gm.createGameObj(c1);
-	if (obj1) {
-		obj1->checkComponents();
+	for (size_t i = 0; i < 200; i++){
+		std::vector<ST::ComponentId> c1;
+		c1.push_back(gm.createTransformComponent());
+		c1.push_back(gm.createRenderComponent());
+
+		obj1[i] = gm.createGameObj(c1);
+		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
+		if (t) {
+			float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
+			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
+
+			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
+			t->setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
+
+			float randomVelY = 0.1f + (rand() / (RAND_MAX / (1.0f - 0.1f)));
+			t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
+		}
+
+		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
+		if (r) {
+			float randomR = (rand() / (RAND_MAX / (1.0f)));
+			float randomG = (rand() / (RAND_MAX / (1.0f)));
+			float randomB = (rand() / (RAND_MAX / (1.0f)));
+			r->material->setColor(glm::vec3(randomR, randomG, randomB));
+		}
 	}
 
 	//ST::TransformComponent* t = (ST::TransformComponent*)obj1->getComponent(ST::kComp_Trans);
 	//if (t) {
-	//	printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-	//	t->Move(glm::vec3(10.0f, 0.0f, 0.0f));
-	//	printf("Muevo al Obj1\n");
-	//	printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-	//	printf("\n");
+	//	//printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+	//	//t->Move(glm::vec3(10.0f, 0.0f, 0.0f));
+	//	//printf("Muevo al Obj1\n");
+	//	//printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+	//	//printf("\n");
+	//	t->setScale(glm::vec3(0.1f, 0.1f, 1.0f));
 	//}
 	//obj1.release();
 
-	std::vector<ST::ComponentId> c2;
-	c2.push_back(gm.createTransformComponent());
-	c2.push_back(gm.createRenderComponent());
-
-	std::unique_ptr<ST::GameObj> obj2 = gm.createGameObj(c2);
-	if (obj2) {
-		obj2->checkComponents();
-	}
+	//std::vector<ST::ComponentId> c2;
+	//c2.push_back(gm.createTransformComponent());
+	//c2.push_back(gm.createRenderComponent());
+	//
+	//std::unique_ptr<ST::GameObj> obj2 = gm.createGameObj(c2);
+	//if (obj2) {
+	//	obj2->checkComponents();
+	//}
 
 	
 	// --------------------------

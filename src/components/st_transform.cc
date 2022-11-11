@@ -39,6 +39,14 @@ void ST::TransformComponent::setScale(const glm::vec3 newScale) {
 	m_transform_[2][2] = newScale.z;
 }
 
+void ST::TransformComponent::setVelocity(const glm::vec3 vel){
+	movementVelocity = vel;
+}
+
+glm::vec3 ST::TransformComponent::getVelocity(){
+	return movementVelocity;
+}
+
 // ------------------------- Getters -------------------------
 glm::vec3 ST::TransformComponent::getPosition() {
 	// 12 - 13 - 14

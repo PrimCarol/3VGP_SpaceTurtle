@@ -30,6 +30,7 @@ namespace ST {
 		const glm::vec3 getColor();
 
 		const ST::Program* getProgram();
+		void setProgram(ST::Program* program);
 
 		~Material();
 		Material(const Material& o);

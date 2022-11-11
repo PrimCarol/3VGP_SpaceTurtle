@@ -22,13 +22,18 @@ namespace ST {
 		/*Set a forced scale*/
 		void setScale(const glm::vec3 newScale);
 
+		void setVelocity(const glm::vec3 vel);
+		glm::vec3 getVelocity();
+
 		glm::vec3 getPosition();
 		glm::vec3 getScale();
 		glm::vec3 getRotation();
 
 		~TransformComponent();
-	private:
+
 		glm::mat4 m_transform_;
+	private:
+		glm::vec3 movementVelocity;
 		//TransformComponent(const TransformComponent& o);
 	};
 }
