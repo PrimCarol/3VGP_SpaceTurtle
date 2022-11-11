@@ -2,7 +2,7 @@
 
 // -------------------- Transform ---------------------
 ST::TransformComponent::TransformComponent(){
-	printf("Create Component: Transform\n");
+	//printf("Create Component: Transform\n");
 
 	m_transform_ = glm::mat4(1);
 
@@ -11,18 +11,18 @@ ST::TransformComponent::TransformComponent(){
 }
 
 // ------------------------- Movement -------------------------
-void ST::TransformComponent::Move(glm::vec3 newPos) {
+void ST::TransformComponent::Move(const glm::vec3 newPos) {
 	m_transform_ = glm::translate(m_transform_, newPos);
 }
 
 
-void ST::TransformComponent::RotateX(float r) {
+void ST::TransformComponent::RotateX(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 1.0f,0.0f,0.0f });
 }
-void ST::TransformComponent::RotateY(float r) {
+void ST::TransformComponent::RotateY(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,1.0f,0.0f });
 }
-void ST::TransformComponent::RotateZ(float r) {
+void ST::TransformComponent::RotateZ(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,0.0f,1.0f });
 }
 
@@ -43,12 +43,12 @@ void ST::TransformComponent::setVelocity(const glm::vec3 vel){
 	movementVelocity = vel;
 }
 
-glm::vec3 ST::TransformComponent::getVelocity(){
+const glm::vec3 ST::TransformComponent::getVelocity(){
 	return movementVelocity;
 }
 
 // ------------------------- Getters -------------------------
-glm::vec3 ST::TransformComponent::getPosition() {
+const glm::vec3 ST::TransformComponent::getPosition() {
 	// 12 - 13 - 14
 
 	// m - m - m - m
@@ -58,7 +58,7 @@ glm::vec3 ST::TransformComponent::getPosition() {
 	return glm::vec3(m_transform_[3][0], m_transform_[3][1], m_transform_[3][2]);
 }
 
-glm::vec3 ST::TransformComponent::getScale() {
+const glm::vec3 ST::TransformComponent::getScale() {
 	// 0 - 5 - 10
 
 	// x - m - m - m
@@ -68,7 +68,7 @@ glm::vec3 ST::TransformComponent::getScale() {
 	return glm::vec3(m_transform_[0][0], m_transform_[1][1], m_transform_[2][2]);
 }
 
-glm::vec3 ST::TransformComponent::getRotation() {
+const glm::vec3 ST::TransformComponent::getRotation() {
 	//return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
 	return glm::vec3();
 }

@@ -12,13 +12,11 @@ namespace ST {
 	public:
 		RenderComponent();
 
-		void render();
-
 		void setMesh(ST::Mesh *m);
 		void setMaterial(ST::Material* m);
 
 		~RenderComponent();
-	//private:
+
 		ST::Material* material;
 		ST::Mesh* mesh;
 		//RenderComponent(const RenderComponent& o);

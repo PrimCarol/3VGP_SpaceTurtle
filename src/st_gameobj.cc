@@ -59,5 +59,5 @@ ST::GameObj::~GameObj(){
 		}
 		
 	}
-	printf("Destroy GameObj");
+	//printf("Destroy GameObj");
 }

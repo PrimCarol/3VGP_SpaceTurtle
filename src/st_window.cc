@@ -90,22 +90,6 @@ void ST::Window::Clear() const{
     //ImGui::DockSpaceOverViewport();
 }
 
-void ST::Window::initImGuiWindow(const char* t){
-    ImGui::Begin(t);
-}
-
-void ST::Window::textImGui(const char* t){
-    ImGui::Text(t);
-}
-
-bool ST::Window::buttonImGui(const char* t) {
-    return ImGui::Button(t);
-}
-
-void ST::Window::endImGuiWindow(){
-    ImGui::End();
-}
-
 bool ST::Window::inputPressed(ST_INPUT input){
     
     switch (input){

@@ -12,7 +12,7 @@
 
 ST::GameObj_Manager::GameObj_Manager(){
 
-	printf("***** GameObj Manager Created *****\n");
+	//printf("***** GameObj Manager Created *****\n");
 
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
@@ -66,11 +66,11 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 	return result;
 }
 
-std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(std::vector<ComponentId> c){
+std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c){
 
 	auto go = std::make_unique<ST::GameObj>();
 	if (go) {
-		printf("\n***** Obj Created *****\n");
+		//printf("\n***** Obj Created *****\n");
 		go->components = c;
 		go->gm_ = this;
 	}
@@ -101,12 +101,12 @@ void ST::GameObj_Manager::UpdateRender(){
 			//GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
 			//glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &m_transform_[0][0]);
 
+			// De momento esta mal, funciona 1:1.
 			GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
 			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &transformComponentList_[i].m_transform_[0][0]);
 
 
-			GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");;
-			////glm::vec3 c = material->getSettings()->getColor();
+			GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");
 			glm::vec3 c = renderComponentList_[i].material->getColor();
 			glUniform3fv(u_color, 1, &c[0]);
 		}

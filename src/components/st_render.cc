@@ -3,11 +3,11 @@
 
 // -------------------- Mesh ---------------------
 ST::RenderComponent::RenderComponent(){
-	printf("Create Component: Render\n");
+	//printf("Create Component: Render\n");
 	mesh = nullptr;
 	material = nullptr;
 
-	mesh = new ST::Circle();
+	//mesh = new ST::Circle();
 	material = new ST::Material();
 }
 

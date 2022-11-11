@@ -19,7 +19,7 @@ namespace ST {
 		ComponentId createTransformComponent();
 		ComponentId createRenderComponent();
 
-		std::unique_ptr<ST::GameObj> createGameObj(std::vector<ComponentId> c);
+		std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
 
 		void UpdateTransforms();
 		void UpdateRender();

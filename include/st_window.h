@@ -28,12 +28,6 @@ namespace ST {
 		void Render();
 		void Clear() const;
 
-		// ------ ImGui ------
-		void initImGuiWindow(const char* t);
-		void textImGui(const char* t);
-		bool buttonImGui(const char* t);
-		void endImGuiWindow();
-
 		// ------ Inputs ------
 		//bool isDown(ST_INPUT input);
 		bool inputPressed(ST_INPUT input);

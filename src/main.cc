@@ -6,6 +6,10 @@
 #include <st_window.h>
 #include <st_gameobj_manager.h>
 
+const float getRandom(float min, float max) {
+	return min + (rand() / (RAND_MAX / (max - min)));
+}
+
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f);
@@ -13,12 +17,18 @@ int main() {
 	srand(time(0));
 	// ----------------------------------------------------------------
 	
-	printf("---------------------------\n");
+	printf("------------- Space Turtle --------------\n");
+	printf("--------- By: Pere Prim Carol -----------\n");
+	printf("-----------------------------------------\n");
 	ST::GameObj_Manager gm;
 
-	std::unique_ptr<ST::GameObj> obj1[200];
+	ST::Triangle triangle;
+	ST::Quad quad;
+	ST::Circle circle;
 
-	for (size_t i = 0; i < 200; i++){
+	std::unique_ptr<ST::GameObj> obj1[1000];
+
+	for (size_t i = 0; i < 1000; i++){
 		std::vector<ST::ComponentId> c1;
 		c1.push_back(gm.createTransformComponent());
 		c1.push_back(gm.createRenderComponent());
@@ -26,21 +36,35 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
+			//float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
+			float randomScale = getRandom(0.01f, 0.2f);
 			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
 
-			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
-			t->setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
+			float randomPosX = getRandom(-1.5f, 1.5f);
+			float randomPosY = getRandom(-1.5f, 1.5f);
+			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
 
-			float randomVelY = 0.1f + (rand() / (RAND_MAX / (1.0f - 0.1f)));
+			float randomVelY = getRandom(0.1f, 0.7f);
 			t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
 		}
 
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
-			float randomR = (rand() / (RAND_MAX / (1.0f)));
-			float randomG = (rand() / (RAND_MAX / (1.0f)));
-			float randomB = (rand() / (RAND_MAX / (1.0f)));
+			int randomGeometry = rand() % 3;
+			switch (randomGeometry){
+			case 0:
+				r->setMesh(&triangle);
+				break;
+			case 1:
+				r->setMesh(&quad);
+				break;
+			case 2:
+				r->setMesh(&circle);
+				break;
+			}
+			float randomR = getRandom(0.0f,1.0f);
+			float randomG = getRandom(0.0f,1.0f);
+			float randomB = getRandom(0.0f,1.0f);
 			r->material->setColor(glm::vec3(randomR, randomG, randomB));
 		}
 	}
@@ -98,7 +122,7 @@ int main() {
 
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {
-			//printf("AI\n");
+			//printf("Something\n");
 
 
 			timerForSomething = 0.0f;

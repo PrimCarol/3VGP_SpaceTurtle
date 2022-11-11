@@ -42,6 +42,7 @@ void ST::Material::setProgram(ST::Program* p){
 ST::Material::Material(const Material& o){
 	//settings_ = o.settings_;
 	program = o.program;
+	color = o.color;
 }
 
 ST::Material::~Material(){

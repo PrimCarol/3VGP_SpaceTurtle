@@ -12,10 +12,10 @@ namespace ST {
 
 		//----------------- Transforms ------------------
 		/*Moves based on your current position*/
-		void Move(glm::vec3 newPos);
-		void RotateX(float r);
-		void RotateY(float r);
-		void RotateZ(float r);
+		void Move(const glm::vec3 newPos);
+		void RotateX(const float r);
+		void RotateY(const float r);
+		void RotateZ(const float r);
 
 		/*Set a forced position*/
 		void setPosition(const glm::vec3 pos);
@@ -23,11 +23,11 @@ namespace ST {
 		void setScale(const glm::vec3 newScale);
 
 		void setVelocity(const glm::vec3 vel);
-		glm::vec3 getVelocity();
+		const glm::vec3 getVelocity();
 
-		glm::vec3 getPosition();
-		glm::vec3 getScale();
-		glm::vec3 getRotation();
+		const glm::vec3 getPosition();
+		const glm::vec3 getScale();
+		const glm::vec3 getRotation();
 
 		~TransformComponent();
 

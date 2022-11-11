@@ -21,6 +21,10 @@ namespace ST {
         }
         return file_contents;
     }
+
+    //const int getRandom(int min, int max) {
+    //    return min + (rand() / (RAND_MAX / (max - min)));
+    //}
 }
 
 #endif
