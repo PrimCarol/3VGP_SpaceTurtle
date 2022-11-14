@@ -3,6 +3,7 @@
 
 #include <random.hpp>
 
+#include <imgui.h>
 #include <st_window.h>
 #include <st_gameobj_manager.h>
 
@@ -26,9 +27,9 @@ int main() {
 	ST::Quad quad;
 	ST::Circle circle;
 
-	std::unique_ptr<ST::GameObj> obj1[1000];
+	std::unique_ptr<ST::GameObj> obj1[5000];
 
-	for (size_t i = 0; i < 1000; i++){
+	for (size_t i = 0; i < 5000; i++){
 		std::vector<ST::ComponentId> c1;
 		c1.push_back(gm.createTransformComponent());
 		c1.push_back(gm.createRenderComponent());
@@ -83,12 +84,22 @@ int main() {
 	//std::vector<ST::ComponentId> c2;
 	//c2.push_back(gm.createTransformComponent());
 	//c2.push_back(gm.createRenderComponent());
-	//
+	
 	//std::unique_ptr<ST::GameObj> obj2 = gm.createGameObj(c2);
 	//if (obj2) {
 	//	obj2->checkComponents();
 	//}
 
+	//ST::TransformComponent* t = (ST::TransformComponent*)obj2->getComponent(ST::kComp_Trans);
+	//if (t) {
+	//	t->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	//}
+
+	//ST::Quad figure;
+	//ST::RenderComponent* r = (ST::RenderComponent*)obj2->getComponent(ST::kComp_Render);
+	//if (r) {
+	//	r->setMesh(&figure);
+	//}
 	
 	// --------------------------
 	bool apretado = false;
@@ -114,6 +125,25 @@ int main() {
 				apretado = false;
 			}
 
+			//if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+			//	t->Move(glm::vec3(1.0f * w.DeltaTime(),0.0f,0.0f));
+			//}
+			//if (w.inputPressed(ST::ST_INPUT_LEFT)) {
+			//	t->Move(glm::vec3(-1.0f * w.DeltaTime(), 0.0f, 0.0f));
+			//}
+			//if (w.inputPressed(ST::ST_INPUT_UP)) {
+			//	t->Move(glm::vec3(0.0f, 1.0f * w.DeltaTime(), 0.0f));
+			//}
+			//if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+			//	t->Move(glm::vec3(0.0f, -1.0f * w.DeltaTime(), 0.0f));
+			//}
+			//if (w.inputPressed('E')) {
+			//	t->RotateZ(-2.0f * w.DeltaTime());
+			//}
+			//if (w.inputPressed('Q')) {
+			//	t->RotateZ(2.0f * w.DeltaTime());
+			//}
+
 			timerForInput = 0.0f;
 		}
 
@@ -127,6 +157,15 @@ int main() {
 
 			timerForSomething = 0.0f;
 		}
+
+
+		ImGui::Begin("Info");
+		ImGui::Text("FPS: %d", (int)w.FPS(w.DeltaTime()));
+		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		ImGui::End();
+
+
+
 
 		// ----------------------------
 

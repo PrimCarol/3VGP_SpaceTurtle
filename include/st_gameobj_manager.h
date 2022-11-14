@@ -20,6 +20,7 @@ namespace ST {
 		ComponentId createRenderComponent();
 
 		std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
+		const int getGameObjNum();
 
 		void UpdateTransforms();
 		void UpdateRender();
@@ -34,6 +35,8 @@ namespace ST {
 		size_t RenderCompIndex_;
 		
 		ST::Program* basicProgram;
+
+		unsigned int numGameObjs;
 
 		GameObj_Manager(const GameObj_Manager& o);
 

@@ -14,20 +14,21 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	//printf("***** GameObj Manager Created *****\n");
 
+	numGameObjs = 0;
+
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
 
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
 
+	// ------- Create Basic Program -------
 	ST::Shader vertex(E_VERTEX_SHADER);
-
 	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
 	//vertex.loadSource(textVertex);
 	vertex.loadSource(basic_vShader_text);
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-
 	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
 	//fragment.loadSource(textFragment);
 	fragment.loadSource(basic_fShader_text);
@@ -75,7 +76,13 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 		go->gm_ = this;
 	}
 
+	numGameObjs++;
+
 	return go;
+}
+
+const int ST::GameObj_Manager::getGameObjNum(){
+	return numGameObjs;
 }
 
 void ST::GameObj_Manager::UpdateTransforms(){

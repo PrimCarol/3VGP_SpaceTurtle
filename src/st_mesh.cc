@@ -169,3 +169,19 @@ void ST::Circle::render() {
 }
 
 ST::Circle::~Circle() {}
+
+
+// ------------------- OBJ -------------------
+ST::Geometry::Geometry() : Mesh() {
+
+}
+
+void ST::Geometry::loadFromFile(const char* path){
+
+}
+
+void ST::Geometry::render(){
+
+}
+
+ST::Geometry::~Geometry(){}

@@ -37,22 +37,22 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         -- Donde estan los includes
         includedirs{
-            --Personal
+            -- Personal
             "../include",
             "../include/components",
 
-            --Math Library
+            -- Math Library
             "../deps/glm",
             "../deps/glm/gtx",
             "../deps/glm/gtc",
             
-            --GLFW
+            -- GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
 
-            --OpenGl - GLAD
+            -- OpenGl - GLAD
             "../deps/OpenGL",
 
-            --ImGui
+            -- ImGui
             "../deps/imgui-docking",
             "../deps/imgui-docking/backends",
 
@@ -67,10 +67,12 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../src/*.cc",
             "../src/components/*.cc",
 
+            -- ImGui
             "../deps/imgui-docking/*.cpp",
             "../deps/imgui-docking/backends/imgui_impl_glfw.cpp",
             "../deps/imgui-docking/backends/imgui_impl_opengl3.cpp",
 
+            -- OpenGl - GLAD
             "../deps/OpenGL/glad.c",
         }  
 
@@ -87,6 +89,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         filter  {"Debug","x64"}
             --targetdir (ROOT .. "bin/Debug/x64")
+            links {"glfw3d"}
             targetdir(ROOT .. "/bin/Debug/")
             objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
             targetsuffix "_d"

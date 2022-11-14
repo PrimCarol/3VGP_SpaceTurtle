@@ -2,16 +2,11 @@
 #include <st_gameobj_manager.h>
 
 ST::GameObj::GameObj(){
+	gm_ = nullptr;
 
+	parent = nullptr;
+	//childs = nullptr;
 }
-
-//void ST::GameObj::addComponent(const ST::Components* c){
-//	components.push_back(*c);
-//}
-//
-//int ST::GameObj::numComponents() const{
-//	return components.size();
-//}
 
 void ST::GameObj::checkComponents(){
 	printf("<- Components ->\n");
@@ -44,6 +39,30 @@ ST::Components* ST::GameObj::getComponent(ST::CompType t){
 		}
 	}
 	return nullptr;
+}
+
+void ST::GameObj::addChild(GameObj* c){
+	if (c) {
+		c->parent = this;
+		childs.push_back(c);
+	}
+}
+
+void ST::GameObj::removeChild(const unsigned int index){
+	if (index < childs.size()) {
+		childs.erase(childs.begin() + index);
+	}
+}
+
+ST::GameObj* ST::GameObj::getChild(const unsigned int index){
+	if (index >= childs.size()) {
+		return nullptr;
+	}
+	return childs[index];
+}
+
+ST::GameObj* ST::GameObj::getParent(){
+	return parent;
 }
 
 ST::GameObj::~GameObj(){
