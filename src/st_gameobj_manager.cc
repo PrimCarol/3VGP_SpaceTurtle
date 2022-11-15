@@ -112,10 +112,21 @@ void ST::GameObj_Manager::UpdateRender(){
 			GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
 			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &transformComponentList_[i].m_transform_[0][0]);
 
-
+			// Material 
 			GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");
 			glm::vec3 c = renderComponentList_[i].material->getColor();
 			glUniform3fv(u_color, 1, &c[0]);
+
+			GLuint u_haveAlbedo = renderComponentList_[i].material->getProgram()->getUniform("u_haveAlbedo");
+			glUniform1i(u_haveAlbedo, renderComponentList_[i].material->haveAlbedo);
+			
+			if (renderComponentList_[i].material->haveAlbedo) {
+				//GLuint u_haveAlbedo = renderComponentList_[i].material->getProgram()->getUniform("u_tex_Albedo");
+				//glUniform1i(u_haveAlbedo, renderComponentList_[i].material->haveAlbedo);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, renderComponentList_[i].material->getAlbedo()->getID());
+			}
 		}
 		if (renderComponentList_[i].mesh) {
 			renderComponentList_[i].mesh->render();

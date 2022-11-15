@@ -8,7 +8,7 @@ namespace ST {
 	class Texture{
 	public:
 
-        enum Type {
+        enum TextType {
             T_Invalid,
             //T_1D,
             T_2D,
@@ -48,11 +48,24 @@ namespace ST {
 		Texture();
 		
 		bool loadSource(const char* shaderText);
-		GLuint getID();
+        void createTexture(const unsigned int w, const unsigned int h);
+        void set_data(const Format f, /* const Type t,*/ const void* data, unsigned int mipmap_LOD = 0);
+		
+        const GLuint getID();
+
+        const TextType getType();
+        const unsigned int width();
+        const unsigned int height();
 
 		~Texture();
 	private:
 		GLuint internalID;
+
+        TextType type_;
+        unsigned int width_;
+        unsigned int height_;
+
+        unsigned int* texChecker;
 
 		Texture(const Texture& o);
 	};

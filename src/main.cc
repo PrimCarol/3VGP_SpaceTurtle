@@ -27,6 +27,8 @@ int main() {
 	ST::Quad quad;
 	ST::Circle circle;
 
+	ST::Texture textureTest;
+
 	std::unique_ptr<ST::GameObj> obj1[5000];
 
 	for (size_t i = 0; i < 5000; i++){
@@ -55,6 +57,7 @@ int main() {
 			switch (randomGeometry){
 			case 0:
 				r->setMesh(&triangle);
+				r->material->setTexture_Albedo(&textureTest);
 				break;
 			case 1:
 				r->setMesh(&quad);

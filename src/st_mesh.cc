@@ -24,12 +24,15 @@ ST::Triangle::Triangle() : Mesh() {
 	
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	VertexInfo vertices[] = {
-		 0.0f, 0.5f,0.0f,
-		 0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f
+		     /* Pos */          /* Normal */        /* UV */
+		 0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.5f, 0.0f,
+		 0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
+		-0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -45,9 +48,12 @@ ST::Triangle::Triangle() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normals
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;
