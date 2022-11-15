@@ -28,10 +28,13 @@ int main() {
 	ST::Circle circle;
 
 	ST::Texture textureTest;
+	textureTest.createChecker(256,256);
 
-	std::unique_ptr<ST::GameObj> obj1[5000];
+	const int numObjs = 100000;
 
-	for (size_t i = 0; i < 5000; i++){
+	std::unique_ptr<ST::GameObj> obj1[numObjs];
+
+	for (size_t i = 0; i < numObjs; i++){
 		std::vector<ST::ComponentId> c1;
 		c1.push_back(gm.createTransformComponent());
 		c1.push_back(gm.createRenderComponent());
@@ -61,6 +64,7 @@ int main() {
 				break;
 			case 1:
 				r->setMesh(&quad);
+				r->material->setTexture_Albedo(&textureTest);
 				break;
 			case 2:
 				r->setMesh(&circle);

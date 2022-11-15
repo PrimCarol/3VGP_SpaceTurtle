@@ -7,8 +7,8 @@
 //	return e;
 //}
 
-#define MAX_TRANSFORM_COMPONENTS 10000
-#define MAX_RENDER_COMPONENTS 10000
+#define MAX_TRANSFORM_COMPONENTS 1000000
+#define MAX_RENDER_COMPONENTS 1000000
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -102,30 +102,37 @@ void ST::GameObj_Manager::UpdateTransforms(){
 }
 
 void ST::GameObj_Manager::UpdateRender(){
+	ST::Material* mat = nullptr;
+	const ST::Program* p = nullptr;
+
 	for (size_t i = 0; i < renderComponentList_.size(); i++){
-		if (renderComponentList_[i].material) {
-			renderComponentList_[i].material->getProgram()->use();
-			//GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
-			//glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &m_transform_[0][0]);
+		
+		mat = renderComponentList_[i].material;
+
+		if (mat) {
+
+			p = renderComponentList_[i].material->getProgram();
+
+			p->use();
 
 			// De momento esta mal, funciona 1:1.
-			GLuint u_m_trans = renderComponentList_[i].material->getProgram()->getUniform("u_m_trans");
+			GLuint u_m_trans = p->getUniform("u_m_trans");
 			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &transformComponentList_[i].m_transform_[0][0]);
 
 			// Material 
-			GLuint u_color = renderComponentList_[i].material->getProgram()->getUniform("u_color");
-			glm::vec3 c = renderComponentList_[i].material->getColor();
+			GLuint u_color = p->getUniform("u_color");
+			glm::vec3 c = mat->getColor();
 			glUniform3fv(u_color, 1, &c[0]);
 
-			GLuint u_haveAlbedo = renderComponentList_[i].material->getProgram()->getUniform("u_haveAlbedo");
-			glUniform1i(u_haveAlbedo, renderComponentList_[i].material->haveAlbedo);
+			GLuint u_haveAlbedo = p->getUniform("u_haveAlbedo");
+			glUniform1i(u_haveAlbedo, mat->haveAlbedo);
 			
-			if (renderComponentList_[i].material->haveAlbedo) {
+			if (mat->haveAlbedo) {
 				//GLuint u_haveAlbedo = renderComponentList_[i].material->getProgram()->getUniform("u_tex_Albedo");
 				//glUniform1i(u_haveAlbedo, renderComponentList_[i].material->haveAlbedo);
 
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, renderComponentList_[i].material->getAlbedo()->getID());
+				glBindTexture(GL_TEXTURE_2D, mat->getAlbedo()->getID());
 			}
 		}
 		if (renderComponentList_[i].mesh) {

@@ -71,15 +71,19 @@ ST::Triangle::~Triangle() {}
 
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
+
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	VertexInfo vertices[] = {
-		 0.5f, 0.5f,0.0f,
-		 0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f,
-		-0.5f, 0.5f,0.0f
+			/*Pos*/ 		    /* Normal */        /* UV */
+		 0.5f, 0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
+		 0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
+		-0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
+		-0.5f, 0.5f,0.0f,    0.0f, 0.0f, 1.0f,     0.0f, 1.0f
 	};
 
 	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
@@ -95,9 +99,12 @@ ST::Quad::Quad() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;
@@ -118,6 +125,8 @@ ST::Quad::~Quad() {}
 ST::Circle::Circle() : Mesh() {
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	const int rebolutions = 10 + 1;
@@ -131,9 +140,16 @@ ST::Circle::Circle() : Mesh() {
 	vertices[0].z = 0.0f;
 
 	for (int i = 1; i < rebolutions; i++) {
+		// Pos
 		vertices[i].x = (float)cos(angle * i) * 0.5f;
 		vertices[i].y = (float)sin(angle * i) * 0.5f;
 		vertices[i].z = 0.0f;
+		// Normals
+		vertices[i].nx = 0.0f;
+		vertices[i].ny = 0.0f;
+		vertices[i].nz = 1.0f;
+		// UV's
+		// ???????????????
 	}
 
 	unsigned int indices[rebolutions * 3];
@@ -157,9 +173,12 @@ ST::Circle::Circle() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	//glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;

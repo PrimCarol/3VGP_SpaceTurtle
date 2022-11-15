@@ -48,7 +48,7 @@ namespace ST {
 		Texture();
 		
 		bool loadSource(const char* shaderText);
-        void createTexture(const unsigned int w, const unsigned int h);
+        void createChecker(const unsigned int w, const unsigned int h);
         void set_data(const Format f, /* const Type t,*/ const void* data, unsigned int mipmap_LOD = 0);
 		
         const GLuint getID();
@@ -65,7 +65,7 @@ namespace ST {
         unsigned int width_;
         unsigned int height_;
 
-        unsigned int* texChecker;
+        //unsigned int* texChecker;
 
 		Texture(const Texture& o);
 	};

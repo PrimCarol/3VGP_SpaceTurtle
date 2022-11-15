@@ -29,6 +29,15 @@ namespace ST {
 
 		std::vector<TransformComponent> transformComponentList_;
 		std::vector<RenderComponent> renderComponentList_;
+		
+		//std::vector<BeltComponent> beltComponentList_; 
+		//std::vector<BeltRenderPairComponent> beltRenderPairComponentList_;  // Id trans y render
+		//struct BeltRender {
+		//	size_t belt_id;
+		//	size_t render_id;
+		//};
+		
+		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 	private:
 
 		size_t TransCompIndex_;

@@ -8,6 +8,7 @@ ST::Window::Window(){
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
+        //glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE); // <---- Quitar el duble buffering para mejorar la limitacion de fps
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         Focus();
     }
@@ -50,6 +51,7 @@ ST::Window::Window(const Window& o){}
 
 void ST::Window::Focus() const{
     glfwMakeContextCurrent(glWindow);
+    //glfwSwapInterval(0);
 }
 
 void ST::Window::Render(){

@@ -3,8 +3,7 @@
 
 ST::Texture::Texture(){
 	glGenTextures(1, &internalID);
-    createTexture(256,256);
-    set_data(F_RGBA, (const void*)texChecker);
+    //createChecker(256,256);
 }
 
 bool ST::Texture::loadSource(const char* shaderText){
@@ -12,7 +11,7 @@ bool ST::Texture::loadSource(const char* shaderText){
 	return false;
 }
 
-void ST::Texture::createTexture(const unsigned int w, const unsigned int h){
+void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
     unsigned int* argb = new unsigned int[w * h];
     int x, y;
     for (y = 0; y < h; y++) {
@@ -22,7 +21,10 @@ void ST::Texture::createTexture(const unsigned int w, const unsigned int h){
     }
     width_ = w;
     height_ = h;
-    texChecker = argb;
+    //texChecker = argb;
+
+    //set_data(F_RGBA, (const void*)texChecker);
+    set_data(F_RGBA, (const void*)argb);
 }
 
 
