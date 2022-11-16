@@ -101,11 +101,28 @@ void ST::GameObj_Manager::UpdateTransforms(){
 	}
 }
 
-void ST::GameObj_Manager::UpdateRender(){
+//********** Test *************
+#include <thread>
+void ST::GameObj_Manager::UpdateRenderMultiThread(){
+	int mitad = numGameObjs / 2;
+	std::thread t1(&ST::GameObj_Manager::UpdateRender, this, 0, mitad);
+	std::thread t2(&ST::GameObj_Manager::UpdateRender, this, mitad+1, numGameObjs);
+	t1.join();
+	t2.join();
+}
+//********** Test *************
+
+
+void ST::GameObj_Manager::UpdateRender(int offset, int to){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
-	for (size_t i = 0; i < renderComponentList_.size(); i++){
+	int toInside = renderComponentList_.size();
+	if (to > 0) {
+		toInside = to;
+	}
+
+	for (size_t i = offset; i < toInside; i++){
 		
 		mat = renderComponentList_[i].material;
 
@@ -128,9 +145,6 @@ void ST::GameObj_Manager::UpdateRender(){
 			glUniform1i(u_haveAlbedo, mat->haveAlbedo);
 			
 			if (mat->haveAlbedo) {
-				//GLuint u_haveAlbedo = renderComponentList_[i].material->getProgram()->getUniform("u_tex_Albedo");
-				//glUniform1i(u_haveAlbedo, renderComponentList_[i].material->haveAlbedo);
-
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, mat->getAlbedo()->getID());
 			}

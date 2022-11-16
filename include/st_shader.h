@@ -43,7 +43,7 @@ namespace ST {
 		"uniform sampler2D u_tex_Albedo;\n"
 
 		"void main() {\n"
-			"if(u_haveAlbedo == 1){ FragColor = texture(u_tex_Albedo, texCoords);}\n" // + vec4(color,1.0); }\n"
+			"if(u_haveAlbedo == 1){ FragColor = texture(u_tex_Albedo, texCoords) + vec4(color,1.0); }\n"
 			"else { FragColor = vec4(color, 1.0); }\n"
 			//"FragColor = vec4(u_haveAlbedo,u_haveAlbedo,u_haveAlbedo, 1.0);\n"
 		"}\n";

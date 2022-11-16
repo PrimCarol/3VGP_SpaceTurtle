@@ -152,6 +152,12 @@ ST::Circle::Circle() : Mesh() {
 		// ???????????????
 	}
 
+	for (size_t i = 0; i < rebolutions; i++){
+		vertices[i].u = -0.5f + vertices[i].x;
+		vertices[i].v = -0.5f + vertices[i].y;
+	}
+
+
 	unsigned int indices[rebolutions * 3];
 
 	int contadorIndice = 0;
@@ -177,8 +183,8 @@ ST::Circle::Circle() : Mesh() {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	// UV
-	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
-	//glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;

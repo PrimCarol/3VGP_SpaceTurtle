@@ -30,7 +30,7 @@ int main() {
 	ST::Texture textureTest;
 	textureTest.createChecker(256,256);
 
-	const int numObjs = 100000;
+	const int numObjs = 2000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -43,7 +43,7 @@ int main() {
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
 			//float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
-			float randomScale = getRandom(0.01f, 0.2f);
+			float randomScale = getRandom(0.01f, 0.07f);
 			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
 
 			float randomPosX = getRandom(-1.5f, 1.5f);
@@ -68,6 +68,7 @@ int main() {
 				break;
 			case 2:
 				r->setMesh(&circle);
+				r->material->setTexture_Albedo(&textureTest);
 				break;
 			}
 			float randomR = getRandom(0.0f,1.0f);
@@ -155,6 +156,7 @@ int main() {
 		}
 
 		gm.UpdateTransforms();
+		//gm.UpdateRenderMultiThread();
 		gm.UpdateRender();
 
 		timerForSomething += w.DeltaTime();
