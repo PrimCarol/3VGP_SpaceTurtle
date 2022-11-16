@@ -37,21 +37,25 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         -- Donde estan los includes
         includedirs{
-            --Personal
+            -- Personal
             "../include",
+            "../include/components",
 
-            --Math Library
+            -- STD Extras
+            "../deps/stb_extras",
+
+            -- Math Library
             "../deps/glm",
             "../deps/glm/gtx",
             "../deps/glm/gtc",
             
-            --GLFW
+            -- GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
 
-            --OpenGl - GLAD
+            -- OpenGl - GLAD
             "../deps/OpenGL",
 
-            --ImGui
+            -- ImGui
             "../deps/imgui-docking",
             "../deps/imgui-docking/backends",
 
@@ -62,34 +66,16 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         -- Los ficheros a incluir en la solucion
         files {
             "../include/*.h",
+            "../include/components/*.h",
             "../src/*.cc",
+            "../src/components/*.cc",
 
-            -- Includes a mano.
-            --"../include/st_engine.h",
-            --"../include/st_node.h",
-            --"../include/st_emptyobj.h",
-            --"../include/st_drawobj.h",
-            --"../include/st_window.h",
-            --"../include/st_program.h",
-            --"../include/st_shader.h",
-            --"../include/st_mesh.h",
-
-
-            --"../src/st_node.cc",
-            --"../src/st_emptyobj.cc",
-            --"../src/st_drawobj.cc",
-            --"../src/st_window.cc",
-            --"../src/st_program.cc",
-            --"../src/st_shader.cc",
-            --"../src/st_mesh.cc",
-            --"../src/main.cc",
-
-
-
+            -- ImGui
             "../deps/imgui-docking/*.cpp",
             "../deps/imgui-docking/backends/imgui_impl_glfw.cpp",
             "../deps/imgui-docking/backends/imgui_impl_opengl3.cpp",
 
+            -- OpenGl - GLAD
             "../deps/OpenGL/glad.c",
         }  
 
@@ -106,6 +92,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         filter  {"Debug","x64"}
             --targetdir (ROOT .. "bin/Debug/x64")
+            links {"glfw3d"}
             targetdir(ROOT .. "/bin/Debug/")
             objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
             targetsuffix "_d"

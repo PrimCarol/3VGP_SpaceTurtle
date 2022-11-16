@@ -8,7 +8,6 @@ namespace ST {
 	/*struct VertexInfo {
 		float x, y, z; // Position
 		//float nx, ny, nz; // Normals
-		float r, g, b; // Color
 		//float u, v; // UVs
 	};*/
 
@@ -25,6 +24,7 @@ namespace ST {
 		GLuint internalId;
 	};
 
+	// ------------------- Basics 2D -------------------
 	class Triangle : public Mesh{
 	public:
 		Triangle();
@@ -47,6 +47,19 @@ namespace ST {
 		~Circle();
 	//private:
 		//void reload();
+	};
+
+	// ------------------- OBJ -------------------
+	class Geometry : public Mesh {
+	public:
+		Geometry();
+
+		void loadFromFile(const char* path);
+		void render() override;
+
+		~Geometry();
+	private:
+		//unsigned int indices;
 	};
 }
 

@@ -24,12 +24,15 @@ ST::Triangle::Triangle() : Mesh() {
 	
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	VertexInfo vertices[] = {
-		 0.0f, 0.5f,0.0f,
-		 0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f
+		     /* Pos */          /* Normal */        /* UV */
+		 0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.5f, 0.0f,
+		 0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
+		-0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -45,9 +48,12 @@ ST::Triangle::Triangle() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normals
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;
@@ -65,15 +71,19 @@ ST::Triangle::~Triangle() {}
 
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
+
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	VertexInfo vertices[] = {
-		 0.5f, 0.5f,0.0f,
-		 0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f,
-		-0.5f, 0.5f,0.0f
+			/*Pos*/ 		    /* Normal */        /* UV */
+		 0.5f, 0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
+		 0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
+		-0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
+		-0.5f, 0.5f,0.0f,    0.0f, 0.0f, 1.0f,     0.0f, 0.0f
 	};
 
 	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
@@ -89,9 +99,12 @@ ST::Quad::Quad() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;
@@ -112,33 +125,50 @@ ST::Quad::~Quad() {}
 ST::Circle::Circle() : Mesh() {
 	struct VertexInfo {
 		float x, y, z;
+		float nx, ny, nz;
+		float u, v;
 	};
 
 	const int rebolutions = 10 + 1;
 
 	VertexInfo vertices[rebolutions];
 
-	float angle = (3.1415926535f * 2.0f) / rebolutions;
+	float angle = (3.1415926535f * 2.0f) / (rebolutions-1);
 
-	vertices[0].x = 0.5f;
-	vertices[0].y = 0.0f;
-	vertices[0].z = 0.0f;
-
-	for (int i = 1; i < rebolutions; i++) {
+	for (int i = 0; i < rebolutions-1; i++) {
+		// Pos
 		vertices[i].x = (float)cos(angle * i) * 0.5f;
 		vertices[i].y = (float)sin(angle * i) * 0.5f;
 		vertices[i].z = 0.0f;
+		// Normals
+		vertices[i].nx = 0.0f;
+		vertices[i].ny = 0.0f;
+		vertices[i].nz = 1.0f;
 	}
 
-	unsigned int indices[rebolutions * 3];
+	vertices[rebolutions-1].x = 0.0f;
+	vertices[rebolutions-1].y = 0.0f;
+	vertices[rebolutions-1].z = 0.0f;
 
-	int contadorIndice = 0;
+	for (size_t i = 0; i < rebolutions; i++){
+		// UV's
+		vertices[i].u = -0.5f + vertices[i].x;
+		vertices[i].v =  0.5f - vertices[i].y;
+	}
+
+	unsigned int indices[(rebolutions * 3)+3];
+
+	int contadorIndice = -1;
 	for (int i = 0; i < rebolutions*3; i+=3){
 		indices[i] = contadorIndice +1;
 		indices[i+1] = contadorIndice +2;
-		indices[i+2] = 0;
+		indices[i+2] = rebolutions-1;
 		contadorIndice++;
 	}
+
+	indices[(rebolutions*3)] = contadorIndice-1;
+	indices[(rebolutions * 3) + 1] = 0;
+	indices[(rebolutions * 3) + 2] = rebolutions - 1;
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -151,9 +181,12 @@ ST::Circle::Circle() : Mesh() {
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
-	// Color
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	//glEnableVertexAttribArray(1);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
 
 	// Indices
 	GLuint gEBO = 0;
@@ -165,7 +198,25 @@ ST::Circle::Circle() : Mesh() {
 
 void ST::Circle::render() {
 	glBindVertexArray(internalId);
-	glDrawElements(GL_TRIANGLES, 10*3, GL_UNSIGNED_INT, (void*)0);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawElements(GL_TRIANGLES, (11*3)+3, GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Circle::~Circle() {}
+
+
+// ------------------- OBJ -------------------
+ST::Geometry::Geometry() : Mesh() {
+
+}
+
+void ST::Geometry::loadFromFile(const char* path){
+
+}
+
+void ST::Geometry::render(){
+
+}
+
+ST::Geometry::~Geometry(){}

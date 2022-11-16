@@ -3,6 +3,7 @@
 
 #include <glm.hpp>
 #include <st_program.h>
+#include <st_texture.h>
 
 namespace ST {
 
@@ -30,12 +31,20 @@ namespace ST {
 		const glm::vec3 getColor();
 
 		const ST::Program* getProgram();
+		void setProgram(ST::Program* program);
+
+		ST::Texture* getAlbedo();
+		void setTexture_Albedo(ST::Texture* texAlbedo);
 
 		~Material();
 		Material(const Material& o);
 	
+		bool haveAlbedo;
 	private:
 		//Settings* settings_;
+
+		ST::Texture* albedo;
+
 		glm::vec3 color;
 		ST::Program* program;
 	};

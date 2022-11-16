@@ -3,100 +3,152 @@
 
 #include <random.hpp>
 
+#include <imgui.h>
 #include <st_window.h>
-#include <st_drawobj.h>
+#include <st_gameobj_manager.h>
 
-void RandomPos(ST::DrawObj obj[], int size) {
-	for (int i = 0; i < size; i++){
-		obj[i].setPosition({glm::linearRand(-1.0f,1.0f), glm::linearRand(-1.0f,1.0f), 1.0f});
-		obj[i].setScale({ glm::linearRand(0.01f,0.3f), glm::linearRand(0.01f,0.3f), 1.0f });
-	}
+const float getRandom(float min, float max) {
+	return min + (rand() / (RAND_MAX / (max - min)));
 }
 
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f);
 
-	// ----------------------------------------------------------------
 	srand(time(0));
-
-	ST::DrawObj a;
-	ST::Triangle geometry;
-	//ST::Material mat;
-	//ST::Material::Settings settings;
-	a.setMesh(&geometry);
-	//a.setMaterial(&mat);
-	//a.getMaterial()->setSettings(&settings);
-	a.setScale({ 0.1f, 0.1f, 0.1f });
-	//a.getMaterial()->getSettings()->setColor({1.0f, 0.7f, 0.9f});
-	a.setName("A");
-
-	const int howManyObjs = 500;
-	ST::DrawObj b[howManyObjs];
-	//ST::Material::Settings settings_b[howManyObjs];
-	ST::Circle circle;
-	ST::Quad quad;
-	for (int i = 0; i < howManyObjs; i++){
-		int geometry = glm::linearRand(0,1);
-		switch (geometry){
-		case 0: b[i].setMesh(&circle); break;
-		case 1: b[i].setMesh(&quad); break;
-		}
-		
-		//b[i].setMaterial(&mat);
-		//b[i].getMaterial()->setSettings(&settings_b[i]);
-		//b[i].getMaterial()->getSettings()->setColor({ glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f) });
-		b[i].getMaterial()->setColor({glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f), glm::linearRand(0.0f,1.0f)});
-	}
-	RandomPos(b,howManyObjs);
-
-	a.addChild(&b[0]);
-	printf("Parent-> %s \n", b[0].getParent()->getName());
 	// ----------------------------------------------------------------
+	
+	printf("-----------------------------------------\n");
+	printf("------------- Space Turtle --------------\n");
+	printf("--------- By: Pere Prim Carol -----------\n");
+	printf("-----------------------------------------\n");
+	ST::GameObj_Manager gm;
+
+	ST::Triangle triangle;
+	ST::Quad quad;
+	ST::Circle circle;
+
+	ST::Texture textureTest;
+	//textureTest.createChecker(256,256);
+	textureTest.loadSource("../others/icon.png");
+	
+	const int numObjs = 10000;
+
+	std::unique_ptr<ST::GameObj> obj1[numObjs];
+
+	for (size_t i = 0; i < numObjs; i++){
+		std::vector<ST::ComponentId> c1;
+		c1.push_back(gm.createTransformComponent());
+		c1.push_back(gm.createRenderComponent());
+
+		obj1[i] = gm.createGameObj(c1);
+		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
+		if (t) {
+			float randomScale = getRandom(0.01f, 0.1f);
+			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
+
+			float randomPosX = getRandom(-1.5f, 1.5f);
+			float randomPosY = getRandom(-1.5f, 1.5f);
+			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
+
+			float randomVelY = getRandom(0.1f, 0.7f);
+			t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
+		}
+
+		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
+		if (r) {
+
+			int randomGeometry = rand() % 3;
+			switch (randomGeometry){
+			case 0:
+				r->setMesh(&triangle);
+				break;
+			case 1:
+				r->setMesh(&quad);
+				break;
+			case 2:
+				r->setMesh(&circle);
+				break;
+			}
+
+			r->material->setTexture_Albedo(&textureTest);
+
+			float randomR = getRandom(0.0f,1.0f);
+			float randomG = getRandom(0.0f,1.0f);
+			float randomB = getRandom(0.0f,1.0f);
+			r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
+		}
+	}
+	
+	// --------------------------
+	bool apretado = false;
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
-	while (w.isOpen() && !w.isPressed(ST::ST_INPUT_ESCAPE)) {
+	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		
 		w.Clear();
 
+		// ----------------------------------------------------------------
 		timerForInput += w.DeltaTime();
 		if (timerForInput >= 1.0f/60) {
-			//printf("Input FPS: %d \n", (int)w.FPS(timerForInput));
-			printf("Input\n");
-			if (w.isDown(ST::ST_INPUT_RIGHT)) { a.RotateZ({-8.0f * w.DeltaTime()}); }
-			if (w.isDown(ST::ST_INPUT_LEFT)) { a.RotateZ({ 8.0f * w.DeltaTime() }); }
-			if (w.isDown(ST::ST_INPUT_UP)) { a.Move({ 0.0f, 20.0f * w.DeltaTime(),0.0f }); }
-			if (w.isDown(ST::ST_INPUT_DOWN)) { a.Move({ 0.0f, -20.0f * w.DeltaTime(),0.0f }); }
+			//printf("Input\n");
+
+			if (w.inputPressed('P') && !apretado) {
+				printf("Apreto input.\n");
+				apretado = true;
+			}
+
+			if (w.inputReleased('P') && apretado) {
+				printf("Suelto input.\n");
+				apretado = false;
+			}
+
 			timerForInput = 0.0f;
 		}
 
-		// ----------------------------------------------------------------
-		//printf("Normal FPS: %d\n", (int)w.FPS(w.DeltaTime()));
+		gm.UpdateTransforms();
+		//gm.UpdateRenderMultiThread();
+		gm.UpdateRender();
 
-		for (int i = 0; i < howManyObjs; i++){
-			b[i].draw();
-		}
-
-		a.draw();
-		//printf("NumChilds: %d \n", a.getChildCount());
-		if (w.isPressed('P')) {
-			printf("Parent-> %s \n", b[0].getParent()->getName());
-			printf("NumChilds: %d \n", a.getChildCount());
-		}
-		
 		timerForSomething += w.DeltaTime();
 		if (timerForSomething >= 1.0f/10) {
-			printf("AI\n");
+			//printf("Something\n");
+
+
 			timerForSomething = 0.0f;
 		}
 
-		w.initImGuiWindow("Ventana Guay");
-		if (w.buttonImGui("ReGenerate")) {
-			RandomPos(b,howManyObjs);
+
+		ImGui::BeginMainMenuBar();
+		ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.8f, 0.9f, 1.0f });
+		ImGui::Text("| Space Turtle | by: Pere Prim / ESAT");
+		ImGui::PopStyleColor();
+		ImGui::SameLine(525);
+		if (w.FPS(w.DeltaTime()) >= 50) {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0, 1, 0, 1 });
 		}
-		w.endImGuiWindow();
-		// ----------------------------------------------------------------
+		else if (w.FPS(w.DeltaTime()) < 50 && w.FPS(w.DeltaTime()) >= 30) {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 1, 0.5f, 0, 1 });
+		}
+		else {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 1, 0, 0, 1 });
+		}
+		ImGui::Text("%d", (int)w.FPS(w.DeltaTime()));
+		ImGui::PopStyleColor();
+		ImGui::EndMainMenuBar();
+
+
+		ImGui::Begin("Info");
+		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
+		ImGui::End();
+
+
+
+
+		// ----------------------------
 
 		w.Render();	
 
@@ -265,4 +317,13 @@ std::optional<float> divide_2_numeros(float, float);
 auto res = divide_2_numeros(3.0f,0.0f);
 
 // Puede ser null. puedes tener mas cuidado.
+
+*/
+
+/*
+Recorrer un Template ...  
+
+	?????
+	(mi(packDeComponentes),...);
+
 */

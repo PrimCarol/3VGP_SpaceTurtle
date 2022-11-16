@@ -5,24 +5,12 @@
 #include <st_program.h>
 
 ST::Material::Material(){
-	ST::Shader vertex(E_VERTEX_SHADER);
 
-	GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
-	vertex.loadSource(textVertex);
-
-	ST::Shader fragment(E_FRAGMENT_SHADER);
-
-	GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
-	fragment.loadSource(textFragment);
-
-	program = new ST::Program();
-	program->attach(vertex);
-	program->attach(fragment);
-	program->link();
 
 	//settings_ = new Settings();
 	//settings_ = NULL;
-	color = { 1.0f,0.0f,1.0f };
+	color = { 1.0f,0.8f,0.9f };
+	haveAlbedo = false;
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -46,9 +34,27 @@ const ST::Program* ST::Material::getProgram(){
 	return program;
 }
 
+void ST::Material::setProgram(ST::Program* p){
+	if (p) {
+		program = p;
+	}
+}
+
+ST::Texture* ST::Material::getAlbedo(){
+	return albedo;
+}
+
+void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
+	if (texAlbedo) {
+		albedo = texAlbedo;
+		haveAlbedo = true;
+	}
+}
+
 ST::Material::Material(const Material& o){
 	//settings_ = o.settings_;
 	program = o.program;
+	color = o.color;
 }
 
 ST::Material::~Material(){

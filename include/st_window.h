@@ -28,19 +28,14 @@ namespace ST {
 		void Render();
 		void Clear() const;
 
-		// ------ ImGui ------
-		void initImGuiWindow(const char* t);
-		void textImGui(const char* t);
-		bool buttonImGui(const char* t);
-		void endImGuiWindow();
-
 		// ------ Inputs ------
-		bool isDown(ST_INPUT input);
-		bool isPressed(ST_INPUT input);
-		//bool isReleased(ST_INPUT input);
+		//bool isDown(ST_INPUT input);
+		bool inputPressed(ST_INPUT input);
+		bool inputReleased(ST_INPUT input);
 		//bool isUp(ST_INPUT input);
-		bool isDown(const char key);
-		bool isPressed(const char key);
+		//bool isDown(const char key);
+		bool inputPressed(const char key);
+		bool inputReleased(const char key);
 		//bool isUp(const char key);
 				
 		// Mouse

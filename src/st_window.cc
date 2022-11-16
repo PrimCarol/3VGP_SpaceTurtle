@@ -8,6 +8,7 @@ ST::Window::Window(){
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
+        //glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE); // <---- Quitar el duble buffering para mejorar la limitacion de fps
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         Focus();
     }
@@ -50,6 +51,7 @@ ST::Window::Window(const Window& o){}
 
 void ST::Window::Focus() const{
     glfwMakeContextCurrent(glWindow);
+    //glfwSwapInterval(0);
 }
 
 void ST::Window::Render(){
@@ -90,121 +92,159 @@ void ST::Window::Clear() const{
     //ImGui::DockSpaceOverViewport();
 }
 
-void ST::Window::initImGuiWindow(const char* t){
-    ImGui::Begin(t);
-}
-
-void ST::Window::textImGui(const char* t){
-    ImGui::Text(t);
-}
-
-bool ST::Window::buttonImGui(const char* t) {
-    return ImGui::Button(t);
-}
-
-void ST::Window::endImGuiWindow(){
-    ImGui::End();
-}
-
-bool ST::Window::isPressed(ST_INPUT input){
+bool ST::Window::inputPressed(ST_INPUT input){
     
     switch (input){
     case ST::ST_INPUT_UP:
         if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }else if (glfwGetKey(glWindow, GLFW_KEY_UP) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_DOWN:
         if (glfwGetKey(glWindow, GLFW_KEY_S) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_RIGHT:
         if (glfwGetKey(glWindow, GLFW_KEY_D) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_LEFT:
         if (glfwGetKey(glWindow, GLFW_KEY_A) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_FIRE:
         if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-            if (lastMousePressed != input) {
-                lastMousePressed = input;
+            //if (lastMousePressed != input) {
+            //    lastMousePressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_JUMP:
         if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     case ST::ST_INPUT_ESCAPE:
         if (glfwGetKey(glWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            if (lastKeyPressed != input) {
-                lastKeyPressed = input;
+            //if (lastKeyPressed != input) {
+            //    lastKeyPressed = input;
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         }
         break;
     }
-    lastKeyPressed = -1;
+    //lastKeyPressed = -1;
     return false;
 }
 
-bool ST::Window::isDown(ST_INPUT input) {
+bool ST::Window::inputReleased(ST_INPUT input){
+    switch (input) {
+    case ST::ST_INPUT_UP:
+        if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_RELEASE) {
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_UP) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_DOWN:
+        if (glfwGetKey(glWindow, GLFW_KEY_S) == GLFW_RELEASE) {
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_RIGHT:
+        if (glfwGetKey(glWindow, GLFW_KEY_D) == GLFW_RELEASE) {
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_LEFT:
+        if (glfwGetKey(glWindow, GLFW_KEY_A) == GLFW_RELEASE) {
+            return true;
+        }
+        else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_FIRE:
+        if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_JUMP:
+        if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_ESCAPE:
+        if (glfwGetKey(glWindow, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    }
+    //lastKeyPressed = -1;
+    return false;
+}
+
+/*bool ST::Window::isDown(ST_INPUT input) {
     switch (input) {
     case ST::ST_INPUT_UP:
         if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_PRESS) {
@@ -267,7 +307,7 @@ bool ST::Window::isDown(ST_INPUT input) {
     }
 
     return false;
-}
+}*/
 
 /*bool ST::Window::isUp(ST_INPUT input) {
     switch (input) {
@@ -357,23 +397,31 @@ bool ST::Window::isDown(ST_INPUT input) {
 }
 */
 
-bool ST::Window::isDown(const char key){
-    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
-        lastKeyPressed = key;
-        return true;
-    }
+//bool ST::Window::isDown(const char key){
+//    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
+//        lastKeyPressed = key;
+//        return true;
+//    }
+//}
+
+//bool ST::Window::isPressed(const char key){
+//    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
+//        if (lastKeyPressed != key) {
+//            lastKeyPressed = key;
+//            return true;
+//        }
+//        return false;
+//    }
+//     
+//    return false;
+//}
+
+bool ST::Window::inputPressed(const char key) {
+    return (glfwGetKey(glWindow, key) == GLFW_PRESS);
 }
 
-bool ST::Window::isPressed(const char key){
-    if (glfwGetKey(glWindow, key) == GLFW_PRESS) {
-        if (lastKeyPressed != key) {
-            lastKeyPressed = key;
-            return true;
-        }
-        return false;
-    }
-     
-    return false;
+bool ST::Window::inputReleased(const char key) {
+    return (glfwGetKey(glWindow, key) == GLFW_RELEASE);
 }
 
 //bool ST::Window::isUp(const char key){
