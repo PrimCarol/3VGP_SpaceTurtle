@@ -4,7 +4,7 @@
 ST::GameObj::GameObj(){
 	gm_ = nullptr;
 
-	parent = nullptr;
+	//parent = nullptr;
 	//childs = nullptr;
 }
 
@@ -41,6 +41,7 @@ ST::Components* ST::GameObj::getComponent(ST::CompType t){
 	return nullptr;
 }
 
+/*
 void ST::GameObj::addChild(GameObj* c){
 	if (c) {
 		c->parent = this;
@@ -64,6 +65,7 @@ ST::GameObj* ST::GameObj::getChild(const unsigned int index){
 ST::GameObj* ST::GameObj::getParent(){
 	return parent;
 }
+*/
 
 ST::GameObj::~GameObj(){
 	// Eliminar el "vinculo" de los componentes del Manager

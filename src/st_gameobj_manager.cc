@@ -95,9 +95,6 @@ void ST::GameObj_Manager::UpdateTransforms(){
 
 			//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
 		}
-		//printf("Obj[%d] Pos-> %f - %f - %f\n", i, transformComponentList_[i].getPosition().x,
-		//									      transformComponentList_[i].getPosition().y,
-		//									      transformComponentList_[i].getPosition().z);
 	}
 }
 

@@ -31,8 +31,8 @@ ST::Triangle::Triangle() : Mesh() {
 	VertexInfo vertices[] = {
 		     /* Pos */          /* Normal */        /* UV */
 		 0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.5f, 0.0f,
-		 0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
-		-0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f
+		 0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
+		-0.5f,-0.5f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -80,10 +80,10 @@ ST::Quad::Quad() : Mesh() {
 
 	VertexInfo vertices[] = {
 			/*Pos*/ 		    /* Normal */        /* UV */
-		 0.5f, 0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
-		 0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
-		-0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
-		-0.5f, 0.5f,0.0f,    0.0f, 0.0f, 1.0f,     0.0f, 1.0f
+		 0.5f, 0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
+		 0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
+		-0.5f,-0.5f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
+		-0.5f, 0.5f,0.0f,    0.0f, 0.0f, 1.0f,     0.0f, 0.0f
 	};
 
 	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
@@ -133,13 +133,9 @@ ST::Circle::Circle() : Mesh() {
 
 	VertexInfo vertices[rebolutions];
 
-	float angle = (3.1415926535f * 2.0f) / rebolutions;
+	float angle = (3.1415926535f * 2.0f) / (rebolutions-1);
 
-	vertices[0].x = 0.5f;
-	vertices[0].y = 0.0f;
-	vertices[0].z = 0.0f;
-
-	for (int i = 1; i < rebolutions; i++) {
+	for (int i = 0; i < rebolutions-1; i++) {
 		// Pos
 		vertices[i].x = (float)cos(angle * i) * 0.5f;
 		vertices[i].y = (float)sin(angle * i) * 0.5f;
@@ -148,25 +144,31 @@ ST::Circle::Circle() : Mesh() {
 		vertices[i].nx = 0.0f;
 		vertices[i].ny = 0.0f;
 		vertices[i].nz = 1.0f;
-		// UV's
-		// ???????????????
 	}
+
+	vertices[rebolutions-1].x = 0.0f;
+	vertices[rebolutions-1].y = 0.0f;
+	vertices[rebolutions-1].z = 0.0f;
 
 	for (size_t i = 0; i < rebolutions; i++){
+		// UV's
 		vertices[i].u = -0.5f + vertices[i].x;
-		vertices[i].v = -0.5f + vertices[i].y;
+		vertices[i].v =  0.5f - vertices[i].y;
 	}
 
+	unsigned int indices[(rebolutions * 3)+3];
 
-	unsigned int indices[rebolutions * 3];
-
-	int contadorIndice = 0;
+	int contadorIndice = -1;
 	for (int i = 0; i < rebolutions*3; i+=3){
 		indices[i] = contadorIndice +1;
 		indices[i+1] = contadorIndice +2;
-		indices[i+2] = 0;
+		indices[i+2] = rebolutions-1;
 		contadorIndice++;
 	}
+
+	indices[(rebolutions*3)] = contadorIndice-1;
+	indices[(rebolutions * 3) + 1] = 0;
+	indices[(rebolutions * 3) + 2] = rebolutions - 1;
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -196,7 +198,9 @@ ST::Circle::Circle() : Mesh() {
 
 void ST::Circle::render() {
 	glBindVertexArray(internalId);
-	glDrawElements(GL_TRIANGLES, 10*3, GL_UNSIGNED_INT, (void*)0);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDrawElements(GL_TRIANGLES, (11*3)+3, GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Circle::~Circle() {}

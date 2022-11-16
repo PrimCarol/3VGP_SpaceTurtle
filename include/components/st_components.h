@@ -17,7 +17,7 @@ namespace ST {
 		CompType type = ST::kComp_None;
 	};
 
-	struct TransformComponentId : ComponentId {	};
+	struct TransformComponentId : ComponentId {};
 	struct RenderComponentId : ComponentId {};
 
 	// --------------------------- Usability ----------------------------

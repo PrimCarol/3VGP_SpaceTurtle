@@ -18,6 +18,7 @@ int main() {
 	srand(time(0));
 	// ----------------------------------------------------------------
 	
+	printf("-----------------------------------------\n");
 	printf("------------- Space Turtle --------------\n");
 	printf("--------- By: Pere Prim Carol -----------\n");
 	printf("-----------------------------------------\n");
@@ -30,8 +31,8 @@ int main() {
 	ST::Texture textureTest;
 	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
-
-	const int numObjs = 1000;
+	
+	const int numObjs = 10000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -43,7 +44,6 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			//float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
 			float randomScale = getRandom(0.01f, 0.1f);
 			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
 
@@ -57,58 +57,29 @@ int main() {
 
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
+
 			int randomGeometry = rand() % 3;
 			switch (randomGeometry){
 			case 0:
 				r->setMesh(&triangle);
-				r->material->setTexture_Albedo(&textureTest);
 				break;
 			case 1:
 				r->setMesh(&quad);
-				r->material->setTexture_Albedo(&textureTest);
 				break;
 			case 2:
 				r->setMesh(&circle);
-				r->material->setTexture_Albedo(&textureTest);
 				break;
 			}
+
+			r->material->setTexture_Albedo(&textureTest);
+
 			float randomR = getRandom(0.0f,1.0f);
 			float randomG = getRandom(0.0f,1.0f);
 			float randomB = getRandom(0.0f,1.0f);
 			r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
-
-	//ST::TransformComponent* t = (ST::TransformComponent*)obj1->getComponent(ST::kComp_Trans);
-	//if (t) {
-	//	//printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-	//	//t->Move(glm::vec3(10.0f, 0.0f, 0.0f));
-	//	//printf("Muevo al Obj1\n");
-	//	//printf("Obj1 Pos-> %f - %f - %f\n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-	//	//printf("\n");
-	//	t->setScale(glm::vec3(0.1f, 0.1f, 1.0f));
-	//}
-	//obj1.release();
-
-	//std::vector<ST::ComponentId> c2;
-	//c2.push_back(gm.createTransformComponent());
-	//c2.push_back(gm.createRenderComponent());
-	
-	//std::unique_ptr<ST::GameObj> obj2 = gm.createGameObj(c2);
-	//if (obj2) {
-	//	obj2->checkComponents();
-	//}
-
-	//ST::TransformComponent* t = (ST::TransformComponent*)obj2->getComponent(ST::kComp_Trans);
-	//if (t) {
-	//	t->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	//}
-
-	//ST::Quad figure;
-	//ST::RenderComponent* r = (ST::RenderComponent*)obj2->getComponent(ST::kComp_Render);
-	//if (r) {
-	//	r->setMesh(&figure);
-	//}
 	
 	// --------------------------
 	bool apretado = false;
@@ -134,25 +105,6 @@ int main() {
 				apretado = false;
 			}
 
-			//if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-			//	t->Move(glm::vec3(1.0f * w.DeltaTime(),0.0f,0.0f));
-			//}
-			//if (w.inputPressed(ST::ST_INPUT_LEFT)) {
-			//	t->Move(glm::vec3(-1.0f * w.DeltaTime(), 0.0f, 0.0f));
-			//}
-			//if (w.inputPressed(ST::ST_INPUT_UP)) {
-			//	t->Move(glm::vec3(0.0f, 1.0f * w.DeltaTime(), 0.0f));
-			//}
-			//if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-			//	t->Move(glm::vec3(0.0f, -1.0f * w.DeltaTime(), 0.0f));
-			//}
-			//if (w.inputPressed('E')) {
-			//	t->RotateZ(-2.0f * w.DeltaTime());
-			//}
-			//if (w.inputPressed('Q')) {
-			//	t->RotateZ(2.0f * w.DeltaTime());
-			//}
-
 			timerForInput = 0.0f;
 		}
 
@@ -171,9 +123,9 @@ int main() {
 
 		ImGui::BeginMainMenuBar();
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.8f, 0.9f, 1.0f });
-		ImGui::Text("Pere Prim - 3VGP - ESAT");
+		ImGui::Text("| Space Turtle | by: Pere Prim / ESAT");
 		ImGui::PopStyleColor();
-		ImGui::SameLine(500);
+		ImGui::SameLine(525);
 		if (w.FPS(w.DeltaTime()) >= 50) {
 			ImGui::PushStyleColor(ImGuiCol_Text, { 0, 1, 0, 1 });
 		}
@@ -189,9 +141,8 @@ int main() {
 
 
 		ImGui::Begin("Info");
-		//ImGui::Text("FPS: %d", (int)w.FPS(w.DeltaTime()));
 		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
-		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(256, 256));
+		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
 		ImGui::End();
 
 
