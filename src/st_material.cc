@@ -10,7 +10,7 @@ ST::Material::Material(){
 	//settings_ = new Settings();
 	//settings_ = NULL;
 	color = { 1.0f,0.8f,0.9f };
-	haveAlbedo = 0;
+	haveAlbedo = false;
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -47,7 +47,7 @@ ST::Texture* ST::Material::getAlbedo(){
 void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
 	if (texAlbedo) {
 		albedo = texAlbedo;
-		haveAlbedo = 1;
+		haveAlbedo = true;
 	}
 }
 

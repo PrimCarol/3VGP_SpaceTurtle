@@ -41,6 +41,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include",
             "../include/components",
 
+            -- STD Extras
+            "../deps/stb_extras",
+
             -- Math Library
             "../deps/glm",
             "../deps/glm/gtx",

@@ -39,7 +39,7 @@ namespace ST {
 		~Material();
 		Material(const Material& o);
 	
-		int haveAlbedo;
+		bool haveAlbedo;
 	private:
 		//Settings* settings_;
 

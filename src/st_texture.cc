@@ -1,14 +1,25 @@
 #include "st_texture.h"
 #include <assert.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 ST::Texture::Texture(){
 	glGenTextures(1, &internalID);
-    //createChecker(256,256);
 }
 
-bool ST::Texture::loadSource(const char* shaderText){
+bool ST::Texture::loadSource(const char* filePath){
 	// ????????????????
-	return false;
+
+    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
+    if (image_data == NULL)
+        return false;
+
+    set_data(F_RGBA, (const void*)image_data);
+
+    stbi_image_free(image_data);
+
+	return true;
 }
 
 void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
@@ -58,11 +69,11 @@ const ST::Texture::TextType ST::Texture::getType(){
     return type_;
 }
 
-const unsigned int ST::Texture::width(){
+const int ST::Texture::width(){
     return width_;
 }
 
-const unsigned int ST::Texture::height(){
+const int ST::Texture::height(){
     return height_;
 }
 

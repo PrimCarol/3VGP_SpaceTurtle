@@ -54,16 +54,16 @@ namespace ST {
         const GLuint getID();
 
         const TextType getType();
-        const unsigned int width();
-        const unsigned int height();
+        const int width();
+        const int height();
 
 		~Texture();
 	private:
 		GLuint internalID;
 
         TextType type_;
-        unsigned int width_;
-        unsigned int height_;
+        int width_;
+        int height_;
 
         //unsigned int* texChecker;
 

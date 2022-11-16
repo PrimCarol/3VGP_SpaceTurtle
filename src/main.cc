@@ -28,9 +28,10 @@ int main() {
 	ST::Circle circle;
 
 	ST::Texture textureTest;
-	textureTest.createChecker(256,256);
+	//textureTest.createChecker(256,256);
+	textureTest.loadSource("../others/icon.png");
 
-	const int numObjs = 2000;
+	const int numObjs = 1000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -43,7 +44,7 @@ int main() {
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
 			//float randomScale = 0.01f + (rand() / (RAND_MAX / (0.2f - 0.01f)));
-			float randomScale = getRandom(0.01f, 0.07f);
+			float randomScale = getRandom(0.01f, 0.1f);
 			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
 
 			float randomPosX = getRandom(-1.5f, 1.5f);
@@ -168,9 +169,29 @@ int main() {
 		}
 
 
+		ImGui::BeginMainMenuBar();
+		ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.8f, 0.9f, 1.0f });
+		ImGui::Text("Pere Prim - 3VGP - ESAT");
+		ImGui::PopStyleColor();
+		ImGui::SameLine(500);
+		if (w.FPS(w.DeltaTime()) >= 50) {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 0, 1, 0, 1 });
+		}
+		else if (w.FPS(w.DeltaTime()) < 50 && w.FPS(w.DeltaTime()) >= 30) {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 1, 0.5f, 0, 1 });
+		}
+		else {
+			ImGui::PushStyleColor(ImGuiCol_Text, { 1, 0, 0, 1 });
+		}
+		ImGui::Text("%d", (int)w.FPS(w.DeltaTime()));
+		ImGui::PopStyleColor();
+		ImGui::EndMainMenuBar();
+
+
 		ImGui::Begin("Info");
-		ImGui::Text("FPS: %d", (int)w.FPS(w.DeltaTime()));
+		//ImGui::Text("FPS: %d", (int)w.FPS(w.DeltaTime()));
 		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(256, 256));
 		ImGui::End();
 
 

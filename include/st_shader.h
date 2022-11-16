@@ -39,13 +39,12 @@ namespace ST {
 		"in vec2 texCoords;\n"
 
 		// Texture
-		"uniform int u_haveAlbedo;\n"
+		"uniform bool u_haveAlbedo;\n"
 		"uniform sampler2D u_tex_Albedo;\n"
 
 		"void main() {\n"
-			"if(u_haveAlbedo == 1){ FragColor = texture(u_tex_Albedo, texCoords) + vec4(color,1.0); }\n"
+			"if(u_haveAlbedo){ FragColor = texture(u_tex_Albedo, texCoords) + vec4(color,1.0); }\n"
 			"else { FragColor = vec4(color, 1.0); }\n"
-			//"FragColor = vec4(u_haveAlbedo,u_haveAlbedo,u_haveAlbedo, 1.0);\n"
 		"}\n";
 
 	class Shader{
