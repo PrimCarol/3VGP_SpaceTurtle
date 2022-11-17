@@ -41,7 +41,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// Cam
 
 	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,-1.0f));
-	cam_->updateMatrix(90.0f, 0.03f, 10.0f);
+	
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -108,6 +108,8 @@ void ST::GameObj_Manager::UpdateTransforms(){
 void ST::GameObj_Manager::UpdateRender(){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
+
+	cam_->updateMatrix(90.0f, 0.03f, 10.0f);
 
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		

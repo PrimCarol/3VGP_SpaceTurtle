@@ -99,9 +99,10 @@ int main() {
 		if (timerForInput >= 1.0f/60) {
 			//printf("Input\n");
 
-			if (w.inputPressed('P') && !apretado) {
+			if (w.inputPressed('P') ){//&& !apretado) {
 				printf("Apreto input.\n");
-				apretado = true;
+				gm.cam_->transform_.Move(glm::vec3(1.0f,0.0f,0.0f));
+				//apretado = true;
 			}
 
 			if (w.inputReleased('P') && apretado) {
