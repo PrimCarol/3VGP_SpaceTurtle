@@ -87,7 +87,7 @@ const int ST::GameObj_Manager::getGameObjNum(){
 
 void ST::GameObj_Manager::UpdateTransforms(){
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
+		//transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
 		if (transformComponentList_[i].getPosition().y < -1.0f) {
 			
 			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
@@ -98,28 +98,11 @@ void ST::GameObj_Manager::UpdateTransforms(){
 	}
 }
 
-//********** Test *************
-#include <thread>
-void ST::GameObj_Manager::UpdateRenderMultiThread(){
-	int mitad = numGameObjs / 2;
-	std::thread t1(&ST::GameObj_Manager::UpdateRender, this, 0, mitad);
-	std::thread t2(&ST::GameObj_Manager::UpdateRender, this, mitad+1, numGameObjs);
-	t1.join();
-	t2.join();
-}
-//********** Test *************
-
-
-void ST::GameObj_Manager::UpdateRender(int offset, int to){
+void ST::GameObj_Manager::UpdateRender(){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
-	int toInside = renderComponentList_.size();
-	if (to > 0) {
-		toInside = to;
-	}
-
-	for (size_t i = offset; i < toInside; i++){
+	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
 		mat = renderComponentList_[i].material;
 

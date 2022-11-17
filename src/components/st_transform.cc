@@ -13,17 +13,21 @@ ST::TransformComponent::TransformComponent(){
 // ------------------------- Movement -------------------------
 void ST::TransformComponent::Move(const glm::vec3 newPos) {
 	m_transform_ = glm::translate(m_transform_, newPos);
+	updateDirectionalVectors();
 }
 
 
 void ST::TransformComponent::RotateX(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 1.0f,0.0f,0.0f });
+	updateDirectionalVectors();
 }
 void ST::TransformComponent::RotateY(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,1.0f,0.0f });
+	updateDirectionalVectors();
 }
 void ST::TransformComponent::RotateZ(const float r) {
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,0.0f,1.0f });
+	updateDirectionalVectors();
 }
 
 // ------------------------- Setters -------------------------
@@ -31,20 +35,39 @@ void ST::TransformComponent::setPosition(const glm::vec3 pos) {
 	m_transform_[3][0] = pos.x;
 	m_transform_[3][1] = pos.y;
 	m_transform_[3][2] = pos.z;
+	updateDirectionalVectors();
 }
 void ST::TransformComponent::setScale(const glm::vec3 newScale) {
 	//m_transform = glm::scale(m_transform, newScale);
 	m_transform_[0][0] = newScale.x;
 	m_transform_[1][1] = newScale.y;
 	m_transform_[2][2] = newScale.z;
+	updateDirectionalVectors();
 }
 
-void ST::TransformComponent::setVelocity(const glm::vec3 vel){
-	movementVelocity = vel;
-}
+// ------------------------ Physic Component -----------------------
+//void ST::TransformComponent::setVelocity(const glm::vec3 vel){
+//	movementVelocity = vel;
+//}
 
-const glm::vec3 ST::TransformComponent::getVelocity(){
-	return movementVelocity;
+//const glm::vec3 ST::TransformComponent::getVelocity(){
+//	return movementVelocity;
+//}
+
+void ST::TransformComponent::updateDirectionalVectors(){
+	vectorForward_.x = m_transform_[0][2];
+	vectorForward_.y = m_transform_[1][2];
+	vectorForward_.z = m_transform_[2][2];
+
+	vectorRight_.x = m_transform_[0][0];
+	vectorRight_.y = m_transform_[1][0];
+	vectorRight_.z = m_transform_[2][0];
+
+	vectorUp_.x = m_transform_[0][1];
+	vectorUp_.y = m_transform_[1][1];
+	vectorUp_.z = m_transform_[2][1];
+
+	// Habria que normalizar esto???????
 }
 
 // ------------------------- Getters -------------------------

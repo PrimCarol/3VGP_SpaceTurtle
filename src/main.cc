@@ -32,7 +32,7 @@ int main() {
 	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 10000;
+	const int numObjs = 1000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -51,8 +51,8 @@ int main() {
 			float randomPosY = getRandom(-1.5f, 1.5f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
 
-			float randomVelY = getRandom(0.1f, 0.7f);
-			t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
+			//float randomVelY = getRandom(0.1f, 0.7f);
+			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
 		}
 
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);

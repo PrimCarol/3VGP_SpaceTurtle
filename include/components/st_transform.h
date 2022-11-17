@@ -11,20 +11,18 @@ namespace ST {
 		TransformComponent();
 
 		//----------------- Transforms ------------------
-		/*Moves based on your current position*/
+		/* Moves based on your current position */
 		void Move(const glm::vec3 newPos);
 		void RotateX(const float r);
 		void RotateY(const float r);
 		void RotateZ(const float r);
 
-		/*Set a forced position*/
+		/* Set a forced position */
 		void setPosition(const glm::vec3 pos);
-		/*Set a forced scale*/
+		/* Set a forced scale */
 		void setScale(const glm::vec3 newScale);
 
-		void setVelocity(const glm::vec3 vel);
-		const glm::vec3 getVelocity();
-
+		/* Getters */
 		const glm::vec3 getPosition();
 		const glm::vec3 getScale();
 		const glm::vec3 getRotation();
@@ -32,8 +30,17 @@ namespace ST {
 		~TransformComponent();
 
 		glm::mat4 m_transform_;
+
+		//void setVelocity(const glm::vec3 vel); // esto deberia de ser en un componente de fisica.
+		//const glm::vec3 getVelocity(); // esto deberia de ser en un componente de fisica.
 	private:
-		glm::vec3 movementVelocity;
+		//glm::vec3 movementVelocity; // esto deberia de ser en un componente de fisica.
+
+		// ---- Directional Vectors ----
+		void updateDirectionalVectors();
+		glm::vec3 vectorForward_;
+		glm::vec3 vectorUp_;
+		glm::vec3 vectorRight_;
 		//TransformComponent(const TransformComponent& o);
 	};
 }

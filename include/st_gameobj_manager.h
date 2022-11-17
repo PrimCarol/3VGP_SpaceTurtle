@@ -23,8 +23,7 @@ namespace ST {
 		const int getGameObjNum();
 
 		void UpdateTransforms();
-		void UpdateRenderMultiThread();
-		void UpdateRender(int offset = 0, int to = -1);
+		void UpdateRender();
 
 		//GameObj& root();
 
