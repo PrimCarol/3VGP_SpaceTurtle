@@ -27,6 +27,10 @@ namespace ST {
 		const glm::vec3 getScale();
 		const glm::vec3 getRotation();
 
+		const glm::vec3 getForward();
+		const glm::vec3 getUp();
+		const glm::vec3 getRight();
+
 		~TransformComponent();
 
 		glm::mat4 m_transform_;

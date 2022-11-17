@@ -51,6 +51,10 @@ int main() {
 			float randomPosY = getRandom(-1.5f, 1.5f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
 
+
+			float randomRotZ = getRandom(-3.14f, 3.14f);
+			t->RotateZ(randomRotZ);
+
 			//float randomVelY = getRandom(0.1f, 0.7f);
 			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
 		}

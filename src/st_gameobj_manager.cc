@@ -37,6 +37,11 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
+
+	// Cam
+
+	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,-1.0f));
+	cam_->updateMatrix(90.0f, 0.03f, 10.0f);
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -96,6 +101,8 @@ void ST::GameObj_Manager::UpdateTransforms(){
 			//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
 		}
 	}
+	//moveCam++;
+	//cam_->transform_.setPosition(glm::vec3(sin(moveCam)*5.0f,0.0f,-1.0f));
 }
 
 void ST::GameObj_Manager::UpdateRender(){
@@ -104,13 +111,21 @@ void ST::GameObj_Manager::UpdateRender(){
 
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
+		// Material
 		mat = renderComponentList_[i].material;
-
 		if (mat) {
 
 			p = renderComponentList_[i].material->getProgram();
 
 			p->use();
+
+			GLuint camView = p->getUniform("u_view_matrix");
+			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_->view[0][0]);
+			GLuint camProjection = p->getUniform("u_projection_matrix");
+			glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam_->projection[0][0]);
+			GLuint camVP = p->getUniform("u_vp_matrix");
+			glm::mat4 cam_m_vp = cam_->projection * cam_->view;
+			glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
 
 			// De momento esta mal, funciona 1:1.
 			GLuint u_m_trans = p->getUniform("u_m_trans");

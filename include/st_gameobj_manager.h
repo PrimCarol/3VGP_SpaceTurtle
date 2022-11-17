@@ -5,6 +5,8 @@
 #include <components/st_transform.h>
 #include <components/st_render.h>
 
+#include <st_camera.h>
+
 #include <memory>
 
 namespace ST {
@@ -38,6 +40,9 @@ namespace ST {
 		//};
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
+
+		ST::Camera* cam_;
+		//float moveCam = 0.0f;
 	private:
 
 		size_t TransCompIndex_;

@@ -17,6 +17,10 @@ namespace ST {
 		"layout (location=1) in vec3 a_normals;\n"
 		"layout (location=2) in vec2 a_uv;\n"
 
+		"uniform mat4 u_view_matrix;\n"
+		"uniform mat4 u_projection_matrix;\n"	
+	    "uniform mat4 u_vp_matrix;\n"
+
 		"uniform mat4 u_m_trans;\n"
 		"uniform vec3 u_color;\n"
 
@@ -26,8 +30,8 @@ namespace ST {
 		"void main() {\n"
 			"color = u_color;\n"
 			"texCoords = a_uv;\n"
-
-			"gl_Position = u_m_trans * vec4(a_position, 1);\n"
+			
+			"gl_Position = (u_vp_matrix * u_m_trans) * vec4(a_position, 1);\n"
 		"}\n";
 
 	static GLchar* basic_fShader_text =

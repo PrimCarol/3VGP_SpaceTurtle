@@ -96,6 +96,16 @@ const glm::vec3 ST::TransformComponent::getRotation() {
 	return glm::vec3();
 }
 
+const glm::vec3 ST::TransformComponent::getForward(){
+	return vectorForward_;
+}
+const glm::vec3 ST::TransformComponent::getUp() {
+	return vectorUp_;
+}
+const glm::vec3 ST::TransformComponent::getRight() {
+	return vectorRight_;
+}
+
 ST::TransformComponent::~TransformComponent(){
 	//printf("Destroy Component: Transform\n");
 }
