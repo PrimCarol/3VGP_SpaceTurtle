@@ -93,13 +93,13 @@ const int ST::GameObj_Manager::getGameObjNum(){
 void ST::GameObj_Manager::UpdateTransforms(){
 	for (int i = 0; i < transformComponentList_.size(); i++){
 		//transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
-		if (transformComponentList_[i].getPosition().y < -1.0f) {
-			
-			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
-			transformComponentList_[i].setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
-
-			//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
-		}
+		//if (transformComponentList_[i].getPosition().y < -1.5f) {
+		//	
+		//	float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
+		//	transformComponentList_[i].setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
+		//
+		//	//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
+		//}
 	}
 	//moveCam++;
 	//cam_->transform_.setPosition(glm::vec3(sin(moveCam)*5.0f,0.0f,-1.0f));

@@ -68,6 +68,9 @@ void ST::TransformComponent::updateDirectionalVectors(){
 	vectorUp_.z = m_transform_[2][1];
 
 	// Habria que normalizar esto???????
+	vectorForward_ = glm::normalize(vectorForward_);
+	vectorRight_ = glm::normalize(vectorRight_);
+	vectorUp_ = glm::normalize(vectorUp_);
 }
 
 // ------------------------- Getters -------------------------

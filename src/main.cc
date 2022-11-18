@@ -32,7 +32,7 @@ int main() {
 	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 1000;
+	const int numObjs = 10000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -49,7 +49,8 @@ int main() {
 
 			float randomPosX = getRandom(-1.5f, 1.5f);
 			float randomPosY = getRandom(-1.5f, 1.5f);
-			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
+			float randomPosZ = getRandom( 0.0f, 10.0f);
+			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 
 
 			float randomRotZ = getRandom(-3.14f, 3.14f);
@@ -86,7 +87,6 @@ int main() {
 	}
 	
 	// --------------------------
-	bool apretado = false;
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
@@ -99,16 +99,19 @@ int main() {
 		if (timerForInput >= 1.0f/60) {
 			//printf("Input\n");
 
-			if (w.inputPressed('P') ){//&& !apretado) {
-				printf("Apreto input.\n");
-				gm.cam_->transform_.Move(glm::vec3(1.0f,0.0f,0.0f));
-				//apretado = true;
+			if (w.inputPressed(ST::ST_INPUT_UP)) {
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, 0.2f));
+			}
+			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, -0.2f));
+			}
+			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
+				gm.cam_->transform_.RotateY(0.2f);
+			}
+			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+				gm.cam_->transform_.RotateY(-0.2f);
 			}
 
-			if (w.inputReleased('P') && apretado) {
-				printf("Suelto input.\n");
-				apretado = false;
-			}
 
 			timerForInput = 0.0f;
 		}
