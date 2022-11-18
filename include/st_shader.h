@@ -28,6 +28,7 @@ namespace ST {
 		"out vec2 texCoords;\n"
 		
 		"void main() {\n"
+			//"color = normalize((u_m_trans * vec4(a_normals,0.0)).xyz);\n"
 			"color = u_color;\n"
 			"texCoords = a_uv;\n"
 			

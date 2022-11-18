@@ -40,7 +40,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// Cam
 
-	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,-1.0f));
+	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,-5.0f));
 	
 }
 
@@ -100,6 +100,8 @@ void ST::GameObj_Manager::UpdateTransforms(){
 		//
 		//	//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
 		//}
+		transformComponentList_[i].RotateX(0.02f);
+		transformComponentList_[i].RotateZ(0.07f);
 	}
 	//moveCam++;
 	//cam_->transform_.setPosition(glm::vec3(sin(moveCam)*5.0f,0.0f,-1.0f));
@@ -108,6 +110,10 @@ void ST::GameObj_Manager::UpdateTransforms(){
 void ST::GameObj_Manager::UpdateRender(){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
+
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
 	cam_->updateMatrix(90.0f, 0.03f, 10.0f);
 

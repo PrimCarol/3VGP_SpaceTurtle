@@ -27,12 +27,13 @@ int main() {
 	ST::Triangle triangle;
 	ST::Quad quad;
 	ST::Circle circle;
+	ST::Cube cube;
 
 	ST::Texture textureTest;
 	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 10000;
+	const int numObjs = 1000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -45,7 +46,7 @@ int main() {
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
 			float randomScale = getRandom(0.01f, 0.1f);
-			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
+			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 
 			float randomPosX = getRandom(-1.5f, 1.5f);
 			float randomPosY = getRandom(-1.5f, 1.5f);
@@ -63,7 +64,7 @@ int main() {
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
 
-			int randomGeometry = rand() % 3;
+			int randomGeometry = rand() % 4;
 			switch (randomGeometry){
 			case 0:
 				r->setMesh(&triangle);
@@ -73,6 +74,9 @@ int main() {
 				break;
 			case 2:
 				r->setMesh(&circle);
+				break;
+			case 3:
+				r->setMesh(&cube);
 				break;
 			}
 
@@ -150,7 +154,10 @@ int main() {
 
 		ImGui::Begin("Info");
 		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		ImGui::Spacing();
+		ImGui::Text("UV->"); ImGui::SameLine(150); ImGui::Text("1,1");
 		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
+		ImGui::Text("0,0");
 		ImGui::End();
 
 

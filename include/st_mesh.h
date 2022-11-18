@@ -14,10 +14,8 @@ namespace ST {
 	class Mesh{
 	public:
 		Mesh();
-
 		GLuint getId();
 		virtual void render();
-
 		~Mesh();
 		Mesh(const Mesh& o);
 	protected:
@@ -43,13 +41,20 @@ namespace ST {
 	public:
 		Circle();
 		void render() override;
-		//void setRobolutions(int v);
 		~Circle();
-	//private:
-		//void reload();
 	};
 
-	// ------------------- OBJ -------------------
+	// ------------------- 3D -------------------
+	
+	// ------- Cube -------
+	class Cube : public Mesh {
+	public:
+		Cube();
+		void render() override;
+		~Cube();
+	};
+
+	// ------- Geometry -------
 	class Geometry : public Mesh {
 	public:
 		Geometry();
