@@ -98,96 +98,58 @@ bool ST::Window::inputPressed(ST_INPUT input){
     switch (input){
     case ST::ST_INPUT_UP:
         if (glfwGetKey(glWindow, GLFW_KEY_W) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
         }else if (glfwGetKey(glWindow, GLFW_KEY_UP) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
         }
         break;
     case ST::ST_INPUT_DOWN:
         if (glfwGetKey(glWindow, GLFW_KEY_S) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
-        }
-        else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
+        }else if (glfwGetKey(glWindow, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            return true;
         }
         break;
     case ST::ST_INPUT_RIGHT:
         if (glfwGetKey(glWindow, GLFW_KEY_D) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
-        }
-        else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
+        }else if (glfwGetKey(glWindow, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            return true;
         }
         break;
     case ST::ST_INPUT_LEFT:
         if (glfwGetKey(glWindow, GLFW_KEY_A) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
-        }
-        else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
+        }else if (glfwGetKey(glWindow, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            return true;
         }
         break;
     case ST::ST_INPUT_FIRE:
         if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
-            //if (lastMousePressed != input) {
-            //    lastMousePressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_FIRE_SECOND:
+        if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS) {
+            return true;
         }
         break;
     case ST::ST_INPUT_JUMP:
         if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_SHIFT:
+        if (glfwGetKey(glWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            return true;
         }
         break;
     case ST::ST_INPUT_ESCAPE:
         if (glfwGetKey(glWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            //if (lastKeyPressed != input) {
-            //    lastKeyPressed = input;
-                return true;
-            //}
-            //return false;
+            return true;
         }
         break;
     }
-    //lastKeyPressed = -1;
     return false;
 }
 
@@ -230,8 +192,18 @@ bool ST::Window::inputReleased(ST_INPUT input){
             return true;
         }
         break;
+    case ST::ST_INPUT_FIRE_SECOND:
+        if (glfwGetMouseButton(glWindow, GLFW_MOUSE_BUTTON_2) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
     case ST::ST_INPUT_JUMP:
         if (glfwGetKey(glWindow, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+            return true;
+        }
+        break;
+    case ST::ST_INPUT_SHIFT:
+        if (glfwGetKey(glWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
             return true;
         }
         break;

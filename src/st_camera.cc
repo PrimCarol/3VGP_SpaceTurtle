@@ -7,6 +7,7 @@
 
 ST::Camera::Camera(int width, int height, glm::vec3 pos){
 	transform_.setPosition(pos);
+	transform_.RotateY(3.1415f);
 	width_ = width;
 	height_ = height;
 
@@ -15,7 +16,8 @@ ST::Camera::Camera(int width, int height, glm::vec3 pos){
 }
 
 void ST::Camera::updateMatrix(float fov, float nearPlane, float farPlane){
-	view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), transform_.getUp());
+	//view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), transform_.getUp());
+	view = glm::inverse(transform_.m_transform_);
 	projection = glm::perspective(glm::radians(fov), float(width_/height_), nearPlane, farPlane);
 }
 

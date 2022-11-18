@@ -39,8 +39,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->link();
 
 	// Cam
-
-	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,-5.0f));
+	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,0.0f));
 	
 }
 
@@ -112,10 +111,10 @@ void ST::GameObj_Manager::UpdateRender(){
 	const ST::Program* p = nullptr;
 
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
-	cam_->updateMatrix(90.0f, 0.03f, 10.0f);
+	cam_->updateMatrix(90.0f, 0.03f, 100.0f);
 
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		

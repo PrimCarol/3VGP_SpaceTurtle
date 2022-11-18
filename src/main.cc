@@ -18,6 +18,12 @@ int main() {
 	srand(time(0));
 	// ----------------------------------------------------------------
 	
+	// ************** Temporal ****************
+	bool firtsMouse = true; 
+	float lastX = 0.0f;
+	float lastY = 0.0f;
+	// ************** Temporal ****************
+
 	printf("-----------------------------------------\n");
 	printf("------------- Space Turtle --------------\n");
 	printf("--------- By: Pere Prim Carol -----------\n");
@@ -33,7 +39,7 @@ int main() {
 	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 1000;
+	const int numObjs = 50000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -48,9 +54,9 @@ int main() {
 			float randomScale = getRandom(0.01f, 0.1f);
 			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 
-			float randomPosX = getRandom(-1.5f, 1.5f);
-			float randomPosY = getRandom(-1.5f, 1.5f);
-			float randomPosZ = getRandom( 0.0f, 10.0f);
+			float randomPosX = getRandom(-10.0f, 10.0f);
+			float randomPosY = getRandom(-10.0f, 10.0f);
+			float randomPosZ = getRandom( 0.0f,  20.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 
 
@@ -103,25 +109,46 @@ int main() {
 		if (timerForInput >= 1.0f/60) {
 			//printf("Input\n");
 
-			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, 0.2f));
-			}
-			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, -0.2f));
-			}
-			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
-				gm.cam_->transform_.RotateY(0.2f);
-			}
-			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-				gm.cam_->transform_.RotateY(-0.2f);
+			glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
+
+			float extra_speed = 1.0f;
+			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+				extra_speed = 4.0f;
 			}
 
+			if (w.inputPressed(ST::ST_INPUT_UP)) {
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (-3.0f * w.DeltaTime()) * extra_speed));
+			}
+			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed));
+			}
+			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
+				gm.cam_->transform_.Move(glm::vec3((-3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+			}
+			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+				gm.cam_->transform_.Move(glm::vec3((3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+			}
+
+			if (firtsMouse) {
+				lastX = mousePos.x;
+				lastY = mousePos.y;
+				firtsMouse = false;
+			}
+
+			float yoffset = mousePos.x - lastX;
+			float xoffset = mousePos.y - lastY;
+			lastX = mousePos.x;
+			lastY = mousePos.y;
+
+			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x - xoffset * 0.5f * w.DeltaTime());
+				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
+			}
 
 			timerForInput = 0.0f;
 		}
 
 		gm.UpdateTransforms();
-		//gm.UpdateRenderMultiThread();
 		gm.UpdateRender();
 
 		timerForSomething += w.DeltaTime();
@@ -133,6 +160,7 @@ int main() {
 		}
 
 
+		// ---------------------------- ImGui -------------------------------
 		ImGui::BeginMainMenuBar();
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.8f, 0.9f, 1.0f });
 		ImGui::Text("| Space Turtle | by: Pere Prim / ESAT");
@@ -159,9 +187,6 @@ int main() {
 		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
 		ImGui::Text("0,0");
 		ImGui::End();
-
-
-
 
 		// ----------------------------
 
