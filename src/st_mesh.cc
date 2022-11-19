@@ -22,11 +22,11 @@ void ST::Mesh::render(){}
 // ----------------- Triangle ------------------
 ST::Triangle::Triangle() : Mesh() {
 	
-	struct VertexInfo {
-		float x, y, z;
-		float nx, ny, nz;
-		float u, v;
-	};
+	//struct VertexInfo {
+	//	float x, y, z;
+	//	float nx, ny, nz;
+	//	float u, v;
+	//};
 
 	VertexInfo vertices[] = {
 		     /* Pos */          /* Normal */        /* UV */
@@ -72,11 +72,11 @@ ST::Triangle::~Triangle() {}
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
 
-	struct VertexInfo {
-		float x, y, z;
-		float nx, ny, nz;
-		float u, v;
-	};
+	//struct VertexInfo {
+	//	float x, y, z;
+	//	float nx, ny, nz;
+	//	float u, v;-
+	//};
 
 	VertexInfo vertices[] = {
 			/*Pos*/ 		    /* Normal */        /* UV */
@@ -123,11 +123,11 @@ ST::Quad::~Quad() {}
 
 // ----------------- Circle ------------------
 ST::Circle::Circle() : Mesh() {
-	struct VertexInfo {
-		float x, y, z;
-		float nx, ny, nz;
-		float u, v;
-	};
+	//struct VertexInfo {
+	//	float x, y, z;
+	//	float nx, ny, nz;
+	//	float u, v;
+	//};
 
 	const int rebolutions = 10 + 1;
 
@@ -156,7 +156,7 @@ ST::Circle::Circle() : Mesh() {
 
 	for (size_t i = 0; i < rebolutions; i++){
 		// UV's
-		vertices[i].u =  (1.0f + vertices[i].x) * 0.5f;
+		vertices[i].u =  (1.0f - vertices[i].x) * 0.5f;
 		vertices[i].v =  (1.0f - vertices[i].y) * 0.5f;
 	}
 
@@ -211,11 +211,11 @@ ST::Circle::~Circle() {}
 
 // ------------------- Cube -------------------
 ST::Cube::Cube() : Mesh() {
-	struct VertexInfo {
-		float x, y, z;
-		float nx, ny, nz;
-		float u, v;
-	};
+	//struct VertexInfo {
+	//	float x, y, z;
+	//	float nx, ny, nz;
+	//	float u, v;
+	//};
 
 	VertexInfo vertices[] = {
 		/*Pos*/ 		        /* Normal */         /* UV */
@@ -288,16 +288,16 @@ void ST::Cube::render() {
 ST::Cube::~Cube() {}
 
 // ------------------- OBJ -------------------
-ST::Geometry::Geometry() : Mesh() {
-
-}
-
-void ST::Geometry::loadFromFile(const char* path){
-
-}
-
-void ST::Geometry::render(){
-
-}
-
-ST::Geometry::~Geometry(){}
+//ST::Geometry::Geometry() : Mesh() {
+//
+//}
+//
+//void ST::Geometry::loadFromFile(const char* path){
+//
+//}
+//
+//void ST::Geometry::render(){
+//
+//}
+//
+//ST::Geometry::~Geometry(){}

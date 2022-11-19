@@ -36,10 +36,9 @@ int main() {
 	ST::Cube cube;
 
 	ST::Texture textureTest;
-	//textureTest.createChecker(256,256);
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 50000;
+	const int numObjs = 10000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -60,6 +59,10 @@ int main() {
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 
 
+			float randomRotX = getRandom(-3.14f, 3.14f);
+			t->RotateX(randomRotX);
+			float randomRotY = getRandom(-3.14f, 3.14f);
+			t->RotateY(randomRotY);
 			float randomRotZ = getRandom(-3.14f, 3.14f);
 			t->RotateZ(randomRotZ);
 

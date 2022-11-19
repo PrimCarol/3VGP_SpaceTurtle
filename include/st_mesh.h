@@ -5,11 +5,11 @@
 
 namespace ST {
 
-	/*struct VertexInfo {
+	struct VertexInfo {
 		float x, y, z; // Position
-		//float nx, ny, nz; // Normals
-		//float u, v; // UVs
-	};*/
+		float nx, ny, nz; // Normals
+		float u, v; // UVs
+	};
 
 	class Mesh{
 	public:
@@ -55,17 +55,15 @@ namespace ST {
 	};
 
 	// ------- Geometry -------
-	class Geometry : public Mesh {
-	public:
-		Geometry();
-
-		void loadFromFile(const char* path);
-		void render() override;
-
-		~Geometry();
-	private:
-		//unsigned int indices;
-	};
+	//class Geometry : public Mesh {
+	//public:
+	//	Geometry();
+	//
+	//	void loadFromFile(const char* path);
+	//	void render() override;
+	//
+	//	~Geometry();
+	//};
 }
 
 #endif

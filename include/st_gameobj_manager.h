@@ -42,18 +42,16 @@ namespace ST {
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 
 		ST::Camera* cam_;
-		//float moveCam = 0.0f;
 	private:
 
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
 		
-		ST::Program* basicProgram;
+		ST::Program* basicProgram; // Default Shader Program to render.
 
-		unsigned int numGameObjs;
+		unsigned int numGameObjs; // Opcional / Temporal
 
 		GameObj_Manager(const GameObj_Manager& o);
-
 	};
 }
 

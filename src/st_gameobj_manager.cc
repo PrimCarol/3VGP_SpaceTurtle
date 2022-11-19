@@ -44,16 +44,17 @@ ST::GameObj_Manager::GameObj_Manager(){
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
-	
 	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
 		return ST::TransformComponentId();
 	}
 
 	ST::TransformComponentId result;
-	result.value = TransCompIndex_++;
+	result.value = TransCompIndex_;
 	result.type = ST::kComp_Trans;
 
 	transformComponentList_.push_back(ST::TransformComponent());
+	TransCompIndex_++;
+
 	return result;
 }
 
@@ -63,11 +64,13 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 	}
 
 	ST::RenderComponentId result;
-	result.value = RenderCompIndex_++;
+	result.value = RenderCompIndex_;
 	result.type = ST::kComp_Render;
 
 	renderComponentList_.push_back(ST::RenderComponent());
-	renderComponentList_[RenderCompIndex_ - 1].material->setProgram(basicProgram);
+	renderComponentList_[RenderCompIndex_].material->setProgram(basicProgram);
+	RenderCompIndex_++;
+
 	return result;
 }
 
@@ -77,7 +80,7 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 	if (go) {
 		//printf("\n***** Obj Created *****\n");
 		go->components = c;
-		go->gm_ = this;
+		go->gm_ = this;		
 	}
 
 	numGameObjs++;
@@ -91,19 +94,8 @@ const int ST::GameObj_Manager::getGameObjNum(){
 
 void ST::GameObj_Manager::UpdateTransforms(){
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		//transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
-		//if (transformComponentList_[i].getPosition().y < -1.5f) {
-		//	
-		//	float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
-		//	transformComponentList_[i].setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
-		//
-		//	//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
-		//}
-		transformComponentList_[i].RotateX(0.02f);
-		transformComponentList_[i].RotateZ(0.07f);
+		transformComponentList_[i].RotateY(0.07f);
 	}
-	//moveCam++;
-	//cam_->transform_.setPosition(glm::vec3(sin(moveCam)*5.0f,0.0f,-1.0f));
 }
 
 void ST::GameObj_Manager::UpdateRender(){
@@ -111,10 +103,10 @@ void ST::GameObj_Manager::UpdateRender(){
 	const ST::Program* p = nullptr;
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
-	cam_->updateMatrix(90.0f, 0.03f, 100.0f);
+	cam_->updateMatrix(90.0f, 0.03f, 500.0f);
 
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
@@ -126,6 +118,7 @@ void ST::GameObj_Manager::UpdateRender(){
 
 			p->use();
 
+			// ------ Camara -------
 			GLuint camView = p->getUniform("u_view_matrix");
 			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_->view[0][0]);
 			GLuint camProjection = p->getUniform("u_projection_matrix");
@@ -133,6 +126,7 @@ void ST::GameObj_Manager::UpdateRender(){
 			GLuint camVP = p->getUniform("u_vp_matrix");
 			glm::mat4 cam_m_vp = cam_->projection * cam_->view;
 			glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
+			// ------ Camara -------
 
 			// De momento esta mal, funciona 1:1.
 			GLuint u_m_trans = p->getUniform("u_m_trans");
@@ -158,23 +152,5 @@ void ST::GameObj_Manager::UpdateRender(){
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
-
-//ST::TransformComponent* ST::GameObj_Manager::getTransformComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//	if (id > transformComponentList_.size()) { return NULL; }
-//	return transformComponentList_.at(id);
-//}
-
-//ST::MeshComponent* ST::GameObj_Manager::getMeshComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//  if (id > meshComponentList_.size()) { return NULL; }
-//	return meshComponentList_.at(id);
-//}
-
-//ST::MaterialComponent* ST::GameObj_Manager::getMaterialComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//  if (id > materialComponentList_.size()) { return NULL; }
-//	return materialComponentList_.at(id);
-//}
 
 ST::GameObj_Manager::~GameObj_Manager(){}
