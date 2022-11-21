@@ -7,6 +7,8 @@
 //	return e;
 //}
 
+#include <st_engine.h>
+
 #define MAX_TRANSFORM_COMPONENTS 1000000
 #define MAX_RENDER_COMPONENTS 1000000
 
@@ -24,14 +26,14 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Basic Program -------
 	ST::Shader vertex(E_VERTEX_SHADER);
-	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
-	//vertex.loadSource(textVertex);
-	vertex.loadSource(basic_vShader_text);
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/vertex.vert");
+	vertex.loadSource(textVertex);
+	//vertex.loadSource(basic_vShader_text);
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
-	//fragment.loadSource(textFragment);
-	fragment.loadSource(basic_fShader_text);
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/fragment.frag");
+	fragment.loadSource(textFragment);
+	//fragment.loadSource(basic_fShader_text);
 
 	basicProgram = new ST::Program();
 	basicProgram->attach(vertex);
@@ -119,6 +121,9 @@ void ST::GameObj_Manager::UpdateRender(){
 			p->use();
 
 			// ------ Camara -------
+			GLuint camPos = p->getUniform("u_view_pos");
+			glm::vec3 camTransPos = cam_->transform_.getPosition();
+			glUniform3fv(camPos, 1, &camTransPos.x);
 			GLuint camView = p->getUniform("u_view_matrix");
 			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_->view[0][0]);
 			GLuint camProjection = p->getUniform("u_projection_matrix");

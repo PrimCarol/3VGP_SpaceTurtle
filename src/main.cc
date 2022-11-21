@@ -1,15 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <random.hpp>
-
 #include <imgui.h>
-#include <st_window.h>
-#include <st_gameobj_manager.h>
 
-const float getRandom(float min, float max) {
-	return min + (rand() / (RAND_MAX / (max - min)));
-}
+#include <st_engine.h>
 
 int main() {
 	ST::Window w;
@@ -50,20 +44,20 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = getRandom(0.01f, 0.1f);
+			float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
 			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 
-			float randomPosX = getRandom(-10.0f, 10.0f);
-			float randomPosY = getRandom(-10.0f, 10.0f);
-			float randomPosZ = getRandom( 0.0f,  20.0f);
+			float randomPosX = ST::Engine::getRandom(-10.0f, 10.0f);
+			float randomPosY = ST::Engine::getRandom(-10.0f, 10.0f);
+			float randomPosZ = ST::Engine::getRandom( 0.0f,  20.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 
 
-			float randomRotX = getRandom(-3.14f, 3.14f);
+			float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
 			t->RotateX(randomRotX);
-			float randomRotY = getRandom(-3.14f, 3.14f);
+			float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
 			t->RotateY(randomRotY);
-			float randomRotZ = getRandom(-3.14f, 3.14f);
+			float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
 			t->RotateZ(randomRotZ);
 
 			//float randomVelY = getRandom(0.1f, 0.7f);
@@ -89,12 +83,17 @@ int main() {
 				break;
 			}
 
-			r->material->setTexture_Albedo(&textureTest);
+			if ((rand() % 2) == 0) {
+				r->material->setTexture_Albedo(&textureTest);
+			}
+			else
+			{
+				float randomR = ST::Engine::getRandom(0.0f,1.0f);
+				float randomG = ST::Engine::getRandom(0.0f,1.0f);
+				float randomB = ST::Engine::getRandom(0.0f,1.0f);
+				r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			}
 
-			float randomR = getRandom(0.0f,1.0f);
-			float randomG = getRandom(0.0f,1.0f);
-			float randomB = getRandom(0.0f,1.0f);
-			r->material->setColor(glm::vec3(randomR, randomG, randomB));
 			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
