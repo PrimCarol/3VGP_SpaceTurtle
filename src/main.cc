@@ -32,7 +32,7 @@ int main() {
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 10000;
+	const int numObjs = 100;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 

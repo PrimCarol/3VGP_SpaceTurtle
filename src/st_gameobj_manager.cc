@@ -9,6 +9,8 @@
 
 #include <st_engine.h>
 
+#include <st_raycast.h>
+
 #define MAX_TRANSFORM_COMPONENTS 1000000
 #define MAX_RENDER_COMPONENTS 1000000
 
@@ -95,8 +97,26 @@ const int ST::GameObj_Manager::getGameObjNum(){
 }
 
 void ST::GameObj_Manager::UpdateTransforms(){
+
+	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
+
+	ST::Raycast ray;
+	ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
+
 	for (int i = 0; i < transformComponentList_.size(); i++){
 		transformComponentList_[i].RotateY(0.07f);
+		
+	//	ST::Raycast ray;
+	//
+	//	glm::vec3 aabb_min(-1.0f, -1.0f, -1.0f); // Collider
+	//	glm::vec3 aabb_max(1.0f, 1.0f, 1.0f);
+	//
+	//	float outputDistance;
+	//	ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), aabb_min, aabb_max, transformComponentList_[i].m_transform_, outputDistance);
+	//	if(outputDistance > 0.0f){
+	//		printf("Detecto el objeto -> %d \n", i);
+	//		printf("Esta a %f de distancia. \n", outputDistance);
+	//	}
 	}
 }
 
