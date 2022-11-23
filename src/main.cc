@@ -16,6 +16,8 @@ int main() {
 	bool firtsMouse = true; 
 	float lastX = 0.0f;
 	float lastY = 0.0f;
+
+	int objSelected = -1;
 	// ************** Temporal ****************
 
 	printf("-----------------------------------------\n");
@@ -32,7 +34,7 @@ int main() {
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 10;
+	const int numObjs = 1000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -44,8 +46,8 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
-			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
+			float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
+			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
 			float randomPosX = ST::Engine::getRandom(-10.0f, 10.0f);
 			float randomPosY = ST::Engine::getRandom(-10.0f, 10.0f);
@@ -53,12 +55,12 @@ int main() {
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
-			//float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateX(randomRotX);
-			//float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateY(randomRotY);
-			//float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateZ(randomRotZ);
+			float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateX(randomRotX);
+			float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateY(randomRotY);
+			float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateZ(randomRotZ);
 		
 			//float randomVelY = getRandom(0.1f, 0.7f);
 			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
@@ -67,7 +69,7 @@ int main() {
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
 
-			int randomGeometry = 3; //rand() % 4;
+			int randomGeometry = rand() % 4;
 			switch (randomGeometry){
 			case 0:
 				r->setMesh(&triangle);
@@ -83,16 +85,16 @@ int main() {
 				break;
 			}
 
-			//if ((rand() % 2) == 0) {
+			if ((rand() % 2) == 0) {
 				r->material->setTexture_Albedo(&textureTest);
-			//}
-			//else
-			//{
-			//	float randomR = ST::Engine::getRandom(0.0f,1.0f);
-			//	float randomG = ST::Engine::getRandom(0.0f,1.0f);
-			//	float randomB = ST::Engine::getRandom(0.0f,1.0f);
-			//	r->material->setColor(glm::vec3(randomR, randomG, randomB));
-			//}
+			}
+			else
+			{
+				float randomR = ST::Engine::getRandom(0.0f,1.0f);
+				float randomG = ST::Engine::getRandom(0.0f,1.0f);
+				float randomB = ST::Engine::getRandom(0.0f,1.0f);
+				r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			}
 
 			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
@@ -149,7 +151,17 @@ int main() {
 				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
 			}
 
-
+			// ---- Picking ---
+			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+				ST::GameObj* a = gm.tryPickObj();
+				if (a) {
+					printf("Selecciono el objeto -> %d \n", a->getID());
+					ST::TransformComponent* t = (ST::TransformComponent*)a->getComponent(ST::kComp_Trans);
+					if (t) {
+						printf("Esta en la posicion -> %f / %f / %f \n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+					}
+				}
+			}
 
 			timerForInput = 0.0f;
 		} // End Input Tick

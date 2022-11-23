@@ -11,6 +11,7 @@
 
 #include <st_raycast.h>
 
+#define MAX_OBJS 1000000
 #define MAX_TRANSFORM_COMPONENTS 1000000
 #define MAX_RENDER_COMPONENTS 1000000
 
@@ -18,7 +19,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	//printf("***** GameObj Manager Created *****\n");
 
-	numGameObjs = 0;
+	GameObjsList_.reserve(MAX_OBJS);
 
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
@@ -85,56 +86,25 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 		//printf("\n***** Obj Created *****\n");
 		go->components = c;
 		go->gm_ = this;		
+
+		go->setID(GameObjsList_.size());
+
+		GameObjsList_.push_back(go.get());
 	}
 
-	numGameObjs++;
+	//numGameObjs++;
 
 	return go;
 }
 
 const int ST::GameObj_Manager::getGameObjNum(){
-	return numGameObjs;
+	return GameObjsList_.size();
 }
 
 void ST::GameObj_Manager::UpdateTransforms(){
 
-	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
-
-	//ST::Raycast ray;
-	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
-
-	float objClose = 100000.0f;
-	int objIndexCloase = -1;
-
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		//transformComponentList_[i].RotateY(0.07f);
-		
-		ST::Raycast ray;
-	
-		glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
-		glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
-	
-		float outputDistance;
-		//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
-		//			 transformComponentList_[i].m_transform_, outputDistance);
-		
-		if (ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), colliderPoint_min, colliderPoint_max,
-			transformComponentList_[i].m_transform_, outputDistance)) {
-
-			if (outputDistance < objClose) {
-				objClose = outputDistance;
-				objIndexCloase = i;
-			}
-		}
-		//else {
-		//	printf("No detecto nada \n");
-		//}
-
-	}
-
-	if (objIndexCloase != -1) {
-		printf("Detecto el objeto -> %d \n", objIndexCloase);
-		printf("Esta a %f de distancia. \n", objClose);
+		transformComponentList_[i].RotateY(0.07f);
 	}
 }
 
@@ -194,6 +164,59 @@ void ST::GameObj_Manager::UpdateRender(){
 
 		glUseProgram(0);
 	}
+}
+
+ST::GameObj* ST::GameObj_Manager::tryPickObj(){
+
+	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
+
+	//ST::Raycast ray;
+	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
+
+	float objClose = 100000.0f;
+	int objIndexClose = -1;
+
+	for (int i = 0; i < GameObjsList_.size(); i++) {
+
+		ST::TransformComponent* t = (ST::TransformComponent*)GameObjsList_[i]->getComponent(ST::kComp_Trans);
+
+		if (t) {
+
+			ST::Raycast ray;
+
+			glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
+			glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
+
+			float outputDistance = 100000.0f;
+
+			//glm::mat4 m = transformComponentList_[i].m_transform_;
+			//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
+			//			 transformComponentList_[i].m_transform_, outputDistance);
+
+			if (ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), colliderPoint_min, colliderPoint_max,
+				t->m_transform_, outputDistance)) {
+
+				if (outputDistance < objClose) {
+					objClose = outputDistance;
+					objIndexClose = i;
+				}
+			}
+			//else {
+			//	printf("No detecto nada \n");
+			//}
+		}
+
+	}
+	
+	if (objIndexClose != -1) {
+		//printf("Detecto el objeto -> %d \n", objIndexClose);
+		//printf("Esta a %f de distancia. \n", objClose);
+
+		return GameObjsList_[objIndexClose];
+		//return nullptr;
+	}
+
+	return nullptr;
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}

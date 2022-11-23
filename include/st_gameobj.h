@@ -11,6 +11,10 @@ namespace ST {
 	public:
 		GameObj();
 
+		// Basic Info
+		int getID();
+		void setID(int id);
+
 		// The creator manager reference
 		class GameObj_Manager* gm_;
 
@@ -28,7 +32,7 @@ namespace ST {
 		//GameObj(const GameObj& o);
 
 	private:
-
+		int ID_;
 	};
 }
 

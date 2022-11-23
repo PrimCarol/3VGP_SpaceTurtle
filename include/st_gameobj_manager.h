@@ -27,8 +27,11 @@ namespace ST {
 		void UpdateTransforms();
 		void UpdateRender();
 
+		ST::GameObj* tryPickObj();
+
 		//GameObj& root();
 
+		std::vector<GameObj*> GameObjsList_;
 		std::vector<TransformComponent> transformComponentList_;
 		std::vector<RenderComponent> renderComponentList_;
 		
@@ -49,7 +52,7 @@ namespace ST {
 		
 		ST::Program* basicProgram; // Default Shader Program to render.
 
-		unsigned int numGameObjs; // Opcional / Temporal
+		//unsigned int numGameObjs; // Opcional / Temporal
 
 		GameObj_Manager(const GameObj_Manager& o);
 	};
