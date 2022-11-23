@@ -103,6 +103,9 @@ void ST::GameObj_Manager::UpdateTransforms(){
 	//ST::Raycast ray;
 	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
 
+	float objClose = 100000.0f;
+	int objIndexCloase = -1;
+
 	for (int i = 0; i < transformComponentList_.size(); i++){
 		//transformComponentList_[i].RotateY(0.07f);
 		
@@ -115,16 +118,23 @@ void ST::GameObj_Manager::UpdateTransforms(){
 		//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
 		//			 transformComponentList_[i].m_transform_, outputDistance);
 		
-		ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f,0.0f,1.0f), colliderPoint_min, colliderPoint_max,
-						 transformComponentList_[i].m_transform_, outputDistance);
+		if (ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), colliderPoint_min, colliderPoint_max,
+			transformComponentList_[i].m_transform_, outputDistance)) {
 
-		if(outputDistance >= 0.0f){
-			printf("Detecto el objeto -> %d \n", i);
-			printf("Esta a %f de distancia. \n", outputDistance);
+			if (outputDistance < objClose) {
+				objClose = outputDistance;
+				objIndexCloase = i;
+			}
 		}
 		//else {
 		//	printf("No detecto nada \n");
 		//}
+
+	}
+
+	if (objIndexCloase != -1) {
+		printf("Detecto el objeto -> %d \n", objIndexCloase);
+		printf("Esta a %f de distancia. \n", objClose);
 	}
 }
 
