@@ -43,8 +43,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->link();
 
 	// Cam
-	cam_ = new ST::Camera(1080, 720, glm::vec3(0.0f,0.0f,0.0f));
-	
+	cam_ = new ST::Camera();
+	//cam_->setOrthographic(20.0f,20.0f, 0.05f, 10000.0f);
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -100,23 +100,31 @@ void ST::GameObj_Manager::UpdateTransforms(){
 
 	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
 
-	ST::Raycast ray;
-	ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
+	//ST::Raycast ray;
+	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
 
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].RotateY(0.07f);
+		//transformComponentList_[i].RotateY(0.07f);
 		
-	//	ST::Raycast ray;
-	//
-	//	glm::vec3 aabb_min(-1.0f, -1.0f, -1.0f); // Collider
-	//	glm::vec3 aabb_max(1.0f, 1.0f, 1.0f);
-	//
-	//	float outputDistance;
-	//	ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), aabb_min, aabb_max, transformComponentList_[i].m_transform_, outputDistance);
-	//	if(outputDistance > 0.0f){
-	//		printf("Detecto el objeto -> %d \n", i);
-	//		printf("Esta a %f de distancia. \n", outputDistance);
-	//	}
+		ST::Raycast ray;
+	
+		glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
+		glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
+	
+		float outputDistance;
+		//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
+		//			 transformComponentList_[i].m_transform_, outputDistance);
+		
+		ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f,0.0f,1.0f), colliderPoint_min, colliderPoint_max,
+						 transformComponentList_[i].m_transform_, outputDistance);
+
+		if(outputDistance >= 0.0f){
+			printf("Detecto el objeto -> %d \n", i);
+			printf("Esta a %f de distancia. \n", outputDistance);
+		}
+		//else {
+		//	printf("No detecto nada \n");
+		//}
 	}
 }
 
@@ -128,7 +136,7 @@ void ST::GameObj_Manager::UpdateRender(){
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_BACK);
 
-	cam_->updateMatrix(90.0f, 0.03f, 500.0f);
+	cam_->update();
 
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
@@ -173,6 +181,8 @@ void ST::GameObj_Manager::UpdateRender(){
 		if (renderComponentList_[i].mesh) {
 			renderComponentList_[i].mesh->render();
 		}
+
+		glUseProgram(0);
 	}
 }
 

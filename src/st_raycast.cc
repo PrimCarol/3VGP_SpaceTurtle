@@ -115,12 +115,11 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 
 void ST::Raycast::drawRay(glm::vec3 start, glm::vec3 end){
 
-	GLfloat points[6] = { start.x,start.y,start.z, end.x,end.y,end.z };
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0,	points);
-		glDrawArrays(GL_LINES, 0, 2);
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glBegin(GL_LINES);
+		glColor3f(1.0, 0.0, 0.0);
+		glVertex3f(start.x, start.y, start.z);
+		glVertex3f(end.x, end.y, end.z);
+	glEnd();
 }
 
 ST::Raycast::~Raycast(){

@@ -5,11 +5,19 @@
 
 namespace ST {
 
+	enum CameraType {
+		kCam_Perpective,
+		kCam_Orthographic,
+	};
+
 	class Camera{
 	public:
-		Camera(int width, int height, glm::vec3 pos);
+		Camera();
 
-		void updateMatrix(float fov, float nearPlane, float farPlane);
+		void setPerspective(float fov, float ratio, float nearPlane, float farPlane);
+		void setOrthographic(float h, float v, float nearPlane, float farPlane);
+
+		void update();
 
 		~Camera();
 		//Camera(const Camera& o);
@@ -20,7 +28,18 @@ namespace ST {
 		glm::mat4 projection;
 
 	private:
-		int width_, height_;
+		CameraType type;
+		
+		// Perspective
+		float fov_;
+		float ratio_;
+
+		//Orthographic
+		float horizontal_;
+		float vertical_;
+
+		float nearPlane_;
+		float farPlane_;
 	};
 }
 
