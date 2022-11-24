@@ -17,7 +17,7 @@ int main() {
 	float lastX = 0.0f;
 	float lastY = 0.0f;
 
-	int objSelected = -1;
+	ST::GameObj* objSelected = nullptr;
 	// ************** Temporal ****************
 
 	printf("-----------------------------------------\n");
@@ -153,14 +153,14 @@ int main() {
 
 			// ---- Picking ---
 			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-				ST::GameObj* a = gm.tryPickObj();
-				if (a) {
-					printf("Selecciono el objeto -> %d \n", a->getID());
-					ST::TransformComponent* t = (ST::TransformComponent*)a->getComponent(ST::kComp_Trans);
-					if (t) {
-						printf("Esta en la posicion -> %f / %f / %f \n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-					}
-				}
+				objSelected = gm.tryPickObj();
+				//if (objSelected) {
+				//	printf("Selecciono el objeto -> %d \n", objSelected->getID());
+				//	ST::TransformComponent* t = (ST::TransformComponent*)objSelected->getComponent(ST::kComp_Trans);
+				//	if (t) {
+				//		printf("Esta en la posicion -> %f / %f / %f \n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
+				//	}
+				//}
 			}
 
 			timerForInput = 0.0f;
@@ -198,12 +198,70 @@ int main() {
 		ImGui::EndMainMenuBar();
 
 
-		ImGui::Begin("Info");
-		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
-		ImGui::Spacing();
-		ImGui::Text("UV->"); ImGui::SameLine(150); ImGui::Text("1,1");
-		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
-		ImGui::Text("0,0");
+		//ImGui::Begin("Info");
+		//ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		//ImGui::Spacing();
+		//ImGui::Text("UV->"); ImGui::SameLine(150); ImGui::Text("1,1");
+		//ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
+		//ImGui::Text("0,0");
+		//ImGui::End();
+
+		ImGui::Begin("Object Seleected");
+		if (objSelected) {
+			ImGui::Text("Obj ID -> %d ", objSelected->getID());
+			ST::TransformComponent* trans = (ST::TransformComponent*)objSelected->getComponent(ST::kComp_Trans);
+			if (trans) {
+				//ImGui::BeginChild("Transform");
+				ImGui::Text("---- Transform ----");
+				glm::vec3 pos = trans->getPosition();
+				ImGui::DragFloat3("##Pos", &pos.x, 0.5f);
+				trans->setPosition(pos);
+				glm::vec3 rot = trans->getRotation();
+				ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
+				trans->RotateX(rot.x);
+				trans->RotateY(rot.y);
+				trans->RotateZ(rot.z);
+
+				//ImGui::EndChild();
+			}
+			ST::RenderComponent* render = (ST::RenderComponent*)objSelected->getComponent(ST::kComp_Render);
+			if (render) {
+				//ImGui::BeginChild("Render");
+				ImGui::Text("---- Render ----");
+				
+				ImGui::Text("- Color -");
+				glm::vec3 c = render->material->getColor();
+				ImGui::ColorEdit3("Color", &c.x);
+				render->material->setColor(c);
+
+				ImGui::Text("- Texture -");
+				if (render->material->haveAlbedo) {
+					ImGui::Image((void*)(intptr_t)render->material->getAlbedo()->getID(), ImVec2(144, 144));
+				}
+				else {
+					ImGui::Text("None");
+				}
+
+				ImGui::Text("---- Mesh ----");
+				ImGui::Text("Mesh: "); ImGui::SameLine();
+				switch (render->mesh->meshType_){
+				case ST::kMeshType_Triangle:
+					ImGui::Text("Triangle");
+					break;
+				case ST::kMeshType_Quad:
+					ImGui::Text("Quad");
+					break;
+				case ST::kMeshType_Circle:
+					ImGui::Text("Circle");
+					break;
+				case ST::kMeshType_Cube:
+					ImGui::Text("Cube");
+					break;
+				}
+
+				//ImGui::EndChild();
+			}
+		}
 		ImGui::End();
 
 		// ----------------------------

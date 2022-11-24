@@ -40,6 +40,10 @@ namespace ST {
 	private:
 		//glm::vec3 movementVelocity; // esto deberia de ser en un componente de fisica.
 
+		glm::vec3 position_;
+		glm::vec3 rotation_;
+		glm::vec3 scale_;
+
 		// ---- Directional Vectors ----
 		void updateDirectionalVectors();
 		glm::vec3 vectorForward_;

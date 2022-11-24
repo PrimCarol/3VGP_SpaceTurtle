@@ -104,7 +104,7 @@ const int ST::GameObj_Manager::getGameObjNum(){
 void ST::GameObj_Manager::UpdateTransforms(){
 
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].RotateY(0.07f);
+		//transformComponentList_[i].RotateY(0.07f);
 	}
 }
 

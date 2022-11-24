@@ -4,6 +4,7 @@
 ST::Mesh::Mesh(){
 	gladLoadGL();
 	internalId = 0;
+	meshType_ = kMeshType_None;
 }
 
 GLuint ST::Mesh::getId(){
@@ -14,6 +15,7 @@ ST::Mesh::~Mesh(){}
 
 ST::Mesh::Mesh(const Mesh& o){
 	internalId = o.internalId;
+	meshType_ = o.meshType_;
 }
 
 void ST::Mesh::render(){}
@@ -27,6 +29,8 @@ ST::Triangle::Triangle() : Mesh() {
 	//	float nx, ny, nz;
 	//	float u, v;
 	//};
+
+	meshType_ = kMeshType_Triangle;
 
 	VertexInfo vertices[] = {
 		     /* Pos */          /* Normal */        /* UV */
@@ -78,6 +82,8 @@ ST::Quad::Quad() : Mesh() {
 	//	float u, v;-
 	//};
 
+	meshType_ = kMeshType_Quad;
+
 	VertexInfo vertices[] = {
 			/*Pos*/ 		    /* Normal */        /* UV */
 		 1.0f, 1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
@@ -128,6 +134,8 @@ ST::Circle::Circle() : Mesh() {
 	//	float nx, ny, nz;
 	//	float u, v;
 	//};
+
+	meshType_ = kMeshType_Circle;
 
 	const int rebolutions = 10 + 1;
 
@@ -216,6 +224,8 @@ ST::Cube::Cube() : Mesh() {
 	//	float nx, ny, nz;
 	//	float u, v;
 	//};
+
+	meshType_ = kMeshType_Cube;
 
 	VertexInfo vertices[] = {
 		/*Pos*/ 		        /* Normal */         /* UV */

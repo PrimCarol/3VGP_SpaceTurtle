@@ -11,10 +11,22 @@ namespace ST {
 		float u, v; // UVs
 	};
 
+	enum MeshType{
+		kMeshType_None,
+		kMeshType_Triangle,
+		kMeshType_Quad,
+		kMeshType_Circle,
+		kMeshType_Cube,
+		kMeshType_Custom,
+	};
+
 	class Mesh{
+
+
 	public:
 		Mesh();
 		GLuint getId();
+		MeshType meshType_;
 		virtual void render();
 		~Mesh();
 		Mesh(const Mesh& o);
