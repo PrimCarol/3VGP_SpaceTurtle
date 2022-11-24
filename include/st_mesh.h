@@ -3,6 +3,10 @@
 
 #include <glad.h>
 
+// Testing
+#include <vector>
+#include <transform.hpp>
+
 namespace ST {
 
 	struct VertexInfo {
@@ -67,15 +71,20 @@ namespace ST {
 	};
 
 	// ------- Geometry -------
-	//class Geometry : public Mesh {
-	//public:
-	//	Geometry();
-	//
-	//	void loadFromFile(const char* path);
-	//	void render() override;
-	//
-	//	~Geometry();
-	//};
+	class Geometry : public Mesh {
+	public:
+		Geometry();
+	
+		bool loadFromFile(const char* path);
+		void render() override;
+	
+		~Geometry();
+
+	private:
+		std::vector<glm::vec3> vertices_;
+		std::vector<glm::vec2> uvs_;
+		std::vector<glm::vec3> normals_;
+	};
 }
 
 #endif

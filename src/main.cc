@@ -34,7 +34,12 @@ int main() {
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 10;
+	// *************************** Test ***********************
+	//ST::Geometry geometry;
+	//geometry.loadFromFile("../others/skull.obj");
+	// *************************** Test ***********************
+
+	const int numObjs = 1000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
