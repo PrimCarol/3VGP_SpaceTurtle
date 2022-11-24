@@ -135,6 +135,7 @@ int main() {
 				gm.cam_->transform_.Move(glm::vec3((3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
 			}
 
+			/*
 			if (firtsMouse) {
 				lastX = mousePos.x;
 				lastY = mousePos.y;
@@ -150,7 +151,7 @@ int main() {
 				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x - xoffset * 0.5f * w.DeltaTime());
 				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
 			}
-
+			*/
 			// ---- Picking ---
 			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 				objSelected = gm.tryPickObj();
