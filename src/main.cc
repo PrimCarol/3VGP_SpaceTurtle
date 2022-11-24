@@ -34,7 +34,7 @@ int main() {
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
 	
-	const int numObjs = 1000;
+	const int numObjs = 10;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -46,8 +46,8 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
-			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
+			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
+			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
 			float randomPosX = ST::Engine::getRandom(-10.0f, 10.0f);
 			float randomPosY = ST::Engine::getRandom(-10.0f, 10.0f);
@@ -55,12 +55,12 @@ int main() {
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
-			float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
-			t->RotateX(randomRotX);
-			float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
-			t->RotateY(randomRotY);
-			float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
-			t->RotateZ(randomRotZ);
+			//float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
+			//t->RotateX(randomRotX);
+			//float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
+			//t->RotateY(randomRotY);
+			//float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
+			//t->RotateZ(randomRotZ);
 		
 			//float randomVelY = getRandom(0.1f, 0.7f);
 			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
