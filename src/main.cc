@@ -35,11 +35,11 @@ int main() {
 	textureTest.loadSource("../others/icon.png");
 	
 	// *************************** Test ***********************
-	//ST::Geometry geometry;
-	//geometry.loadFromFile("../others/skull.obj");
+	ST::Geometry geometry;
+	geometry.loadFromFile("../others/cat.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 1000;
+	const int numObjs = 1;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -56,7 +56,7 @@ int main() {
 		
 			float randomPosX = ST::Engine::getRandom(-10.0f, 10.0f);
 			float randomPosY = ST::Engine::getRandom(-10.0f, 10.0f);
-			float randomPosZ = ST::Engine::getRandom( 0.0f,  20.0f);
+			float randomPosZ = ST::Engine::getRandom( 2.0f,  20.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
@@ -77,16 +77,16 @@ int main() {
 			int randomGeometry = rand() % 4;
 			switch (randomGeometry){
 			case 0:
-				r->setMesh(&triangle);
+				r->setMesh(&geometry);
 				break;
 			case 1:
-				r->setMesh(&quad);
+				r->setMesh(&geometry);
 				break;
 			case 2:
-				r->setMesh(&circle);
+				r->setMesh(&geometry);
 				break;
 			case 3:
-				r->setMesh(&cube);
+				r->setMesh(&geometry);
 				break;
 			}
 

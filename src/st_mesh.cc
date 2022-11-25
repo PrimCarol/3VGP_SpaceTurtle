@@ -370,6 +370,7 @@ bool ST::Geometry::loadFromFile(const char* path){
 		}
 
 	}
+
 	// For each vertex of each triangle
 	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
 
@@ -383,22 +384,39 @@ bool ST::Geometry::loadFromFile(const char* path){
 		glm::vec2 uv = temp_uvs[uvIndex - 1];
 		glm::vec3 normal = temp_normals[normalIndex - 1];
 
-		// Put the attributes in buffers
-		vertices_.push_back(vertex);
-		uvs_.push_back(uv);
-		normals_.push_back(normal);
+		VertexInfo tempVertices;
+		
+		// Position
+		tempVertices.x = vertex.x;
+		tempVertices.y = vertex.y;
+		tempVertices.z = vertex.z;
 
+		//Normales
+		tempVertices.nx = normal.x;
+		tempVertices.ny = normal.y;
+		tempVertices.nz = normal.z;
+
+		// UV's
+		tempVertices.u = uv.x;
+		tempVertices.v = uv.y;
+
+		vertices_.push_back(tempVertices);
+		indices_.push_back(vertexIndex);
 	}
 	fclose(file);
 
-	/*glGenVertexArrays(1, &internalId);
+	//VertexInfo* allVertices = &vertices_[0];
+	//unsigned int* allIndices = &indices_[0];
+
+	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
 
 	GLuint gVBO = 0;
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
+	//int sizeV = sizeof(*allVertices);
+	//int sizeI = sizeof(*allIndices);
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
@@ -413,7 +431,7 @@ bool ST::Geometry::loadFromFile(const char* path){
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);*/
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 
 
 

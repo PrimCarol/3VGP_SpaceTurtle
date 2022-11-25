@@ -81,9 +81,8 @@ namespace ST {
 		~Geometry();
 
 	private:
-		std::vector<glm::vec3> vertices_;
-		std::vector<glm::vec2> uvs_;
-		std::vector<glm::vec3> normals_;
+		std::vector<VertexInfo> vertices_;
+		std::vector<unsigned int> indices_;
 	};
 }
 
