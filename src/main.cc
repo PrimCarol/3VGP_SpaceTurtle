@@ -32,7 +32,7 @@ int main() {
 	ST::Cube cube;
 
 	ST::Texture textureTest;
-	textureTest.loadSource("../others/icon.png");
+	textureTest.loadSource("../others/Cat_diffuse.jpg");
 	
 	// *************************** Test ***********************
 	ST::Geometry geometry;
@@ -90,16 +90,16 @@ int main() {
 				break;
 			}
 
-			if ((rand() % 2) == 0) {
+			//if ((rand() % 2) == 0) {
 				r->material->setTexture_Albedo(&textureTest);
-			}
-			else
-			{
-				float randomR = ST::Engine::getRandom(0.0f,1.0f);
-				float randomG = ST::Engine::getRandom(0.0f,1.0f);
-				float randomB = ST::Engine::getRandom(0.0f,1.0f);
-				r->material->setColor(glm::vec3(randomR, randomG, randomB));
-			}
+			//}
+			//else
+			//{
+			//	float randomR = ST::Engine::getRandom(0.0f,1.0f);
+			//	float randomG = ST::Engine::getRandom(0.0f,1.0f);
+			//	float randomB = ST::Engine::getRandom(0.0f,1.0f);
+			//	r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			//}
 
 			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}

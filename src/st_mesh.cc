@@ -34,8 +34,7 @@ ST::Triangle::Triangle() : Mesh() {
 
 	meshType_ = kMeshType_Triangle;
 
-	VertexInfo vertices[] = {
-		     /* Pos */          /* Normal */        /* UV */
+	/*VertexInfo vertices[] = {
 		 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     0.5f, 0.0f,
 		 1.0f,-1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
 		-1.0f,-1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f
@@ -66,6 +65,7 @@ ST::Triangle::Triangle() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	*/
 }
 
 void ST::Triangle::render(){
@@ -86,8 +86,7 @@ ST::Quad::Quad() : Mesh() {
 
 	meshType_ = kMeshType_Quad;
 
-	VertexInfo vertices[] = {
-			/*Pos*/ 		    /* Normal */        /* UV */
+	/*VertexInfo vertices[] = {
 		 1.0f, 1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
 		 1.0f,-1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
 		-1.0f,-1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
@@ -119,7 +118,7 @@ ST::Quad::Quad() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
+	*/
 }
 
 void ST::Quad::render() {
@@ -145,7 +144,7 @@ ST::Circle::Circle() : Mesh() {
 
 	float angle = (3.1415926535f * 2.0f) / (rebolutions-1);
 
-	for (int i = 0; i < rebolutions-1; i++) {
+	for (int i = 0; i < rebolutions - 1; i++) {
 		// Pos
 		vertices[i].x = (float)cos(angle * i); //* 1.0f;
 		vertices[i].y = (float)sin(angle * i); //* 1.0f;
@@ -207,7 +206,6 @@ ST::Circle::Circle() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
 }
 
 void ST::Circle::render() {
@@ -221,45 +219,39 @@ ST::Circle::~Circle() {}
 
 // ------------------- Cube -------------------
 ST::Cube::Cube() : Mesh() {
-	//struct VertexInfo {
-	//	float x, y, z;
-	//	float nx, ny, nz;
-	//	float u, v;
-	//};
 
 	meshType_ = kMeshType_Cube;
 
 	VertexInfo vertices[] = {
-		/*Pos*/ 		        /* Normal */         /* UV */
-	  0.5f, 0.5f, -0.5f,	   0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
-	  0.5f,-0.5f, -0.5f,	   0.0f, 0.0f, 1.0f,     0.0f, 1.0f,	//Front
-	 -0.5f,-0.5f, -0.5f,	   0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
-	 -0.5f, 0.5f, -0.5f,       0.0f, 0.0f, 1.0f,     1.0f, 0.0f,
+		{{ 0.5f, 0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
+		{{ 0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},	//Front
+		{{-0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
+		{{-0.5f, 0.5f, -0.5f },    {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}},
 
-	 -0.5f,  0.5f, -0.5f,      1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	 -0.5f, -0.5f, -0.5f,      1.0f, 0.0f, 0.0f,     0.0f, 1.0f,	//Right
-	 -0.5f, -0.5f,  0.5f,      1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 -0.5f,  0.5f,  0.5f,      1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+		{{-0.5f,  0.5f, -0.5f},    {1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
+		{{-0.5f, -0.5f, -0.5f},    {1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Right
+		{{-0.5f, -0.5f,  0.5f},    {1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
+		{{-0.5f,  0.5f,  0.5f},    {1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
 
-	  0.5f,  0.5f,  0.5f,	  -1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	  0.5f, -0.5f,  0.5f,     -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,	//Left
-	  0.5f, -0.5f, -0.5f,	  -1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	  0.5f,  0.5f, -0.5f,     -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+		{{0.5f,  0.5f,  0.5f},	  {-1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
+		{{0.5f, -0.5f,  0.5f},    {-1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Left
+		{{0.5f, -0.5f, -0.5f},	  {-1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
+		{{0.5f,  0.5f, -0.5f},    {-1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
 
-	 -0.5f,  0.5f,  0.5f,	   0.0f, 0.0f,-1.0f,     0.0f, 0.0f,
-	 -0.5f, -0.5f,  0.5f,      0.0f, 0.0f,-1.0f,     0.0f, 1.0f,	//Back
-	  0.5f, -0.5f,  0.5f,	   0.0f, 0.0f,-1.0f,     1.0f, 1.0f,
-	  0.5f,  0.5f,  0.5f,      0.0f, 0.0f,-1.0f,     1.0f, 0.0f,
+		{{-0.5f,  0.5f,  0.5f},	  {0.0f, 0.0f,-1.0f},     {0.0f, 0.0f}},
+		{{-0.5f, -0.5f,  0.5f},   {0.0f, 0.0f,-1.0f},     {0.0f, 1.0f}},	//Back
+		{{ 0.5f, -0.5f,  0.5f},	  {0.0f, 0.0f,-1.0f},     {1.0f, 1.0f}},
+		{{ 0.5f,  0.5f,  0.5f},   {0.0f, 0.0f,-1.0f},     {1.0f, 0.0f}},
 
-      0.5f, -0.5f, -0.5f,	   0.0f,-1.0f, 0.0f,     0.0f, 0.0f,
-	  0.5f, -0.5f,  0.5f,      0.0f,-1.0f, 0.0f,     0.0f, 1.0f,	//Bottom
-	 -0.5f, -0.5f,  0.5f,	   0.0f,-1.0f, 0.0f,     1.0f, 1.0f,
-	 -0.5f, -0.5f, -0.5f,      0.0f,-1.0f, 0.0f,     1.0f, 0.0f,
+		{{ 0.5f, -0.5f, -0.5f},	   {0.0f,-1.0f, 0.0f},     {0.0f, 0.0f}},
+		{{ 0.5f, -0.5f,  0.5f},    {0.0f,-1.0f, 0.0f},     {0.0f, 1.0f}},	//Bottom
+		{{-0.5f, -0.5f,  0.5f},	   {0.0f,-1.0f, 0.0f},     {1.0f, 1.0f}},
+		{{-0.5f, -0.5f, -0.5f},    {0.0f,-1.0f, 0.0f},     {1.0f, 0.0f}},
 
-	 -0.5f,  0.5f, -0.5f,	   0.0f, 1.0f, 0.0f,     1.0f, 1.0f,
-	 -0.5f,  0.5f,  0.5f,      0.0f, 1.0f, 0.0f,     1.0f, 0.0f,	//Top
-	  0.5f,  0.5f,  0.5f,	   0.0f, 1.0f, 0.0f,     0.0f, 0.0f,
-	  0.5f,  0.5f, -0.5f,      0.0f, 1.0f, 0.0f,     0.0f, 1.0f,
+		{{-0.5f,  0.5f, -0.5f},	   {0.0f, 1.0f, 0.0f},     {1.0f, 1.0f}},
+		{{-0.5f,  0.5f,  0.5f},    {0.0f, 1.0f, 0.0f},     {1.0f, 0.0f}},	//Top
+		{{ 0.5f,  0.5f,  0.5f},	   {0.0f, 1.0f, 0.0f},     {0.0f, 0.0f}},
+		{{ 0.5f,  0.5f, -0.5f},    {0.0f, 1.0f, 0.0f},     {0.0f, 1.0f}}
 	};
 
 	unsigned int indices[] = { 0,1,2 , 0,2,3  ,  4,5,6 , 4,6,7,
@@ -304,7 +296,7 @@ ST::Geometry::Geometry() : Mesh() {
 
 }
 
-bool ST::Geometry::loadFromFile(const char* path){
+/*bool ST::Geometry::loadFromFile(const char* path) {
 	printf("Loading OBJ file %s...\n", path);
 
 	FILE* file = fopen(path, "r");
@@ -436,12 +428,104 @@ bool ST::Geometry::loadFromFile(const char* path){
 
 
 	return true;
+}*/
+
+#include <tiny_obj_loader.h>
+#include <unordered_map>
+
+bool ST::Geometry::loadFromFile(const char* path) {
+	tinyobj::attrib_t attributes;
+	std::vector<tinyobj::shape_t> shapes;
+	//std::vector<tinyobj::material_t> materials;
+	std::string warning;
+	std::string error;
+
+	if (!tinyobj::LoadObj(
+		&attributes, &shapes, NULL, &warning, &error, path)){
+		printf("Error on load file mesh: %s [%s] \n", warning, error);
+		return false;
+	}
+
+	std::vector<VertexInfo> vertices;
+	std::vector<uint32_t> indices;
+	std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
+
+
+	for (const auto& shape : shapes){
+
+		for (const auto& index : shape.mesh.indices){
+			glm::vec3 position{
+				attributes.vertices[(int)3 * index.vertex_index + 0],
+				attributes.vertices[(int)3 * index.vertex_index + 1],
+				attributes.vertices[(int)3 * index.vertex_index + 2] };
+
+			glm::vec3 normals{
+				attributes.normals[(int)3 * index.normal_index + 0],
+				attributes.normals[(int)3 * index.normal_index + 1],
+				attributes.normals[(int)3 * index.normal_index + 2] };
+
+			glm::vec2 texCoord{
+				attributes.texcoords[(int)2 * index.texcoord_index + 0],
+				1.0f - attributes.texcoords[(int)2 * index.texcoord_index + 1] };
+
+			VertexInfo vertex{ position, normals, texCoord };
+
+			if (uniqueVertices.count(vertex) == 0)
+			{
+				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+				vertices.push_back(vertex);
+			}
+
+			indices_.push_back(uniqueVertices[vertex]);
+		}
+	}
+
+	for (const auto& vertex : vertices){
+		VertexInfo tempVertices;
+
+		// Position
+		tempVertices.pos = vertex.pos;
+
+		//Normales
+		tempVertices.normal = vertex.normal;
+
+		// UV's
+		tempVertices.uv = vertex.uv;
+
+		vertices_.push_back(tempVertices);
+	}
+
+	glGenVertexArrays(1, &internalId);
+	glBindVertexArray(internalId);
+
+	GLuint gVBO = 0;
+	glGenBuffers(1, &gVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
+
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
+	glEnableVertexAttribArray(0);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
+
+	// Indices
+	GLuint gEBO = 0;
+	glGenBuffers(1, &gEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
+
+	return true;
 }
 
 void ST::Geometry::render(){
 	glBindVertexArray(internalId);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, vertices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Geometry::~Geometry(){}
