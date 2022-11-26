@@ -184,8 +184,8 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
 			ST::Raycast ray;
 
-			glm::vec3 colliderPoint_min(-10.0f, -10.0f, -10.0f); // Collider
-			glm::vec3 colliderPoint_max(10.0f, 10.0f, 10.0f);
+			glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
+			glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
 
 			float outputDistance = 100000.0f;
 
