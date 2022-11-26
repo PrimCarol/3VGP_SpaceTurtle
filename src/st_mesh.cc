@@ -120,6 +120,8 @@ ST::Circle::Circle() : Mesh() {
 	meshType_ = kMeshType_Circle;
 
 	const int rebolutions = 10 + 1;
+	changeRebolutions(rebolutions);
+
 
 	/*VertexInfo vertices[rebolutions];
 
@@ -190,76 +192,7 @@ ST::Circle::Circle() : Mesh() {
 	*/
 
 
-	float angle = (3.1415926535f * 2.0f) / (rebolutions - 1);
 
-	for (int i = 0; i < rebolutions - 1; i++) {
-		VertexInfo vertices;
-		// Pos
-		vertices.pos.x = (float)cos(angle * i);
-		vertices.pos.y = (float)sin(angle * i);
-		vertices.pos.z = 0.0f;
-		// Normals
-		vertices.normal.x = 0.0f;
-		vertices.normal.y = 0.0f;
-		vertices.normal.z = 1.0f;
-
-		vertices_.push_back(vertices);
-	}
-
-	VertexInfo verticesLast;
-	verticesLast.normal.x = 0.0f;
-	verticesLast.normal.y = 0.0f;
-	verticesLast.normal.z = 1.0f;
-
-	verticesLast.pos.x = 0.0f;
-	verticesLast.pos.y = 0.0f;
-	verticesLast.pos.z = 0.0f;
-
-	vertices_.push_back(verticesLast);
-
-	for (size_t i = 0; i < rebolutions; i++) {
-		// UV's
-		vertices_[i].uv.x = (1.0f - vertices_[i].pos.x) * 0.5f;
-		vertices_[i].uv.y = (1.0f - vertices_[i].pos.y) * 0.5f;
-	}
-
-	//unsigned int indices;
-
-	int contadorIndice = -1;
-	for (int i = 0; i < rebolutions * 3; i += 3) {
-		indices_.push_back(contadorIndice + 2);
-		indices_.push_back(contadorIndice + 1);
-		indices_.push_back(rebolutions - 1);
-		contadorIndice++;
-	}
-
-	indices_.push_back(0);
-	indices_.push_back(contadorIndice - 1);
-	indices_.push_back(rebolutions - 1);
-
-	glGenVertexArrays(1, &internalId);
-	glBindVertexArray(internalId);
-
-	GLuint gVBO = 0;
-	glGenBuffers(1, &gVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
-
-	// Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
-	glEnableVertexAttribArray(0);
-	// Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
-	glEnableVertexAttribArray(1);
-	// UV
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
-	glEnableVertexAttribArray(2);
-
-	// Indices
-	GLuint gEBO = 0;
-	glGenBuffers(1, &gEBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 }
 
 void ST::Circle::render() {
@@ -270,9 +203,88 @@ void ST::Circle::render() {
 }
 
 void ST::Circle::changeRebolutions(int r){
-	if (r > 3) {
+	if (r > 3 && rebolutions_ != r) {
 
+		vertices_.clear();
+		indices_.clear();
+
+		rebolutions_ = r + 1;
+
+		float angle = (3.1415926535f * 2.0f) / (rebolutions_ - 1);
+
+		for (int i = 0; i < rebolutions_ - 1; i++) {
+			VertexInfo vertices;
+			// Pos
+			vertices.pos.x = (float)cos(angle * i);
+			vertices.pos.y = (float)sin(angle * i);
+			vertices.pos.z = 0.0f;
+			// Normals
+			vertices.normal.x = 0.0f;
+			vertices.normal.y = 0.0f;
+			vertices.normal.z = 1.0f;
+
+			vertices_.push_back(vertices);
+		}
+
+		VertexInfo verticesLast;
+		verticesLast.normal.x = 0.0f;
+		verticesLast.normal.y = 0.0f;
+		verticesLast.normal.z = 1.0f;
+
+		verticesLast.pos.x = 0.0f;
+		verticesLast.pos.y = 0.0f;
+		verticesLast.pos.z = 0.0f;
+
+		vertices_.push_back(verticesLast);
+
+		for (size_t i = 0; i < rebolutions_; i++) {
+			// UV's
+			vertices_[i].uv.x = (1.0f - vertices_[i].pos.x) * 0.5f;
+			vertices_[i].uv.y = (1.0f - vertices_[i].pos.y) * 0.5f;
+		}
+
+		//unsigned int indices;
+
+		int contadorIndice = -1;
+		for (int i = 0; i < rebolutions_ * 3; i += 3) {
+			indices_.push_back(contadorIndice + 2);
+			indices_.push_back(contadorIndice + 1);
+			indices_.push_back(rebolutions_ - 1);
+			contadorIndice++;
+		}
+
+		indices_.push_back(0);
+		indices_.push_back(contadorIndice - 1);
+		indices_.push_back(rebolutions_ - 1);
+
+		glGenVertexArrays(1, &internalId);
+		glBindVertexArray(internalId);
+
+		GLuint gVBO = 0;
+		glGenBuffers(1, &gVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
+
+		// Position
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
+		glEnableVertexAttribArray(0);
+		// Normal
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+		glEnableVertexAttribArray(1);
+		// UV
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+		glEnableVertexAttribArray(2);
+
+		// Indices
+		GLuint gEBO = 0;
+		glGenBuffers(1, &gEBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 	}
+}
+
+int ST::Circle::getRebolutions(){
+	return (rebolutions_ -1);
 }
 
 ST::Circle::~Circle() {}
@@ -353,7 +365,7 @@ ST::Cube::~Cube() {}
 
 // ------------------- OBJ -------------------
 ST::Geometry::Geometry() : Mesh() {
-
+	meshType_ = kMeshType_Custom;
 }
 
 /*bool ST::Geometry::loadFromFile(const char* path) {

@@ -57,9 +57,9 @@ int main() {
 			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
 			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
-			float randomPosX = ST::Engine::getRandom(-50.0f, 50.0f);
-			float randomPosY = ST::Engine::getRandom(-50.0f, 50.0f);
-			float randomPosZ = ST::Engine::getRandom( 20.0f,  100.0f);
+			float randomPosX = ST::Engine::getRandom(-100.0f, 100.0f);
+			float randomPosY = ST::Engine::getRandom(-100.0f, 100.0f);
+			float randomPosZ = ST::Engine::getRandom( 30.0f,  150.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
@@ -306,6 +306,8 @@ int main() {
 				}
 
 				ImGui::Text("---- Mesh ----");
+				//ST::Circle* m_circle = nullptr;
+				//int rebolut;
 				ImGui::Text("Mesh: "); ImGui::SameLine();
 				switch (render->mesh->meshType_){
 				case ST::kMeshType_Triangle:
@@ -316,9 +318,17 @@ int main() {
 					break;
 				case ST::kMeshType_Circle:
 					ImGui::Text("Circle");
+					//m_circle = (ST::Circle*)render->mesh;
+					//rebolut = m_circle->getRebolutions();
+					//ImGui::Text("Rebolutions -> %d ", m_circle->getRebolutions());
+					//ImGui::DragInt("Rebolutions", &rebolut);
+					//m_circle->changeRebolutions(rebolut);
 					break;
 				case ST::kMeshType_Cube:
 					ImGui::Text("Cube");
+					break;
+				case ST::kMeshType_Custom:
+					ImGui::Text("Custom");
 					break;
 				}
 
