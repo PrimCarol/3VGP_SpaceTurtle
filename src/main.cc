@@ -39,10 +39,10 @@ int main() {
 	
 	// *************************** Test ***********************
 	ST::Geometry geometry;
-	geometry.loadFromFile("../others/cat.obj");
+	geometry.loadFromFile("../others/cat_petit.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 100;
+	const int numObjs = 10000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -182,12 +182,12 @@ int main() {
 			}
 
 			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (-3.0f * w.DeltaTime()) * extra_speed));
-				gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (-3.0f * w.DeltaTime()) * extra_speed));
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
 			}
 			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed));
-				gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
+				gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed));
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
 			}
 			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
 				gm.cam_->transform_.Move(glm::vec3((-3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
@@ -196,7 +196,7 @@ int main() {
 				gm.cam_->transform_.Move(glm::vec3((3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
 			}
 
-			/*
+			
 			if (firtsMouse) {
 				lastX = mousePos.x;
 				lastY = mousePos.y;
@@ -212,7 +212,7 @@ int main() {
 				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x - xoffset * 0.5f * w.DeltaTime());
 				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
 			}
-			*/
+			
 			// ---- Picking ---
 			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 				objSelected = gm.tryPickObj();
