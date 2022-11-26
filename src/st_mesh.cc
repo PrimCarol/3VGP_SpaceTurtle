@@ -26,18 +26,12 @@ void ST::Mesh::render(){}
 // ----------------- Triangle ------------------
 ST::Triangle::Triangle() : Mesh() {
 	
-	//struct VertexInfo {
-	//	float x, y, z;
-	//	float nx, ny, nz;
-	//	float u, v;
-	//};
-
 	meshType_ = kMeshType_Triangle;
 
-	/*VertexInfo vertices[] = {
-		 0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     0.5f, 0.0f,
-		 1.0f,-1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
-		-1.0f,-1.0f, 0.0f,   0.0f, 0.0f, 1.0f,     1.0f, 1.0f
+	VertexInfo vertices[] = {
+		{{ 0.0f, 1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {0.5f, 0.0f}},
+		{{ 1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},
+		{{-1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}}
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -54,7 +48,7 @@ ST::Triangle::Triangle() : Mesh() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
 	// Normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	// UV's
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
@@ -65,7 +59,6 @@ ST::Triangle::Triangle() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-	*/
 }
 
 void ST::Triangle::render(){
@@ -78,19 +71,13 @@ ST::Triangle::~Triangle() {}
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
 
-	//struct VertexInfo {
-	//	float x, y, z;
-	//	float nx, ny, nz;
-	//	float u, v;-
-	//};
-
 	meshType_ = kMeshType_Quad;
 
-	/*VertexInfo vertices[] = {
-		 1.0f, 1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 0.0f,
-		 1.0f,-1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     0.0f, 1.0f,
-		-1.0f,-1.0f,0.0f,	 0.0f, 0.0f, 1.0f,     1.0f, 1.0f,
-		-1.0f, 1.0f,0.0f,    0.0f, 0.0f, 1.0f,     1.0f, 0.0f
+	VertexInfo vertices[] = {
+		{{ 1.0f, 1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
+		{{ 1.0f,-1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},
+		{{-1.0f,-1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
+		{{-1.0f, 1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}}
 	};
 
 	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
@@ -107,7 +94,7 @@ ST::Quad::Quad() : Mesh() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
 	// Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	// UV's
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
@@ -118,7 +105,6 @@ ST::Quad::Quad() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-	*/
 }
 
 void ST::Quad::render() {
@@ -130,17 +116,12 @@ ST::Quad::~Quad() {}
 
 // ----------------- Circle ------------------
 ST::Circle::Circle() : Mesh() {
-	//struct VertexInfo {
-	//	float x, y, z;
-	//	float nx, ny, nz;
-	//	float u, v;
-	//};
 
 	meshType_ = kMeshType_Circle;
 
 	const int rebolutions = 10 + 1;
 
-	VertexInfo vertices[rebolutions];
+	/*VertexInfo vertices[rebolutions];
 
 	float angle = (3.1415926535f * 2.0f) / (rebolutions-1);
 
@@ -206,13 +187,92 @@ ST::Circle::Circle() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	*/
+
+
+	float angle = (3.1415926535f * 2.0f) / (rebolutions - 1);
+
+	for (int i = 0; i < rebolutions - 1; i++) {
+		VertexInfo vertices;
+		// Pos
+		vertices.pos.x = (float)cos(angle * i);
+		vertices.pos.y = (float)sin(angle * i);
+		vertices.pos.z = 0.0f;
+		// Normals
+		vertices.normal.x = 0.0f;
+		vertices.normal.y = 0.0f;
+		vertices.normal.z = 1.0f;
+
+		vertices_.push_back(vertices);
+	}
+
+	VertexInfo verticesLast;
+	verticesLast.normal.x = 0.0f;
+	verticesLast.normal.y = 0.0f;
+	verticesLast.normal.z = 1.0f;
+
+	verticesLast.pos.x = 0.0f;
+	verticesLast.pos.y = 0.0f;
+	verticesLast.pos.z = 0.0f;
+
+	vertices_.push_back(verticesLast);
+
+	for (size_t i = 0; i < rebolutions; i++) {
+		// UV's
+		vertices_[i].uv.x = (1.0f - vertices_[i].pos.x) * 0.5f;
+		vertices_[i].uv.y = (1.0f - vertices_[i].pos.y) * 0.5f;
+	}
+
+	//unsigned int indices;
+
+	int contadorIndice = -1;
+	for (int i = 0; i < rebolutions * 3; i += 3) {
+		indices_.push_back(contadorIndice + 2);
+		indices_.push_back(contadorIndice + 1);
+		indices_.push_back(rebolutions - 1);
+		contadorIndice++;
+	}
+
+	indices_.push_back(0);
+	indices_.push_back(contadorIndice - 1);
+	indices_.push_back(rebolutions - 1);
+
+	glGenVertexArrays(1, &internalId);
+	glBindVertexArray(internalId);
+
+	GLuint gVBO = 0;
+	glGenBuffers(1, &gVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
+
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
+	glEnableVertexAttribArray(0);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
+
+	// Indices
+	GLuint gEBO = 0;
+	glGenBuffers(1, &gEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 }
 
 void ST::Circle::render() {
 	glBindVertexArray(internalId);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, (11*3)+3, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
+}
+
+void ST::Circle::changeRebolutions(int r){
+	if (r > 3) {
+
+	}
 }
 
 ST::Circle::~Circle() {}
@@ -280,7 +340,7 @@ ST::Cube::Cube() : Mesh() {
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(unsigned int), &indices, GL_STATIC_DRAW);
 }
 
 void ST::Cube::render() {
@@ -507,7 +567,7 @@ bool ST::Geometry::loadFromFile(const char* path) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
 	// Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	// UV's
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));

@@ -31,15 +31,18 @@ int main() {
 	ST::Circle circle;
 	ST::Cube cube;
 
-	ST::Texture textureTest;
-	textureTest.loadSource("../others/Cat_diffuse.jpg");
+	ST::Texture textureCat;
+	textureCat.loadSource("../others/Cat_diffuse.jpg");
+
+	ST::Texture textureTurtle;
+	textureTurtle.loadSource("../others/icon.png");
 	
 	// *************************** Test ***********************
 	ST::Geometry geometry;
 	geometry.loadFromFile("../others/cat.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 1;
+	const int numObjs = 100;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -54,18 +57,18 @@ int main() {
 			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
 			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
-			float randomPosX = ST::Engine::getRandom(-10.0f, 10.0f);
-			float randomPosY = ST::Engine::getRandom(-10.0f, 10.0f);
-			float randomPosZ = ST::Engine::getRandom( 2.0f,  20.0f);
+			float randomPosX = ST::Engine::getRandom(-50.0f, 50.0f);
+			float randomPosY = ST::Engine::getRandom(-50.0f, 50.0f);
+			float randomPosZ = ST::Engine::getRandom( 20.0f,  100.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
-			//float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateX(randomRotX);
-			//float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateY(randomRotY);
-			//float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
-			//t->RotateZ(randomRotZ);
+			float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateX(randomRotX);
+			float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateY(randomRotY);
+			float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateZ(randomRotZ);
 		
 			//float randomVelY = getRandom(0.1f, 0.7f);
 			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
@@ -74,32 +77,85 @@ int main() {
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
 
-			int randomGeometry = rand() % 4;
+			int randomGeometry = rand() % 5;
 			switch (randomGeometry){
 			case 0:
-				r->setMesh(&geometry);
+				
+				r->setMesh(&triangle);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
 				break;
 			case 1:
-				r->setMesh(&geometry);
+
+				r->setMesh(&quad);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
 				break;
 			case 2:
-				r->setMesh(&geometry);
+
+				r->setMesh(&circle);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
 				break;
 			case 3:
+
+				r->setMesh(&cube);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
+				break;
+			case 4:
 				r->setMesh(&geometry);
+				r->material->setTexture_Albedo(&textureCat);
+				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				break;
 			}
 
-			//if ((rand() % 2) == 0) {
+			/*if ((rand() % 2) == 0) {
 				r->material->setTexture_Albedo(&textureTest);
-			//}
-			//else
-			//{
-			//	float randomR = ST::Engine::getRandom(0.0f,1.0f);
-			//	float randomG = ST::Engine::getRandom(0.0f,1.0f);
-			//	float randomB = ST::Engine::getRandom(0.0f,1.0f);
-			//	r->material->setColor(glm::vec3(randomR, randomG, randomB));
-			//}
+			}
+			else
+			{
+				float randomR = ST::Engine::getRandom(0.0f,1.0f);
+				float randomG = ST::Engine::getRandom(0.0f,1.0f);
+				float randomB = ST::Engine::getRandom(0.0f,1.0f);
+				r->material->setColor(glm::vec3(randomR, randomG, randomB));
+			}*/
 
 			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}

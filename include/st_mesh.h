@@ -61,7 +61,11 @@ namespace ST {
 	public:
 		Circle();
 		void render() override;
+		void changeRebolutions(int r);
 		~Circle();
+	private:
+		std::vector<VertexInfo> vertices_;
+		std::vector<unsigned int> indices_;
 	};
 
 	// ------------------- 3D -------------------
