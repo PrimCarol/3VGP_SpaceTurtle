@@ -34,15 +34,20 @@ int main() {
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
 
+	ST::Texture textureChecker;
+	textureChecker.loadSource("../others/checker_texture.jpg");
+
 	ST::Texture textureTurtle;
 	textureTurtle.loadSource("../others/icon.png");
 	
 	// *************************** Test ***********************
-	ST::Geometry geometry;
-	geometry.loadFromFile("../others/cat_petit.obj");
+	ST::Geometry cat;
+	cat.loadFromFile("../others/cat_petit.obj");
+	ST::Geometry skull;
+	skull.loadFromFile("../others/skull_petit.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 10000;
+	const int numObjs = 8000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -77,7 +82,7 @@ int main() {
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
 
-			int randomGeometry = rand() % 5;
+			int randomGeometry = rand() % 6;
 			switch (randomGeometry){
 			case 0:
 				
@@ -140,24 +145,16 @@ int main() {
 				}
 				break;
 			case 4:
-				r->setMesh(&geometry);
+				r->setMesh(&cat);
 				r->material->setTexture_Albedo(&textureCat);
 				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				break;
+			case 5:
+				r->setMesh(&skull);
+				r->material->setTexture_Albedo(&textureChecker);
+				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				break;
 			}
-
-			/*if ((rand() % 2) == 0) {
-				r->material->setTexture_Albedo(&textureTest);
-			}
-			else
-			{
-				float randomR = ST::Engine::getRandom(0.0f,1.0f);
-				float randomG = ST::Engine::getRandom(0.0f,1.0f);
-				float randomB = ST::Engine::getRandom(0.0f,1.0f);
-				r->material->setColor(glm::vec3(randomR, randomG, randomB));
-			}*/
-
-			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
 	
@@ -217,13 +214,6 @@ int main() {
 			// ---- Picking ---
 			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 				objSelected = gm.tryPickObj();
-				//if (objSelected) {
-				//	printf("Selecciono el objeto -> %d \n", objSelected->getID());
-				//	ST::TransformComponent* t = (ST::TransformComponent*)objSelected->getComponent(ST::kComp_Trans);
-				//	if (t) {
-				//		printf("Esta en la posicion -> %f / %f / %f \n", t->getPosition().x, t->getPosition().y, t->getPosition().z);
-				//	}
-				//}
 			}
 
 			timerForInput = 0.0f;
@@ -261,13 +251,9 @@ int main() {
 		ImGui::EndMainMenuBar();
 
 
-		//ImGui::Begin("Info");
-		//ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
-		//ImGui::Spacing();
-		//ImGui::Text("UV->"); ImGui::SameLine(150); ImGui::Text("1,1");
-		//ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
-		//ImGui::Text("0,0");
-		//ImGui::End();
+		ImGui::Begin("Info");
+		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
+		ImGui::End();
 
 		ImGui::Begin("Object Seleected");
 		if (objSelected) {
