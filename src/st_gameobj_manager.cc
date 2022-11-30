@@ -7,6 +7,11 @@
 //	return e;
 //}
 
+#include <st_engine.h>
+
+#include <st_raycast.h>
+
+#define MAX_OBJS 1000000
 #define MAX_TRANSFORM_COMPONENTS 1000000
 #define MAX_RENDER_COMPONENTS 1000000
 
@@ -14,7 +19,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	//printf("***** GameObj Manager Created *****\n");
 
-	numGameObjs = 0;
+	GameObjsList_.reserve(MAX_OBJS);
 
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
@@ -24,32 +29,37 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Basic Program -------
 	ST::Shader vertex(E_VERTEX_SHADER);
-	//GLchar* textVertex = (GLchar*)readFile("../shaders/vertex.vert");
-	//vertex.loadSource(textVertex);
-	vertex.loadSource(basic_vShader_text);
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/vertex.vert");
+	vertex.loadSource(textVertex);
+	//vertex.loadSource(basic_vShader_text);
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-	//GLchar* textFragment = (GLchar*)readFile("../shaders/fragment.frag");
-	//fragment.loadSource(textFragment);
-	fragment.loadSource(basic_fShader_text);
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/fragment.frag");
+	fragment.loadSource(textFragment);
+	//fragment.loadSource(basic_fShader_text);
 
 	basicProgram = new ST::Program();
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
+
+	// Cam
+	cam_ = new ST::Camera();
+	//cam_->setOrthographic(20.0f,20.0f, 0.05f, 10000.0f);
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
-	
 	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
 		return ST::TransformComponentId();
 	}
 
 	ST::TransformComponentId result;
-	result.value = TransCompIndex_++;
+	result.value = TransCompIndex_;
 	result.type = ST::kComp_Trans;
 
 	transformComponentList_.push_back(ST::TransformComponent());
+	TransCompIndex_++;
+
 	return result;
 }
 
@@ -59,11 +69,13 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 	}
 
 	ST::RenderComponentId result;
-	result.value = RenderCompIndex_++;
+	result.value = RenderCompIndex_;
 	result.type = ST::kComp_Render;
 
 	renderComponentList_.push_back(ST::RenderComponent());
-	renderComponentList_[RenderCompIndex_ - 1].material->setProgram(basicProgram);
+	renderComponentList_[RenderCompIndex_].material->setProgram(basicProgram);
+	RenderCompIndex_++;
+
 	return result;
 }
 
@@ -73,28 +85,26 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 	if (go) {
 		//printf("\n***** Obj Created *****\n");
 		go->components = c;
-		go->gm_ = this;
+		go->gm_ = this;		
+
+		go->setID(GameObjsList_.size());
+
+		GameObjsList_.push_back(go.get());
 	}
 
-	numGameObjs++;
+	//numGameObjs++;
 
 	return go;
 }
 
 const int ST::GameObj_Manager::getGameObjNum(){
-	return numGameObjs;
+	return GameObjsList_.size();
 }
 
 void ST::GameObj_Manager::UpdateTransforms(){
-	for (int i = 0; i < transformComponentList_.size(); i++){
-		//transformComponentList_[i].Move(transformComponentList_[i].getVelocity());
-		if (transformComponentList_[i].getPosition().y < -1.0f) {
-			
-			float randomPosX = -1.5f + (rand() / (RAND_MAX / (1.0f - -1.5f)));
-			transformComponentList_[i].setPosition(glm::vec3(randomPosX, 1.0f, 1.0f));
 
-			//transformComponentList_[i].Move(glm::vec3(0.0f, 20.0f, 0.0f));
-		}
+	for (int i = 0; i < transformComponentList_.size(); i++){
+		transformComponentList_[i].RotateY(0.07f);
 	}
 }
 
@@ -102,15 +112,34 @@ void ST::GameObj_Manager::UpdateRender(){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
+	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+
+	cam_->update();
+
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
+		// Material
 		mat = renderComponentList_[i].material;
-
 		if (mat) {
 
 			p = renderComponentList_[i].material->getProgram();
 
 			p->use();
+
+			// ------ Camara -------
+			GLuint camPos = p->getUniform("u_view_pos");
+			glm::vec3 camTransPos = cam_->transform_.getPosition();
+			glUniform3fv(camPos, 1, &camTransPos.x);
+			GLuint camView = p->getUniform("u_view_matrix");
+			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_->view[0][0]);
+			GLuint camProjection = p->getUniform("u_projection_matrix");
+			glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam_->projection[0][0]);
+			GLuint camVP = p->getUniform("u_vp_matrix");
+			glm::mat4 cam_m_vp = cam_->projection * cam_->view;
+			glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
+			// ------ Camara -------
 
 			// De momento esta mal, funciona 1:1.
 			GLuint u_m_trans = p->getUniform("u_m_trans");
@@ -132,27 +161,64 @@ void ST::GameObj_Manager::UpdateRender(){
 		if (renderComponentList_[i].mesh) {
 			renderComponentList_[i].mesh->render();
 		}
+
+		glUseProgram(0);
 	}
 }
 
+ST::GameObj* ST::GameObj_Manager::tryPickObj(){
+
+	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
+
+	//ST::Raycast ray;
+	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
+
+	float objClose = 100000.0f;
+	int objIndexClose = -1;
+
+	for (int i = 0; i < GameObjsList_.size(); i++) {
+
+		ST::TransformComponent* t = (ST::TransformComponent*)GameObjsList_[i]->getComponent(ST::kComp_Trans);
+
+		if (t) {
+
+			ST::Raycast ray;
+
+			glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
+			glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
+
+			float outputDistance = 100000.0f;
+
+			//glm::mat4 m = transformComponentList_[i].m_transform_;
+			//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
+			//			 transformComponentList_[i].m_transform_, outputDistance);
+
+			if (ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), colliderPoint_min, colliderPoint_max,
+				t->m_transform_, outputDistance)) {
+
+				if (outputDistance < objClose) {
+					objClose = outputDistance;
+					objIndexClose = i;
+				}
+			}
+			//else {
+			//	printf("No detecto nada \n");
+			//}
+		}
+
+	}
+	
+	if (objIndexClose != -1) {
+		//printf("Detecto el objeto -> %d \n", objIndexClose);
+		//printf("Esta a %f de distancia. \n", objClose);
+
+		return GameObjsList_[objIndexClose];
+		//return nullptr;
+	}
+
+	return nullptr;
+}
+
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
-
-//ST::TransformComponent* ST::GameObj_Manager::getTransformComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//	if (id > transformComponentList_.size()) { return NULL; }
-//	return transformComponentList_.at(id);
-//}
-
-//ST::MeshComponent* ST::GameObj_Manager::getMeshComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//  if (id > meshComponentList_.size()) { return NULL; }
-//	return meshComponentList_.at(id);
-//}
-
-//ST::MaterialComponent* ST::GameObj_Manager::getMaterialComponent(size_t id){
-//	if (id == -1) { return NULL; }
-//  if (id > materialComponentList_.size()) { return NULL; }
-//	return materialComponentList_.at(id);
-//}
 
 ST::GameObj_Manager::~GameObj_Manager(){}

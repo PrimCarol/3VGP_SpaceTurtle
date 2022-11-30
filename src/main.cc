@@ -1,15 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <random.hpp>
-
 #include <imgui.h>
-#include <st_window.h>
-#include <st_gameobj_manager.h>
 
-const float getRandom(float min, float max) {
-	return min + (rand() / (RAND_MAX / (max - min)));
-}
+#include <st_engine.h>
 
 int main() {
 	ST::Window w;
@@ -18,6 +12,14 @@ int main() {
 	srand(time(0));
 	// ----------------------------------------------------------------
 	
+	// ************** Temporal ****************
+	bool firtsMouse = true; 
+	float lastX = 0.0f;
+	float lastY = 0.0f;
+
+	ST::GameObj* objSelected = nullptr;
+	// ************** Temporal ****************
+
 	printf("-----------------------------------------\n");
 	printf("------------- Space Turtle --------------\n");
 	printf("--------- By: Pere Prim Carol -----------\n");
@@ -27,12 +29,25 @@ int main() {
 	ST::Triangle triangle;
 	ST::Quad quad;
 	ST::Circle circle;
+	ST::Cube cube;
 
-	ST::Texture textureTest;
-	//textureTest.createChecker(256,256);
-	textureTest.loadSource("../others/icon.png");
+	ST::Texture textureCat;
+	textureCat.loadSource("../others/Cat_diffuse.jpg");
+
+	ST::Texture textureChecker;
+	textureChecker.loadSource("../others/checker_texture.jpg");
+
+	ST::Texture textureTurtle;
+	textureTurtle.loadSource("../others/icon.png");
 	
-	const int numObjs = 1000;
+	// *************************** Test ***********************
+	ST::Geometry cat;
+	cat.loadFromFile("../others/cat_petit.obj");
+	ST::Geometry skull;
+	skull.loadFromFile("../others/skull_petit.obj");
+	// *************************** Test ***********************
+
+	const int numObjs = 8000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -44,13 +59,22 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = getRandom(0.01f, 0.1f);
-			t->setScale(glm::vec3(randomScale, randomScale, 1.0f));
-
-			float randomPosX = getRandom(-1.5f, 1.5f);
-			float randomPosY = getRandom(-1.5f, 1.5f);
-			t->setPosition(glm::vec3(randomPosX, randomPosY, 1.0f));
-
+			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
+			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
+		
+			float randomPosX = ST::Engine::getRandom(-100.0f, 100.0f);
+			float randomPosY = ST::Engine::getRandom(-100.0f, 100.0f);
+			float randomPosZ = ST::Engine::getRandom( 30.0f,  150.0f);
+			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
+		
+		
+			float randomRotX = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateX(randomRotX);
+			float randomRotY = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateY(randomRotY);
+			float randomRotZ = ST::Engine::getRandom(-3.14f, 3.14f);
+			t->RotateZ(randomRotZ);
+		
 			//float randomVelY = getRandom(0.1f, 0.7f);
 			//t->setVelocity(glm::vec3(0.0f, -randomVelY, 0.0f));
 		}
@@ -58,31 +82,83 @@ int main() {
 		ST::RenderComponent* r = (ST::RenderComponent*)obj1[i]->getComponent(ST::kComp_Render);
 		if (r) {
 
-			int randomGeometry = rand() % 3;
+			int randomGeometry = rand() % 6;
 			switch (randomGeometry){
 			case 0:
+				
 				r->setMesh(&triangle);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
 				break;
 			case 1:
+
 				r->setMesh(&quad);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
 				break;
 			case 2:
+
 				r->setMesh(&circle);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
+				break;
+			case 3:
+
+				r->setMesh(&cube);
+
+				if ((rand() % 2) == 0) {
+					r->material->setTexture_Albedo(&textureTurtle);
+				}
+				else
+				{
+					float randomR = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomG = ST::Engine::getRandom(0.0f, 1.0f);
+					float randomB = ST::Engine::getRandom(0.0f, 1.0f);
+					r->material->setColor(glm::vec3(randomR, randomG, randomB));
+				}
+				break;
+			case 4:
+				r->setMesh(&cat);
+				r->material->setTexture_Albedo(&textureCat);
+				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				break;
+			case 5:
+				r->setMesh(&skull);
+				r->material->setTexture_Albedo(&textureChecker);
+				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				break;
 			}
-
-			r->material->setTexture_Albedo(&textureTest);
-
-			float randomR = getRandom(0.0f,1.0f);
-			float randomG = getRandom(0.0f,1.0f);
-			float randomB = getRandom(0.0f,1.0f);
-			r->material->setColor(glm::vec3(randomR, randomG, randomB));
-			//r->material->setColor(glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 	}
 	
 	// --------------------------
-	bool apretado = false;
 
 	float timerForInput = 0.0f;
 	float timerForSomething = 0.0f;
@@ -95,32 +171,67 @@ int main() {
 		if (timerForInput >= 1.0f/60) {
 			//printf("Input\n");
 
-			if (w.inputPressed('P') && !apretado) {
-				printf("Apreto input.\n");
-				apretado = true;
+			glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
+
+			float extra_speed = 1.0f;
+			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+				extra_speed = 4.0f;
 			}
 
-			if (w.inputReleased('P') && apretado) {
-				printf("Suelto input.\n");
-				apretado = false;
+			if (w.inputPressed(ST::ST_INPUT_UP)) {
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (-3.0f * w.DeltaTime()) * extra_speed));
+				gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
+			}
+			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed));
+				gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
+			}
+			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
+				gm.cam_->transform_.Move(glm::vec3((-3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+			}
+			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+				gm.cam_->transform_.Move(glm::vec3((3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+			}
+
+			
+			/*if (firtsMouse) {
+				lastX = mousePos.x;
+				lastY = mousePos.y;
+				firtsMouse = false;
+			}
+
+			float yoffset = mousePos.x - lastX;
+			float xoffset = mousePos.y - lastY;
+			lastX = mousePos.x;
+			lastY = mousePos.y;
+
+			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x - xoffset * 0.5f * w.DeltaTime());
+				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
+			}
+			*/
+			
+			// ---- Picking ---
+			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+				objSelected = gm.tryPickObj();
 			}
 
 			timerForInput = 0.0f;
-		}
+		} // End Input Tick
 
 		gm.UpdateTransforms();
-		//gm.UpdateRenderMultiThread();
 		gm.UpdateRender();
 
-		timerForSomething += w.DeltaTime();
-		if (timerForSomething >= 1.0f/10) {
-			//printf("Something\n");
+		//timerForSomething += w.DeltaTime();
+		//if (timerForSomething >= 1.0f/10) {
+		//	//printf("Something\n");
+		//
+		//
+		//	timerForSomething = 0.0f;
+		//}
 
 
-			timerForSomething = 0.0f;
-		}
-
-
+		// ---------------------------- ImGui -------------------------------
 		ImGui::BeginMainMenuBar();
 		ImGui::PushStyleColor(ImGuiCol_Text, { 1.0f, 0.8f, 0.9f, 1.0f });
 		ImGui::Text("| Space Turtle | by: Pere Prim / ESAT");
@@ -142,11 +253,75 @@ int main() {
 
 		ImGui::Begin("Info");
 		ImGui::Text("GameObjects: %d", gm.getGameObjNum() );
-		ImGui::Image((void*)(intptr_t)textureTest.getID(), ImVec2(144, 144));
 		ImGui::End();
 
+		ImGui::Begin("Object Seleected");
+		if (objSelected) {
+			ImGui::Text("Obj ID -> %d ", objSelected->getID());
+			ST::TransformComponent* trans = (ST::TransformComponent*)objSelected->getComponent(ST::kComp_Trans);
+			if (trans) {
+				//ImGui::BeginChild("Transform");
+				ImGui::Text("---- Transform ----");
+				glm::vec3 pos = trans->getPosition();
+				ImGui::DragFloat3("##Pos", &pos.x, 0.5f);
+				trans->setPosition(pos);
+				glm::vec3 rot = trans->getRotation();
+				ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
+				trans->RotateX(rot.x);
+				trans->RotateY(rot.y);
+				trans->RotateZ(rot.z);
 
+				//ImGui::EndChild();
+			}
+			ST::RenderComponent* render = (ST::RenderComponent*)objSelected->getComponent(ST::kComp_Render);
+			if (render) {
+				//ImGui::BeginChild("Render");
+				ImGui::Text("---- Render ----");
+				
+				ImGui::Text("- Color -");
+				glm::vec3 c = render->material->getColor();
+				ImGui::ColorEdit3("Color", &c.x);
+				render->material->setColor(c);
 
+				ImGui::Text("- Texture -");
+				if (render->material->haveAlbedo) {
+					ImGui::Image((void*)(intptr_t)render->material->getAlbedo()->getID(), ImVec2(144, 144));
+				}
+				else {
+					ImGui::Text("None");
+				}
+
+				ImGui::Text("---- Mesh ----");
+				//ST::Circle* m_circle = nullptr;
+				//int rebolut;
+				ImGui::Text("Mesh: "); ImGui::SameLine();
+				switch (render->mesh->meshType_){
+				case ST::kMeshType_Triangle:
+					ImGui::Text("Triangle");
+					break;
+				case ST::kMeshType_Quad:
+					ImGui::Text("Quad");
+					break;
+				case ST::kMeshType_Circle:
+					ImGui::Text("Circle");
+					//m_circle = (ST::Circle*)render->mesh;
+					//rebolut = m_circle->getRebolutions();
+					//ImGui::Text("Rebolutions -> %d ", m_circle->getRebolutions());
+					//ImGui::DragInt("Rebolutions", &rebolut);
+					//m_circle->changeRebolutions(rebolut);
+					break;
+				case ST::kMeshType_Cube:
+					ImGui::Text("Cube");
+					break;
+				case ST::kMeshType_Custom:
+					ImGui::Text("Custom");
+					break;
+				}
+
+				//ImGui::EndChild();
+			}
+		}
+		ImGui::End();
 
 		// ----------------------------
 

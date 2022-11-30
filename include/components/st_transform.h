@@ -27,6 +27,10 @@ namespace ST {
 		const glm::vec3 getScale();
 		const glm::vec3 getRotation();
 
+		const glm::vec3 getForward();
+		const glm::vec3 getUp();
+		const glm::vec3 getRight();
+
 		~TransformComponent();
 
 		glm::mat4 m_transform_;
@@ -35,6 +39,10 @@ namespace ST {
 		//const glm::vec3 getVelocity(); // esto deberia de ser en un componente de fisica.
 	private:
 		//glm::vec3 movementVelocity; // esto deberia de ser en un componente de fisica.
+
+		glm::vec3 position_;
+		glm::vec3 rotation_;
+		glm::vec3 scale_;
 
 		// ---- Directional Vectors ----
 		void updateDirectionalVectors();

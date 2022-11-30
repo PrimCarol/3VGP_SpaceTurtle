@@ -6,8 +6,12 @@ ST::TransformComponent::TransformComponent(){
 
 	m_transform_ = glm::mat4(1);
 
-	setPosition({ 0.0f,0.0f,0.0f });
-	setScale({ 1.0f,1.0f,1.0f });
+	position_ = glm::vec3(0);
+	rotation_ = glm::vec3(0);
+	scale_ = glm::vec3(1.0f);
+
+	setPosition(position_);
+	setScale(scale_);
 }
 
 // ------------------------- Movement -------------------------
@@ -18,14 +22,17 @@ void ST::TransformComponent::Move(const glm::vec3 newPos) {
 
 
 void ST::TransformComponent::RotateX(const float r) {
+	rotation_.x = r;
 	m_transform_ = glm::rotate(m_transform_, r, { 1.0f,0.0f,0.0f });
 	updateDirectionalVectors();
 }
 void ST::TransformComponent::RotateY(const float r) {
+	rotation_.y = r;
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,1.0f,0.0f });
 	updateDirectionalVectors();
 }
 void ST::TransformComponent::RotateZ(const float r) {
+	rotation_.z = r;
 	m_transform_ = glm::rotate(m_transform_, r, { 0.0f,0.0f,1.0f });
 	updateDirectionalVectors();
 }
@@ -68,6 +75,9 @@ void ST::TransformComponent::updateDirectionalVectors(){
 	vectorUp_.z = m_transform_[2][1];
 
 	// Habria que normalizar esto???????
+	vectorForward_ = glm::normalize(vectorForward_);
+	vectorRight_ = glm::normalize(vectorRight_);
+	vectorUp_ = glm::normalize(vectorUp_);
 }
 
 // ------------------------- Getters -------------------------
@@ -93,7 +103,18 @@ const glm::vec3 ST::TransformComponent::getScale() {
 
 const glm::vec3 ST::TransformComponent::getRotation() {
 	//return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
+	//return rotation_;
 	return glm::vec3();
+}
+
+const glm::vec3 ST::TransformComponent::getForward(){
+	return vectorForward_;
+}
+const glm::vec3 ST::TransformComponent::getUp() {
+	return vectorUp_;
+}
+const glm::vec3 ST::TransformComponent::getRight() {
+	return vectorRight_;
 }
 
 ST::TransformComponent::~TransformComponent(){

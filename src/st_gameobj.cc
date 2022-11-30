@@ -8,6 +8,14 @@ ST::GameObj::GameObj(){
 	//childs = nullptr;
 }
 
+int ST::GameObj::getID(){
+	return ID_;
+}
+
+void ST::GameObj::setID(int id){
+	ID_ = id;
+}
+
 void ST::GameObj::checkComponents(){
 	printf("<- Components ->\n");
 	for (int i = 0; i < components.size(); i++) {

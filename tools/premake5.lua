@@ -5,7 +5,8 @@ ROOT = path.getabsolute("./../")
 solution("3VGP_SpaceTurtle" .. _ACTION)
     location( ROOT .. "/build/")
     targetdir(ROOT .. "/bin/")
-    language "C++"
+    --language "C++"
+    cppdialect "C++17"
     startproject "SpaceTurtle"
 
 
@@ -59,6 +60,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/imgui-docking",
             "../deps/imgui-docking/backends",
 
+            -- TinyObj
+            "../deps/tiny_obj/include",
+
             -- MiniAudio
             "../deps/MiniAudio",
         }
@@ -69,6 +73,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../include/components/*.h",
             "../src/*.cc",
             "../src/components/*.cc",
+
+            -- ImGui
+            "../deps/tiny_obj/src/tiny_obj_loader.cc",
 
             -- ImGui
             "../deps/imgui-docking/*.cpp",

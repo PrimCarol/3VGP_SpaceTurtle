@@ -5,6 +5,8 @@
 #include <components/st_transform.h>
 #include <components/st_render.h>
 
+#include <st_camera.h>
+
 #include <memory>
 
 namespace ST {
@@ -25,8 +27,11 @@ namespace ST {
 		void UpdateTransforms();
 		void UpdateRender();
 
+		ST::GameObj* tryPickObj();
+
 		//GameObj& root();
 
+		std::vector<GameObj*> GameObjsList_;
 		std::vector<TransformComponent> transformComponentList_;
 		std::vector<RenderComponent> renderComponentList_;
 		
@@ -38,17 +43,18 @@ namespace ST {
 		//};
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
+
+		ST::Camera* cam_;
 	private:
 
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
 		
-		ST::Program* basicProgram;
+		ST::Program* basicProgram; // Default Shader Program to render.
 
-		unsigned int numGameObjs;
+		//unsigned int numGameObjs; // Opcional / Temporal
 
 		GameObj_Manager(const GameObj_Manager& o);
-
 	};
 }
 
