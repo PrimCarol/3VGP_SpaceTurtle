@@ -47,7 +47,7 @@ int main() {
 	skull.loadFromFile("../others/skull_petit.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 8000;
+	const int numObjs = 3000;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
@@ -62,9 +62,9 @@ int main() {
 			//float randomScale = ST::Engine::getRandom(0.01f, 0.1f);
 			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
-			float randomPosX = ST::Engine::getRandom(-100.0f, 100.0f);
-			float randomPosY = ST::Engine::getRandom(-100.0f, 100.0f);
-			float randomPosZ = ST::Engine::getRandom( 30.0f,  150.0f);
+			float randomPosX = ST::Engine::getRandom(-70.0f, 70.0f);
+			float randomPosY = ST::Engine::getRandom(-70.0f, 70.0f);
+			float randomPosZ = ST::Engine::getRandom(30.0f, 150.0f);
 			t->setPosition(glm::vec3(randomPosX, randomPosY, randomPosZ));
 		
 		
@@ -175,26 +175,28 @@ int main() {
 
 			float extra_speed = 1.0f;
 			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
-				extra_speed = 4.0f;
+				extra_speed = 5.0f;
 			}
 
 			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (-3.0f * w.DeltaTime()) * extra_speed));
-				gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
+				//gm.cam_->transform_.Move(gm.cam_->transform_.getForward() + (glm::vec3(0.0f, 0.0f, (3.0f * w.DeltaTime()) * extra_speed)));
+				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
 			}
 			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed));
-				gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
+				//gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() + (glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed)));
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
+				//gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
 			}
 			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
-				gm.cam_->transform_.Move(glm::vec3((-3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * w.DeltaTime() * extra_speed));
 			}
 			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-				gm.cam_->transform_.Move(glm::vec3((3.0f * w.DeltaTime()) * extra_speed, 0.0f, 0.0f));
+				gm.cam_->transform_.Move(gm.cam_->transform_.getRight() * (-30.0f * w.DeltaTime() * extra_speed));
 			}
 
 			
-			/*if (firtsMouse) {
+			if (firtsMouse) {
 				lastX = mousePos.x;
 				lastY = mousePos.y;
 				firtsMouse = false;
@@ -206,14 +208,20 @@ int main() {
 			lastY = mousePos.y;
 
 			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
-				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x - xoffset * 0.5f * w.DeltaTime());
-				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y - yoffset * 0.5f * w.DeltaTime());
+				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x + -xoffset * 0.5f * w.DeltaTime());
+				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y +  yoffset * 0.5f * w.DeltaTime());
 			}
-			*/
+			
 			
 			// ---- Picking ---
 			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 				objSelected = gm.tryPickObj();
+				//if (objSelected) {
+				//	gm.cam_->setTarget( (glm::vec3*)&((ST::TransformComponent*)objSelected->getComponent(ST::kComp_Trans))->getPosition() );
+				//}
+				//else {
+				//	gm.cam_->setTarget(nullptr);
+				//}
 			}
 
 			timerForInput = 0.0f;
@@ -262,14 +270,20 @@ int main() {
 			if (trans) {
 				//ImGui::BeginChild("Transform");
 				ImGui::Text("---- Transform ----");
+				// Position
 				glm::vec3 pos = trans->getPosition();
 				ImGui::DragFloat3("##Pos", &pos.x, 0.5f);
 				trans->setPosition(pos);
+				// Rotation
 				glm::vec3 rot = trans->getRotation();
 				ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
 				trans->RotateX(rot.x);
 				trans->RotateY(rot.y);
 				trans->RotateZ(rot.z);
+				// Scale
+				glm::vec3 sca = trans->scale_;
+				ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
+				trans->setScale(sca);
 
 				//ImGui::EndChild();
 			}
@@ -295,29 +309,29 @@ int main() {
 				//ST::Circle* m_circle = nullptr;
 				//int rebolut;
 				ImGui::Text("Mesh: "); ImGui::SameLine();
-				switch (render->mesh->meshType_){
-				case ST::kMeshType_Triangle:
-					ImGui::Text("Triangle");
-					break;
-				case ST::kMeshType_Quad:
-					ImGui::Text("Quad");
-					break;
-				case ST::kMeshType_Circle:
-					ImGui::Text("Circle");
-					//m_circle = (ST::Circle*)render->mesh;
-					//rebolut = m_circle->getRebolutions();
-					//ImGui::Text("Rebolutions -> %d ", m_circle->getRebolutions());
-					//ImGui::DragInt("Rebolutions", &rebolut);
-					//m_circle->changeRebolutions(rebolut);
-					break;
-				case ST::kMeshType_Cube:
-					ImGui::Text("Cube");
-					break;
-				case ST::kMeshType_Custom:
-					ImGui::Text("Custom");
-					break;
-				}
+				ImGui::Text(render->mesh->getName());
 
+				if (ImGui::TreeNode("Change Mesh")) {
+					if (ImGui::Button("Change Mesh to -> Triangle")) {
+						render->setMesh(&triangle);
+					}
+					if (ImGui::Button("Change Mesh to -> Quad")) {
+						render->setMesh(&quad);
+					}
+					if (ImGui::Button("Change Mesh to -> Circle")) {
+						render->setMesh(&circle);
+					}
+					if (ImGui::Button("Change Mesh to -> Cube")) {
+						render->setMesh(&cube);
+					}
+					if (ImGui::Button("Change Mesh to -> Cat")) {
+						render->setMesh(&cat);
+					}
+					if (ImGui::Button("Change Mesh to -> Skull")) {
+						render->setMesh(&skull);
+					}
+					ImGui::TreePop();
+				}
 				//ImGui::EndChild();
 			}
 		}

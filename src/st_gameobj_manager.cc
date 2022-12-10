@@ -104,7 +104,9 @@ const int ST::GameObj_Manager::getGameObjNum(){
 void ST::GameObj_Manager::UpdateTransforms(){
 
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].RotateY(0.07f);
+		transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.07f);
+
+		transformComponentList_[i].Update();
 	}
 }
 
@@ -189,11 +191,8 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
 			float outputDistance = 100000.0f;
 
-			//glm::mat4 m = transformComponentList_[i].m_transform_;
-			//ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
-			//			 transformComponentList_[i].m_transform_, outputDistance);
-
-			if (ray.TraceRay(cam_->transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), colliderPoint_min, colliderPoint_max,
+			// Enfrente de la camara.
+			if (ray.TraceRay(cam_->transform_.getPosition(), cam_->transform_.getForward(), colliderPoint_min, colliderPoint_max,
 				t->m_transform_, outputDistance)) {
 
 				if (outputDistance < objClose) {
@@ -201,9 +200,7 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 					objIndexClose = i;
 				}
 			}
-			//else {
-			//	printf("No detecto nada \n");
-			//}
+
 		}
 
 	}
