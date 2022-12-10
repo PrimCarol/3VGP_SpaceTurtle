@@ -34,11 +34,16 @@ namespace ST {
 	public:
 		Mesh();
 		GLuint getId();
+
+		const char* getName();
+		void setName(const char* n);
+
 		MeshType meshType_;
 		virtual void render();
 		~Mesh();
 		Mesh(const Mesh& o);
 	protected:
+		const char* name_;
 		GLuint internalId;
 	};
 

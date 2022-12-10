@@ -17,6 +17,8 @@ namespace ST {
 		void setPerspective(float fov, float ratio, float nearPlane, float farPlane);
 		void setOrthographic(float h, float v, float nearPlane, float farPlane);
 
+		void setTarget(glm::vec3 *target);
+
 		void update();
 
 		~Camera();
@@ -30,6 +32,8 @@ namespace ST {
 	private:
 		CameraType type;
 		
+		glm::vec3* target_;
+
 		// Perspective
 		float fov_;
 		float ratio_;
