@@ -1,7 +1,4 @@
-<h1 align="center"> Space Turtle </h1>
-<h4 align="center"> An engine built from scratch. </h4>
-
-![Turtle](https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png)
+<h1 align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="30" height="30"> Space Turtle <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="30" height="30"></h1>
 
 <h2>Implemented things</h2>
   · GLFW (https://github.com/glfw/glfw)<br>
@@ -13,6 +10,7 @@
 
 
 <h2>Examples</h2>
+<h4>Render Window</h4>
 
 ```cpp
 #include <st_engine.h>
