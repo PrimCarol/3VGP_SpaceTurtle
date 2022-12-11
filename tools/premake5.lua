@@ -74,6 +74,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../src/*.cc",
             "../src/components/*.cc",
 
+            -- Shaders
+            "../shaders/**",
+
             -- ImGui
             "../deps/tiny_obj/src/tiny_obj_loader.cc",
 

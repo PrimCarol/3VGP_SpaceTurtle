@@ -179,14 +179,10 @@ int main() {
 			}
 
 			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				//gm.cam_->transform_.Move(gm.cam_->transform_.getForward() + (glm::vec3(0.0f, 0.0f, (3.0f * w.DeltaTime()) * extra_speed)));
 				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, (3.0f * w.DeltaTime() * extra_speed), 0.0f) );
 			}
 			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				//gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() + (glm::vec3(0.0f, 0.0f, (3.0f  * w.DeltaTime()) * extra_speed)));
 				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
-				//gm.cam_->transform_.Move(glm::vec3(0.0f, (-3.0f * w.DeltaTime() * extra_speed), 0.0f));
 			}
 			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
 				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * w.DeltaTime() * extra_speed));
