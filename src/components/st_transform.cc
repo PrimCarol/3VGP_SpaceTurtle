@@ -20,8 +20,6 @@ void ST::TransformComponent::Update(){
 	
 	glm::mat4 m(1.0f);
 
-	
-
 	m = glm::translate(m, position_);
 
 	//m = glm::rotate(m, rotation_.x, vectorRight_);

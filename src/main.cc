@@ -20,10 +20,6 @@ int main() {
 	ST::GameObj* objSelected = nullptr;
 	// ************** Temporal ****************
 
-	printf("-----------------------------------------\n");
-	printf("------------- Space Turtle --------------\n");
-	printf("--------- By: Pere Prim Carol -----------\n");
-	printf("-----------------------------------------\n");
 	ST::GameObj_Manager gm;
 
 	ST::Triangle triangle;
@@ -59,7 +55,7 @@ int main() {
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = ST::Engine::getRandom(0.5f, 1.0f);
+			float randomScale = ST::Engine::getRandom(0.f, 1.0f);
 			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
 			float randomPosX = ST::Engine::getRandom(-70.0f, 70.0f);

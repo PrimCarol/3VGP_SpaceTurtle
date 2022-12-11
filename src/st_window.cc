@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <stdio.h>
 
 ST::Window::Window(){
     glWindow = NULL;
@@ -23,6 +24,11 @@ ST::Window::Window(){
 
     ImGui_ImplGlfw_InitForOpenGL(glWindow, true);
     ImGui_ImplOpenGL3_Init("#version 130");
+
+    printf("-----------------------------------------\n");
+    printf("------------- Space Turtle --------------\n");
+    printf("--------- By: Pere Prim Carol -----------\n");
+    printf("-----------------------------------------\n");
 }
 
 ST::Window::Window(int width, int height){
