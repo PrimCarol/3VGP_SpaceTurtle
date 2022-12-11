@@ -10,3 +10,35 @@
   · MiniAudio (https://github.com/mackron/miniaudio)<br>
   · TyniObj (https://github.com/tinyobjloader/tinyobjloader)<br>
 </p>
+
+
+<h2>Examples</h2>
+
+```cpp
+#include <st_engine.h>
+
+int main() {
+ ST::Window w;
+ w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
+
+ // ----------------------------------------------------------------
+
+ // Here Your Awesome Start Code!
+
+ // --------------------------
+
+ while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
+	 w.Clear();
+
+	 // ----------------------------------------------------------------
+
+	 // Here Your Awesome Loop Code!
+
+	 // ----------------------------
+
+	 w.Render();	
+  }
+  return 0;
+ }
+  
+```
