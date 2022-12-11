@@ -6,10 +6,12 @@
 ST::Mesh::Mesh(){
 	gladLoadGL();
 	internalId = 0;
-	meshType_ = kMeshType_None;
+
+	name_ = nullptr;
+	cullmode_ = ST::kCull_Back;
 }
 
-GLuint ST::Mesh::getId(){
+const GLuint ST::Mesh::getId(){
 	return internalId;
 }
 
@@ -22,14 +24,40 @@ void ST::Mesh::setName(const char* n){
 	if (n) { name_ = n; }
 }
 
-ST::Mesh::~Mesh(){}
+ST::Mesh::~Mesh(){
+	glDeleteVertexArrays(1, &internalId);
+}
 
 ST::Mesh::Mesh(const Mesh& o){
+	name_ = o.name_;
 	internalId = o.internalId;
-	meshType_ = o.meshType_;
+
+	cullmode_ = o.cullmode_;
 }
 
 void ST::Mesh::render(){}
+
+// ------ Extra Functions ------
+void SetCullMode(ST::CullMode c) {
+
+	switch (c){
+	case ST::kCull_Disable:
+		glDisable(GL_CULL_FACE);
+		break;
+	case ST::kCull_Front:
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		break;
+	case ST::kCull_Back:
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		break;
+	case ST::kCull_Both:
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT_AND_BACK);
+		break;
+	}
+}
 
 
 // ----------------- Triangle ------------------
@@ -37,12 +65,10 @@ ST::Triangle::Triangle() : Mesh() {
 	
 	setName("Triangle");
 
-	meshType_ = kMeshType_Triangle;
-
 	VertexInfo vertices[] = {
-		{{ 0.0f, 1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {0.5f, 0.0f}},
-		{{ 1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},
-		{{-1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}}
+		{{ 0.0f, 1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {0.5f, 0.0f}},
+		{{ 1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},
+		{{-1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}}
 	};
 
 	unsigned int indices[] = { 0,1,2 };
@@ -70,10 +96,16 @@ ST::Triangle::Triangle() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void ST::Triangle::render(){
 	glBindVertexArray(internalId);
+
+	SetCullMode(cullmode_);
+
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
 }
 
@@ -83,13 +115,12 @@ ST::Triangle::~Triangle() {}
 ST::Quad::Quad() : Mesh() {
 
 	setName("Quad");
-	meshType_ = kMeshType_Quad;
 
 	VertexInfo vertices[] = {
-		{{ 1.0f, 1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
-		{{ 1.0f,-1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},
-		{{-1.0f,-1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
-		{{-1.0f, 1.0f,0.0f},  {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}}
+		{{ 1.0f, 1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {0.0f, 0.0f}},
+		{{ 1.0f,-1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},
+		{{-1.0f,-1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}},
+		{{-1.0f, 1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {1.0f, 0.0f}}
 	};
 
 	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
@@ -117,10 +148,16 @@ ST::Quad::Quad() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void ST::Quad::render() {
 	glBindVertexArray(internalId);
+	
+	SetCullMode(cullmode_);
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
 }
 
@@ -130,7 +167,6 @@ ST::Quad::~Quad() {}
 ST::Circle::Circle() : Mesh() {
 
 	setName("Circle");
-	meshType_ = kMeshType_Circle;
 
 	const int rebolutions = 10 + 1;
 	changeRebolutions(rebolutions);
@@ -138,6 +174,9 @@ ST::Circle::Circle() : Mesh() {
 
 void ST::Circle::render() {
 	glBindVertexArray(internalId);
+
+	SetCullMode(cullmode_);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
@@ -162,7 +201,7 @@ void ST::Circle::changeRebolutions(int r){
 			// Normals
 			vertices.normal.x = 0.0f;
 			vertices.normal.y = 0.0f;
-			vertices.normal.z = 1.0f;
+			vertices.normal.z = -1.0f;
 
 			vertices_.push_back(vertices);
 		}
@@ -170,7 +209,7 @@ void ST::Circle::changeRebolutions(int r){
 		VertexInfo verticesLast;
 		verticesLast.normal.x = 0.0f;
 		verticesLast.normal.y = 0.0f;
-		verticesLast.normal.z = 1.0f;
+		verticesLast.normal.z = -1.0f;
 
 		verticesLast.pos.x = 0.0f;
 		verticesLast.pos.y = 0.0f;
@@ -183,8 +222,6 @@ void ST::Circle::changeRebolutions(int r){
 			vertices_[i].uv.x = (1.0f - vertices_[i].pos.x) * 0.5f;
 			vertices_[i].uv.y = (1.0f - vertices_[i].pos.y) * 0.5f;
 		}
-
-		//unsigned int indices;
 
 		int contadorIndice = -1;
 		for (int i = 0; i < rebolutions_ * 3; i += 3) {
@@ -221,6 +258,9 @@ void ST::Circle::changeRebolutions(int r){
 		glGenBuffers(1, &gEBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 }
 
@@ -234,28 +274,27 @@ ST::Circle::~Circle() {}
 ST::Cube::Cube() : Mesh() {
 
 	setName("Cube");
-	meshType_ = kMeshType_Cube;
 
 	VertexInfo vertices[] = {
-		{{ 0.5f, 0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
-		{{ 0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},	//Front
-		{{-0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
-		{{-0.5f, 0.5f, -0.5f },    {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}},
+		{{ 0.5f, 0.5f, -0.5f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 0.0f}},
+		{{ 0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},	//Front
+		{{-0.5f,-0.5f, -0.5f },	   {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}},
+		{{-0.5f, 0.5f, -0.5f },    {0.0f, 0.0f, -1.0f},     {1.0f, 0.0f}},
 
-		{{-0.5f,  0.5f, -0.5f},    {1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
-		{{-0.5f, -0.5f, -0.5f},    {1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Right
-		{{-0.5f, -0.5f,  0.5f},    {1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
-		{{-0.5f,  0.5f,  0.5f},    {1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
+		{{-0.5f,  0.5f, -0.5f},   {-1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
+		{{-0.5f, -0.5f, -0.5f},   {-1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Right
+		{{-0.5f, -0.5f,  0.5f},   {-1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
+		{{-0.5f,  0.5f,  0.5f},   {-1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
 
-		{{0.5f,  0.5f,  0.5f},	  {-1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
-		{{0.5f, -0.5f,  0.5f},    {-1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Left
-		{{0.5f, -0.5f, -0.5f},	  {-1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
-		{{0.5f,  0.5f, -0.5f},    {-1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
+		{{0.5f,  0.5f,  0.5f},	  { 1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
+		{{0.5f, -0.5f,  0.5f},    { 1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Left
+		{{0.5f, -0.5f, -0.5f},	  { 1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
+		{{0.5f,  0.5f, -0.5f},    { 1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
 
-		{{-0.5f,  0.5f,  0.5f},	  {0.0f, 0.0f,-1.0f},     {0.0f, 0.0f}},
-		{{-0.5f, -0.5f,  0.5f},   {0.0f, 0.0f,-1.0f},     {0.0f, 1.0f}},	//Back
-		{{ 0.5f, -0.5f,  0.5f},	  {0.0f, 0.0f,-1.0f},     {1.0f, 1.0f}},
-		{{ 0.5f,  0.5f,  0.5f},   {0.0f, 0.0f,-1.0f},     {1.0f, 0.0f}},
+		{{-0.5f,  0.5f,  0.5f},	  {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
+		{{-0.5f, -0.5f,  0.5f},   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},	//Back
+		{{ 0.5f, -0.5f,  0.5f},	  {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
+		{{ 0.5f,  0.5f,  0.5f},   {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}},
 
 		{{ 0.5f, -0.5f, -0.5f},	   {0.0f,-1.0f, 0.0f},     {0.0f, 0.0f}},
 		{{ 0.5f, -0.5f,  0.5f},    {0.0f,-1.0f, 0.0f},     {0.0f, 1.0f}},	//Bottom
@@ -295,10 +334,16 @@ ST::Cube::Cube() : Mesh() {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(unsigned int), &indices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void ST::Cube::render() {
 	glBindVertexArray(internalId);
+	
+	SetCullMode(cullmode_);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
 }
@@ -308,7 +353,6 @@ ST::Cube::~Cube() {}
 // ------------------- OBJ -------------------
 ST::Geometry::Geometry() : Mesh() {
 	setName("Custom");
-	meshType_ = kMeshType_Custom;
 }
 
 #include <tiny_obj_loader.h>
@@ -402,13 +446,18 @@ bool ST::Geometry::loadFromFile(const char* path) {
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
-	
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
 	return true;
 }
 
 void ST::Geometry::render(){
 	glBindVertexArray(internalId);
+	
+	SetCullMode(cullmode_);
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }

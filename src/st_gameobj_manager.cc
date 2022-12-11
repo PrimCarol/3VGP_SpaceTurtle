@@ -115,8 +115,6 @@ void ST::GameObj_Manager::UpdateRender(){
 	const ST::Program* p = nullptr;
 
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
 
 	cam_->update();
 
@@ -170,11 +168,6 @@ void ST::GameObj_Manager::UpdateRender(){
 
 ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
-	//printf("Camera Forward: %f / %f / %f \n", cam_->transform_.getForward().x, cam_->transform_.getForward().y, cam_->transform_.getForward().z);
-
-	//ST::Raycast ray;
-	//ray.drawRay(glm::vec3(100.0f,0.0f,100.0f), glm::vec3(0.0f,0.0f,0.0f));
-
 	float objClose = 100000.0f;
 	int objIndexClose = -1;
 
@@ -206,11 +199,7 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 	}
 	
 	if (objIndexClose != -1) {
-		//printf("Detecto el objeto -> %d \n", objIndexClose);
-		//printf("Esta a %f de distancia. \n", objClose);
-
 		return GameObjsList_[objIndexClose];
-		//return nullptr;
 	}
 
 	return nullptr;

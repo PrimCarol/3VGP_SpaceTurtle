@@ -24,6 +24,7 @@ void main() {
 	color = u_color;
 
 	normals = normalize((u_m_trans * vec4(a_normals,0.0)).xyz);
+	//normals = a_normals;
 	texCoords = a_uv;
 
 	gl_Position = (u_vp_matrix * u_m_trans) * vec4(a_position, 1);	

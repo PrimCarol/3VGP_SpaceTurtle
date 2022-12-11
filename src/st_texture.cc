@@ -9,7 +9,6 @@ ST::Texture::Texture(){
 }
 
 bool ST::Texture::loadSource(const char* filePath){
-	// ????????????????
 
     unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
     if (image_data == NULL)
@@ -27,14 +26,12 @@ void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
     int x, y;
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
-            argb[x + y * w] = (x ^ y); // | (x << 16) | 0xff000000;
+            argb[x + y * w] = (x ^ y);
         }
     }
     width_ = w;
     height_ = h;
-    //texChecker = argb;
 
-    //set_data(F_RGBA, (const void*)texChecker);
     set_data(F_RGBA, (const void*)argb);
 }
 
@@ -78,5 +75,5 @@ const int ST::Texture::height(){
 }
 
 ST::Texture::~Texture(){
-
+    glDeleteTextures(1, &internalID);
 }

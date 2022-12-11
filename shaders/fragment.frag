@@ -46,4 +46,5 @@ void main() {
 	// ---- Resultado -----	
 	//FragColor = vec4((((albedo * diffuse_light) + (specular_light * specular_color)) * light_color) + ambient_color, 1.0);
 	FragColor = vec4((ambient_color * albedo) + (light_color * diffuse_light * albedo) /*+ (specular_color * specular_light * albedo)*/, 1.0);
+	//FragColor = vec4(normals, 1.0);
 }
