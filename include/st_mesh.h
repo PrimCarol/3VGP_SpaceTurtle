@@ -10,9 +10,9 @@
 namespace ST {
 
 	struct VertexInfo {
-		glm::vec3 pos; // Position
-		glm::vec3 normal; // Normals
-		glm::vec2 uv; // UVs
+		glm::vec3 pos;
+		glm::vec3 normal;
+		glm::vec2 uv;
 
 		bool VertexInfo::operator==(const VertexInfo& other) const {
 			return (pos == other.pos && normal == other.normal && uv == other.uv);
@@ -103,6 +103,7 @@ namespace ST {
 
 #endif
 
+// ---- Geometry optimization ----
 #include "gtx/hash.hpp"
 namespace std {
 

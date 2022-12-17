@@ -51,12 +51,13 @@ int main() {
 		std::vector<ST::ComponentId> c1;
 		c1.push_back(gm.createTransformComponent());
 		c1.push_back(gm.createRenderComponent());
+		c1.push_back(gm.createColliderComponent());
 
 		obj1[i] = gm.createGameObj(c1);
 		ST::TransformComponent* t = (ST::TransformComponent*)obj1[i]->getComponent(ST::kComp_Trans);
 		if (t) {
-			float randomScale = ST::Engine::getRandom(0.f, 1.0f);
-			t->setScale(glm::vec3(randomScale, randomScale, randomScale));
+			//float randomScale = ST::Engine::getRandom(0.f, 1.0f);
+			//t->setScale(glm::vec3(randomScale, randomScale, randomScale));
 		
 			float randomPosX = ST::Engine::getRandom(-70.0f, 70.0f);
 			float randomPosY = ST::Engine::getRandom(-70.0f, 70.0f);
@@ -153,7 +154,7 @@ int main() {
 			}
 		}
 	}
-	
+
 	// --------------------------
 
 	float timerForInput = 0.0f;
@@ -164,7 +165,7 @@ int main() {
 
 		// ----------------------------------------------------------------
 		timerForInput += w.DeltaTime();
-		if (timerForInput >= 1.0f/60) {
+		if (timerForInput >= 1.0f/30) {
 
 			glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
 

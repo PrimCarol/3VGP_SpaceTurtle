@@ -1,7 +1,5 @@
 #include "st_raycast.h"
 
-#include <glad.h>
-
 ST::Raycast::Raycast(){
 
 }
@@ -113,6 +111,7 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 	return true;
 }
 
+#include <glad.h>
 void ST::Raycast::drawRay(glm::vec3 start, glm::vec3 end){
 
 	glBegin(GL_LINES);

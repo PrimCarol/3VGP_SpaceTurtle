@@ -14,6 +14,7 @@
 #define MAX_OBJS 1000000
 #define MAX_TRANSFORM_COMPONENTS 1000000
 #define MAX_RENDER_COMPONENTS 1000000
+#define MAX_COLLIDER_COMPONENTS 1000000
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -21,31 +22,30 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	GameObjsList_.reserve(MAX_OBJS);
 
-	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS);
-	renderComponentList_.reserve(MAX_RENDER_COMPONENTS);
+	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS); // Transforms
+	renderComponentList_.reserve(MAX_RENDER_COMPONENTS); // Render
+	colliderComponentList_.reserve(MAX_COLLIDER_COMPONENTS); // Colliders
 
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
+	ColliderCompIndex_ = 0;
 
 	// ------- Create Basic Program -------
 	ST::Shader vertex(E_VERTEX_SHADER);
 	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/vertex.vert");
 	vertex.loadSource(textVertex);
-	//vertex.loadSource(basic_vShader_text);
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
 	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/fragment.frag");
 	fragment.loadSource(textFragment);
-	//fragment.loadSource(basic_fShader_text);
 
 	basicProgram = new ST::Program();
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
 
-	// Cam
+	// ------- Cam -------
 	cam_ = new ST::Camera();
-	//cam_->setOrthographic(20.0f,20.0f, 0.05f, 10000.0f);
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -79,6 +79,21 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 	return result;
 }
 
+ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
+	if (ColliderCompIndex_ >= MAX_COLLIDER_COMPONENTS) {
+		return ST::ColliderComponentId();
+	}
+
+	ST::ColliderComponentId result;
+	result.value = ColliderCompIndex_;
+	result.type = ST::kComp_Collider;
+
+	colliderComponentList_.push_back(ST::ColliderComponent());
+	ColliderCompIndex_++;
+
+	return result;
+}
+
 std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c){
 
 	auto go = std::make_unique<ST::GameObj>();
@@ -104,7 +119,7 @@ const int ST::GameObj_Manager::getGameObjNum(){
 void ST::GameObj_Manager::UpdateTransforms(){
 
 	for (int i = 0; i < transformComponentList_.size(); i++){
-		//transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
+		transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
 
 		transformComponentList_[i].Update();
 	}
@@ -162,6 +177,8 @@ void ST::GameObj_Manager::UpdateRender(){
 			renderComponentList_[i].mesh->render();
 		}
 
+		colliderComponentList_[i].draw(); // Bad thing.
+
 		glUseProgram(0);
 	}
 }
@@ -179,8 +196,11 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
 			ST::Raycast ray;
 
-			glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
-			glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
+			//glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
+			//glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
+
+			glm::vec3 colliderPoint_min(-colliderComponentList_[i].size_);
+			glm::vec3 colliderPoint_max(colliderComponentList_[i].size_);
 
 			float outputDistance = 100000.0f;
 
@@ -193,7 +213,6 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 					objIndexClose = i;
 				}
 			}
-
 		}
 
 	}
@@ -207,4 +226,8 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 
-ST::GameObj_Manager::~GameObj_Manager(){}
+ST::GameObj_Manager::~GameObj_Manager(){
+	transformComponentList_.clear();
+	renderComponentList_.clear();
+	colliderComponentList_.clear();
+}

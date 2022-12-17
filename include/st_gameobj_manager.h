@@ -4,6 +4,7 @@
 #include <st_gameobj.h>
 #include <components/st_transform.h>
 #include <components/st_render.h>
+#include <components/st_collider.h>
 
 #include <st_camera.h>
 
@@ -20,6 +21,7 @@ namespace ST {
 		
 		ComponentId createTransformComponent();
 		ComponentId createRenderComponent();
+		ComponentId createColliderComponent();
 
 		std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
 		const int getGameObjNum();
@@ -34,6 +36,7 @@ namespace ST {
 		std::vector<GameObj*> GameObjsList_;
 		std::vector<TransformComponent> transformComponentList_;
 		std::vector<RenderComponent> renderComponentList_;
+		std::vector<ColliderComponent> colliderComponentList_;
 		
 		//std::vector<BeltComponent> beltComponentList_; 
 		//std::vector<BeltRenderPairComponent> beltRenderPairComponentList_;  // Id trans y render
@@ -49,6 +52,7 @@ namespace ST {
 
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
+		size_t ColliderCompIndex_;
 		
 		ST::Program* basicProgram; // Default Shader Program to render.
 

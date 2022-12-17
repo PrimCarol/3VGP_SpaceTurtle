@@ -20,7 +20,7 @@ namespace ST {
 
 	struct TransformComponentId : ComponentId {};
 	struct RenderComponentId : ComponentId {};
-	struct RenderColliderId : ComponentId {};
+	struct ColliderComponentId : ComponentId {};
 
 	// --------------------------- Usability ----------------------------
 
