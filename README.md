@@ -8,6 +8,12 @@
   · TyniObj (https://github.com/tinyobjloader/tinyobjloader)<br>
 </p>
 
+<h2>Generate Visual Solution</h2>
+
+```
+click -> ./tools/compile_vs[version].bat
+open -> ./build/3VGP_SpaceTurtlevs[version].sln
+```
 
 <h2>Examples</h2>
 <h4>Render Window</h4>
