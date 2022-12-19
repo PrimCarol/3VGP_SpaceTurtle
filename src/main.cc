@@ -5,6 +5,8 @@
 
 #include <st_engine.h>
 
+#define ACTUAL_OBJECTS 5000
+
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f);
@@ -39,13 +41,18 @@ int main() {
 	// *************************** Test ***********************
 	ST::Geometry cat;
 	cat.loadFromFile("../others/cat_petit.obj");
-	ST::Geometry skull;
-	skull.loadFromFile("../others/skull_petit.obj");
+	ST::Geometry sanic;
+	sanic.loadFromFile("../others/skull_petit.obj");
 	// *************************** Test ***********************
 
-	const int numObjs = 5000;
+	const int numObjs = ACTUAL_OBJECTS;
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
+
+	ST::Program* customProgram = new ST::Program();
+	if (!customProgram->setUp("../shaders/basicShader.vert", "../shaders/basicShader.frag")) {
+		printf("Error Program Loading...\n");
+	}
 
 	for (size_t i = 0; i < numObjs; i++){
 		std::vector<ST::ComponentId> c1;
@@ -147,10 +154,15 @@ int main() {
 				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				break;
 			case 5:
-				r->setMesh(&skull);
+				r->setMesh(&sanic);
 				r->material->setTexture_Albedo(&textureChecker);
 				r->material->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				break;
+			}
+
+			int randomProgram = rand()%2;
+			if (randomProgram == 0) {
+				r->material->setProgram(customProgram);
 			}
 		}
 	}
@@ -165,7 +177,7 @@ int main() {
 
 		// ----------------------------------------------------------------
 		timerForInput += w.DeltaTime();
-		if (timerForInput >= 1.0f/30) {
+		if (timerForInput >= 1.0f/60) {
 
 			glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
 
@@ -175,16 +187,16 @@ int main() {
 			}
 
 			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
+				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
 			}
 			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * w.DeltaTime() * extra_speed));
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
 			}
 			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
-				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * w.DeltaTime() * extra_speed));
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
 			}
 			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-				gm.cam_->transform_.Move(gm.cam_->transform_.getRight() * (-30.0f * w.DeltaTime() * extra_speed));
+				gm.cam_->transform_.Move(gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
 			}
 		
 			if (firtsMouse) {
@@ -308,8 +320,8 @@ int main() {
 					if (ImGui::Button("Change Mesh to -> Cat")) {
 						render->setMesh(&cat);
 					}
-					if (ImGui::Button("Change Mesh to -> Skull")) {
-						render->setMesh(&skull);
+					if (ImGui::Button("Change Mesh to -> Sanic")) {
+						render->setMesh(&sanic);
 					}
 					ImGui::TreePop();
 				}

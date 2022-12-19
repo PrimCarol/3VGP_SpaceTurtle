@@ -10,22 +10,6 @@ namespace ST {
 	class Material{
 	public:
 		Material();
-		
-		/*class Settings {
-		public:
-			Settings();
-
-			void setColor(glm::vec3 rgb);
-			const glm::vec3 getColor();
-
-			~Settings();
-			Settings(const Settings& o);
-		private:
-			glm::vec3 color;
-		};*/
-
-		//void setSettings(Settings* s);
-		//Settings* getSettings() const;
 
 		void setColor(glm::vec3 rgb);
 		const glm::vec3 getColor();
@@ -41,8 +25,6 @@ namespace ST {
 	
 		bool haveAlbedo;
 	private:
-		//Settings* settings_;
-
 		ST::Texture* albedo;
 
 		glm::vec3 color;

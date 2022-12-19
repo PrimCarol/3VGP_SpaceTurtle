@@ -7,7 +7,20 @@
 //	return e;
 //}
 
-#include <st_engine.h>
+/*
+ template <class T>
+	inline T* get_component() {
+		for (unsigned int i = 0; components_.size(); i++) {
+			T* aux = dynamic_cast<T*>(components_[i]);
+			if (aux) {
+				return aux;
+			}
+		}
+		return nullptr;
+	}
+
+	 TransformComponent* transform_cmp = m.get_component<TransformComponent>();
+*/
 
 #include <st_raycast.h>
 
@@ -31,18 +44,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	ColliderCompIndex_ = 0;
 
 	// ------- Create Basic Program -------
-	ST::Shader vertex(E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/vertex.vert");
-	vertex.loadSource(textVertex);
-
-	ST::Shader fragment(E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/fragment.frag");
-	fragment.loadSource(textFragment);
-
 	basicProgram = new ST::Program();
-	basicProgram->attach(vertex);
-	basicProgram->attach(fragment);
-	basicProgram->link();
+	if (!basicProgram->setUp("../shaders/vertex.vert", "../shaders/fragment.frag")) {
+		printf("*Error* Creating Basic Program.");
+	}
 
 	// ------- Cam -------
 	cam_ = new ST::Camera();
@@ -133,6 +138,8 @@ void ST::GameObj_Manager::UpdateRender(){
 
 	cam_->update();
 
+	GLuint lastProgramID = 0;
+
 	for (size_t i = 0; i < renderComponentList_.size(); i++) {
 		
 		// Material
@@ -141,7 +148,10 @@ void ST::GameObj_Manager::UpdateRender(){
 
 			p = renderComponentList_[i].material->getProgram();
 
-			p->use();
+			if (lastProgramID != p->getID()) {
+				p->use();
+				lastProgramID = p->getID();
+			}
 
 			// ------ Camara -------
 			GLuint camPos = p->getUniform("u_view_pos");
@@ -178,9 +188,8 @@ void ST::GameObj_Manager::UpdateRender(){
 		}
 
 		colliderComponentList_[i].draw(); // Bad thing.
-
-		glUseProgram(0);
 	}
+	glUseProgram(0);
 }
 
 ST::GameObj* ST::GameObj_Manager::tryPickObj(){

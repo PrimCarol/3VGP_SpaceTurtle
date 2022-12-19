@@ -20,7 +20,7 @@ namespace ST {
 
 		// --- Components ---
 		void checkComponents();
-		ST::Components* getComponent(ST::CompType t);		
+		ST::Components* getComponent(ST::CompType t);	
 		std::vector<ST::ComponentId> components;
 
 		// Podriamos pasarle en cuanto tiempo quieres que se destuya, como en Unity?

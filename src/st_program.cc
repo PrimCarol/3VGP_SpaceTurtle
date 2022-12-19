@@ -1,6 +1,8 @@
 #include "st_program.h"
 #include <assert.h>
 
+#include <st_engine.h>
+
 ST::Program::Program(){
 	gladLoadGL();
 	internalID = glCreateProgram();
@@ -8,6 +10,31 @@ ST::Program::Program(){
 
 GLuint ST::Program::getID() const{
 	return internalID;
+}
+
+bool ST::Program::setUp(const char* vertexShader, const char* fragmentShader){
+	
+	ST::Shader vertex(E_VERTEX_SHADER);
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile(vertexShader);
+	if (!vertex.loadSource(textVertex)) {
+		return false;
+	}
+	free(textVertex);
+
+	ST::Shader fragment(E_FRAGMENT_SHADER);
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile(fragmentShader);
+	if (!fragment.loadSource(textFragment)) {
+		return false;
+	}
+	free(textFragment);
+
+	attach(vertex);
+	attach(fragment);
+	if (!link()) {
+		return false;
+	}
+	
+	return true;
 }
 
 void ST::Program::attach(Shader &s){

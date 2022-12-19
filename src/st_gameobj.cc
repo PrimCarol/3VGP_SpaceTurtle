@@ -27,6 +27,9 @@ void ST::GameObj::checkComponents(){
 		case ST::kComp_Render:
 			printf("- Render\n");
 			break;
+		case ST::kComp_Collider:
+			printf("- Collider\n");
+			break;
 		}
 	}
 	printf("\n");
@@ -42,6 +45,9 @@ ST::Components* ST::GameObj::getComponent(ST::CompType t){
 				break;
 			case ST::kComp_Render:
 				return &gm_->renderComponentList_[components[i].value];
+				break;
+			case ST::kComp_Collider:
+				return &gm_->colliderComponentList_[components[i].value];
 				break;
 			}
 		}
@@ -84,6 +90,9 @@ ST::GameObj::~GameObj(){
 			break;
 		case ST::kComp_Render:
 			gm_->renderComponentList_.erase(gm_->renderComponentList_.begin() + components[i].value);
+			break;
+		case ST::kComp_Collider:
+			gm_->colliderComponentList_.erase(gm_->colliderComponentList_.begin() + components[i].value);
 			break;
 		}
 		
