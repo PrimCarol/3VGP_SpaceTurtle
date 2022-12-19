@@ -239,4 +239,7 @@ ST::GameObj_Manager::~GameObj_Manager(){
 	transformComponentList_.clear();
 	renderComponentList_.clear();
 	colliderComponentList_.clear();
+
+	delete basicProgram;
+	delete cam_;
 }

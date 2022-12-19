@@ -60,20 +60,3 @@ ST::Material::Material(const Material& o){
 ST::Material::~Material(){
 	
 }
-
-
-// --------------------------- Settings ---------------------------
-/*ST::Material::Settings::Settings() {
-	color = { 1.0f,0.0f,1.0f };
-}
-
-void ST::Material::Settings::setColor(glm::vec3 rgb){
-	color = rgb;
-}
-
-const glm::vec3 ST::Material::Settings::getColor(){
-	return color;
-}
-
-ST::Material::Settings::~Settings(){ }
-*/

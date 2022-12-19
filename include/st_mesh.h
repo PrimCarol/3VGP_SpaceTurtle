@@ -34,7 +34,7 @@ namespace ST {
 		const GLuint getId();
 
 		const char* getName();
-		void setName(const char* n);
+		void setName(char* n);
 
 		virtual void render();
 

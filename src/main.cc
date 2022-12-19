@@ -320,7 +320,7 @@ int main() {
 					if (ImGui::Button("Change Mesh to -> Cat")) {
 						render->setMesh(&cat);
 					}
-					if (ImGui::Button("Change Mesh to -> Sanic")) {
+					if (ImGui::Button("Change Mesh to -> Skull")) {
 						render->setMesh(&sanic);
 					}
 					ImGui::TreePop();
