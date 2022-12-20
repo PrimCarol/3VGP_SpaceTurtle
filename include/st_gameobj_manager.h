@@ -27,7 +27,7 @@ namespace ST {
 		const int getGameObjNum();
 
 		void UpdateTransforms();
-		void UpdateRender();
+		//void UpdateRender();
 
 		ST::GameObj* tryPickObj();
 

@@ -130,68 +130,6 @@ void ST::GameObj_Manager::UpdateTransforms(){
 	}
 }
 
-void ST::GameObj_Manager::UpdateRender(){
-	ST::Material* mat = nullptr;
-	const ST::Program* p = nullptr;
-
-	glEnable(GL_DEPTH_TEST);
-
-	cam_->update();
-
-	GLuint lastProgramID = 0;
-
-	for (size_t i = 0; i < renderComponentList_.size(); i++) {
-		
-		// Material
-		mat = renderComponentList_[i].material;
-		if (mat) {
-
-			p = renderComponentList_[i].material->getProgram();
-
-			if (lastProgramID != p->getID()) {
-				p->use();
-				lastProgramID = p->getID();
-			}
-
-			// ------ Camara -------
-			GLuint camPos = p->getUniform("u_view_pos");
-			glm::vec3 camTransPos = cam_->transform_.getPosition();
-			glUniform3fv(camPos, 1, &camTransPos.x);
-			GLuint camView = p->getUniform("u_view_matrix");
-			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_->view[0][0]);
-			GLuint camProjection = p->getUniform("u_projection_matrix");
-			glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam_->projection[0][0]);
-			GLuint camVP = p->getUniform("u_vp_matrix");
-			glm::mat4 cam_m_vp = cam_->projection * cam_->view;
-			glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
-			// ------ Camara -------
-
-			// De momento esta mal, funciona 1:1.
-			GLuint u_m_trans = p->getUniform("u_m_trans");
-			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &transformComponentList_[i].m_transform_[0][0]);
-
-			// Material 
-			GLuint u_color = p->getUniform("u_color");
-			glm::vec3 c = mat->getColor();
-			glUniform3fv(u_color, 1, &c[0]);
-
-			GLuint u_haveAlbedo = p->getUniform("u_haveAlbedo");
-			glUniform1i(u_haveAlbedo, mat->haveAlbedo);
-			
-			if (mat->haveAlbedo) {
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, mat->getAlbedo()->getID());
-			}
-		}
-		if (renderComponentList_[i].mesh) {
-			renderComponentList_[i].mesh->render();
-		}
-
-		colliderComponentList_[i].draw(); // Bad thing.
-	}
-	glUseProgram(0);
-}
-
 ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 
 	float objClose = 100000.0f;

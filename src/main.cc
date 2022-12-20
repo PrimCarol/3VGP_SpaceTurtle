@@ -5,6 +5,8 @@
 
 #include <st_engine.h>
 
+#include <systems/st_system_render.h>
+
 #define ACTUAL_OBJECTS 5000
 
 int main() {
@@ -225,7 +227,9 @@ int main() {
 		} // End Input Tick
 
 		gm.UpdateTransforms();
-		gm.UpdateRender();
+		//gm.UpdateRender();
+
+		ST::SystemRender::Render(gm.cam_, gm.renderComponentList_, gm.transformComponentList_);
 
 		//timerForSomething += w.DeltaTime();
 		//if (timerForSomething >= 1.0f/10) {
