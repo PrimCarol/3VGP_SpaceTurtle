@@ -47,14 +47,14 @@ namespace ST {
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 
-		ST::Camera* cam_;
+		std::unique_ptr<ST::Camera> cam_;
 	private:
 
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
 		size_t ColliderCompIndex_;
 		
-		ST::Program* basicProgram; // Default Shader Program to render.
+		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
 		//unsigned int numGameObjs; // Opcional / Temporal
 

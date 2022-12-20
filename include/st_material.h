@@ -4,6 +4,7 @@
 #include <glm.hpp>
 #include <st_program.h>
 #include <st_texture.h>
+#include <memory>
 
 namespace ST {
 
@@ -15,20 +16,19 @@ namespace ST {
 		const glm::vec3 getColor();
 
 		const ST::Program* getProgram();
-		void setProgram(ST::Program* program);
+		void setProgram(std::shared_ptr<ST::Program>& p);
 
 		ST::Texture* getAlbedo();
 		void setTexture_Albedo(ST::Texture* texAlbedo);
 
 		~Material();
-		Material(const Material& o);
 	
 		bool haveAlbedo;
 	private:
 		ST::Texture* albedo;
 
 		glm::vec3 color;
-		ST::Program* program;
+		std::shared_ptr<ST::Program> program;
 	};
 }
 

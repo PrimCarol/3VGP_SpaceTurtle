@@ -44,13 +44,13 @@ ST::GameObj_Manager::GameObj_Manager(){
 	ColliderCompIndex_ = 0;
 
 	// ------- Create Basic Program -------
-	basicProgram = new ST::Program();
+	basicProgram = std::make_unique<ST::Program>();
 	if (!basicProgram->setUp("../shaders/vertex.vert", "../shaders/fragment.frag")) {
 		printf("*Error* Creating Basic Program.");
 	}
 
 	// ------- Cam -------
-	cam_ = new ST::Camera();
+	cam_ = std::make_unique<ST::Camera>();
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){
@@ -177,7 +177,4 @@ ST::GameObj_Manager::~GameObj_Manager(){
 	transformComponentList_.clear();
 	renderComponentList_.clear();
 	colliderComponentList_.clear();
-
-	delete basicProgram;
-	delete cam_;
 }

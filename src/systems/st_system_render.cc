@@ -1,6 +1,6 @@
 #include "st_system_render.h"
 
-void ST::SystemRender::Render(ST::Camera* cam, std::vector<ST::RenderComponent> r, std::vector<ST::TransformComponent> t){
+void ST::SystemRender::Render(ST::Camera* cam, const std::vector<ST::RenderComponent>& r, const std::vector<ST::TransformComponent>& t){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
@@ -13,7 +13,7 @@ void ST::SystemRender::Render(ST::Camera* cam, std::vector<ST::RenderComponent> 
 	for (size_t i = 0; i < r.size(); i++) {
 
 		// Material
-		mat = r[i].material;
+		mat = r[i].material.get();
 		if (mat) {
 
 			p = r[i].material->getProgram();

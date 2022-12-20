@@ -3,6 +3,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <memory>
 
 ST::Texture::Texture(){
 	glGenTextures(1, &internalID);
@@ -22,7 +23,7 @@ bool ST::Texture::loadSource(const char* filePath){
 }
 
 void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
-    unsigned int* argb = new unsigned int[w * h];
+    auto argb = std::make_unique<unsigned int[]>(w * h);
     int x, y;
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
@@ -32,7 +33,7 @@ void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
     width_ = w;
     height_ = h;
 
-    set_data(F_RGBA, (const void*)argb);
+    set_data(F_RGBA, (const void*)argb.get());
 }
 
 

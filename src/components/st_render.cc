@@ -8,15 +8,15 @@ ST::RenderComponent::RenderComponent(){
 	material = nullptr;
 
 	//mesh = new ST::Circle();
-	material = new ST::Material();
+	material = std::make_unique<ST::Material>();
 }
 
 void ST::RenderComponent::setMesh(ST::Mesh* m){
 	mesh = m;
 }
 
-void ST::RenderComponent::setMaterial(ST::Material* m){
-	material = m;
+void ST::RenderComponent::setMaterial(std::unique_ptr<ST::Material>& m){
+	material = std::move(m);
 }
 
 ST::RenderComponent::~RenderComponent(){
