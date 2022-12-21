@@ -31,10 +31,10 @@ const glm::vec3 ST::Material::getColor() {
 }
 
 const ST::Program* ST::Material::getProgram(){
-	return program;
+	return program.get();
 }
 
-void ST::Material::setProgram(ST::Program* p){
+void ST::Material::setProgram(std::shared_ptr<ST::Program>& p){
 	if (p) {
 		program = p;
 	}
@@ -49,12 +49,6 @@ void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
 		albedo = texAlbedo;
 		haveAlbedo = true;
 	}
-}
-
-ST::Material::Material(const Material& o){
-	//settings_ = o.settings_;
-	program = o.program;
-	color = o.color;
 }
 
 ST::Material::~Material(){

@@ -13,7 +13,7 @@ int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f);
 
-	srand(time(0));
+	srand((unsigned int)time(0));
 	// ----------------------------------------------------------------
 	
 	// ************** Temporal ****************
@@ -51,7 +51,7 @@ int main() {
 
 	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
-	ST::Program* customProgram = new ST::Program();
+	auto customProgram = std::make_shared<ST::Program>();
 	if (!customProgram->setUp("../shaders/basicShader.vert", "../shaders/basicShader.frag")) {
 		printf("Error Program Loading...\n");
 	}
@@ -229,7 +229,7 @@ int main() {
 		gm.UpdateTransforms();
 		//gm.UpdateRender();
 
-		ST::SystemRender::Render(gm.cam_, gm.renderComponentList_, gm.transformComponentList_);
+		ST::SystemRender::Render(gm.cam_.get(), gm.renderComponentList_, gm.transformComponentList_);
 
 		//timerForSomething += w.DeltaTime();
 		//if (timerForSomething >= 1.0f/10) {

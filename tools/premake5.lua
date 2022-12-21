@@ -32,7 +32,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
     project "SpaceTurtle"
         location(ROOT .. "/build/" .. _ACTION)
         entrypoint "mainCRTStartup"
-        --ignoredefaultlibraries { "LIBCMT" }
+        ignoredefaultlibraries { "LIBCMT" }
 
 
         -- Donde estan los includes

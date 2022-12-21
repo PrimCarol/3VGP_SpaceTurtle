@@ -179,7 +179,7 @@ void ST::Circle::render() {
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
 }
 
 void ST::Circle::changeRebolutions(int r){
@@ -367,7 +367,7 @@ bool ST::Geometry::loadFromFile(const char* path) {
 
 	if (!tinyobj::LoadObj(
 		&attributes, &shapes, NULL, &warning, &error, path)){
-		printf("Error on load file mesh: %s [%s] \n", warning, error);
+		printf("Error on load file mesh: %s [%s] \n", warning.c_str(), error.c_str());
 		return false;
 	}
 
@@ -459,7 +459,7 @@ void ST::Geometry::render(){
 	SetCullMode(cullmode_);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Geometry::~Geometry(){}

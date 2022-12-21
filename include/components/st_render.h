@@ -5,6 +5,7 @@
 
 #include <st_mesh.h>
 #include <st_material.h>
+#include <memory>
 
 namespace ST {
 
@@ -13,12 +14,15 @@ namespace ST {
 		RenderComponent();
 
 		void setMesh(ST::Mesh *m);
-		void setMaterial(ST::Material* m);
+		void setMaterial(std::unique_ptr<ST::Material>& m);
 
 		~RenderComponent();
 
-		ST::Material* material;
-		ST::Mesh* mesh;
+		RenderComponent(RenderComponent&&) = default;
+		RenderComponent& operator=(RenderComponent&&) = default;
+
+		std::unique_ptr<ST::Material> material;
+		ST::Mesh* mesh = nullptr;
 		//RenderComponent(const RenderComponent& o);
 	};
 }

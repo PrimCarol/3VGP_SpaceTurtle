@@ -9,7 +9,7 @@ namespace ST {
 
 	class SystemRender {
 	public:
-		static void Render(ST::Camera* cam, std::vector<ST::RenderComponent> r, std::vector<ST::TransformComponent> t);
+		static void Render(ST::Camera* cam, const std::vector<ST::RenderComponent>& r, const std::vector<ST::TransformComponent>& t);
 	private:
 		SystemRender();
 		~SystemRender();
