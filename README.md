@@ -60,5 +60,6 @@ int main() {
   · Glad (https://github.com/Dav1dde/glad)<br>
   · ImGui (https://github.com/ocornut/imgui)<br>
   · MiniAudio (https://github.com/mackron/miniaudio)<br>
+  · STB (https://github.com/nothings/stb)<br>
   · TyniObj (https://github.com/tinyobjloader/tinyobjloader)<br>
 </p>
