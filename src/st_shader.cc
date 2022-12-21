@@ -10,6 +10,7 @@ GLenum ShaderTypeToEnum(ST::ShaderType t) {
 		return GL_FRAGMENT_SHADER;
 		break;
 	}
+	return GL_FRAGMENT_SHADER;
 }
 
 ST::Shader::Shader(ShaderType t){

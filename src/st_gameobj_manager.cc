@@ -107,7 +107,7 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 		go->components = c;
 		go->gm_ = this;		
 
-		go->setID(GameObjsList_.size());
+		go->setID((int)GameObjsList_.size());
 
 		GameObjsList_.push_back(go.get());
 	}
@@ -118,7 +118,7 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 }
 
 const int ST::GameObj_Manager::getGameObjNum(){
-	return GameObjsList_.size();
+	return (int)GameObjsList_.size();
 }
 
 void ST::GameObj_Manager::UpdateTransforms(){

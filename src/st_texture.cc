@@ -24,7 +24,7 @@ bool ST::Texture::loadSource(const char* filePath){
 
 void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
     auto argb = std::make_unique<unsigned int[]>(w * h);
-    int x, y;
+    unsigned int x, y;
     for (y = 0; y < h; y++) {
         for (x = 0; x < w; x++) {
             argb[x + y * w] = (x ^ y);
@@ -38,7 +38,7 @@ void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
 
 
 void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap_LOD) {
-    GLenum data_type;
+    //GLenum data_type;
 
     glBindTexture(GL_TEXTURE_2D, internalID);
 
