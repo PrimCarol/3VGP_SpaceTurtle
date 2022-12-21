@@ -14,7 +14,7 @@ Visual Studio 2019/2022
 
 <h2>🔶 Generate Visual Solution</h2>
 
-Thanks to the use of Premake sol you have to do the following
+Thanks to the use of Premake you only have to do the following
 - Run the file that you will find in -> ./tools/compile_vs[version].bat <br>
 - Then open the visual solution that has been created in -> ./build/3VGP_SpaceTurtlevs[version].sln <br>
 
