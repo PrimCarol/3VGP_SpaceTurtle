@@ -19,11 +19,11 @@ Visual Studio 2019/2022
 click -> ./tools/compile_vs[version].bat
 open -> ./build/3VGP_SpaceTurtlevs[version].sln
 ```
-<h2>Build</h2>
-Inside the solution, press 'F5' to build and run.
-<img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenchots/Demo_00.png">
+<h2 align="center">Build</h2>
+<p>Inside the solution, press 'F5' to build and run.</p>
+<img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/Demo_00.png">
 
-<h2>Examples</h2>
+<h2 align="center">Examples</h2>
 <h4>Render Window</h4>
 
 ```cpp
