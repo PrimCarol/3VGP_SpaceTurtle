@@ -1,6 +1,8 @@
 <h1 align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="30" height="30"> Space Turtle <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="30" height="30"></h1>
 
 <h2>Implemented things</h2>
+
+<p>
   · GLFW (https://github.com/glfw/glfw)<br>
   · Glad (https://github.com/Dav1dde/glad)<br>
   · ImGui (https://github.com/ocornut/imgui)<br>
@@ -8,12 +10,18 @@
   · TyniObj (https://github.com/tinyobjloader/tinyobjloader)<br>
 </p>
 
+<h2>Prerequisites</h2>
+Visual Studio 2019/2022
+
 <h2>Generate Visual Solution</h2>
 
 ```
 click -> ./tools/compile_vs[version].bat
 open -> ./build/3VGP_SpaceTurtlevs[version].sln
 ```
+<h2>Build</h2>
+Inside the solution, press 'F5' to build and run.
+
 
 <h2>Examples</h2>
 <h4>Render Window</h4>
