@@ -25,12 +25,13 @@ namespace ST {
 		"uniform vec3 u_color;\n"
 
 		"out vec3 color;\n"
+		"out vec3 normals;\n"
 		"out vec2 texCoords;\n"
 
 		"void main() {\n"
-		"color = u_color;\n"
-		"texCoords = a_uv;\n"
-		"gl_Position = (u_vp_matrix * u_m_trans) * vec4(a_position, 1);\n"
+			"color = u_color;\n"
+			"texCoords = a_uv;\n"
+			"gl_Position = (u_vp_matrix * u_m_trans) * vec4(a_position, 1);\n"
 		"}\n";
 
 	static GLchar* basic_fShader_text =
@@ -39,6 +40,7 @@ namespace ST {
 		"out vec4 FragColor;\n"
 
 		"in vec3 color;\n"
+		"in vec3 normals; \n"
 		"in vec2 texCoords;\n"
 
 		// Texture
@@ -46,8 +48,8 @@ namespace ST {
 		"uniform sampler2D u_tex_Albedo;\n"
 
 		"void main() {\n"
-		"if(u_haveAlbedo){ FragColor = texture(u_tex_Albedo, texCoords) + vec4(color,1.0); }\n"
-		"else { FragColor = vec4(color, 1.0); }\n"
+			"if(u_haveAlbedo){ FragColor = texture(u_tex_Albedo, texCoords) + vec4(color,1.0); }\n"
+			"else { FragColor = vec4(color, 1.0); }\n"
 		"}\n";
 
 	class Shader{

@@ -22,15 +22,25 @@ int main() {
 	float lastY = 0.0f;
 
 	ST::GameObj* objSelected = nullptr;
+	bool clicked = false;
 	// ************** Temporal ****************
 
+	// ************* Game Manager **********
 	ST::GameObj_Manager gm;
 
+	// ************* Geometries **********
 	ST::Triangle triangle;
 	ST::Quad quad;
 	ST::Circle circle;
 	ST::Cube cube;
 
+	// ************* Objs **********
+	ST::Geometry cat;
+	cat.loadFromFile("../others/cat_petit.obj");
+	ST::Geometry sanic;
+	sanic.loadFromFile("../others/skull_petit.obj");
+
+	// ************* Textures **********
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
 
@@ -38,23 +48,17 @@ int main() {
 	textureChecker.loadSource("../others/checker_texture.jpg");
 
 	ST::Texture textureTurtle;
-	textureTurtle.loadSource("../others/icon.png");
-	
-	// *************************** Test ***********************
-	ST::Geometry cat;
-	cat.loadFromFile("../others/cat_petit.obj");
-	ST::Geometry sanic;
-	sanic.loadFromFile("../others/skull_petit.obj");
-	// *************************** Test ***********************
+	textureTurtle.loadSource("../others/icon.png");	
 
-	const int numObjs = ACTUAL_OBJECTS;
-
-	std::unique_ptr<ST::GameObj> obj1[numObjs];
-
+	// ************* Custom Program **********
 	auto customProgram = std::make_shared<ST::Program>();
 	if (!customProgram->setUp("../shaders/basicShader.vert", "../shaders/basicShader.frag")) {
 		printf("Error Program Loading...\n");
 	}
+
+	// *********************** Creation *********************
+	const int numObjs = ACTUAL_OBJECTS;
+	std::unique_ptr<ST::GameObj> obj1[numObjs];
 
 	for (size_t i = 0; i < numObjs; i++){
 		std::vector<ST::ComponentId> c1;
@@ -219,8 +223,12 @@ int main() {
 			
 			
 			// ---- Picking ---
-			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+			if (w.inputPressed(ST::ST_INPUT_FIRE) && !clicked) {
 				objSelected = gm.tryPickObj();
+				clicked = true;
+			}
+			if (w.inputReleased(ST::ST_INPUT_FIRE) && clicked) {
+				clicked = false;
 			}
 
 			timerForInput = 0.0f;
@@ -341,3 +349,70 @@ int main() {
 
 	return 0;
 }
+
+/*
+struct RenderComponent {};
+
+struct lista_componentes {
+
+};
+
+template<typename T>
+struct lista_componentes_implementacion : lista_componentes {
+	std::vector<std::optional<T>> componentes;
+};
+
+class EntityManager {
+public:
+	template<typename T> void add_component_type();
+private:
+	std::unordered_map<size_t, std::unique_ptr<lista_componentes>> a;
+};
+
+template<typename T>
+void acces_comp(const EntityManager& em){
+	auto it = em.a.find(typeid(T).hash_code());
+}
+
+
+void do_render(const EntityManager& em){
+	auto it = em.a.find(typeid(RenderComponent).hash_code());
+	auto lista = static_cast<lista_componentes_implementacion<RenderComponent>*>(it->second.get())
+}
+
+
+//---------------------------------------------------------
+
+struct RenderComponent {};
+
+struct lista_componentes {
+
+};
+
+template<typename T>
+struct lista_componentes_implementacion : lista_componentes {
+	std::vector<std::optional<T>> componentes;
+};
+
+class EntityManager {
+public:
+	template<typename T> void add_component_type();
+	template<typename T> lista_componentes_implementacion<T>& get_component_list(){
+		auto it = em.a.find(typeid(T).hash_code());
+		auto lista = static_cast<lista_componentes_implementacion<T>*>(it->second.get())
+		return *lista;
+	};
+private:
+	std::unordered_map<size_t, std::unique_ptr<lista_componentes>> a;
+};
+
+template<typename T>
+void acces_comp(const EntityManager& em){
+	auto it = em.a.find(typeid(T).hash_code());
+}
+
+
+void do_render(const EntityManager& em){
+	auto &lista = em.get_component_list<RenderComponent>();
+}
+*/

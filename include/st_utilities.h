@@ -7,7 +7,7 @@
 
 namespace ST {
 
-    const unsigned char* readFile(const char* filename) {
+    /*const unsigned char* readFile(const char* filename) {
         FILE* in_file = 0;
         int err = fopen_s(&in_file, filename, "rb");
         assert(in_file);
@@ -20,7 +20,7 @@ namespace ST {
             fclose(in_file);
         }
         return file_contents;
-    }
+    }*/
 
     //const int getRandom(int min, int max) {
     //    return min + (rand() / (RAND_MAX / (max - min)));

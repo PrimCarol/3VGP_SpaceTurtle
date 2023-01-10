@@ -46,7 +46,21 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
 	if (!basicProgram->setUp("../shaders/vertex.vert", "../shaders/fragment.frag")) {
-		printf("*Error* Creating Basic Program.");
+		printf("*Error* Loading Shader");
+
+		ST::Shader vertex(E_VERTEX_SHADER);
+		GLchar* textVertex = (GLchar*)ST::basic_vShader_text;
+		vertex.loadSource(textVertex);
+		free(textVertex);
+
+		ST::Shader fragment(E_FRAGMENT_SHADER);
+		GLchar* textFragment = (GLchar*)ST::basic_fShader_text;
+		fragment.loadSource(textFragment);
+		free(textFragment);
+
+		basicProgram->attach(vertex);
+		basicProgram->attach(fragment);
+		basicProgram->link();
 	}
 
 	// ------- Cam -------

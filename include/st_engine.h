@@ -13,11 +13,6 @@ namespace ST {
 	class Engine{
 	public:
 	
-		//static Engine& instance() {
-		//	static Engine instance;
-		//	return instance;
-		//}
-
 		static const float getRandom(float min, float max) {
 			return min + (rand() / (RAND_MAX / (max - min)));
 		}
