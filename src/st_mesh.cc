@@ -462,4 +462,4 @@ void ST::Geometry::render(){
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
-ST::Geometry::~Geometry(){}
+ST::Geometry::~Geometry() {}

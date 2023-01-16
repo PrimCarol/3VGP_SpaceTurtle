@@ -16,24 +16,47 @@ void ST::GameObj::setID(int id){
 	ID_ = id;
 }
 
-void ST::GameObj::checkComponents(){
-	printf("<- Components ->\n");
-	for (int i = 0; i < components.size(); i++) {
+//void ST::GameObj::checkComponents(){
+//	printf("<- Components ->\n");
+//	for (int i = 0; i < components.size(); i++) {
+//
+//		switch (components[i].type) {
+//		case ST::kComp_Trans:
+//			printf("- Transform\n");
+//			break;
+//		case ST::kComp_Render:
+//			printf("- Render\n");
+//			break;
+//		case ST::kComp_Collider:
+//			printf("- Collider\n");
+//			break;
+//		}
+//	}
+//	printf("\n");
+//}
 
-		switch (components[i].type) {
-		case ST::kComp_Trans:
-			printf("- Transform\n");
-			break;
-		case ST::kComp_Render:
-			printf("- Render\n");
-			break;
-		case ST::kComp_Collider:
-			printf("- Collider\n");
-			break;
-		}
+/*
+void ST::GameObj::addChild(GameObj* c){
+	if (c) {
+		c->parent = this;
+		childs.push_back(c);
 	}
-	printf("\n");
 }
+void ST::GameObj::removeChild(const unsigned int index){
+	if (index < childs.size()) {
+		childs.erase(childs.begin() + index);
+	}
+}
+ST::GameObj* ST::GameObj::getChild(const unsigned int index){
+	if (index >= childs.size()) {
+		return nullptr;
+	}
+	return childs[index];
+}
+ST::GameObj* ST::GameObj::getParent(){
+	return parent;
+}
+*/
 
 ST::Components* ST::GameObj::getComponent(ST::CompType t){
 	for (int i = 0; i < components.size(); i++) {
@@ -55,35 +78,15 @@ ST::Components* ST::GameObj::getComponent(ST::CompType t){
 	return nullptr;
 }
 
-/*
-void ST::GameObj::addChild(GameObj* c){
-	if (c) {
-		c->parent = this;
-		childs.push_back(c);
+void ST::GameObj::addComponents(std::vector<ComponentId> c){
+	for (int i = 0; i < c.size(); i++){
+		components.push_back(c[i]);
 	}
 }
-
-void ST::GameObj::removeChild(const unsigned int index){
-	if (index < childs.size()) {
-		childs.erase(childs.begin() + index);
-	}
-}
-
-ST::GameObj* ST::GameObj::getChild(const unsigned int index){
-	if (index >= childs.size()) {
-		return nullptr;
-	}
-	return childs[index];
-}
-
-ST::GameObj* ST::GameObj::getParent(){
-	return parent;
-}
-*/
 
 ST::GameObj::~GameObj(){
 	// Eliminar el "vinculo" de los componentes del Manager
-	for (int i = 0; i < components.size(); i++) {
+	/*for (int i = 0; i < components.size(); i++) {
 		switch (components[i].type) {
 		case ST::kComp_Trans:
 			gm_->transformComponentList_.erase(gm_->transformComponentList_.begin() + components[i].value);
@@ -96,6 +99,6 @@ ST::GameObj::~GameObj(){
 			break;
 		}
 		
-	}
+	}*/
 	//printf("Destroy GameObj");
 }

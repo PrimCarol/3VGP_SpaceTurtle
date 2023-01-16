@@ -45,23 +45,18 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
-	if (!basicProgram->setUp("../shaders/vertex.vert", "../shaders/fragment.frag")) {
-		printf("*Error* Loading Shader");
 
-		ST::Shader vertex(E_VERTEX_SHADER);
-		GLchar* textVertex = (GLchar*)ST::basic_vShader_text;
-		vertex.loadSource(textVertex);
-		free(textVertex);
+	ST::Shader vertex(E_VERTEX_SHADER);
+	GLchar* textVertex = (GLchar*)ST::basic_vShader_text;
+	vertex.loadSource(textVertex);
 
-		ST::Shader fragment(E_FRAGMENT_SHADER);
-		GLchar* textFragment = (GLchar*)ST::basic_fShader_text;
-		fragment.loadSource(textFragment);
-		free(textFragment);
+	ST::Shader fragment(E_FRAGMENT_SHADER);
+	GLchar* textFragment = (GLchar*)ST::basic_fShader_text;
+	fragment.loadSource(textFragment);
 
-		basicProgram->attach(vertex);
-		basicProgram->attach(fragment);
-		basicProgram->link();
-	}
+	basicProgram->attach(vertex);
+	basicProgram->attach(fragment);
+	basicProgram->link();
 
 	// ------- Cam -------
 	cam_ = std::make_unique<ST::Camera>();
@@ -113,12 +108,13 @@ ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
 	return result;
 }
 
-std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c){
+/*std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c) {
 
 	auto go = std::make_unique<ST::GameObj>();
 	if (go) {
 		//printf("\n***** Obj Created *****\n");
-		go->components = c;
+		//go->components = c;
+		go->addComponents(c);
 		go->gm_ = this;		
 
 		go->setID((int)GameObjsList_.size());
@@ -129,22 +125,42 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vecto
 	//numGameObjs++;
 
 	return go;
+}*/
+
+std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
+
+	auto go = std::make_unique<ST::GameObj>();
+	if (go) {
+		//printf("\n***** Obj Created *****\n");
+		//go->components = c;
+
+		std::vector<ST::ComponentId> comps;
+		comps.push_back(createTransformComponent());
+		comps.push_back(createRenderComponent());
+		go->addComponents(comps);
+		go->gm_ = this;
+
+		go->setID((int)GameObjsList_.size());
+
+		GameObjsList_.push_back(go.get());
+	}
+	return go;
 }
 
 const int ST::GameObj_Manager::getGameObjNum(){
 	return (int)GameObjsList_.size();
 }
 
-void ST::GameObj_Manager::UpdateTransforms(){
+//void ST::GameObj_Manager::UpdateTransforms(){
+//
+//	for (int i = 0; i < transformComponentList_.size(); i++){
+//		transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
+//
+//		//transformComponentList_[i].Update();
+//	}
+//}
 
-	for (int i = 0; i < transformComponentList_.size(); i++){
-		transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
-
-		transformComponentList_[i].Update();
-	}
-}
-
-ST::GameObj* ST::GameObj_Manager::tryPickObj(){
+/*ST::GameObj* ST::GameObj_Manager::tryPickObj() {
 
 	float objClose = 100000.0f;
 	int objIndexClose = -1;
@@ -183,7 +199,7 @@ ST::GameObj* ST::GameObj_Manager::tryPickObj(){
 	}
 
 	return nullptr;
-}
+}*/
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 

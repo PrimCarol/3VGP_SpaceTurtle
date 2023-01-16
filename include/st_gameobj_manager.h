@@ -23,20 +23,17 @@ namespace ST {
 		ComponentId createRenderComponent();
 		ComponentId createColliderComponent();
 
-		std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
+		//std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
+		std::unique_ptr<ST::GameObj> createGameObj();
 		const int getGameObjNum();
 
-		void UpdateTransforms();
+		//virtual void UpdateTransforms();
 		//void UpdateRender();
 
-		ST::GameObj* tryPickObj();
+		//ST::GameObj* tryPickObj();
 
 		//GameObj& root();
 
-		std::vector<GameObj*> GameObjsList_;
-		std::vector<TransformComponent> transformComponentList_;
-		std::vector<RenderComponent> renderComponentList_;
-		std::vector<ColliderComponent> colliderComponentList_;
 		
 		//std::vector<BeltComponent> beltComponentList_; 
 		//std::vector<BeltRenderPairComponent> beltRenderPairComponentList_;  // Id trans y render
@@ -46,6 +43,10 @@ namespace ST {
 		//};
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
+		std::vector<GameObj*> GameObjsList_;
+		std::vector<TransformComponent> transformComponentList_;
+		std::vector<RenderComponent> renderComponentList_;
+		std::vector<ColliderComponent> colliderComponentList_;
 
 		std::unique_ptr<ST::Camera> cam_;
 	private:
@@ -55,8 +56,6 @@ namespace ST {
 		size_t ColliderCompIndex_;
 		
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
-
-		//unsigned int numGameObjs; // Opcional / Temporal
 
 		GameObj_Manager(const GameObj_Manager& o);
 	};

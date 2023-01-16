@@ -1,5 +1,6 @@
 #include <components/st_transform.h>
 
+
 // -------------------- Transform ---------------------
 ST::TransformComponent::TransformComponent(){
 	//printf("Create Component: Transform\n");
@@ -14,82 +15,63 @@ ST::TransformComponent::TransformComponent(){
 	setScale(scale_);
 }
 
-void ST::TransformComponent::Update(){
-	
-	updateDirectionalVectors();
+void ST::TransformComponent::updateTransformMatrix(){
 	
 	glm::mat4 m(1.0f);
 
 	m = glm::translate(m, position_);
 
-	//m = glm::rotate(m, rotation_.x, vectorRight_);
-	//m = glm::rotate(m, rotation_.y, vectorUp_);
-	//m = glm::rotate(m, rotation_.z, vectorForward_);
-	
 	m = glm::rotate(m, rotation_.x, { 1.0f,0.0f,0.0f });
 	m = glm::rotate(m, rotation_.y, { 0.0f,1.0f,0.0f });
 	m = glm::rotate(m, rotation_.z, { 0.0f,0.0f,1.0f });
 
 	m = glm::scale(m, scale_);
 
-	
 	m_transform_ = m;
+
+	updateDirectionalVectors();
 }
 
 // ------------------------- Movement -------------------------
 void ST::TransformComponent::Move(const glm::vec3 newPos) {
-	//m_transform_ = glm::translate(m_transform_, newPos);
 	position_ += newPos;
-	//updateDirectionalVectors();
+	updateTransformMatrix();
 }
-
 
 void ST::TransformComponent::RotateX(const float r) {
-	rotation_.x = r;
-	
-	//m_transform_ = glm::rotate(m_transform_, r, { 1.0f,0.0f,0.0f });
-	//updateDirectionalVectors();
+	rotation_.x += r;
+	updateTransformMatrix();
 }
 void ST::TransformComponent::RotateY(const float r) {
-	rotation_.y = r;
-	
-	//m_transform_ = glm::rotate(m_transform_, r, { 0.0f,1.0f,0.0f });
-	//updateDirectionalVectors();
+	rotation_.y += r;
+	updateTransformMatrix();
 }
 void ST::TransformComponent::RotateZ(const float r) {
-	rotation_.z = r;
-	
-	//m_transform_ = glm::rotate(m_transform_, r, { 0.0f,0.0f,1.0f });
-	//updateDirectionalVectors();
+	rotation_.z += r;
+	updateTransformMatrix();
 }
 
 // ------------------------- Setters -------------------------
 void ST::TransformComponent::setPosition(const glm::vec3 pos) {
 	position_ = pos;
-	//m_transform_[3][0] = pos.x;
-	//m_transform_[3][1] = pos.y;
-	//m_transform_[3][2] = pos.z;
-	//updateDirectionalVectors();
+	updateTransformMatrix();
+}
+void ST::TransformComponent::setRotateX(const float r) {
+	rotation_.x = r;
+	updateTransformMatrix();
+}
+void ST::TransformComponent::setRotateY(const float r) {
+	rotation_.y = r;
+	updateTransformMatrix();
+}
+void ST::TransformComponent::setRotateZ(const float r) {
+	rotation_.z = r;
+	updateTransformMatrix();
 }
 void ST::TransformComponent::setScale(const glm::vec3 newScale) {
-	//m_transform = glm::scale(m_transform, newScale);
 	scale_ = newScale;
-	//m_transform_[0][0] = newScale.x;
-	//m_transform_[1][1] = newScale.y;
-	//m_transform_[2][2] = newScale.z;
-	//updateDirectionalVectors();
+	updateTransformMatrix();
 }
-
-
-
-// ------------------------ Physic Component -----------------------
-//void ST::TransformComponent::setVelocity(const glm::vec3 vel){
-//	movementVelocity = vel;
-//}
-
-//const glm::vec3 ST::TransformComponent::getVelocity(){
-//	return movementVelocity;
-//}
 
 void ST::TransformComponent::updateDirectionalVectors(){
 	vectorForward_.x = m_transform_[0][2];
@@ -150,4 +132,3 @@ const glm::vec3 ST::TransformComponent::getRight() {
 ST::TransformComponent::~TransformComponent(){
 	//printf("Destroy Component: Transform\n");
 }
-

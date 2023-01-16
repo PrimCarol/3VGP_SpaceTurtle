@@ -1,10 +1,17 @@
 #include "st_system_render.h"
 
-void ST::SystemRender::Render(ST::Camera* cam, const std::vector<ST::RenderComponent>& r, const std::vector<ST::TransformComponent>& t){
+void ST::SystemRender::Render(const std::vector<ST::RenderComponent>& r, const std::vector<ST::TransformComponent>& t, ST::Camera* cam){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
 	glEnable(GL_DEPTH_TEST);
+
+	if (cam == nullptr) {
+		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
+		cam = cam_.get();
+		cam->transform_.setRotateY(3.14f);
+		cam->transform_.setPosition(glm::vec3(0.0f,0.0f,5.0f));
+	}
 
 	cam->update();
 

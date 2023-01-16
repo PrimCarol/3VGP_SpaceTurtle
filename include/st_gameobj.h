@@ -19,9 +19,10 @@ namespace ST {
 		class GameObj_Manager* gm_;
 
 		// --- Components ---
-		void checkComponents();
-		ST::Components* getComponent(ST::CompType t);	
-		std::vector<ST::ComponentId> components;
+		//void checkComponents();
+		ST::Components* getComponent(ST::CompType t);
+		
+		void addComponents(std::vector<ComponentId> c);
 
 		// Podriamos pasarle en cuanto tiempo quieres que se destuya, como en Unity?
 		// Que al llamar a esta funcion, se añanada al GameManager, a una lista para destruyir
@@ -32,12 +33,12 @@ namespace ST {
 		//GameObj(const GameObj& o);
 
 	private:
+		std::vector<ST::ComponentId> components;
 		int ID_;
 	};
 }
 
 #endif
-
 
 // ************* Crear un componente ***********
 

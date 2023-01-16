@@ -43,7 +43,7 @@ void ST::Camera::update(){
 	//view = glm::lookAt(transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
 
-	transform_.Update();
+	//transform_.updateTransformMatrix();
 	//view = glm::inverse(transform_.m_transform_);
 
 	if(target_){

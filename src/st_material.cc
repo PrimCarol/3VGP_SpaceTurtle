@@ -9,7 +9,8 @@ ST::Material::Material(){
 
 	//settings_ = new Settings();
 	//settings_ = NULL;
-	color = { 1.0f,0.8f,0.9f };
+	//color = { 1.0f,0.8f,0.9f };
+	color = { 1.0f,1.0f,1.0f };
 	haveAlbedo = false;
 }
 
