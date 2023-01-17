@@ -35,6 +35,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	GameObjsList_.reserve(MAX_OBJS);
 
+	hierarchyComponentList_.reserve(MAX_OBJS); // Hierarchy
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS); // Transforms
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS); // Render
 	colliderComponentList_.reserve(MAX_COLLIDER_COMPONENTS); // Colliders
@@ -42,6 +43,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
 	ColliderCompIndex_ = 0;
+	HierarchyCompIndex_ = 0;
 
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
@@ -108,6 +110,21 @@ ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
 	return result;
 }
 
+ST::ComponentId ST::GameObj_Manager::createHierarchyComponent(){
+	if (HierarchyCompIndex_ >= MAX_OBJS) {
+		return ST::HierarchyComponentId();
+	}
+
+	ST::HierarchyComponentId result;
+	result.value = HierarchyCompIndex_;
+	result.type = ST::kComp_Hierarchy;
+
+	hierarchyComponentList_.push_back(ST::HierarchyComponent());
+	HierarchyCompIndex_++;
+
+	return result;
+}
+
 /*std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c) {
 
 	auto go = std::make_unique<ST::GameObj>();
@@ -135,6 +152,7 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
 		//go->components = c;
 
 		std::vector<ST::ComponentId> comps;
+		comps.push_back(createHierarchyComponent());
 		comps.push_back(createTransformComponent());
 		comps.push_back(createRenderComponent());
 		go->addComponents(comps);
@@ -151,14 +169,17 @@ const int ST::GameObj_Manager::getGameObjNum(){
 	return (int)GameObjsList_.size();
 }
 
-//void ST::GameObj_Manager::UpdateTransforms(){
-//
-//	for (int i = 0; i < transformComponentList_.size(); i++){
-//		transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
-//
-//		//transformComponentList_[i].Update();
-//	}
-//}
+void ST::GameObj_Manager::UpdateTransforms(){
+
+	for (int i = 0; i < transformComponentList_.size(); i++){
+		//transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
+		if (hierarchyComponentList_[i].parentID != -1) {
+			ST::TransformComponent* transPa = (ST::TransformComponent*)GameObjsList_[hierarchyComponentList_[i].parentID]->getComponent(ST::kComp_Trans);
+			transformComponentList_[i].m_transform_ = transPa->m_transform_ * transformComponentList_[i].m_transform_;
+		}
+		//transformComponentList_[i].Update();
+	}
+}
 
 /*ST::GameObj* ST::GameObj_Manager::tryPickObj() {
 

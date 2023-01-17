@@ -5,6 +5,7 @@
 #include <components/st_transform.h>
 #include <components/st_render.h>
 #include <components/st_collider.h>
+#include <components/st_hierarchy.h>
 
 #include <st_camera.h>
 
@@ -22,12 +23,13 @@ namespace ST {
 		ComponentId createTransformComponent();
 		ComponentId createRenderComponent();
 		ComponentId createColliderComponent();
+		ComponentId createHierarchyComponent();
 
 		//std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
 		std::unique_ptr<ST::GameObj> createGameObj();
 		const int getGameObjNum();
 
-		//virtual void UpdateTransforms();
+		void UpdateTransforms();
 		//void UpdateRender();
 
 		//ST::GameObj* tryPickObj();
@@ -47,6 +49,7 @@ namespace ST {
 		std::vector<TransformComponent> transformComponentList_;
 		std::vector<RenderComponent> renderComponentList_;
 		std::vector<ColliderComponent> colliderComponentList_;
+		std::vector<HierarchyComponent> hierarchyComponentList_;
 
 		std::unique_ptr<ST::Camera> cam_;
 	private:
@@ -54,6 +57,7 @@ namespace ST {
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;
 		size_t ColliderCompIndex_;
+		size_t HierarchyCompIndex_;
 		
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 

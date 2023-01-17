@@ -95,7 +95,7 @@ void ST::Window::Clear() const{
     ImGui::NewFrame();
 
     // Para que toda la ventana tenga la posibilidad de hacer Dock
-    //ImGui::DockSpaceOverViewport();
+    ImGui::DockSpaceOverViewport();
 }
 
 bool ST::Window::inputPressed(ST_INPUT input){

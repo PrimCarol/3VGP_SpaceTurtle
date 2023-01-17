@@ -69,9 +69,12 @@ ST::Components* ST::GameObj::getComponent(ST::CompType t){
 			case ST::kComp_Render:
 				return &gm_->renderComponentList_[components[i].value];
 				break;
-			case ST::kComp_Collider:
-				return &gm_->colliderComponentList_[components[i].value];
+			case ST::kComp_Hierarchy:
+				return &gm_->hierarchyComponentList_[components[i].value];
 				break;
+			//case ST::kComp_Collider:
+			//	return &gm_->colliderComponentList_[components[i].value];
+			//	break;
 			}
 		}
 	}
