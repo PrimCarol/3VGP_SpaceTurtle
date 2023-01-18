@@ -27,17 +27,29 @@ int main() {
 	Sun->getComponentRender()->setMesh(&mesh_cube);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
 
-	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
 	std::unique_ptr<ST::GameObj> EarthRotationPoint = gm.createGameObj();
+	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
 
-	Earth->getComponentHierarchy()->parentID = EarthRotationPoint.get()->getID();
+	Earth->getComponentHierarchy()->parentID = EarthRotationPoint->getID();
 
 	Earth->getComponentRender()->setMesh(&mesh_cube);
 	Earth->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
-
 	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
 	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
+
+
+	std::unique_ptr<ST::GameObj> MoonRotationPoint = gm.createGameObj();
+	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
+
+	MoonRotationPoint->getComponentHierarchy()->parentID = Earth->getID();
+	Moon->getComponentHierarchy()->parentID = MoonRotationPoint->getID();
+
+	Moon->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
+
+	Moon->getComponentRender()->setMesh(&mesh_cube);
+	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
 	// --------------------------
 
@@ -47,7 +59,9 @@ int main() {
 
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
-		Earth->getComponentTransform()->RotateY(2.0f * w.DeltaTime());
+		//Earth->getComponentTransform()->RotateZ(7.0f * w.DeltaTime());
+
+		MoonRotationPoint->getComponentTransform()->RotateX(-3.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_);

@@ -1,8 +1,7 @@
 #include <st_camera.h>
 
 ST::Camera::Camera(){
-	//transform_.RotateY(3.1415f);
-	
+
 	type = kCam_Perpective;
 
 	target_ = nullptr;
@@ -12,8 +11,8 @@ ST::Camera::Camera(){
 	nearPlane_ = 0.05f;
 	farPlane_ = 1000.0f;
 
-	horizontal_ = 20.0f;
-	vertical_ = 20.0f;
+	horizontal_ = 10.0f;
+	vertical_ = 10.0f;
 
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
@@ -66,25 +65,14 @@ void ST::Camera::update(){
 		view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), transform_.getUp());
 	}
 
-
-	//camForward = normalize(glm::vec3(view[2]));
-
-	//glm::mat4 m(1.0f);
-	//m = m * glm::rotate(m, transform_.getRotation().x, glm::vec3(1.0f,0.0f,0.0f));
-	//m = m * glm::rotate(m, transform_.getRotation().y, glm::vec3(0.0f, 1.0f, 0.0f));
-	//m = m * glm::rotate(m, transform_.getRotation().z, glm::vec3(0.0f, 0.0f, 1.0f));
-	//m = m * glm::translate(m, transform_.getPosition());
-	//
-	//view = glm::inverse(m);
-
-
 	switch (type){
 	case ST::kCam_Perpective:
 		projection = glm::perspective(glm::radians(fov_), ratio_, nearPlane_, farPlane_);
 		break;
 	case ST::kCam_Orthographic:
-		break;
+		//ortho(-(800.0f / 2.0f), 800.0f / 2.0f, 600.0f / 2.0f, -(600.0f / 2.0f),-1000.0f, 1000.0f);
 		projection = glm::ortho(-(horizontal_ / 2.0f), horizontal_ / 2.0f, vertical_ / 2.0f, -(vertical_ / 2.0f), nearPlane_, farPlane_);
+		break;
 	}
 }
 
