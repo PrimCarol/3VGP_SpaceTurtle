@@ -161,6 +161,16 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/MiniAudio",
         }
 
+        --libdirs {
+        --    "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion,
+        --}
+        --
+        ---- Librerias standard y .lib
+        --links {
+        --    "glfw3_mt", -- Version Multithreading
+        --    "opengl32",
+        --}
+
         links {
             "SpaceTurtle",
         }
