@@ -19,7 +19,6 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 
 		m = glm::scale(m, t->getScale());
 
-		//t->m_transform_ = m;
 		if (h->parentID != -1) {
 			t->m_transform_ = gm.GameObjsList_[h->parentID]->getComponentTransform()->m_transform_ * m;
 		}

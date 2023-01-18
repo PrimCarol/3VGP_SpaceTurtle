@@ -15,11 +15,13 @@ int main() {
 
 	ST::Cube mesh_cube;
 	ST::Geometry mesh_cat;
-	mesh_cat.loadFromFile("../others/cat_petit.obj");
+	mesh_cat.loadFromFile("../others/skull_petit.obj");
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/cat_diffuse.jpg");
+	ST::Texture textureChecker;
+	textureChecker.loadSource("../others/checker_texture.jpg");
 
 	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
 	Sun->getComponentRender()->setMesh(&mesh_cube);
@@ -30,8 +32,8 @@ int main() {
 
 	Earth->getComponentHierarchy()->parentID = EarthRotationPoint.get()->getID();
 
-	Earth->getComponentRender()->setMesh(&mesh_cat);
-	Earth->getComponentRender()->material->setTexture_Albedo(&textureCat);
+	Earth->getComponentRender()->setMesh(&mesh_cube);
+	Earth->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
 
 	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
@@ -45,7 +47,7 @@ int main() {
 
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
-		//Earth->getComponentTransform()->RotateZ(2.0f * w.DeltaTime());
+		Earth->getComponentTransform()->RotateY(2.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_);
