@@ -7,7 +7,7 @@
 
 int main() {
 	ST::Window w;
-	w.ColorBg(1.0f, 0.8f, 0.9f); // Optional
+	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
 
 	// ----------------------------------------------------------------
 
@@ -45,6 +45,7 @@ int main() {
 
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
+		//Earth->getComponentTransform()->RotateZ(2.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_);
