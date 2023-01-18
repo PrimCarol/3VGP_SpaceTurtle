@@ -24,10 +24,10 @@
 
 #include <st_raycast.h>
 
-#define MAX_OBJS 1000000
-#define MAX_TRANSFORM_COMPONENTS 1000000
-#define MAX_RENDER_COMPONENTS 1000000
-#define MAX_COLLIDER_COMPONENTS 1000000
+#define MAX_OBJS 10000
+#define MAX_TRANSFORM_COMPONENTS MAX_OBJS
+#define MAX_RENDER_COMPONENTS MAX_OBJS
+#define MAX_COLLIDER_COMPONENTS MAX_OBJS
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -169,17 +169,17 @@ const int ST::GameObj_Manager::getGameObjNum(){
 	return (int)GameObjsList_.size();
 }
 
-void ST::GameObj_Manager::UpdateTransforms(){
-
-	for (int i = 0; i < transformComponentList_.size(); i++){
-		//transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
-		if (hierarchyComponentList_[i].parentID != -1) {
-			ST::TransformComponent* transPa = (ST::TransformComponent*)GameObjsList_[hierarchyComponentList_[i].parentID]->getComponent(ST::kComp_Trans);
-			transformComponentList_[i].m_transform_ = transPa->m_transform_ * transformComponentList_[i].m_transform_;
-		}
-		//transformComponentList_[i].Update();
-	}
-}
+//void ST::GameObj_Manager::UpdateTransforms(){
+//
+//	for (int i = 0; i < transformComponentList_.size(); i++){
+//		//transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
+//		if (hierarchyComponentList_[i].parentID != -1) {
+//			ST::TransformComponent* transPa = (ST::TransformComponent*)GameObjsList_[hierarchyComponentList_[i].parentID]->getComponent(ST::kComp_Trans);
+//			transformComponentList_[i].m_transform_ = transPa->m_transform_ * transformComponentList_[i].m_transform_;
+//		}
+//		//transformComponentList_[i].Update();
+//	}
+//}
 
 /*ST::GameObj* ST::GameObj_Manager::tryPickObj() {
 

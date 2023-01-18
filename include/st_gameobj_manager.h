@@ -29,20 +29,7 @@ namespace ST {
 		std::unique_ptr<ST::GameObj> createGameObj();
 		const int getGameObjNum();
 
-		void UpdateTransforms();
-		//void UpdateRender();
-
 		//ST::GameObj* tryPickObj();
-
-		//GameObj& root();
-
-		
-		//std::vector<BeltComponent> beltComponentList_; 
-		//std::vector<BeltRenderPairComponent> beltRenderPairComponentList_;  // Id trans y render
-		//struct BeltRender {
-		//	size_t belt_id;
-		//	size_t render_id;
-		//};
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 		std::vector<GameObj*> GameObjsList_;

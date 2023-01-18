@@ -46,6 +46,19 @@ void ST::Camera::update(){
 	//transform_.updateTransformMatrix();
 	//view = glm::inverse(transform_.m_transform_);
 
+	glm::mat4 m(1.0f);
+
+	m = glm::translate(m, transform_.getPosition());
+
+	m = glm::rotate(m, transform_.getRotation().x, { 1.0f,0.0f,0.0f });
+	m = glm::rotate(m, transform_.getRotation().y, { 0.0f,1.0f,0.0f });
+	m = glm::rotate(m, transform_.getRotation().z, { 0.0f,0.0f,1.0f });
+
+	m = glm::scale(m, transform_.getScale());
+	transform_.m_transform_ = m;
+	transform_.updateDirectionalVectors();
+
+
 	if(target_){
 		view = glm::lookAt(transform_.getPosition(), *target_, transform_.getUp());
 	}

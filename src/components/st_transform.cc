@@ -15,62 +15,62 @@ ST::TransformComponent::TransformComponent(){
 	setScale(scale_);
 }
 
-void ST::TransformComponent::updateTransformMatrix(){
-	
-	glm::mat4 m(1.0f);
-
-	m = glm::translate(m, position_);
-
-	m = glm::rotate(m, rotation_.x, { 1.0f,0.0f,0.0f });
-	m = glm::rotate(m, rotation_.y, { 0.0f,1.0f,0.0f });
-	m = glm::rotate(m, rotation_.z, { 0.0f,0.0f,1.0f });
-
-	m = glm::scale(m, scale_);
-
-	m_transform_ = m;
-
-	updateDirectionalVectors();
-}
+//void ST::TransformComponent::updateTransformMatrix(){
+//	
+//	glm::mat4 m(1.0f);
+//
+//	m = glm::translate(m, position_);
+//
+//	m = glm::rotate(m, rotation_.x, { 1.0f,0.0f,0.0f });
+//	m = glm::rotate(m, rotation_.y, { 0.0f,1.0f,0.0f });
+//	m = glm::rotate(m, rotation_.z, { 0.0f,0.0f,1.0f });
+//
+//	m = glm::scale(m, scale_);
+//
+//	m_transform_ = m;
+//
+//	updateDirectionalVectors();
+//}
 
 // ------------------------- Movement -------------------------
 void ST::TransformComponent::Move(const glm::vec3 newPos) {
 	position_ += newPos;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 
 void ST::TransformComponent::RotateX(const float r) {
 	rotation_.x += r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::RotateY(const float r) {
 	rotation_.y += r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::RotateZ(const float r) {
 	rotation_.z += r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 
 // ------------------------- Setters -------------------------
 void ST::TransformComponent::setPosition(const glm::vec3 pos) {
 	position_ = pos;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::setRotateX(const float r) {
 	rotation_.x = r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::setRotateY(const float r) {
 	rotation_.y = r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::setRotateZ(const float r) {
 	rotation_.z = r;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 void ST::TransformComponent::setScale(const glm::vec3 newScale) {
 	scale_ = newScale;
-	updateTransformMatrix();
+	//updateTransformMatrix();
 }
 
 void ST::TransformComponent::updateDirectionalVectors(){
@@ -93,39 +93,40 @@ void ST::TransformComponent::updateDirectionalVectors(){
 }
 
 // ------------------------- Getters -------------------------
-const glm::vec3 ST::TransformComponent::getPosition() {
+const glm::vec3 ST::TransformComponent::getPosition() const {
 	// 12 - 13 - 14
 
 	// m - m - m - m
 	// m - m - m - m
 	// m - m - m - m
 	// x - y - z - m
-	return glm::vec3(m_transform_[3][0], m_transform_[3][1], m_transform_[3][2]);
+	//return glm::vec3(m_transform_[3][0], m_transform_[3][1], m_transform_[3][2]);
+	return position_;
 }
 
-const glm::vec3 ST::TransformComponent::getScale() {
+const glm::vec3 ST::TransformComponent::getScale() const {
 	// 0 - 5 - 10
 
 	// x - m - m - m
 	// m - y - m - m
 	// m - m - z - m
 	// m - m - m - m
-	return glm::vec3(m_transform_[0][0], m_transform_[1][1], m_transform_[2][2]);
+	//return glm::vec3(m_transform_[0][0], m_transform_[1][1], m_transform_[2][2]);
+	return scale_;
 }
 
-const glm::vec3 ST::TransformComponent::getRotation() {
+const glm::vec3 ST::TransformComponent::getRotation() const {
 	//return glm::vec3(m_transform[3][0], m_transform[3][1], m_transform[3][2]);
 	return rotation_;
-	//return glm::vec3();
 }
 
-const glm::vec3 ST::TransformComponent::getForward(){
+const glm::vec3 ST::TransformComponent::getForward() const {
 	return vectorForward_;
 }
-const glm::vec3 ST::TransformComponent::getUp() {
+const glm::vec3 ST::TransformComponent::getUp() const {
 	return vectorUp_;
 }
-const glm::vec3 ST::TransformComponent::getRight() {
+const glm::vec3 ST::TransformComponent::getRight() const {
 	return vectorRight_;
 }
 

@@ -5,6 +5,8 @@
 #include <imgui_impl_opengl3.h>
 #include <stdio.h>
 
+#include <iostream>
+
 ST::Window::Window(){
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
@@ -12,6 +14,8 @@ ST::Window::Window(){
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         Focus();
     }
+
+    srand(time(NULL));
 
     // Imgui
     IMGUI_CHECKVERSION();
@@ -38,6 +42,8 @@ ST::Window::Window(int width, int height){
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
         Focus();
     }
+
+    srand(time(NULL));
 
     // Imgui
     IMGUI_CHECKVERSION();

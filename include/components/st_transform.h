@@ -34,15 +34,17 @@ namespace ST {
 		void setRotateZ(const float r);
 
 		/* Getters */
-		const glm::vec3 getPosition();
-		const glm::vec3 getScale();
-		const glm::vec3 getRotation();
+		const glm::vec3 getPosition() const;
+		const glm::vec3 getScale() const;
+		const glm::vec3 getRotation() const;
 
-		const glm::vec3 getForward();
-		const glm::vec3 getUp();
-		const glm::vec3 getRight();
+		const glm::vec3 getForward() const;
+		const glm::vec3 getUp() const;
+		const glm::vec3 getRight() const;
 
 		glm::mat4 m_transform_;
+
+		void updateDirectionalVectors();
 
 		~TransformComponent();
 	private:
@@ -53,8 +55,7 @@ namespace ST {
 		glm::vec3 scale_;
 
 		// ---- Directional Vectors ----
-		void updateTransformMatrix();
-		void updateDirectionalVectors();
+		//void updateTransformMatrix();
 		glm::vec3 vectorForward_;
 		glm::vec3 vectorUp_;
 		glm::vec3 vectorRight_;

@@ -1,6 +1,7 @@
 #include <st_engine.h>
 
 #include <systems/st_system_render.h>
+#include <systems/st_system_transform.h>
 
 #include <imgui.h>
 
@@ -12,37 +13,29 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	ST::Cube mesh;
-	//mesh.loadFromFile("../others/cat_petit.obj");
-	ST::Texture testureTest;
-	testureTest.loadSource("../others/icon.png");
+	ST::Cube mesh_cube;
+	ST::Geometry mesh_cat;
+	mesh_cat.loadFromFile("../others/cat_petit.obj");
+	ST::Texture textureTest;
+	textureTest.loadSource("../others/icon.png");
+	ST::Texture textureCat;
+	textureCat.loadSource("../others/cat_diffuse.jpg");
 
-	std::unique_ptr<ST::GameObj> a = gm.createGameObj();
-	ST::RenderComponent* r = (ST::RenderComponent*)a->getComponent(ST::kComp_Render);
-	if (r) {
-		r->setMesh(&mesh);
-		r->material->setTexture_Albedo(&testureTest);
-	}
+	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
+	Sun->getComponentRender()->setMesh(&mesh_cube);
+	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
+
+	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
+	std::unique_ptr<ST::GameObj> EarthRotationPoint = gm.createGameObj();
+
+	Earth->getComponentHierarchy()->parentID = EarthRotationPoint.get()->getID();
+
+	Earth->getComponentRender()->setMesh(&mesh_cat);
+	Earth->getComponentRender()->material->setTexture_Albedo(&textureCat);
 
 
-	std::unique_ptr<ST::GameObj> b = gm.createGameObj();
-	ST::HierarchyComponent* h = (ST::HierarchyComponent*)b->getComponent(ST::kComp_Hierarchy);
-	if (h) {
-		h->parentID = a.get()->getID();
-	}
-
-	ST::RenderComponent* r2 = (ST::RenderComponent*)b->getComponent(ST::kComp_Render);
-	if (r2) {
-		r2->setMesh(&mesh);
-		r2->material->setColor(glm::vec3(ST::Engine::getRandom(0.0f, 1.0f),
-										 ST::Engine::getRandom(0.0f, 1.0f),
-										 ST::Engine::getRandom(0.0f, 1.0f)));
-	}
-
-	ST::TransformComponent* t2 = (ST::TransformComponent*)b->getComponent(ST::kComp_Trans);
-	if (t2) {
-		t2->setPosition(glm::vec3(0.0f,3.0f,0.0f));
-	}
+	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
 
 	// --------------------------
 
@@ -50,12 +43,10 @@ int main() {
 		w.Clear();
 
 
-		ST::TransformComponent* t = (ST::TransformComponent*)a->getComponent(ST::kComp_Trans);
-		if (t) {
-			t->RotateZ(2.0f * w.DeltaTime());
-		}
+		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
+		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
 
-		gm.UpdateTransforms();
+		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_);
 
 		// ----------------------------

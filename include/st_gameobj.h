@@ -19,8 +19,9 @@ namespace ST {
 		class GameObj_Manager* gm_;
 
 		// --- Components ---
-		//void checkComponents();
-		ST::Components* getComponent(ST::CompType t);
+		class HierarchyComponent* getComponentHierarchy();
+		class TransformComponent* getComponentTransform();
+		class RenderComponent* getComponentRender();
 		
 		void addComponents(std::vector<ComponentId> c);
 
