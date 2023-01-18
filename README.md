@@ -2,6 +2,7 @@
 
 <p align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="250" height="250"></h1>
 <p align="center">My personal Engine from Scratch with C++ and OpenGl.</h1>
+<p align="center">© 2023 Pere Prim Carol</h1>
 
 <h2>🔶 Implemented things</h2>
 
