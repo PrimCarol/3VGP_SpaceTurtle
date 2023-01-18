@@ -60,13 +60,10 @@ int main() {
 
 		myCam.fpsMovement(w);
 
-		//myCam.setTarget(MoonRotationPoint->getComponentTransform()->getPosition());
-
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
-		//Earth->getComponentTransform()->RotateZ(7.0f * w.DeltaTime());
 
-		MoonRotationPoint->getComponentTransform()->RotateX(-3.0f * w.DeltaTime());
+		MoonRotationPoint->getComponentTransform()->RotateX(-5.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, &myCam);
