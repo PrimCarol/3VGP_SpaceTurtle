@@ -1,4 +1,6 @@
-<h1 align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="50" height="50"> Space Turtle <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="50" height="50"></h1>
+<h1 align="center"> Space Turtle </h1>
+
+<h1 align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="250" height="250"></h1>
 
 <h2>🔶 Implemented things</h2>
 
