@@ -7,6 +7,7 @@
 <h2>🔶 Implemented things</h2>
 
   - Entity Component System (ECS)<br>
+  - Hierarchy Transformations <br>
   - Load OBJ<br>
   - Camera Movement (FPS style)<br>
   - Load Textures<br>
