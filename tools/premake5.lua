@@ -1,24 +1,15 @@
-
-ROOT = path.getabsolute("./../")
-            -- folders -> SpaceTurtle/tools/premake5.lua
-
 solution("3VGP_SpaceTurtle" .. _ACTION)
+    ROOT = path.getabsolute("./../")
+    -- folders -> SpaceTurtle/tools/premake5.lua
+
     location( ROOT .. "/build/")
-    targetdir(ROOT .. "/bin/")
     cppdialect "C++17"
-    startproject "SpaceTurtle"
+    startproject "Test"
 
 
     configurations { "Debug", "Release" }
     platforms      { "x64" }
 
-
-    filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp" debugdir(ROOT.."/bin")
-    filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp" debugdir(ROOT.."/bin")
-    
-    filter { "platforms:*64" } architecture "x64"
-
-    filter {}
 
     -- Dependiendo de que version de Visual utilice. (Para el GLFW)
     visualVersion = "UNDEFINED"
@@ -30,8 +21,18 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
 
     project "SpaceTurtle"
+
+        targetdir(ROOT .. "/Engine/")
+
+        filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "StaticLib" debugdir(ROOT.."/bin")
+        filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "StaticLib" debugdir(ROOT.."/bin")
+        
+        filter { "platforms:*64" } architecture "x64"
+
+        filter {}
+
         location(ROOT .. "/build/" .. _ACTION)
-        entrypoint "mainCRTStartup"
+        --entrypoint "mainCRTStartup"
         ignoredefaultlibraries { "LIBCMT" }
 
 
@@ -102,13 +103,68 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "opengl32",
         }
 
-        filter  {"Debug","x64"}
-            --targetdir (ROOT .. "bin/Debug/x64")
-            links {"glfw3d"}
-            targetdir(ROOT .. "/bin/Debug/")
-            objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
-            targetsuffix "_d"
-        filter  {"Release","x64"}
-            --targetdir (ROOT .. "bin/Release/x64")
-            targetdir(ROOT .. "/bin/Release/")
-            objdir(ROOT .. "/build/SpaceTurtle/Release/" )
+    --    filter  {"Debug","x64"}
+    --        --targetdir (ROOT .. "bin/Debug/x64")
+    --        links {"glfw3d"}
+    --        targetdir(ROOT .. "/bin/Debug/")
+    --        objdir(ROOT .. "/build/SpaceTurtle/Debug/" )
+    --        targetsuffix "_d"
+    --    filter  {"Release","x64"}
+    --        --targetdir (ROOT .. "bin/Release/x64")
+    --        targetdir(ROOT .. "/bin/Release/")
+    --        objdir(ROOT .. "/build/SpaceTurtle/Release/" )
+
+
+    project "Test"
+
+        targetdir(ROOT .. "/bin/")
+
+        filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp" debugdir(ROOT.."/bin")
+        filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp" debugdir(ROOT.."/bin")
+        
+        filter { "platforms:*64" } architecture "x64"
+
+        filter {}
+
+        location(ROOT .. "/build/" .. _ACTION)
+        entrypoint "mainCRTStartup"
+        ignoredefaultlibraries { "LIBCMT" }
+
+        includedirs{
+           -- Personal
+            "../include",
+            "../include/components",
+            "../include/systems",
+
+            -- STD Extras
+            "../deps/stb_extras",
+
+            -- Math Library
+            "../deps/glm",
+            "../deps/glm/gtx",
+            "../deps/glm/gtc",
+            
+            -- GLFW
+            "../deps/glfw-3.3.8.bin.WIN64/include",
+
+            -- OpenGl - GLAD
+            "../deps/OpenGL",
+
+            -- ImGui
+            "../deps/imgui-docking",
+            "../deps/imgui-docking/backends",
+
+            -- TinyObj
+            "../deps/tiny_obj/include",
+
+            -- MiniAudio
+            "../deps/MiniAudio",
+        }
+
+        links {
+            "SpaceTurtle",
+        }
+
+        files {
+            "../demo/main.cc",
+        }

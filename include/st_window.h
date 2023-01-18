@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <ctime>
 
+#include <imgui.h>
+
 namespace ST {
 
 	enum ST_INPUT{
