@@ -13,6 +13,8 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
+	ST::Camera myCam;
+
 	ST::Cube mesh_cube;
 	ST::Geometry mesh_cat;
 	mesh_cat.loadFromFile("../others/skull_petit.obj");
@@ -56,6 +58,9 @@ int main() {
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
+		myCam.fpsMovement(w);
+
+		//myCam.setTarget(MoonRotationPoint->getComponentTransform()->getPosition());
 
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
@@ -64,7 +69,7 @@ int main() {
 		MoonRotationPoint->getComponentTransform()->RotateX(-3.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_);
+		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, &myCam);
 
 		// ----------------------------
 

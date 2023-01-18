@@ -7,8 +7,6 @@
 #include <components/st_collider.h>
 #include <components/st_hierarchy.h>
 
-#include <st_camera.h>
-
 #include <memory>
 
 namespace ST {
@@ -38,7 +36,6 @@ namespace ST {
 		std::vector<ColliderComponent> colliderComponentList_;
 		std::vector<HierarchyComponent> hierarchyComponentList_;
 
-		std::unique_ptr<ST::Camera> cam_;
 	private:
 
 		size_t TransCompIndex_;

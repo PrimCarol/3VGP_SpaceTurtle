@@ -4,7 +4,7 @@ ST::Camera::Camera(){
 
 	type = kCam_Perpective;
 
-	target_ = nullptr;
+	target_ = glm::vec3(-9.0f, -9.0f, -9.0f);
 
 	fov_ = 90.0f;
 	ratio_ = (1080.0f/720.0f);
@@ -16,6 +16,9 @@ ST::Camera::Camera(){
 
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
+
+	transform_.setRotateY(3.14f);
+	transform_.setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 }
 
 void ST::Camera::setPerspective(float fov, float ratio ,float nearPlane, float farPlane){
@@ -34,8 +37,46 @@ void ST::Camera::setOrthographic(float h, float v, float nearPlane, float farPla
 	type = kCam_Orthographic;
 }
 
-void ST::Camera::setTarget(glm::vec3* target){
+void ST::Camera::setTarget(glm::vec3 target){
 	target_ = target;
+}
+
+void ST::Camera::fpsMovement(ST::Window& w, float MoveSpeed, float RotateSpeed){
+	static bool firtsMouse = true;
+	static float lastX = 0.0f;
+	static float lastY = 0.0f;
+
+	glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
+	float extra_speed = 1.0f;
+	if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+		extra_speed = 5.0f;
+	}
+	if (w.inputPressed(ST::ST_INPUT_UP)) {
+		transform_.Move(transform_.getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+	}
+	if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+		transform_.Move(-transform_.getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+	}
+	if (w.inputPressed(ST::ST_INPUT_LEFT)) {
+		transform_.Move(-transform_.getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+	}
+	if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+		transform_.Move(transform_.getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+	}
+
+	if (firtsMouse) {
+		lastX = mousePos.x;
+		lastY = mousePos.y;
+		firtsMouse = false;
+	}
+	float yoffset = mousePos.x - lastX;
+	float xoffset = mousePos.y - lastY;
+	lastX = mousePos.x;
+	lastY = mousePos.y;
+	if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+		transform_.setRotateX(transform_.getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
+		transform_.setRotateY(transform_.getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
+	}
 }
 
 void ST::Camera::update(){
@@ -53,13 +94,14 @@ void ST::Camera::update(){
 	m = glm::rotate(m, transform_.getRotation().y, { 0.0f,1.0f,0.0f });
 	m = glm::rotate(m, transform_.getRotation().z, { 0.0f,0.0f,1.0f });
 
-	m = glm::scale(m, transform_.getScale());
+	//m = glm::scale(m, transform_.getScale());
 	transform_.m_transform_ = m;
+
 	transform_.updateDirectionalVectors();
 
 
-	if(target_){
-		view = glm::lookAt(transform_.getPosition(), *target_, transform_.getUp());
+	if(target_ != glm::vec3(-9.0f, -9.0f, -9.0f)){
+		view = glm::lookAt(transform_.getPosition(), target_, transform_.getUp());
 	}
 	else {
 		view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), transform_.getUp());
@@ -79,3 +121,45 @@ void ST::Camera::update(){
 ST::Camera::~Camera(){
 
 }
+
+
+/*
+
+glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
+			float extra_speed = 1.0f;
+			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+				extra_speed = 5.0f;
+			}
+			if (w.inputPressed(ST::ST_INPUT_UP)) {
+				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
+				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+				gm.cam_->transform_.Move(gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
+			}
+
+			if (firtsMouse) {
+				lastX = mousePos.x;
+				lastY = mousePos.y;
+				firtsMouse = false;
+			}
+			float yoffset = mousePos.x - lastX;
+			float xoffset = mousePos.y - lastY;
+			lastX = mousePos.x;
+			lastY = mousePos.y;
+			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x + -xoffset * 0.5f * w.DeltaTime());
+				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y +  yoffset * 0.5f * w.DeltaTime());
+			}
+
+
+			// ---- Picking ---
+			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+				objSelected = gm.tryPickObj();
+			}
+*/

@@ -9,8 +9,6 @@ void ST::SystemRender::Render(const std::vector<ST::RenderComponent>& r, const s
 	if (cam == nullptr) {
 		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
 		cam = cam_.get();
-		cam->transform_.setRotateY(3.14f);
-		cam->transform_.setPosition(glm::vec3(0.0f,0.0f,5.0f));
 	}
 
 	cam->update();

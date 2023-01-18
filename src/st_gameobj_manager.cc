@@ -59,9 +59,6 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
-
-	// ------- Cam -------
-	cam_ = std::make_unique<ST::Camera>();
 }
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent(){

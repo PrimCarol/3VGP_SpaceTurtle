@@ -3,6 +3,8 @@
 
 #include <components/st_transform.h>
 
+#include <st_window.h>
+
 namespace ST {
 
 	enum CameraType {
@@ -17,7 +19,9 @@ namespace ST {
 		void setPerspective(float fov, float ratio, float nearPlane, float farPlane);
 		void setOrthographic(float h, float v, float nearPlane, float farPlane);
 
-		void setTarget(glm::vec3 *target);
+		void setTarget(glm::vec3 target);
+
+		void fpsMovement(ST::Window& w, float MoveSpeed = 30.0f, float RotateSpeed = 0.5f);
 
 		void update();
 
@@ -32,7 +36,7 @@ namespace ST {
 	private:
 		CameraType type;
 		
-		glm::vec3* target_;
+		glm::vec3 target_;
 
 		// Perspective
 		float fov_;
