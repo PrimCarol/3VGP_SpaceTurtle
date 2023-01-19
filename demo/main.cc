@@ -68,7 +68,7 @@ int main() {
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			ST::GameObj* g = ST::SystemPicking::tryPickObj(gm, myCam);
+			ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm, myCam);
 			if (g) {
 				printf("Detecto un objeto  ->  %d \n", g->getID());
 			}

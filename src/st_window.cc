@@ -93,6 +93,8 @@ void ST::Window::Render(){
 
     glfwSwapBuffers(glWindow);
 
+    glfwGetCursorPos(glWindow, &mouseX, &mouseY);
+
     glfwPollEvents();
 }
 
@@ -431,13 +433,13 @@ bool ST::Window::inputReleased(const char key) {
 //    return false;
 //}
 
-double ST::Window::mousePosX(){
-    glfwGetCursorPos(glWindow, &mouseX, &mouseY);
+double ST::Window::mousePosX() const{
+    //glfwGetCursorPos(glWindow, &mouseX, &mouseY);
     return mouseX;
 }
 
-double ST::Window::mousePosY(){
-    glfwGetCursorPos(glWindow, &mouseX, &mouseY);
+double ST::Window::mousePosY() const{
+    //glfwGetCursorPos(glWindow, &mouseX, &mouseY);
     return mouseY;
 }
 

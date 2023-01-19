@@ -46,8 +46,8 @@ namespace ST {
 		//bool isUp(const char key);
 				
 		// Mouse
-		double mousePosX();
-		double mousePosY();
+		double mousePosX() const;
+		double mousePosY() const;
 
 		/* Return if window is opened */
 		bool isOpen() const;

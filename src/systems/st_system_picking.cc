@@ -2,7 +2,7 @@
 
 #include <st_raycast.h>
 
-ST::GameObj* ST::SystemPicking::tryPickObj(const ST::GameObj_Manager& gm, const ST::Camera& c) {
+ST::GameObj* ST::SystemPicking::tryPickObj(const ST::Window &w, const ST::GameObj_Manager& gm, const ST::Camera& c) {
 
 	float objClose = 100000.0f;
 	int objIndexClose = -1;
@@ -27,7 +27,16 @@ ST::GameObj* ST::SystemPicking::tryPickObj(const ST::GameObj_Manager& gm, const 
 			float outputDistance = 100000.0f;
 
 			// Enfrente de la camara.
-			if (ray.TraceRay(c.transform_.getPosition(), c.transform_.getForward(), colliderPoint_min, colliderPoint_max,
+			/*if (ray.TraceRay(c.transform_.getPosition(), c.transform_.getForward(), colliderPoint_min, colliderPoint_max,
+				t->m_transform_, outputDistance)) {
+
+				if (outputDistance < objClose) {
+					objClose = outputDistance;
+					objIndexClose = i;
+				}
+			}*/
+
+			if (ray.TraceRay(c.transform_.getPosition(), ray.ScreenPosToWorldRay(w,c), colliderPoint_min, colliderPoint_max,
 				t->m_transform_, outputDistance)) {
 
 				if (outputDistance < objClose) {
