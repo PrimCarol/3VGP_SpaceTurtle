@@ -1,8 +1,8 @@
 <h1 align="center"> 🐢 Space Turtle 🐢</h1>
 
-<p align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="250" height="250"></h1>
-<p align="center">My personal Engine from scratch with C++ and OpenGl.</h1>
-<p align="center">© 2023 Pere Prim Carol</h1>
+<p align="center"><img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/icon.png" width="250" height="250"></p>
+<p align="center">My personal Engine from scratch with C++ and OpenGl.</p>
+<p align="center">© 2023 Pere Prim Carol</p>
 
 <h2>🔶 Implemented things</h2>
 
