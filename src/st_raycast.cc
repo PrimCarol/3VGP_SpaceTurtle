@@ -111,16 +111,6 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 	return true;
 }
 
-#include <glad.h>
-void ST::Raycast::drawRay(glm::vec3 start, glm::vec3 end){
-
-	glBegin(GL_LINES);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(start.x, start.y, start.z);
-		glVertex3f(end.x, end.y, end.z);
-	glEnd();
-}
-
 ST::Raycast::~Raycast(){
 
 }

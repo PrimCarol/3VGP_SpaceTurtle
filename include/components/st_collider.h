@@ -11,7 +11,7 @@ namespace ST {
 		ColliderComponent();
 
 
-		void draw();
+		//void draw() const;
 
 
 		~ColliderComponent();

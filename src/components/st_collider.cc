@@ -7,8 +7,8 @@ ST::ColliderComponent::ColliderComponent(){
 	size_ = glm::vec3(1.0f,1.0f,1.0f);
 }
 
-#include <glad.h>
-void ST::ColliderComponent::draw(){
+/*#include <glad.h>
+void ST::ColliderComponent::draw() const{
 	glBegin(GL_LINES);
 	
 	glColor3f(0.0, 1.0, 0.0);
@@ -51,7 +51,7 @@ void ST::ColliderComponent::draw(){
 
 	//glVertex3f(-size_.x, -size_.y, -size_.z);
 	glEnd();
-}
+}*/
 
 ST::ColliderComponent::~ColliderComponent(){
 	//printf("Destroy Component: Collider\n");

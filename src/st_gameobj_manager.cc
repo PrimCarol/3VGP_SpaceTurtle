@@ -22,7 +22,7 @@
 	 TransformComponent* transform_cmp = m.get_component<TransformComponent>();
 */
 
-#include <st_raycast.h>
+//#include <st_raycast.h>
 
 #define MAX_OBJS 10000
 #define MAX_TRANSFORM_COMPONENTS MAX_OBJS
@@ -152,6 +152,7 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
 		comps.push_back(createHierarchyComponent());
 		comps.push_back(createTransformComponent());
 		comps.push_back(createRenderComponent());
+		comps.push_back(createColliderComponent());
 		go->addComponents(comps);
 		go->gm_ = this;
 
@@ -166,17 +167,63 @@ const int ST::GameObj_Manager::getGameObjNum(){
 	return (int)GameObjsList_.size();
 }
 
-//void ST::GameObj_Manager::UpdateTransforms(){
-//
-//	for (int i = 0; i < transformComponentList_.size(); i++){
-//		//transformComponentList_[i].RotateY(transformComponentList_[i].getRotation().y + 0.03f);
-//		if (hierarchyComponentList_[i].parentID != -1) {
-//			ST::TransformComponent* transPa = (ST::TransformComponent*)GameObjsList_[hierarchyComponentList_[i].parentID]->getComponent(ST::kComp_Trans);
-//			transformComponentList_[i].m_transform_ = transPa->m_transform_ * transformComponentList_[i].m_transform_;
-//		}
-//		//transformComponentList_[i].Update();
-//	}
-//}
+/*
+
+* Recordar que nuestra pantalla empieza des de arriba a la izquierda y no des de abajo a la izquierda
+
+
+void ScreenPosToWorldRay(
+	int mouseX, int mouseY,             // Mouse position, in pixels, from bottom-left corner of the window
+	int screenWidth, int screenHeight,  // Window size, in pixels
+	glm::mat4 ViewMatrix,               // Camera position and orientation
+	glm::mat4 ProjectionMatrix,         // Camera parameters (ratio, field of view, near and far planes)
+	glm::vec3& out_origin,              // Ouput : Origin of the ray. /!\ Starts at the near plane, so if you want the ray to start at the camera's position instead, ignore this.
+	glm::vec3& out_direction            // Ouput : Direction, in world space, of the ray that goes "through" the mouse.
+){
+
+	// The ray Start and End positions, in Normalized Device Coordinates (Have you read Tutorial 4 ?)
+	glm::vec4 lRayStart_NDC(
+		((float)mouseX/(float)screenWidth  - 0.5f) * 2.0f, // [0,1024] -> [-1,1]
+		((float)mouseY/(float)screenHeight - 0.5f) * 2.0f, // [0, 768] -> [-1,1]
+		-1.0, // The near plane maps to Z=-1 in Normalized Device Coordinates
+		1.0f
+	);
+	glm::vec4 lRayEnd_NDC(
+		((float)mouseX/(float)screenWidth  - 0.5f) * 2.0f,
+		((float)mouseY/(float)screenHeight - 0.5f) * 2.0f,
+		0.0,
+		1.0f
+	);
+
+
+	// The Projection matrix goes from Camera Space to NDC.
+	// So inverse(ProjectionMatrix) goes from NDC to Camera Space.
+	glm::mat4 InverseProjectionMatrix = glm::inverse(ProjectionMatrix);
+
+	// The View Matrix goes from World Space to Camera Space.
+	// So inverse(ViewMatrix) goes from Camera Space to World Space.
+	glm::mat4 InverseViewMatrix = glm::inverse(ViewMatrix);
+
+	glm::vec4 lRayStart_camera = InverseProjectionMatrix * lRayStart_NDC;    lRayStart_camera/=lRayStart_camera.w;
+	glm::vec4 lRayStart_world  = InverseViewMatrix       * lRayStart_camera; lRayStart_world /=lRayStart_world .w;
+	glm::vec4 lRayEnd_camera   = InverseProjectionMatrix * lRayEnd_NDC;      lRayEnd_camera  /=lRayEnd_camera  .w;
+	glm::vec4 lRayEnd_world    = InverseViewMatrix       * lRayEnd_camera;   lRayEnd_world   /=lRayEnd_world   .w;
+
+
+	// Faster way (just one inverse)
+	//glm::mat4 M = glm::inverse(ProjectionMatrix * ViewMatrix);
+	//glm::vec4 lRayStart_world = M * lRayStart_NDC; lRayStart_world/=lRayStart_world.w;
+	//glm::vec4 lRayEnd_world   = M * lRayEnd_NDC  ; lRayEnd_world  /=lRayEnd_world.w;
+
+
+	glm::vec3 lRayDir_world(lRayEnd_world - lRayStart_world);
+	lRayDir_world = glm::normalize(lRayDir_world);
+
+
+	out_origin = glm::vec3(lRayStart_world);
+	out_direction = glm::normalize(lRayDir_world);
+}
+*/
 
 /*ST::GameObj* ST::GameObj_Manager::tryPickObj() {
 
@@ -224,5 +271,6 @@ ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 ST::GameObj_Manager::~GameObj_Manager(){
 	transformComponentList_.clear();
 	renderComponentList_.clear();
+	hierarchyComponentList_.clear();
 	colliderComponentList_.clear();
 }

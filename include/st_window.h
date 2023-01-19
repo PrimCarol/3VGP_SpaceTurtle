@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <ctime>
 
-#include <imgui.h>
+//#include <imgui.h>
 
 namespace ST {
 
@@ -31,6 +31,9 @@ namespace ST {
 		void Focus() const;
 		void Render();
 		void Clear() const;
+
+		int getWindowsHeight() const;
+		int getWindowsWidth() const;
 
 		// ------ Inputs ------
 		//bool isDown(ST_INPUT input);
@@ -67,9 +70,10 @@ namespace ST {
 		clock_t lastTime;
 		clock_t deltaTime;
 
+		int window_Width_, window_Height_;
 		double mouseX=0.0f, mouseY=0.0f;
-		int lastKeyPressed = -1;
-		int lastMousePressed = -1;
+		//int lastKeyPressed = -1;
+		//int lastMousePressed = -1;
 	};
 }
 

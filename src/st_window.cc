@@ -15,6 +15,9 @@ ST::Window::Window(){
         Focus();
     }
 
+    window_Width_ = 1080;
+    window_Height_ = 720;
+
     srand(time(NULL));
 
     // Imgui
@@ -42,6 +45,9 @@ ST::Window::Window(int width, int height){
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
         Focus();
     }
+
+    window_Width_ = width;
+    window_Height_ = height;
 
     srand(time(NULL));
 
@@ -94,7 +100,6 @@ void ST::Window::Clear() const{
     glClearColor(color[0], color[1], color[2], color[3]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
     // ImGui
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -102,6 +107,14 @@ void ST::Window::Clear() const{
 
     // Para que toda la ventana tenga la posibilidad de hacer Dock
     ImGui::DockSpaceOverViewport();
+}
+
+int ST::Window::getWindowsHeight() const{
+    return window_Height_;
+}
+
+int ST::Window::getWindowsWidth() const{
+    return window_Width_;
 }
 
 bool ST::Window::inputPressed(ST_INPUT input){

@@ -2,6 +2,7 @@
 
 #include <systems/st_system_render.h>
 #include <systems/st_system_transform.h>
+#include <systems/st_system_picking.h>
 
 int main() {
 	ST::Window w;
@@ -58,13 +59,20 @@ int main() {
 
 		myCam.fpsMovement(w);
 
-		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
-		EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
-
-		MoonRotationPoint->getComponentTransform()->RotateX(-5.0f * w.DeltaTime());
+		//Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
+		//EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
+		//
+		//MoonRotationPoint->getComponentTransform()->RotateX(-5.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, &myCam);
+
+		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+			ST::GameObj* g = ST::SystemPicking::tryPickObj(gm, myCam);
+			if (g) {
+				printf("Detecto un objeto  ->  %d \n", g->getID());
+			}
+		}
 
 		// ----------------------------
 
