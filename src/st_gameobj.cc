@@ -7,10 +7,10 @@
 
 ST::GameObj::GameObj(){
 	gm_ = nullptr;
-
+	ID_ = -1;
 	//parent = nullptr;
 	//childs = nullptr;
-	name_ = "Null";
+	//name_ = "Null";
 }
 
 int ST::GameObj::getID() const{

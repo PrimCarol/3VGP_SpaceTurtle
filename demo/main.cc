@@ -29,13 +29,16 @@ int main() {
 	Earth->getComponentRender()->setMesh(&mesh_cube);
 	Earth->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
-	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
+	//Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
 
 	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
 	Moon->getComponentTransform()->setPosition(glm::vec3(3.0f, 0.0f, 0.0f));
-	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
+	//Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
 	Moon->getComponentRender()->setMesh(&mesh_cube);
 	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
+
+	Earth->getComponentHierarchy()->setParent(*Sun);
+	Moon->getComponentHierarchy()->setParent(*Earth);
 
 	// --------------------------
 
@@ -45,6 +48,7 @@ int main() {
 		myCam.fpsMovement(w);
 
 		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
+		Earth->getComponentTransform()->RotateY(-2.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_ , &myCam );

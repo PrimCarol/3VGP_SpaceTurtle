@@ -15,9 +15,6 @@ namespace ST {
 		int getID() const;
 		void setID(int id);
 
-		//const char* getName();
-		//void setName(const char* name);
-
 		// The creator manager reference
 		class GameObj_Manager* gm_;
 
@@ -38,20 +35,8 @@ namespace ST {
 
 	private:
 		std::vector<ST::ComponentId> components;
-		const char* name_;
 		int ID_;
 	};
 }
 
 #endif
-
-// ************* Crear un componente ***********
-
-//GameObj* parent;
-//std::vector<GameObj*> childs;
-
-// --- Childs ---
-//void addChild(GameObj* c);
-//void removeChild(const unsigned int index);
-//GameObj* getChild(const unsigned int index);
-//GameObj* getParent();

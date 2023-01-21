@@ -3,7 +3,6 @@
 
 #include <components/st_components.h>
 
-
 namespace ST {
 
 	class GameObj;

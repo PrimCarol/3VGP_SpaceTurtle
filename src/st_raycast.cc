@@ -11,8 +11,6 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 	glm::vec3 ObjPos(ModelMatrix[3].x, ModelMatrix[3].y, ModelMatrix[3].z);
 	glm::vec3 delta = ObjPos - ray_origin;
 
-
-	// Test intersection with the 2 planes perpendicular to the OBB's X axis
 	{
 		glm::vec3 xaxis(ModelMatrix[0].x, ModelMatrix[0].y, ModelMatrix[0].z);
 		float e = glm::dot(xaxis, delta);
@@ -50,9 +48,6 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 		}
 	}
 
-
-	// Test intersection with the 2 planes perpendicular to the OBB's Y axis
-	// Exactly the same thing than above.
 	{
 		glm::vec3 yaxis(ModelMatrix[1].x, ModelMatrix[1].y, ModelMatrix[1].z);
 		float e = glm::dot(yaxis, delta);
@@ -79,8 +74,6 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 		}
 	}
 
-	// Test intersection with the 2 planes perpendicular to the OBB's Z axis
-	// Exactly the same thing than above.
 	{
 		glm::vec3 zaxis(ModelMatrix[2].x, ModelMatrix[2].y, ModelMatrix[2].z);
 		float e = glm::dot(zaxis, delta);
