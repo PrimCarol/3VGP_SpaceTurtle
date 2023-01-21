@@ -22,7 +22,7 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
     project "SpaceTurtle"
 
-        targetdir(ROOT .. "/Engine/")
+        targetdir(ROOT .. "ST_Engine/")
 
         filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "StaticLib" debugdir(ROOT.."/bin")
         filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "StaticLib" debugdir(ROOT.."/bin")
@@ -116,29 +116,29 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
 
     project "Test"
-
+    
         targetdir(ROOT .. "/bin/")
-
+    
         filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "ConsoleApp" debugdir(ROOT.."/bin")
         filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "WindowedApp" debugdir(ROOT.."/bin")
         
         filter { "platforms:*64" } architecture "x64"
-
+    
         filter {}
-
+    
         location(ROOT .. "/build/" .. _ACTION)
         entrypoint "mainCRTStartup"
         ignoredefaultlibraries { "LIBCMT" }
-
+    
         includedirs{
            -- Personal
             "../include",
             "../include/components",
             "../include/systems",
-
+    
             -- STD Extras
             "../deps/stb_extras",
-
+    
             -- Math Library
             "../deps/glm",
             "../deps/glm/gtx",
@@ -146,21 +146,21 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             
             -- GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
-
+    
             -- OpenGl - GLAD
             "../deps/OpenGL",
-
+    
             -- ImGui
             "../deps/imgui-docking",
             "../deps/imgui-docking/backends",
-
+    
             -- TinyObj
             "../deps/tiny_obj/include",
-
+    
             -- MiniAudio
             "../deps/MiniAudio",
         }
-
+    
         --libdirs {
         --    "../deps/glfw-3.3.8.bin.WIN64/lib-"..visualVersion,
         --}
@@ -170,11 +170,12 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
         --    "glfw3_mt", -- Version Multithreading
         --    "opengl32",
         --}
-
+    
         links {
             "SpaceTurtle",
         }
-
+    
         files {
             "../demo/main.cc",
         }
+    

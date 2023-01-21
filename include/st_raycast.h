@@ -21,7 +21,7 @@ namespace ST {
 			float& intersection_distance
 		);
 
-		glm::vec3 ScreenPosToWorldRay(const ST::Window& w, const ST::Camera& cam); // out_direction
+		glm::vec3 ScreenPosToWorldRay(const ST::Window& w, const ST::Camera& cam);
 
 		~Raycast();
 	private:

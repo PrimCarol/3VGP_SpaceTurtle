@@ -10,15 +10,24 @@ ST::GameObj::GameObj(){
 
 	//parent = nullptr;
 	//childs = nullptr;
+	name_ = "Null";
 }
 
-int ST::GameObj::getID(){
+int ST::GameObj::getID() const{
 	return ID_;
 }
 
 void ST::GameObj::setID(int id){
 	ID_ = id;
 }
+
+//const char* ST::GameObj::getName(){
+//	return name_;
+//}
+//
+//void ST::GameObj::setName(const char* name){
+//	name_ = name != nullptr ? name : "GameObj";
+//}
 
 /*
 void ST::GameObj::addChild(GameObj* c){

@@ -9,7 +9,8 @@ namespace ST {
 
 	class SystemPicking {
 	public:
-		static ST::GameObj* tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera& c);
+		/* Return the reference of the object */
+		static ST::GameObj* tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c = nullptr);
 	private:
 		SystemPicking();
 		~SystemPicking();

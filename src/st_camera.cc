@@ -37,6 +37,10 @@ void ST::Camera::setOrthographic(float h, float v, float nearPlane, float farPla
 	type = kCam_Orthographic;
 }
 
+ST::CameraType ST::Camera::getCameraType() const{
+	return type;
+}
+
 void ST::Camera::setTarget(glm::vec3 target){
 	target_ = target;
 }
@@ -121,45 +125,3 @@ void ST::Camera::update(){
 ST::Camera::~Camera(){
 
 }
-
-
-/*
-
-glm::vec2 mousePos = {w.mousePosX(), w.mousePosY()};
-			float extra_speed = 1.0f;
-			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
-				extra_speed = 5.0f;
-			}
-			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				gm.cam_->transform_.Move(gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
-			}
-			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				gm.cam_->transform_.Move(-gm.cam_->transform_.getForward() * (30.0f * extra_speed * w.DeltaTime()));
-			}
-			if (w.inputPressed(ST::ST_INPUT_LEFT) ){
-				gm.cam_->transform_.Move(-gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
-			}
-			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-				gm.cam_->transform_.Move(gm.cam_->transform_.getRight() * (-30.0f * extra_speed * w.DeltaTime()));
-			}
-
-			if (firtsMouse) {
-				lastX = mousePos.x;
-				lastY = mousePos.y;
-				firtsMouse = false;
-			}
-			float yoffset = mousePos.x - lastX;
-			float xoffset = mousePos.y - lastY;
-			lastX = mousePos.x;
-			lastY = mousePos.y;
-			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
-				gm.cam_->transform_.RotateX(gm.cam_->transform_.getRotation().x + -xoffset * 0.5f * w.DeltaTime());
-				gm.cam_->transform_.RotateY(gm.cam_->transform_.getRotation().y +  yoffset * 0.5f * w.DeltaTime());
-			}
-
-
-			// ---- Picking ---
-			if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-				objSelected = gm.tryPickObj();
-			}
-*/

@@ -19,20 +19,20 @@ namespace ST {
 		void setPerspective(float fov, float ratio, float nearPlane, float farPlane);
 		void setOrthographic(float h, float v, float nearPlane, float farPlane);
 
+		ST::CameraType getCameraType() const;
+
 		void setTarget(glm::vec3 target);
 
 		void fpsMovement(ST::Window& w, float MoveSpeed = 30.0f, float RotateSpeed = 0.5f);
 
 		void update();
 
-		~Camera();
-		//Camera(const Camera& o);
-
 		ST::TransformComponent transform_;
 
 		glm::mat4 view;
 		glm::mat4 projection;
 
+		~Camera();
 	private:
 		CameraType type;
 		

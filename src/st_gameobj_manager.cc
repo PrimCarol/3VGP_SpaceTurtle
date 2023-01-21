@@ -158,6 +158,10 @@ std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
 
 		go->setID((int)GameObjsList_.size());
 
+		//char provisionalName[20];
+		//sprintf(provisionalName, "GameObj %d", (int)GameObjsList_.size());
+		//go->setName(provisionalName);
+
 		GameObjsList_.push_back(go.get());
 	}
 	return go;

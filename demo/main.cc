@@ -15,12 +15,9 @@ int main() {
 	ST::Camera myCam;
 
 	ST::Cube mesh_cube;
-	ST::Geometry mesh_cat;
-	mesh_cat.loadFromFile("../others/skull_petit.obj");
+
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
-	ST::Texture textureCat;
-	textureCat.loadSource("../others/cat_diffuse.jpg");
 	ST::Texture textureChecker;
 	textureChecker.loadSource("../others/checker_texture.jpg");
 
@@ -28,27 +25,15 @@ int main() {
 	Sun->getComponentRender()->setMesh(&mesh_cube);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
 
-	std::unique_ptr<ST::GameObj> EarthRotationPoint = gm.createGameObj();
 	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
-
-	Earth->getComponentHierarchy()->parentID = EarthRotationPoint->getID();
-
 	Earth->getComponentRender()->setMesh(&mesh_cube);
 	Earth->getComponentRender()->material->setTexture_Albedo(&textureChecker);
-
 	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
 	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
 
-
-	std::unique_ptr<ST::GameObj> MoonRotationPoint = gm.createGameObj();
 	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
-
-	MoonRotationPoint->getComponentHierarchy()->parentID = Earth->getID();
-	Moon->getComponentHierarchy()->parentID = MoonRotationPoint->getID();
-
-	Moon->getComponentTransform()->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	Moon->getComponentTransform()->setPosition(glm::vec3(3.0f, 0.0f, 0.0f));
 	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
-
 	Moon->getComponentRender()->setMesh(&mesh_cube);
 	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
@@ -59,16 +44,13 @@ int main() {
 
 		myCam.fpsMovement(w);
 
-		//Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
-		//EarthRotationPoint->getComponentTransform()->RotateZ(-3.0f * w.DeltaTime());
-		//
-		//MoonRotationPoint->getComponentTransform()->RotateX(-5.0f * w.DeltaTime());
+		Sun->getComponentTransform()->RotateZ(1.0f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, &myCam);
+		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_ , &myCam );
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm, myCam);
+			ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm , &myCam );
 			if (g) {
 				printf("Detecto un objeto  ->  %d \n", g->getID());
 			}

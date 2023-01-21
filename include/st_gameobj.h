@@ -12,8 +12,11 @@ namespace ST {
 		GameObj();
 
 		// Basic Info
-		int getID();
+		int getID() const;
 		void setID(int id);
+
+		//const char* getName();
+		//void setName(const char* name);
 
 		// The creator manager reference
 		class GameObj_Manager* gm_;
@@ -35,6 +38,7 @@ namespace ST {
 
 	private:
 		std::vector<ST::ComponentId> components;
+		const char* name_;
 		int ID_;
 	};
 }
