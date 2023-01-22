@@ -11,11 +11,17 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 
 		glm::mat4 m(1.0f);
 
-		m = glm::translate(m, t->getPosition());
+		t->m_Position_ = glm::mat4(1.0f);
 
-		m = glm::rotate(m, t->getRotation().x, { 1.0f,0.0f,0.0f });
-		m = glm::rotate(m, t->getRotation().y, { 0.0f,1.0f,0.0f });
-		m = glm::rotate(m, t->getRotation().z, { 0.0f,0.0f,1.0f });
+		t->m_Position_ = glm::translate(t->m_Position_, t->getPosition());
+
+		t->m_Rotation_ = glm::mat4(1.0f);
+
+		t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().x, { 1.0f,0.0f,0.0f });
+		t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().y, { 0.0f,1.0f,0.0f });
+		t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().z, { 0.0f,0.0f,1.0f });
+
+		m = t->m_Position_ * t->m_Rotation_;
 
 		m = glm::scale(m, t->getScale());
 

@@ -65,13 +65,13 @@ ST::Triangle::Triangle() : Mesh() {
 	
 	setName("Triangle");
 
-	VertexInfo vertices[] = {
-		{{ 0.0f, 1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {0.5f, 0.0f}},
-		{{ 1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},
-		{{-1.0f,-1.0f, 0.0f},   {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}}
-	};
+	vertices_.push_back({ {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.5f, 0.0f} });
+	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
 
-	unsigned int indices[] = { 0,1,2 };
+	indices_.push_back(0);
+	indices_.push_back(1);
+	indices_.push_back(2);
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -79,7 +79,7 @@ ST::Triangle::Triangle() : Mesh() {
 	GLuint gVBO = 0;
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
@@ -95,7 +95,7 @@ ST::Triangle::Triangle() : Mesh() {
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizei)indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -116,14 +116,17 @@ ST::Quad::Quad() : Mesh() {
 
 	setName("Quad");
 
-	VertexInfo vertices[] = {
-		{{ 1.0f, 1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {0.0f, 0.0f}},
-		{{ 1.0f,-1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},
-		{{-1.0f,-1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}},
-		{{-1.0f, 1.0f,0.0f},  {0.0f, 0.0f, -1.0f},     {1.0f, 0.0f}}
-	};
+	vertices_.push_back({ {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} });
 
-	unsigned int indices[] = { 0,1,2  ,  0,2,3 };
+	indices_.push_back(0);
+	indices_.push_back(1);
+	indices_.push_back(2);
+	indices_.push_back(0);
+	indices_.push_back(2);
+	indices_.push_back(3);
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -131,7 +134,7 @@ ST::Quad::Quad() : Mesh() {
 	GLuint gVBO = 0;
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
@@ -147,7 +150,7 @@ ST::Quad::Quad() : Mesh() {
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizei)indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -275,7 +278,7 @@ ST::Cube::Cube() : Mesh() {
 
 	setName("Cube");
 
-	VertexInfo vertices[] = {
+	/*VertexInfo vertices[] = {
 		{{ 1.0f, 1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 0.0f}},
 		{{ 1.0f,-1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},	//Front
 		{{-1.0f,-1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}},
@@ -305,11 +308,65 @@ ST::Cube::Cube() : Mesh() {
 		{{-1.0f,  1.0f,  1.0f},    {0.0f, 1.0f, 0.0f},     {1.0f, 0.0f}},	//Top
 		{{ 1.0f,  1.0f,  1.0f},	   {0.0f, 1.0f, 0.0f},     {0.0f, 0.0f}},
 		{{ 1.0f,  1.0f, -1.0f},    {0.0f, 1.0f, 0.0f},     {0.0f, 1.0f}}
-	};
+	};*/
 
-	unsigned int indices[] = { 0,1,2 , 0,2,3  ,  4,5,6 , 4,6,7,
-							   8,9,10 , 8,10,11  ,  12,13,14 , 12,14,15,
-							   16,17,18  ,  16,18,19  ,  20,21,22 , 20,22,23 };
+	//Front
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} });
+	
+	indices_.push_back(0);indices_.push_back(1);indices_.push_back(2);
+	indices_.push_back(0);indices_.push_back(2);indices_.push_back(3);
+	
+	//Right
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} });
+	
+	indices_.push_back(4); indices_.push_back(5); indices_.push_back(6);
+	indices_.push_back(4); indices_.push_back(6); indices_.push_back(7);
+
+	//Left
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(8); indices_.push_back(9); indices_.push_back(10);
+	indices_.push_back(8); indices_.push_back(10); indices_.push_back(11);
+
+	//Back
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(12); indices_.push_back(13); indices_.push_back(14);
+	indices_.push_back(12); indices_.push_back(14); indices_.push_back(15);
+
+	//Bottom
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, { 0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, { 0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, { 0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(16); indices_.push_back(17); indices_.push_back(18);
+	indices_.push_back(16); indices_.push_back(18); indices_.push_back(19);
+
+	//Top
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(20); indices_.push_back(21); indices_.push_back(22);
+	indices_.push_back(20); indices_.push_back(22); indices_.push_back(23);
+
+	//unsigned int indices[] = { 0,1,2 , 0,2,3  ,  4,5,6 , 4,6,7,
+	//						   8,9,10 , 8,10,11  ,  12,13,14 , 12,14,15,
+	//						   16,17,18  ,  16,18,19  ,  20,21,22 , 20,22,23 };
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -317,7 +374,7 @@ ST::Cube::Cube() : Mesh() {
 	GLuint gVBO = 0;
 	glGenBuffers(1, &gVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
 
 	// Position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
@@ -333,7 +390,7 @@ ST::Cube::Cube() : Mesh() {
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * sizeof(unsigned int), &indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

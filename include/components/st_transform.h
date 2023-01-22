@@ -44,6 +44,9 @@ namespace ST {
 
 		glm::mat4 m_transform_;
 
+		glm::mat4 m_Position_;
+		glm::mat4 m_Rotation_;
+
 		void updateDirectionalVectors();
 
 		~TransformComponent();

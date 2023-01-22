@@ -2,8 +2,6 @@
 #define _SPACE_TURTLE_MESH_H_ 1
 
 #include <glad.h>
-
-// Testing
 #include <vector>
 #include <transform.hpp>
 
@@ -38,6 +36,9 @@ namespace ST {
 
 		virtual void render();
 
+		std::vector<VertexInfo> vertices_;
+		std::vector<unsigned int> indices_;
+
 		~Mesh();
 		Mesh(const Mesh& o);
 	protected:
@@ -71,8 +72,6 @@ namespace ST {
 		~Circle();
 	private:
 		int rebolutions_;
-		std::vector<VertexInfo> vertices_;
-		std::vector<unsigned int> indices_;
 	};
 
 	// ------------------- 3D -------------------
@@ -94,10 +93,6 @@ namespace ST {
 		void render() override;
 	
 		~Geometry();
-
-	private:
-		std::vector<VertexInfo> vertices_;
-		std::vector<unsigned int> indices_;
 	};
 }
 

@@ -24,7 +24,7 @@
 
 //#include <st_raycast.h>
 
-#define MAX_OBJS 10000
+#define MAX_OBJS 50000
 #define MAX_TRANSFORM_COMPONENTS MAX_OBJS
 #define MAX_RENDER_COMPONENTS MAX_OBJS
 #define MAX_COLLIDER_COMPONENTS MAX_OBJS
@@ -38,7 +38,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	hierarchyComponentList_.reserve(MAX_OBJS); // Hierarchy
 	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS); // Transforms
 	renderComponentList_.reserve(MAX_RENDER_COMPONENTS); // Render
-	colliderComponentList_.reserve(MAX_COLLIDER_COMPONENTS); // Colliders
+	//colliderComponentList_.reserve(MAX_COLLIDER_COMPONENTS); // Colliders
 
 	TransCompIndex_ = 0;
 	RenderCompIndex_ = 0;
@@ -93,7 +93,7 @@ ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
 }
 
 ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
-	if (ColliderCompIndex_ >= MAX_COLLIDER_COMPONENTS) {
+	if (ColliderCompIndex_ >= 0) {
 		return ST::ColliderComponentId();
 	}
 
@@ -101,7 +101,7 @@ ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
 	result.value = ColliderCompIndex_;
 	result.type = ST::kComp_Collider;
 
-	colliderComponentList_.push_back(ST::ColliderComponent());
+	//colliderComponentList_.push_back(ST::ColliderComponent());
 	ColliderCompIndex_++;
 
 	return result;

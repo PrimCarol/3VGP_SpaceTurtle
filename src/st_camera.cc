@@ -17,8 +17,8 @@ ST::Camera::Camera(){
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
 
-	transform_.setRotateY(3.14f);
-	transform_.setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+	//transform_.setRotateY(3.14f);
+	transform_.setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 }
 
 void ST::Camera::setPerspective(float fov, float ratio ,float nearPlane, float farPlane){

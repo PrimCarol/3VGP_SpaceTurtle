@@ -16,13 +16,6 @@ namespace ST {
 
 		~ColliderComponent();
 		//ColliderComponent(const ColliderComponent& o);
-
-
-		glm::vec3 center_;
-		glm::vec3 size_;
-
-		//glm::vec3 colliderPoint_min(-1.0f, -1.0f, -1.0f); // Collider
-		//glm::vec3 colliderPoint_max(1.0f, 1.0f, 1.0f);
 	};
 }
 

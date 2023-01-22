@@ -7,11 +7,20 @@
 
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 ST::Window::Window(){
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
+        
+        GLFWimage images[1];
+        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+        glfwSetWindowIcon(glWindow, 1, images);
+        stbi_image_free(images[0].pixels);
+        
         Focus();
     }
 
@@ -43,6 +52,12 @@ ST::Window::Window(int width, int height){
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
+
+        GLFWimage images[1];
+        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+        glfwSetWindowIcon(glWindow, 1, images);
+        stbi_image_free(images[0].pixels);
+
         Focus();
     }
 
@@ -90,6 +105,14 @@ void ST::Window::Render(){
 
     deltaTime = clock() - lastTime;
     lastTime = clock();
+
+    /*std::stringstream ss;
+    ss << GAME_NAME << " " << VERSION << " [" << fps << " FPS]";
+
+    glfwSetWindowTitle(pWindow, ss.str().c_str());*/
+
+    //glfwSetWindowTitle(glWindow, "UWU");
+
 
     glfwSwapBuffers(glWindow);
 
