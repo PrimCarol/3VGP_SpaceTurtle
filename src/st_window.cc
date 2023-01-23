@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <ImGuizmo.h>
 #include <stdio.h>
 
 #include <iostream>
@@ -129,6 +130,7 @@ void ST::Window::Clear() const{
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 
     // Para que toda la ventana tenga la posibilidad de hacer Dock
     ImGui::DockSpaceOverViewport();
@@ -143,6 +145,11 @@ int ST::Window::getWindowsWidth() const{
 }
 
 bool ST::Window::inputPressed(ST_INPUT input){
+
+    //auto& io = ImGui::GetIO();
+    //if (io.WantCaptureMouse || io.WantCaptureKeyboard) {
+    //    return false;
+    //}
     
     switch (input){
     case ST::ST_INPUT_UP:
@@ -439,6 +446,10 @@ bool ST::Window::inputReleased(ST_INPUT input){
 //}
 
 bool ST::Window::inputPressed(const char key) {
+    //auto& io = ImGui::GetIO();
+    //if (io.WantCaptureMouse || io.WantCaptureKeyboard) {
+    //    return false;
+    //}
     return (glfwGetKey(glWindow, key) == GLFW_PRESS);
 }
 

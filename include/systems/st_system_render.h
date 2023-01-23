@@ -5,11 +5,13 @@
 #include <components/st_transform.h>
 #include <st_camera.h>
 
+#include <optional>
+
 namespace ST {
 
 	class SystemRender {
 	public:
-		static void Render(const std::vector<ST::RenderComponent>& r, const std::vector<ST::TransformComponent>& t, ST::Camera* cam = nullptr);
+		static void Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera* cam = nullptr);
 	private:
 		SystemRender();
 		~SystemRender();

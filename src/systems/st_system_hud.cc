@@ -76,3 +76,62 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 	}
 	ImGui::End();
 }
+
+/*#include <imgui_internal.h>
+#include <ImGuizmo.h>
+
+void ST::SystemHUD::EditTransform(const ST::Camera& c, ST::GameObj* objSeletected, bool editTransformDecomposition){
+
+    //ImGuiIO& io = ImGui::GetIO();
+    //float viewManipulateRight = io.DisplaySize.x;
+    //float viewManipulateTop = 0;
+    //static ImGuiWindowFlags gizmoWindowFlags = 0;
+
+    //if (useWindow)
+    //{
+    //    ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_Appearing);
+    //    ImGui::SetNextWindowPos(ImVec2(400, 20), ImGuiCond_Appearing);
+    //    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor(0.35f, 0.3f, 0.3f));
+    //    ImGui::Begin("Gizmo", 0, gizmoWindowFlags);
+    //    ImGuizmo::SetDrawlist();
+    //    float windowWidth = (float)ImGui::GetWindowWidth();
+    //    float windowHeight = (float)ImGui::GetWindowHeight();
+    //    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+    //    viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
+    //    viewManipulateTop = ImGui::GetWindowPos().y;
+    //    ImGuiWindow* window = ImGui::GetCurrentWindow();
+    //    gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
+    //}
+    //else
+    //{
+    //    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+    //}
+    //glm::mat4 identityMat(1.0f);
+    ////ImGuizmo::DrawGrid((const float*)&c.view, (const float*)&c.projection, (const float*)&identityMat, 100.f);
+    //if (objSeletected) {
+    //    ImGuizmo::DrawCubes((const float*)&c.view, (const float*)&c.projection, (const float*)&objSeletected->getComponentTransform()->m_transform_[0][0], gizmoCount);
+    //    ImGuizmo::Manipulate((const float*)&c.view, (const float*)&c.projection, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&objSeletected->getComponentTransform()->m_transform_[0][0], NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+
+    //    ImGuizmo::ViewManipulate((float*)&c.view, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+    //}
+
+    //if (useWindow)
+    //{
+    //    ImGui::End();
+    //    ImGui::PopStyleColor(1);
+    //}
+
+    if (objSeletected) {
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+
+        float windowWidth = (float)ImGui::GetWindowWidth();
+        float windowHeight = (float)ImGui::GetWindowHeight();
+
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+        ImGuizmo::Manipulate((const float*)&c.view, (const float*)&c.projection,
+            ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&objSeletected->getComponentTransform()->m_transform_[0][0]);
+    }
+}
+*/

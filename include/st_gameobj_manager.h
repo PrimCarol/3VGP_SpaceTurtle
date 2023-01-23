@@ -8,6 +8,7 @@
 #include <components/st_hierarchy.h>
 
 #include <memory>
+#include <optional>
 
 namespace ST {
 
@@ -25,16 +26,15 @@ namespace ST {
 
 		//std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
 		std::unique_ptr<ST::GameObj> createGameObj();
+		//void markToDeletObj(int ID);
 		const int getGameObjNum();
-
-		//ST::GameObj* tryPickObj();
 		
 		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 		std::vector<GameObj*> GameObjsList_;
-		std::vector<TransformComponent> transformComponentList_;
-		std::vector<RenderComponent> renderComponentList_;
-		std::vector<ColliderComponent> colliderComponentList_;
-		std::vector<HierarchyComponent> hierarchyComponentList_;
+		std::vector<std::optional<TransformComponent>> transformComponentList_;
+		std::vector<std::optional<RenderComponent>> renderComponentList_;
+		std::vector<std::optional<ColliderComponent>> colliderComponentList_;
+		std::vector<std::optional<HierarchyComponent>> hierarchyComponentList_;
 
 	private:
 

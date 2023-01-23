@@ -106,7 +106,7 @@ void ST::Triangle::render(){
 
 	SetCullMode(cullmode_);
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Triangle::~Triangle() {}
@@ -161,7 +161,7 @@ void ST::Quad::render() {
 	
 	SetCullMode(cullmode_);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Quad::~Quad() {}
@@ -278,38 +278,6 @@ ST::Cube::Cube() : Mesh() {
 
 	setName("Cube");
 
-	/*VertexInfo vertices[] = {
-		{{ 1.0f, 1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 0.0f}},
-		{{ 1.0f,-1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {0.0f, 1.0f}},	//Front
-		{{-1.0f,-1.0f, -1.0f },	   {0.0f, 0.0f, -1.0f},     {1.0f, 1.0f}},
-		{{-1.0f, 1.0f, -1.0f },    {0.0f, 0.0f, -1.0f},     {1.0f, 0.0f}},
-
-		{{-1.0f,  1.0f, -1.0f},   {-1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
-		{{-1.0f, -1.0f, -1.0f},   {-1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Right
-		{{-1.0f, -1.0f,  1.0f},   {-1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
-		{{-1.0f,  1.0f,  1.0f},   {-1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
-
-		{{1.0f,  1.0f,  1.0f},	  { 1.0f, 0.0f, 0.0f},     {0.0f, 0.0f}},
-		{{1.0f, -1.0f,  1.0f},    { 1.0f, 0.0f, 0.0f},     {0.0f, 1.0f}},	//Left
-		{{1.0f, -1.0f, -1.0f},	  { 1.0f, 0.0f, 0.0f},     {1.0f, 1.0f}},
-		{{1.0f,  1.0f, -1.0f},    { 1.0f, 0.0f, 0.0f},     {1.0f, 0.0f}},
-
-		{{-1.0f,  1.0f,  1.0f},	  {0.0f, 0.0f, 1.0f},     {0.0f, 0.0f}},
-		{{-1.0f, -1.0f,  1.0f},   {0.0f, 0.0f, 1.0f},     {0.0f, 1.0f}},	//Back
-		{{ 1.0f, -1.0f,  1.0f},	  {0.0f, 0.0f, 1.0f},     {1.0f, 1.0f}},
-		{{ 1.0f,  1.0f,  1.0f},   {0.0f, 0.0f, 1.0f},     {1.0f, 0.0f}},
-
-		{{ 1.0f, -1.0f, -1.0f},	   {0.0f,-1.0f, 0.0f},     {0.0f, 0.0f}},
-		{{ 1.0f, -1.0f,  1.0f},    {0.0f,-1.0f, 0.0f},     {0.0f, 1.0f}},	//Bottom
-		{{-1.0f, -1.0f,  1.0f},	   {0.0f,-1.0f, 0.0f},     {1.0f, 1.0f}},
-		{{-1.0f, -1.0f, -1.0f},    {0.0f,-1.0f, 0.0f},     {1.0f, 0.0f}},
-
-		{{-1.0f,  1.0f, -1.0f},	   {0.0f, 1.0f, 0.0f},     {1.0f, 1.0f}},
-		{{-1.0f,  1.0f,  1.0f},    {0.0f, 1.0f, 0.0f},     {1.0f, 0.0f}},	//Top
-		{{ 1.0f,  1.0f,  1.0f},	   {0.0f, 1.0f, 0.0f},     {0.0f, 0.0f}},
-		{{ 1.0f,  1.0f, -1.0f},    {0.0f, 1.0f, 0.0f},     {0.0f, 1.0f}}
-	};*/
-
 	//Front
 	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
 	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
@@ -364,10 +332,6 @@ ST::Cube::Cube() : Mesh() {
 	indices_.push_back(20); indices_.push_back(21); indices_.push_back(22);
 	indices_.push_back(20); indices_.push_back(22); indices_.push_back(23);
 
-	//unsigned int indices[] = { 0,1,2 , 0,2,3  ,  4,5,6 , 4,6,7,
-	//						   8,9,10 , 8,10,11  ,  12,13,14 , 12,14,15,
-	//						   16,17,18  ,  16,18,19  ,  20,21,22 , 20,22,23 };
-
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
 
@@ -402,7 +366,7 @@ void ST::Cube::render() {
 	SetCullMode(cullmode_);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 ST::Cube::~Cube() {}

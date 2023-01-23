@@ -21,18 +21,19 @@ ST::GameObj* ST::SystemPicking::tryPickObj(const ST::Window &w, const ST::GameOb
 
 			ST::Raycast ray;
 
-			glm::vec3 maxPos(-999.0f, -999.0f, -999.0f), minPos(999.0f, 999.0f, 999.0f);
+			glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 			ST::RenderComponent* r = gm.GameObjsList_[i]->getComponentRender();
-			for (int j = 0; j < r->mesh->vertices_.size(); j++){	
-				if (r->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r->mesh->vertices_[j].pos.x; }
-				if (r->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r->mesh->vertices_[j].pos.y; }
-				if (r->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r->mesh->vertices_[j].pos.z; }
+			if (r) {
+				for (int j = 0; j < r->mesh->vertices_.size(); j++) {
+					if (r->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r->mesh->vertices_[j].pos.x; }
+					if (r->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r->mesh->vertices_[j].pos.y; }
+					if (r->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r->mesh->vertices_[j].pos.z; }
 
-				if (r->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r->mesh->vertices_[j].pos.x; }
-				if (r->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r->mesh->vertices_[j].pos.y; }
-				if (r->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r->mesh->vertices_[j].pos.z; }
+					if (r->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r->mesh->vertices_[j].pos.x; }
+					if (r->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r->mesh->vertices_[j].pos.y; }
+					if (r->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r->mesh->vertices_[j].pos.z; }
+				}
 			}
-
 			glm::vec3 colliderPoint_min(minPos * t->getScale());
 			glm::vec3 colliderPoint_max(maxPos * t->getScale());
 

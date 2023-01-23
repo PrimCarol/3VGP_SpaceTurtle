@@ -78,7 +78,7 @@ ST::GameObj* ST::GameObj::getParent(){
 ST::HierarchyComponent* ST::GameObj::getComponentHierarchy() {
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i].type == ST::kComp_Hierarchy) {
-			return &gm_->hierarchyComponentList_[components[i].value];
+			return &gm_->hierarchyComponentList_[components[i].value].value();
 		}
 	}
 	return nullptr;
@@ -87,7 +87,7 @@ ST::HierarchyComponent* ST::GameObj::getComponentHierarchy() {
 ST::TransformComponent* ST::GameObj::getComponentTransform(){
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i].type == ST::kComp_Trans) {
-			return &gm_->transformComponentList_[components[i].value];
+			return &gm_->transformComponentList_[components[i].value].value();
 		}
 	}
 	return nullptr;
@@ -96,7 +96,7 @@ ST::TransformComponent* ST::GameObj::getComponentTransform(){
 ST::RenderComponent* ST::GameObj::getComponentRender() {
 	for (int i = 0; i < components.size(); i++) {
 		if (components[i].type == ST::kComp_Render) {
-			return &gm_->renderComponentList_[components[i].value];
+			return &gm_->renderComponentList_[components[i].value].value();
 		}
 	}
 	return nullptr;
@@ -107,6 +107,10 @@ void ST::GameObj::addComponents(std::vector<ComponentId> c){
 		components.push_back(c[i]);
 	}
 }
+
+//void ST::GameObj::Destroy(){
+//
+//}
 
 ST::GameObj::~GameObj(){
 	// Eliminar el "vinculo" de los componentes del Manager

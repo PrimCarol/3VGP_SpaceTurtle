@@ -6,8 +6,8 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 
 	for (int i = 0; i < gm.transformComponentList_.size(); i++) {
 
-		ST::TransformComponent* t = &gm.transformComponentList_[i];
-		ST::HierarchyComponent* h = &gm.hierarchyComponentList_[i];
+		ST::TransformComponent* t = &gm.transformComponentList_[i].value();
+		ST::HierarchyComponent* h = &gm.hierarchyComponentList_[i].value();
 
 		glm::mat4 m(1.0f);
 
@@ -27,7 +27,7 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 
 		if (h->getParentID() != -1) {
 			//t->m_transform_ = gm.GameObjsList_[h->getParentID()]->getComponentTransform()->m_transform_ * m;
-			t->m_transform_ = gm.transformComponentList_[h->getParentID()].m_transform_ * m;
+			t->m_transform_ = gm.transformComponentList_[h->getParentID()].value().m_transform_ * m;
 		}
 		else {
 			t->m_transform_ = m;
