@@ -1,6 +1,7 @@
 #include "st_window.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <ImGuizmo.h>
@@ -18,7 +19,7 @@ ST::Window::Window(){
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         
         GLFWimage images[1];
-        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); 
         glfwSetWindowIcon(glWindow, 1, images);
         stbi_image_free(images[0].pixels);
         
@@ -76,6 +77,24 @@ ST::Window::Window(int width, int height){
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     ImGui::StyleColorsDark();
 
+
+
+    // Internal 
+    //ImGui::DockBuilderRemoveNode(dockspace_id); // Clear out existing layout
+    //ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_Dockspace); // Add empty node
+    //ImGui::DockBuilderSetNodeSize(dockspace_id, dockspace_size);
+
+    //ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+    //ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, NULL, &dock_main_id);
+    //ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, NULL, &dock_main_id);
+
+    //ImGui::DockBuilderDockWindow("Log", dock_id_bottom);
+    //ImGui::DockBuilderDockWindow("Properties", dock_id_prop);
+    //ImGui::DockBuilderDockWindow("Mesh", dock_id_prop);
+    //ImGui::DockBuilderDockWindow("Extra", dock_id_prop);
+    //ImGui::DockBuilderFinish(dockspace_id);
+
+
     ImGui_ImplGlfw_InitForOpenGL(glWindow, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 }
@@ -84,6 +103,7 @@ ST::Window::Window(const Window& o){}
 
 void ST::Window::Focus() const{
     glfwMakeContextCurrent(glWindow);
+
     //glfwSwapInterval(0);
 }
 

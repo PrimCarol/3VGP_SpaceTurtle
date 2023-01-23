@@ -27,6 +27,12 @@ void ST::Material::setColor(glm::vec3 rgb) {
 	color = rgb;
 }
 
+void ST::Material::setColor(float r, float g, float b) {
+	color.r = r;
+	color.g = g;
+	color.b = b;
+}
+
 const glm::vec3 ST::Material::getColor() {
 	return color;
 }

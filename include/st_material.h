@@ -13,6 +13,7 @@ namespace ST {
 		Material();
 
 		void setColor(glm::vec3 rgb);
+		void setColor(float r, float g, float b);
 		const glm::vec3 getColor();
 
 		const ST::Program* getProgram();

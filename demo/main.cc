@@ -1,10 +1,5 @@
 #include <st_engine.h>
 
-#include <systems/st_system_render.h>
-#include <systems/st_system_transform.h>
-#include <systems/st_system_picking.h>
-#include <systems/st_system_hud.h>
-
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
@@ -38,8 +33,9 @@ int main() {
 	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
 	Moon->getComponentTransform()->setPosition(glm::vec3(3.0f, 0.0f, 0.0f));
 	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
-	//Moon->getComponentRender()->setMesh(&mesh_cube);
-	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
+	Moon->getComponentRender()->setMesh(&mesh_cube);
+	Moon->getComponentRender()->material->setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
+	//Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
 	// --------------------------
 
@@ -47,8 +43,6 @@ int main() {
 		w.Clear();
 
 		myCam.fpsMovement(w);
-
-		// Ahora mismo si no hay mesh, explota.
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_ , &myCam );
@@ -60,7 +54,7 @@ int main() {
 			}
 		}
 
-		ST::SystemHUD::DrawHud(w, gm, objSelected);
+		//ST::SystemHUD::DrawHud(w, gm, objSelected);
 
 		// ----------------------------
 

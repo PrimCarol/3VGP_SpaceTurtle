@@ -103,11 +103,14 @@ void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponen
 				glBindTexture(GL_TEXTURE_2D, mat->getAlbedo()->getID());
 			}
 		}
+
+		glm::vec3 maxPos(-999.0f, -999.0f, -1.0f), minPos(999.0f, 999.0f, 999.0f);
+
 		if (r[i].value().mesh) {
 			r[i].value().mesh->render();
 
 			//if (ST::SystemRender::setCollisionsVisible) {
-				glm::vec3 maxPos(-999.0f, -999.0f, -999.0f), minPos(999.0f, 999.0f, 999.0f);
+				//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 				for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
 					if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
 					if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
@@ -118,12 +121,17 @@ void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponen
 					if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
 				}
 
-				glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
-				glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
-
-				drawCollision(colliderPoint_min, colliderPoint_max);
+				//glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
+				//glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
+				//
+				//drawCollision(colliderPoint_min, colliderPoint_max);
 			//}
 		}
+
+		glm::vec3 colliderPoint_min(minPos);
+		glm::vec3 colliderPoint_max(maxPos);
+
+		drawCollision(colliderPoint_min, colliderPoint_max);
 
 		//colliderComponentList_[i].draw(); // Bad thing.
 	}

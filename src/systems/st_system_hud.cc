@@ -71,16 +71,20 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 			ImGui::Text("---- Mesh ----");
 			ImGui::Text("Mesh: ");
 			ImGui::SameLine();
-			ImGui::Text(render->mesh->getName());
+			if (render->mesh) {
+				ImGui::Text(render->mesh->getName());
+			}else {
+				ImGui::Text("None");
+			}
 		}
 	}
 	ImGui::End();
 }
 
-/*#include <imgui_internal.h>
-#include <ImGuizmo.h>
+//#include <imgui_internal.h>
+//#include <ImGuizmo.h>
 
-void ST::SystemHUD::EditTransform(const ST::Camera& c, ST::GameObj* objSeletected, bool editTransformDecomposition){
+/*void ST::SystemHUD::EditTransform(const ST::Camera& c, ST::GameObj* objSeletected, bool editTransformDecomposition) {
 
     //ImGuiIO& io = ImGui::GetIO();
     //float viewManipulateRight = io.DisplaySize.x;
@@ -133,5 +137,4 @@ void ST::SystemHUD::EditTransform(const ST::Camera& c, ST::GameObj* objSeletecte
         ImGuizmo::Manipulate((const float*)&c.view, (const float*)&c.projection,
             ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&objSeletected->getComponentTransform()->m_transform_[0][0]);
     }
-}
-*/
+}*/
