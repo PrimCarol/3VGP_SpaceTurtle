@@ -35,7 +35,7 @@ int main() {
 	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
 	Moon->getComponentRender()->setMesh(&mesh_cube);
 	Moon->getComponentRender()->material->setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
-	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
+	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);	
 
 	// --------------------------
 
