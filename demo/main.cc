@@ -35,7 +35,7 @@ int main() {
 	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
 	Moon->getComponentRender()->setMesh(&mesh_cube);
 	Moon->getComponentRender()->material->setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
-	//Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
+	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);
 
 	// --------------------------
 
@@ -45,7 +45,7 @@ int main() {
 		myCam.fpsMovement(w);
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_ , &myCam );
+		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, false, &myCam );
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm , &myCam );
@@ -54,8 +54,7 @@ int main() {
 			}
 		}
 
-		//ST::SystemHUD::DrawHud(w, gm, objSelected);
-
+		ST::SystemHUD::DrawHud(w, gm, objSelected);
 		// ----------------------------
 
 		w.Render();

@@ -166,10 +166,10 @@ int ST::Window::getWindowsWidth() const{
 
 bool ST::Window::inputPressed(ST_INPUT input){
 
-    //auto& io = ImGui::GetIO();
-    //if (io.WantCaptureMouse || io.WantCaptureKeyboard) {
-    //    return false;
-    //}
+    auto& io = ImGui::GetIO();
+    if (io.WantCaptureMouse || io.WantTextInput) {
+        return false;
+    }
     
     switch (input){
     case ST::ST_INPUT_UP:
@@ -466,10 +466,10 @@ bool ST::Window::inputReleased(ST_INPUT input){
 //}
 
 bool ST::Window::inputPressed(const char key) {
-    //auto& io = ImGui::GetIO();
-    //if (io.WantCaptureMouse || io.WantCaptureKeyboard) {
-    //    return false;
-    //}
+    auto& io = ImGui::GetIO();
+    if (io.WantCaptureMouse || io.WantTextInput) {
+        return false;
+    }
     return (glfwGetKey(glWindow, key) == GLFW_PRESS);
 }
 

@@ -25,7 +25,9 @@ namespace ST {
 		ComponentId createHierarchyComponent();
 
 		//std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
+		// With all components (Hierarchy, Transform, Render)
 		std::unique_ptr<ST::GameObj> createGameObj();
+		
 		//void markToDeletObj(int ID);
 		const int getGameObjNum();
 		

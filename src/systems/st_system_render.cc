@@ -45,7 +45,7 @@ void drawCollision(glm::vec3 min, glm::vec3 max){
 	glEnd();
 }
 
-void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera* cam){
+void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders, ST::Camera* cam){
 	ST::Material* mat = nullptr;
 	const ST::Program* p = nullptr;
 
@@ -87,8 +87,10 @@ void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponen
 			// ------ Camara -------
 
 			// De momento esta mal, funciona 1:1.
-			GLuint u_m_trans = p->getUniform("u_m_trans");
-			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t[i].value().m_transform_[0][0]);
+			if (t[i].has_value()) {
+				GLuint u_m_trans = p->getUniform("u_m_trans");
+				glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t[i].value().m_transform_[0][0]);
+			}
 
 			// Material 
 			GLuint u_color = p->getUniform("u_color");
@@ -104,12 +106,12 @@ void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponen
 			}
 		}
 
-		glm::vec3 maxPos(-999.0f, -999.0f, -1.0f), minPos(999.0f, 999.0f, 999.0f);
+		glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
 		if (r[i].value().mesh) {
 			r[i].value().mesh->render();
 
-			//if (ST::SystemRender::setCollisionsVisible) {
+			if (renderColliders) {
 				//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 				for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
 					if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
@@ -125,13 +127,15 @@ void ST::SystemRender::Render(const std::vector<std::optional<ST::RenderComponen
 				//glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
 				//
 				//drawCollision(colliderPoint_min, colliderPoint_max);
-			//}
+			}
 		}
 
-		glm::vec3 colliderPoint_min(minPos);
-		glm::vec3 colliderPoint_max(maxPos);
+		if (renderColliders) {
+			glm::vec3 colliderPoint_min(minPos);
+			glm::vec3 colliderPoint_max(maxPos);
 
-		drawCollision(colliderPoint_min, colliderPoint_max);
+			drawCollision(colliderPoint_min, colliderPoint_max);
+		}
 
 		//colliderComponentList_[i].draw(); // Bad thing.
 	}

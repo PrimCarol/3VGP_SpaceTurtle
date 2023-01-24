@@ -11,7 +11,7 @@ namespace ST {
 
 	class SystemRender {
 	public:
-		static void Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera* cam = nullptr);
+		static void Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders = false, ST::Camera* cam = nullptr);
 	private:
 		SystemRender();
 		~SystemRender();
