@@ -18,7 +18,9 @@ namespace ST {
 	class Engine{
 	public:
 	
+		/* Get a random float value between the min and max. */
 		static const float getRandom(float min, float max);
+		/* Read the file in the path you pass */
 		static const unsigned char* readFile(const char* filename);
 
 	private:

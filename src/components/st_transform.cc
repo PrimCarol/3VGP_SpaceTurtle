@@ -56,6 +56,11 @@ void ST::TransformComponent::setPosition(const glm::vec3 pos) {
 	position_ = pos;
 	//updateTransformMatrix();
 }
+void ST::TransformComponent::setPosition(const float posX, const float posY, const float posZ){
+	position_.x = posX;
+	position_.y = posY;
+	position_.z = posZ;
+}
 void ST::TransformComponent::setRotateX(const float r) {
 	rotation_.x = r;
 	//updateTransformMatrix();
@@ -71,6 +76,12 @@ void ST::TransformComponent::setRotateZ(const float r) {
 void ST::TransformComponent::setScale(const glm::vec3 newScale) {
 	scale_ = newScale;
 	//updateTransformMatrix();
+}
+
+void ST::TransformComponent::setScale(const float scaleX, const float scaleY, const float scaleZ){
+	scale_.x = scaleX;
+	scale_.y = scaleY;
+	scale_.z = scaleZ;
 }
 
 void ST::TransformComponent::updateDirectionalVectors(){

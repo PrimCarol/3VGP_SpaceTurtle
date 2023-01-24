@@ -19,19 +19,11 @@ namespace ST {
 		GameObj_Manager();
 		~GameObj_Manager();
 		
-		ComponentId createTransformComponent();
-		ComponentId createRenderComponent();
-		ComponentId createColliderComponent();
-		ComponentId createHierarchyComponent();
-
-		//std::unique_ptr<ST::GameObj> createGameObj(const std::vector<ComponentId> c);
 		// With all components (Hierarchy, Transform, Render)
 		std::unique_ptr<ST::GameObj> createGameObj();
 		
-		//void markToDeletObj(int ID);
 		const int getGameObjNum();
 		
-		//std::vector<std::optional<RenderComponent>> renderComponentList_;
 		std::vector<GameObj*> GameObjsList_;
 		std::vector<std::optional<TransformComponent>> transformComponentList_;
 		std::vector<std::optional<RenderComponent>> renderComponentList_;
@@ -39,6 +31,10 @@ namespace ST {
 		std::vector<std::optional<HierarchyComponent>> hierarchyComponentList_;
 
 	private:
+		ComponentId createTransformComponent();
+		ComponentId createRenderComponent();
+		ComponentId createColliderComponent();
+		ComponentId createHierarchyComponent();
 
 		size_t TransCompIndex_;
 		size_t RenderCompIndex_;

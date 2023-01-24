@@ -13,7 +13,7 @@ namespace ST {
 		TransformComponent();
 
 		//----------------- Transforms ------------------
-		/* Moves based on your current position */
+		// Moves based on your current position. (Preferably use DeltaTime() from ST::Window)
 		void Move(const glm::vec3 newPos);
 		/* Add rotation on your current rotation X axis in radiants*/
 		void RotateX(const float r);
@@ -24,8 +24,10 @@ namespace ST {
 
 		/* Set a forced position */
 		void setPosition(const glm::vec3 pos);
+		void setPosition(const float posX, const float posY, const float posZ);
 		/* Set a forced scale */
 		void setScale(const glm::vec3 newScale);
+		void setScale(const float scaleX, const float scaleY, const float scaleZ);
 		/* Set a forced rotation X axis in radiants */
 		void setRotateX(const float r);
 		/* Set a forced rotation Y axis in radiants */
