@@ -51,6 +51,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/glm/gtx",
             "../deps/glm/gtc",
             
+            -- FastNoiseLite
+            "../deps/fastNoiseLite",
+
             -- GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
 
@@ -96,6 +99,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
             -- OpenGl - GLAD
             "../deps/OpenGL/glad.c",
+
+            -- FastNoiseLite
+            "../deps/fastNoiseLite/*.h",
         }  
 
         -- Donde estan las librerias
@@ -139,6 +145,9 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
             "../deps/glm/gtx",
             "../deps/glm/gtc",
             
+            -- FastNoiseLite
+            "../deps/fastNoiseLite",
+
             -- GLFW
             "../deps/glfw-3.3.8.bin.WIN64/include",
 

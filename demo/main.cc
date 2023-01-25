@@ -1,5 +1,7 @@
 #include <st_engine.h>
 
+#include <FastNoiseLite.h>
+
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
@@ -12,8 +14,6 @@ int main() {
 	ST::Camera myCam;
 
 	ST::Cube mesh_cube;
-	ST::Geometry Cat;
-	Cat.loadFromFile("../others/cat_petit.obj");
 
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/icon.png");
@@ -21,7 +21,7 @@ int main() {
 	textureChecker.loadSource("../others/checker_texture.jpg");
 
 	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
-	Sun->getComponentRender()->setMesh(&Cat);
+	Sun->getComponentRender()->setMesh(&mesh_cube);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
 
 	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
@@ -39,6 +39,17 @@ int main() {
 	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);	
 
 	// --------------------------
+
+	FastNoiseLite fastNoise;
+
+	for (int y = 0; y < 10; y++) {
+		for (int x = 0; x < 10; x++){
+			float perlin_value = fastNoise.GetNoise((float)x,(float)y);
+			printf("%f \n", perlin_value);
+		}
+	}
+
+
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
