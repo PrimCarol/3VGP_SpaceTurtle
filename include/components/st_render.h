@@ -23,7 +23,7 @@ namespace ST {
 		std::unique_ptr<ST::Material> material;
 		ST::Mesh* mesh = nullptr;
 
-		//RenderComponent(const RenderComponent& o);
+		RenderComponent(const RenderComponent& o);
 
 		~RenderComponent();
 

@@ -6,14 +6,27 @@
 #include <st_camera.h>
 
 #include <optional>
+#include <vector>
 
 namespace ST {
 
+	static struct MyObjToRender{
+		ST::TransformComponent* transform_;
+		ST::RenderComponent* render_;
+	};
+
 	class SystemRender {
 	public:
-		static void Render(const std::vector<std::optional<ST::RenderComponent>>& r, const std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders = false, ST::Camera* cam = nullptr);
+		static void Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders = false, ST::Camera* cam = nullptr);
+
 	private:
 		SystemRender();
+
+		static void setUpRender(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera& cam);
+		static void doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam);
+
+		static void setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam);
+
 		~SystemRender();
 		SystemRender(const SystemRender& o);
 	};

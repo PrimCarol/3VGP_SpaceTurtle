@@ -10,8 +10,10 @@ ST::Material::Material(){
 	//settings_ = new Settings();
 	//settings_ = NULL;
 	//color = { 1.0f,0.8f,0.9f };
-	color = { 1.0f,1.0f,1.0f };
+	color = { 1.0f,1.0f,1.0f,1.0f };
 	haveAlbedo = false;
+	albedo = nullptr;
+	translucent = false;
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -23,17 +25,18 @@ ST::Material::Settings* ST::Material::getSettings() const{
 	return settings_;
 }*/
 
-void ST::Material::setColor(glm::vec3 rgb) {
+void ST::Material::setColor(glm::vec4 rgb) {
 	color = rgb;
 }
 
-void ST::Material::setColor(float r, float g, float b) {
+void ST::Material::setColor(float r, float g, float b, float a) {
 	color.r = r;
 	color.g = g;
 	color.b = b;
+	color.a = a;
 }
 
-const glm::vec3 ST::Material::getColor() {
+const glm::vec4 ST::Material::getColor() {
 	return color;
 }
 

@@ -12,9 +12,9 @@ namespace ST {
 	public:
 		Material();
 
-		void setColor(glm::vec3 rgb);
-		void setColor(float r, float g, float b);
-		const glm::vec3 getColor();
+		void setColor(glm::vec4 rgb);
+		void setColor(float r, float g, float b, float a = 1.0f);
+		const glm::vec4 getColor();
 
 		const ST::Program* getProgram();
 		void setProgram(std::shared_ptr<ST::Program>& p);
@@ -25,10 +25,11 @@ namespace ST {
 		~Material();
 	
 		bool haveAlbedo;
+		bool translucent;
 	private:
 		ST::Texture* albedo;
 
-		glm::vec3 color;
+		glm::vec4 color;
 		std::shared_ptr<ST::Program> program;
 	};
 }

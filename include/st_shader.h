@@ -22,9 +22,9 @@ namespace ST {
 		"uniform mat4 u_vp_matrix;\n"
 
 		"uniform mat4 u_m_trans;\n"
-		"uniform vec3 u_color;\n"
+		"uniform vec4 u_color;\n"
 
-		"out vec3 color;\n"
+		"out vec4 color;\n"
 		"out vec3 normals;\n"
 		"out vec2 texCoords;\n"
 
@@ -39,7 +39,7 @@ namespace ST {
 
 		"out vec4 FragColor;\n"
 
-		"in vec3 color;\n"
+		"in vec4 color;\n"
 		"in vec3 normals; \n"
 		"in vec2 texCoords;\n"
 
@@ -48,8 +48,8 @@ namespace ST {
 		"uniform sampler2D u_tex_Albedo;\n"
 
 		"void main() {\n"
-			"if(u_haveAlbedo){ FragColor = texture(u_tex_Albedo, texCoords) * vec4(color,1.0); }\n"
-			"else { FragColor = vec4(color, 1.0); }\n"
+			"if(u_haveAlbedo){ FragColor = texture(u_tex_Albedo, texCoords) * color; }\n"
+			"else { FragColor = color; }\n"
 		"}\n";
 
 	class Shader{

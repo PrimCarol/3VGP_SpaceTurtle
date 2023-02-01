@@ -1,7 +1,5 @@
 #include <st_engine.h>
 
-#include <FastNoiseLite.h>
-
 int main() {
 	ST::Window w;
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
@@ -16,17 +14,19 @@ int main() {
 	ST::Cube mesh_cube;
 
 	ST::Texture textureTest;
-	textureTest.loadSource("../others/icon.png");
-	ST::Texture textureChecker;
-	textureChecker.loadSource("../others/checker_texture.jpg");
+	textureTest.loadSource("../others/checker_texture.jpg");
+	ST::Texture translucentTexture;
+	translucentTexture.loadSource("../others/icon_nobg.png");
 
 	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
 	Sun->getComponentRender()->setMesh(&mesh_cube);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
+	Sun->getComponentRender()->material->translucent = true;
 
 	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
 	Earth->getComponentRender()->setMesh(&mesh_cube);
-	Earth->getComponentRender()->material->setTexture_Albedo(&textureChecker);
+	Earth->getComponentRender()->material->setTexture_Albedo(&translucentTexture);
+	Earth->getComponentRender()->material->translucent = true;
 	Earth->getComponentTransform()->setPosition(glm::vec3(5.0f, 3.0f, 0.0f));
 	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
 	Earth->getComponentHierarchy()->setParent(*Sun);
@@ -36,20 +36,9 @@ int main() {
 	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
 	Moon->getComponentRender()->setMesh(&mesh_cube);
 	Moon->getComponentRender()->material->setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
-	Moon->getComponentRender()->material->setTexture_Albedo(&textureChecker);	
+	Moon->getComponentRender()->material->setTexture_Albedo(&translucentTexture);	
 
 	// --------------------------
-
-	FastNoiseLite fastNoise;
-
-	for (int y = 0; y < 10; y++) {
-		for (int x = 0; x < 10; x++){
-			float perlin_value = fastNoise.GetNoise((float)x,(float)y);
-			printf("%f \n", perlin_value);
-		}
-	}
-
-
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();

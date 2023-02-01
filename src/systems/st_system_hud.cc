@@ -58,8 +58,12 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 			ImGui::Text("---- Render ----");
 
 			ImGui::Text("- Color -");
-			glm::vec3 c = render->material->getColor();
-			ImGui::ColorEdit3("Color", &c.x);
+			glm::vec4 c = render->material->getColor();
+			if (render->material->translucent) {
+				ImGui::ColorEdit4("Color", &c.x);
+			}else {
+				ImGui::ColorEdit3("Color", &c.x);
+			}
 			render->material->setColor(c);
 			ImGui::Text("- Texture -");
 			if (render->material->haveAlbedo) {
