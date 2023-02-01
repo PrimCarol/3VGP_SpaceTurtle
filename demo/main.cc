@@ -20,15 +20,15 @@ int main() {
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
 	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
-	Sun->getComponentRender()->setMesh(&mesh_quad);
+	Sun->getComponentRender()->setMesh(&mesh_cube);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
 	Sun->getComponentRender()->material->translucent = true;
 
 	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
-	Earth->getComponentRender()->setMesh(&mesh_quad);
+	Earth->getComponentRender()->setMesh(&mesh_cube);
 	Earth->getComponentRender()->material->setTexture_Albedo(&translucentTexture);
 	Earth->getComponentRender()->material->translucent = true;
-	Earth->getComponentTransform()->setPosition(glm::vec3(5.0f, 3.0f, 0.0f));
+	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 0.0f, -3.0f));
 	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
 	Earth->getComponentHierarchy()->setParent(*Sun);
 
@@ -45,6 +45,8 @@ int main() {
 		w.Clear();
 
 		myCam.fpsMovement(w, 10.0f);
+
+		Sun->getComponentTransform()->RotateY(0.5f * w.DeltaTime());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, false, &myCam );

@@ -1,5 +1,7 @@
 #include "st_system_render.h"
 
+#include <map>
+
 void drawCollision(glm::vec3 min, glm::vec3 max){
 	glBegin(GL_LINES);
 
@@ -77,11 +79,22 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glDisable(GL_BLEND);
 	doRender(objs_opaque, cam);
 
+	std::map<float, int> sorted;
+	for (int i = 0; i < objs_translucent.size(); i++){
+		float distance = glm::length(cam.transform_.getPosition() - objs_translucent[i].transform_->getPosition());
+		sorted[distance] = i;
+	}
+
+	std::vector<MyObjToRender> objs_translucent_sorted;
+	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it){
+		objs_translucent_sorted.push_back(objs_translucent[it->second]);
+	}
+
 	// Por defecto de momento.
 	glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	doRender(objs_translucent, cam);
+	doRender(objs_translucent_sorted, cam);
 }
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
