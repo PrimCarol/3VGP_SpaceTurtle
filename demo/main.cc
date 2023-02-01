@@ -12,6 +12,7 @@ int main() {
 	ST::Camera myCam;
 
 	ST::Cube mesh_cube;
+	ST::Quad mesh_quad;
 
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/checker_texture.jpg");
@@ -19,12 +20,12 @@ int main() {
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
 	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
-	Sun->getComponentRender()->setMesh(&mesh_cube);
+	Sun->getComponentRender()->setMesh(&mesh_quad);
 	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
 	Sun->getComponentRender()->material->translucent = true;
 
 	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
-	Earth->getComponentRender()->setMesh(&mesh_cube);
+	Earth->getComponentRender()->setMesh(&mesh_quad);
 	Earth->getComponentRender()->material->setTexture_Albedo(&translucentTexture);
 	Earth->getComponentRender()->material->translucent = true;
 	Earth->getComponentTransform()->setPosition(glm::vec3(5.0f, 3.0f, 0.0f));

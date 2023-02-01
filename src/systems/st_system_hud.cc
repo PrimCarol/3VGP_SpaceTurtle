@@ -56,7 +56,8 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 		ST::RenderComponent* render = objSeletected->getComponentRender();
 		if (render) {
 			ImGui::Text("---- Render ----");
-
+			ImGui::Checkbox("Translucent", &render->material->translucent);
+			ImGui::Spacing();
 			ImGui::Text("- Color -");
 			glm::vec4 c = render->material->getColor();
 			if (render->material->translucent) {
