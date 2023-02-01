@@ -6,11 +6,10 @@
 #include <st_camera.h>
 
 #include <optional>
-#include <vector>
 
 namespace ST {
 
-	static struct MyObjToRender{
+	struct MyObjToRender{
 		ST::TransformComponent* transform_;
 		ST::RenderComponent* render_;
 	};

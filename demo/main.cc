@@ -44,7 +44,7 @@ int main() {
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
-		myCam.fpsMovement(w);
+		myCam.fpsMovement(w, 10.0f);
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, false, &myCam );
