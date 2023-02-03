@@ -81,7 +81,9 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 	std::map<float, int> sorted;
 	for (int i = 0; i < objs_translucent.size(); i++){
-		float distance = glm::length(cam.transform_.getPosition() - objs_translucent[i].transform_->getPosition());
+		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+		glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+		float distance = glm::length(cam.transform_.getPosition() - worldPos);
 		sorted[distance] = i;
 	}
 
@@ -153,6 +155,20 @@ void ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders, ST::Camera* cam){
 	
+
+	glEnable(GL_DEPTH_TEST);
+
+	if (cam == nullptr) {
+		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
+		cam = cam_.get();
+	}
+
+	cam->update();
+
+	setUpRender(r,t, *cam);
+
+	glUseProgram(0);
+
 	//	glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
 	//	if (r[i].value().mesh) {
@@ -187,18 +203,4 @@ void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r
 
 	//	//colliderComponentList_[i].draw(); // Bad thing.
 	//}
-	//glUseProgram(0);
-
-	glEnable(GL_DEPTH_TEST);
-
-	if (cam == nullptr) {
-		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
-		cam = cam_.get();
-	}
-
-	cam->update();
-
-	setUpRender(r,t, *cam);
-
-	glUseProgram(0);
 }

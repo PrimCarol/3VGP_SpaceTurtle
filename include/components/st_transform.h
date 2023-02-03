@@ -45,9 +45,13 @@ namespace ST {
 		const glm::vec3 getRight() const;
 
 		glm::mat4 m_transform_;
+		glm::mat4 m_world_transform_;
 
 		glm::mat4 m_Position_;
 		glm::mat4 m_Rotation_;
+
+		glm::mat4 m_World_Position_;
+		glm::mat4 m_World_Rotation_;
 
 		void updateDirectionalVectors();
 

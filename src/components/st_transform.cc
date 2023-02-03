@@ -6,6 +6,7 @@ ST::TransformComponent::TransformComponent(){
 	//printf("Create Component: Transform\n");
 
 	m_transform_ = glm::mat4(1);
+	m_world_transform_ = glm::mat4(1);
 
 	position_ = glm::vec3(0);
 	rotation_ = glm::vec3(0);
