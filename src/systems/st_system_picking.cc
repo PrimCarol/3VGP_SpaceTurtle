@@ -42,11 +42,15 @@ ST::GameObj* ST::SystemPicking::tryPickObj(const ST::Window &w, const ST::GameOb
 			glm::vec3 colliderPoint_max(maxPos * worldScale);
 			glm::mat4 tcopia = t->m_World_Position_ * t->m_World_Rotation_;*/
 
+
+			//glm::vec3 worldScale(t->m_world_transform_[0][0], t->m_world_transform_[1][1], t->m_world_transform_[2][2]);
+			//glm::vec3 colliderPoint_min(minPos * worldScale);
+			//glm::vec3 colliderPoint_max(maxPos * worldScale);
+			//glm::mat4 tcopia = t->m_world_transform_;
+
 			glm::vec3 colliderPoint_min(minPos * t->getScale());
 			glm::vec3 colliderPoint_max(maxPos * t->getScale());
-
-			//glm::mat4 tcopia = t->m_Position_ * t->m_Rotation_;
-			glm::mat4 tcopia = t->m_world_transform_;
+			glm::mat4 tcopia = t->m_Position_ * t->m_Rotation_;
 
 			float outputDistance = 100000.0f;
 

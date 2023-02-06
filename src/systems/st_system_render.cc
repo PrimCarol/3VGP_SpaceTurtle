@@ -105,6 +105,34 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		if (objs[i].render_->mesh) {
 			objs[i].render_->mesh->render();
 		}
+
+		// TEST -------------------
+		glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
+
+		if (objs[i].render_->mesh) {
+			//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
+			for (int j = 0; j < objs[i].render_->mesh->vertices_.size(); j++) {
+				if (objs[i].render_->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = objs[i].render_->mesh->vertices_[j].pos.x; }
+				if (objs[i].render_->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = objs[i].render_->mesh->vertices_[j].pos.y; }
+				if (objs[i].render_->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = objs[i].render_->mesh->vertices_[j].pos.z; }
+
+				if (objs[i].render_->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = objs[i].render_->mesh->vertices_[j].pos.x; }
+				if (objs[i].render_->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = objs[i].render_->mesh->vertices_[j].pos.y; }
+				if (objs[i].render_->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = objs[i].render_->mesh->vertices_[j].pos.z; }
+			}
+
+			glm::vec3 colliderPoint_min(minPos * objs[i].transform_->getScale());
+			glm::vec3 colliderPoint_max(maxPos * objs[i].transform_->getScale());
+			
+			drawCollision(colliderPoint_min, colliderPoint_max);
+		}
+
+		//glm::vec3 colliderPoint_min(minPos);
+		//glm::vec3 colliderPoint_max(maxPos);
+		//
+		//drawCollision(colliderPoint_min, colliderPoint_max);
+		
+		// TEST -------------------
 	}
 }
 
@@ -167,39 +195,39 @@ void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r
 
 	setUpRender(r,t, *cam);
 
-	glUseProgram(0);
+	//glUseProgram(0);
 
-	//	glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
+		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
-	//	if (r[i].value().mesh) {
-	//		r[i].value().mesh->render();
+		//if (r[i].value().mesh) {
+		//	r[i].value().mesh->render();
 
-	//		if (renderColliders) {
-	//			//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-	//			for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
-	//				if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
-	//				if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
-	//				if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
+		//	if (renderColliders) {
+		//		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
+		//		for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
+		//			if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
+		//			if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
+		//			if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
 
-	//				if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
-	//				if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
-	//				if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
-	//			}
+		//			if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
+		//			if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
+		//			if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
+		//		}
 
-	//			//glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
-	//			//glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
-	//			//
-	//			//drawCollision(colliderPoint_min, colliderPoint_max);
-	//		}
-	//	}
+		//		//glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
+		//		//glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
+		//		//
+		//		//drawCollision(colliderPoint_min, colliderPoint_max);
+		//	}
+		//}
 
 
-	//	if (renderColliders) {
-	//		glm::vec3 colliderPoint_min(minPos);
-	//		glm::vec3 colliderPoint_max(maxPos);
+		//if (renderColliders) {
+		//	glm::vec3 colliderPoint_min(minPos);
+		//	glm::vec3 colliderPoint_max(maxPos);
 
-	//		drawCollision(colliderPoint_min, colliderPoint_max);
-	//	}
+		//	drawCollision(colliderPoint_min, colliderPoint_max);
+		//}
 
 	//	//colliderComponentList_[i].draw(); // Bad thing.
 	//}
