@@ -77,6 +77,26 @@ ST::GameObj_Manager::GameObj_Manager(){
 }*/
 
 ST::ComponentId ST::GameObj_Manager::createTransformComponent() {
+	//if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
+	//	return ST::TransformComponentId();
+	//}
+
+	/*ST::TransformComponentId result;
+	bool disponible = false;
+	for (int i = 0; i < transformComponentList_.size() && !disponible; i++){
+		if (!transformComponentList_[i].has_value()) {
+			disponible = true;
+			result.value = i;
+			result.type = ST::kComp_Trans;
+		}
+	}
+
+
+	transformComponentList_.push_back(ST::TransformComponent());
+	TransCompIndex_++;
+
+	return result;*/
+
 	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
 		return ST::TransformComponentId();
 	}

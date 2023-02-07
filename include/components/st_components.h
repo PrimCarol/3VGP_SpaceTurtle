@@ -11,6 +11,7 @@ namespace ST {
 		kComp_Trans,
 		kComp_Render,
 		kComp_Hierarchy,
+		kComp_Light,
 		kComp_Collider,
 	};
 
@@ -22,6 +23,7 @@ namespace ST {
 	struct TransformComponentId : ComponentId {};
 	struct RenderComponentId : ComponentId {};
 	struct HierarchyComponentId : ComponentId {};
+	struct LightComponentId : ComponentId {};
 	struct ColliderComponentId : ComponentId {};
 
 	// --------------------------- Usability ----------------------------
