@@ -107,6 +107,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		}
 
 		// TEST -------------------
+		/*
 		glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
 		if (objs[i].render_->mesh) {
@@ -121,9 +122,16 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 				if (objs[i].render_->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = objs[i].render_->mesh->vertices_[j].pos.z; }
 			}
 
-			glm::vec3 colliderPoint_min(minPos * objs[i].transform_->getScale());
-			glm::vec3 colliderPoint_max(maxPos * objs[i].transform_->getScale());
+			//glm::vec3 worldScale(objs[i].transform_->m_world_transform_[0][0], objs[i].transform_->m_world_transform_[1][1], objs[i].transform_->m_world_transform_[2][2]);
+			//glm::vec3 colliderPoint_min(minPos * worldScale);
+			//glm::vec3 colliderPoint_max(maxPos * worldScale);
 			
+			glm::vec3 colliderPoint_min(minPos);
+			glm::vec3 colliderPoint_max(maxPos);
+
+			//glm::vec3 colliderPoint_min(minPos * objs[i].transform_->getScale());
+			//glm::vec3 colliderPoint_max(maxPos * objs[i].transform_->getScale());
+
 			drawCollision(colliderPoint_min, colliderPoint_max);
 		}
 
@@ -131,7 +139,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		//glm::vec3 colliderPoint_max(maxPos);
 		//
 		//drawCollision(colliderPoint_min, colliderPoint_max);
-		
+		*/
 		// TEST -------------------
 	}
 }

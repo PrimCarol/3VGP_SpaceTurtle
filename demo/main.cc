@@ -30,7 +30,7 @@ int main() {
 	Earth->getComponentRender()->material->translucent = true;
 	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 0.0f, -3.0f));
 	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
-	Earth->getComponentHierarchy()->setParent(*Sun);
+	//Earth->getComponentHierarchy()->setParent(*Sun);
 
 	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
 	Moon->getComponentTransform()->setPosition(glm::vec3(3.0f, 0.0f, 0.0f));
