@@ -2,49 +2,50 @@
 #define _SPACE_TURTLE_GAMEOBJ_MANAGER_H_ 1
 
 #include <st_gameobj.h>
-#include <components/st_transform.h>
-#include <components/st_render.h>
-#include <components/st_collider.h>
-#include <components/st_hierarchy.h>
-
+//#include <components/st_transform.h>
+//#include <components/st_render.h>
+//#include <components/st_collider.h>
+//#include <components/st_hierarchy.h>
+#include <st_program.h>
 #include <memory>
+#include <map>
 #include <optional>
+
+struct ComponentVector {};
+template<typename T>
+struct ComponentVector_Implementation : ComponentVector {
+	std::vector<std::optional<T>> vector;
+};
 
 namespace ST {
 
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 	public:
-
 		GameObj_Manager();
-		~GameObj_Manager();
 		
-		// With all components (Hierarchy, Transform, Render)
 		std::unique_ptr<ST::GameObj> createGameObj();
 		
 		const int getGameObjNum();
 		
 		std::vector<GameObj*> GameObjsList_;
-		std::vector<std::optional<TransformComponent>> transformComponentList_;
-		std::vector<std::optional<RenderComponent>> renderComponentList_;
-		std::vector<std::optional<ColliderComponent>> colliderComponentList_;
-		std::vector<std::optional<HierarchyComponent>> hierarchyComponentList_;
 
+		template<class T>
+		std::vector<std::optional<T>>* GetComponentVector();
+
+		~GameObj_Manager();
 	private:
-		ComponentId createTransformComponent();
-		ComponentId createRenderComponent();
-		ComponentId createColliderComponent();
-		ComponentId createHierarchyComponent();
+		std::map<size_t, std::unique_ptr<ComponentVector> > components_map;
 
-		size_t TransCompIndex_;
-		size_t RenderCompIndex_;
-		size_t ColliderCompIndex_;
-		size_t HierarchyCompIndex_;
-		
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
 		GameObj_Manager(const GameObj_Manager& o);
 	};
+	template<class T>
+	inline std::vector<std::optional<T>>* GameObj_Manager::GetComponentVector()
+	{
+		return nullptr;
+	}
 }
 
 #endif
