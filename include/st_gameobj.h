@@ -19,11 +19,17 @@ namespace ST {
 		class GameObj_Manager* gm_;
 
 		// --- Components ---
-		class HierarchyComponent* getComponentHierarchy();
-		class TransformComponent* getComponentTransform();
-		class RenderComponent* getComponentRender();
+		//class HierarchyComponent* getComponentHierarchy();
+		//class TransformComponent* getComponentTransform();
+		//class RenderComponent* getComponentRender();
 		
+		template<class T>
+		T* getComponent();
+
 		void addComponents(std::vector<ComponentId> c);
+
+		template<class T>
+		void addComponents(T* component);
 
 		// Podriamos pasarle en cuanto tiempo quieres que se destuya, como en Unity?
 		// Que al llamar a esta funcion, se añanada al GameManager, a una lista para destruyir

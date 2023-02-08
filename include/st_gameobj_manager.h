@@ -2,10 +2,7 @@
 #define _SPACE_TURTLE_GAMEOBJ_MANAGER_H_ 1
 
 #include <st_gameobj.h>
-//#include <components/st_transform.h>
-//#include <components/st_render.h>
-//#include <components/st_collider.h>
-//#include <components/st_hierarchy.h>
+
 #include <st_program.h>
 #include <memory>
 #include <map>
@@ -41,11 +38,6 @@ namespace ST {
 
 		GameObj_Manager(const GameObj_Manager& o);
 	};
-	template<class T>
-	inline std::vector<std::optional<T>>* GameObj_Manager::GetComponentVector()
-	{
-		return nullptr;
-	}
 }
 
 #endif

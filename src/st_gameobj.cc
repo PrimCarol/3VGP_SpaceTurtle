@@ -75,37 +75,52 @@ ST::GameObj* ST::GameObj::getParent(){
 //	return nullptr;
 //}
 
-ST::HierarchyComponent* ST::GameObj::getComponentHierarchy() {
-	for (int i = 0; i < components.size(); i++) {
-		if (components[i].type == ST::kComp_Hierarchy) {
-			return &gm_->hierarchyComponentList_[components[i].value].value();
-		}
-	}
+//ST::HierarchyComponent* ST::GameObj::getComponentHierarchy() {
+//	for (int i = 0; i < components.size(); i++) {
+//		if (components[i].type == ST::kComp_Hierarchy) {
+//			return &gm_->hierarchyComponentList_[components[i].value].value();
+//		}
+//	}
+//	return nullptr;
+//}
+//
+//ST::TransformComponent* ST::GameObj::getComponentTransform(){
+//	for (int i = 0; i < components.size(); i++) {
+//		if (components[i].type == ST::kComp_Trans) {
+//			return &gm_->transformComponentList_[components[i].value].value();
+//		}
+//	}
+//	return nullptr;
+//}
+//
+//ST::RenderComponent* ST::GameObj::getComponentRender() {
+//	for (int i = 0; i < components.size(); i++) {
+//		if (components[i].type == ST::kComp_Render) {
+//			return &gm_->renderComponentList_[components[i].value].value();
+//		}
+//	}
+//	return nullptr;
+//}
+
+template<class T>
+T* ST::GameObj::getComponent(){
+	std::vector<std::optional<T>>* vector = gm_->GetComponentVector<T>();
+	std::optional<T>* component = &vector->at(id_); // Algo parecido para añadir.
+
+	if (component->has_value()) return &(component->value());
+
 	return nullptr;
 }
 
-ST::TransformComponent* ST::GameObj::getComponentTransform(){
-	for (int i = 0; i < components.size(); i++) {
-		if (components[i].type == ST::kComp_Trans) {
-			return &gm_->transformComponentList_[components[i].value].value();
-		}
-	}
-	return nullptr;
-}
+//void ST::GameObj::addComponents(std::vector<ComponentId> c){
+//	for (int i = 0; i < c.size(); i++){
+//		components.push_back(c[i]);
+//	}
+//}
 
-ST::RenderComponent* ST::GameObj::getComponentRender() {
-	for (int i = 0; i < components.size(); i++) {
-		if (components[i].type == ST::kComp_Render) {
-			return &gm_->renderComponentList_[components[i].value].value();
-		}
-	}
-	return nullptr;
-}
+template<class T>
+void ST::GameObj::addComponents(T* component){
 
-void ST::GameObj::addComponents(std::vector<ComponentId> c){
-	for (int i = 0; i < c.size(); i++){
-		components.push_back(c[i]);
-	}
 }
 
 //void ST::GameObj::Destroy(){
