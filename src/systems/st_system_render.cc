@@ -65,7 +65,8 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 		thisObj.render_ = &r[i].value();
 		thisObj.transform_ = &t[i].value();
 
-		mat = thisObj.render_->material.get();
+		//mat = thisObj.render_->material.get();
+		mat = thisObj.render_->material;
 		if (mat) {
 			if (!mat->translucent) {
 				objs_opaque.push_back(thisObj);

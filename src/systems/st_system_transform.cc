@@ -47,12 +47,12 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 	//	t->updateDirectionalVectors();
 	//}
 
-	/*auto* t = gm.getComponentVector<ST::TransformComponent>();
+	auto* t = gm.getComponentVector<ST::TransformComponent>();
 
 	for (int i = 0; i < t->size(); i++){
 		if (t->at(i).has_value()) {
 			printf("[%d] Tiene transform\n", i);
 		}
-	}*/
+	}
 
 }

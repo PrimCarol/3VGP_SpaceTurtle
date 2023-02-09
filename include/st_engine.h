@@ -31,8 +31,6 @@ namespace ST {
 		Engine();
 		~Engine();
 	};
-
-	
 }
 
 #endif

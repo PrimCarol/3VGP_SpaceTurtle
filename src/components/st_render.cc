@@ -8,7 +8,7 @@ ST::RenderComponent::RenderComponent(){
 	material = nullptr;
 
 	//mesh = new ST::Circle();
-	material = std::make_unique<ST::Material>();
+	//material = std::make_unique<ST::Material>();
 }
 
 void ST::RenderComponent::setMesh(ST::Mesh* m){
@@ -16,7 +16,7 @@ void ST::RenderComponent::setMesh(ST::Mesh* m){
 }
 
 void ST::RenderComponent::setMaterial(std::unique_ptr<ST::Material>& m){
-	material = std::move(m);
+	//material = std::move(m);
 }
 
 ST::RenderComponent::~RenderComponent(){

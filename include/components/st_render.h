@@ -20,15 +20,16 @@ namespace ST {
 		/* Set the unique material. Basic already has one. */
 		void setMaterial(std::unique_ptr<ST::Material>& m);
 
-		std::unique_ptr<ST::Material> material;
+		//std::unique_ptr<ST::Material> material;
+		ST::Material* material;
 		ST::Mesh* mesh = nullptr;
 
-		RenderComponent(const RenderComponent& o);
+		//RenderComponent(const RenderComponent& o);
 
 		~RenderComponent();
 
-		RenderComponent(RenderComponent&&) = default;
-		RenderComponent& operator=(RenderComponent&&) = default;
+		//RenderComponent(RenderComponent&&) = default;
+		//RenderComponent& operator=(RenderComponent&&) = default;
 	};
 }
 

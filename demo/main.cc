@@ -7,9 +7,7 @@ int main() {
 	// ----------------------------------------------------------------
 
 	ST::GameObj_Manager gm;
-	//gm.addComponentClass<ST::RenderComponent>();
-	//gm.addComponentClass<ST::TransformComponent>();
-	//gm.addComponentClass<ST::HierarchyComponent>();
+
 	//ST::GameObj* objSelected = nullptr;
 
 	ST::Camera myCam;
@@ -22,6 +20,10 @@ int main() {
 	ST::Texture translucentTexture;
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
+	ST::GameObj g = gm.createGameObj(ST::TransformComponent{});
+	ST::GameObj g2 = gm.createGameObj(ST::TransformComponent{}, ST::HierarchyComponent{});
+	ST::GameObj g3 = gm.createGameObj(ST::HierarchyComponent{});
+	ST::GameObj g4 = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
 
 	// --------------------------
 
