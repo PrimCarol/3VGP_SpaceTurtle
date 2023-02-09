@@ -38,10 +38,15 @@ namespace ST {
 		template<typename C>
 		bool addComponent(ST::GameObj ref, C component);
 
+		template<typename C>
+		C* getComponent(ST::GameObj ref);
+
 		template<class T>
 		std::vector<std::optional<T>>* getComponentVector();
 
 		size_t size() const;
+
+		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
 		~GameObj_Manager();
 	private:
@@ -51,7 +56,6 @@ namespace ST {
 		using ComponentMap = std::unordered_map<std::type_index, UniqueCLH>;
 		ComponentMap component_map_;
 
-		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
 		GameObj_Manager(const GameObj_Manager& o);
 	};
@@ -106,6 +110,15 @@ bool ST::GameObj_Manager::addComponent(ST::GameObj ref, C component) {
 	if (!cl) return false;
 	cl->at(ref.getID()) = std::forward<C>(component);
 	return true;
+}
+
+template<typename C>
+C* ST::GameObj_Manager::getComponent(ST::GameObj ref) {
+	auto cl = getComponentVector<C>();
+	if (!cl) return nullptr;
+	auto& c = cl->at(ref.getID());
+	if (!c.has_value()) return nullptr;
+	return &c.value();
 }
 
 #endif

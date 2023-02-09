@@ -44,4 +44,8 @@ namespace ST {
 	};
 }
 
+template<typename C> C* ST::GameObj::getComponent() {
+	return  ID_ == null_id ? nullptr : gm_.getComponent<C>(*this);
+}
+
 #endif

@@ -47,11 +47,38 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 	//	t->updateDirectionalVectors();
 	//}
 
-	auto* t = gm.getComponentVector<ST::TransformComponent>();
+	auto* transformVector = gm.getComponentVector<ST::TransformComponent>();
 
-	for (int i = 0; i < t->size(); i++){
-		if (t->at(i).has_value()) {
-			printf("[%d] Tiene transform\n", i);
+	for (int i = 0; i < transformVector->size(); i++){
+		if (transformVector->at(i).has_value()) {
+			ST::TransformComponent* t = &transformVector->at(i).value();
+			//printf("[%d] Tiene transform\n", i);
+
+			// ------- Local -------
+			glm::mat4 m(1.0f);
+
+			t->m_Position_ = glm::mat4(1.0f);
+			t->m_Position_ = glm::translate(t->m_Position_, t->getPosition());
+
+			t->m_Rotation_ = glm::mat4(1.0f);
+			t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().x, { 1.0f,0.0f,0.0f });
+			t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().y, { 0.0f,1.0f,0.0f });
+			t->m_Rotation_ = glm::rotate(t->m_Rotation_, t->getRotation().z, { 0.0f,0.0f,1.0f });
+
+			m = t->m_Position_ * t->m_Rotation_;
+
+			m = glm::scale(m, t->getScale());
+
+			t->m_transform_ = m;
+
+			// ------ World -----
+			t->m_World_Position_ = t->m_Position_;
+			t->m_World_Rotation_ = t->m_Rotation_;
+			t->m_world_transform_ = m;
+
+
+
+			t->updateDirectionalVectors();
 		}
 	}
 

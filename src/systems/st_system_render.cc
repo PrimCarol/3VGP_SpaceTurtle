@@ -49,7 +49,7 @@ void drawCollision(glm::vec3 min, glm::vec3 max){
 
 void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera& cam){
 	
-	ST::Material* mat = nullptr;
+	//ST::Material* mat = nullptr;
 	
 	std::vector<MyObjToRender> objs_opaque;
 	std::vector<MyObjToRender> objs_translucent;
@@ -60,20 +60,23 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	for (int i = 0; i < r.size(); i++){
 		
 		//if(isVisible){}
+		if (r[i].has_value() && t[i].has_value()) {
 
-		MyObjToRender thisObj;
-		thisObj.render_ = &r[i].value();
-		thisObj.transform_ = &t[i].value();
+			MyObjToRender thisObj;
+			thisObj.render_ = &r[i].value();
+			thisObj.transform_ = &t[i].value();
 
-		//mat = thisObj.render_->material.get();
-		mat = thisObj.render_->material;
-		if (mat) {
-			if (!mat->translucent) {
-				objs_opaque.push_back(thisObj);
-			}
-			else {
-				objs_translucent.push_back(thisObj);
-			}
+			//mat = thisObj.render_->material.get(); // <----------------- Careful ---------------------
+			//mat = thisObj.render_->material;
+
+			//if (mat) {
+				if (!thisObj.render_->material.translucent) {
+					objs_opaque.push_back(thisObj);
+				}
+				else {
+					objs_translucent.push_back(thisObj);
+				}
+			//}
 		}
 	}
 
@@ -102,7 +105,7 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
 	for (int i = 0; i < objs.size(); i++){
-		setUpUniforms(*objs[i].render_->material, objs[i].transform_, cam);
+		setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
 		if (objs[i].render_->mesh) {
 			objs[i].render_->mesh->render();
 		}

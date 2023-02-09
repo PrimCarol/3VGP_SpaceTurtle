@@ -17,10 +17,6 @@ int ST::GameObj::getID() const{
 //	ID_ = id;
 //}
 
-template<typename C> C* ST::GameObj::getComponent() {
-	return  id_ == null_id ? nullptr : gm_.getComponent<C>(*this);
-}
-
 // Iterator interface
 bool ST::GameObj::operator!=(const ST::GameObj& other) const {
 	return other.ID_ != ID_;

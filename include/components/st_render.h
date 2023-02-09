@@ -18,11 +18,11 @@ namespace ST {
 		void setMesh(ST::Mesh *m);
 
 		/* Set the unique material. Basic already has one. */
-		void setMaterial(std::unique_ptr<ST::Material>& m);
+		//void setMaterial(std::unique_ptr<ST::Material>& m);
 
 		//std::unique_ptr<ST::Material> material;
-		ST::Material* material;
-		ST::Mesh* mesh = nullptr;
+		ST::Material material;
+		ST::Mesh* mesh;
 
 		//RenderComponent(const RenderComponent& o);
 

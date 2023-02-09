@@ -20,10 +20,19 @@ int main() {
 	ST::Texture translucentTexture;
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
-	ST::GameObj g = gm.createGameObj(ST::TransformComponent{});
-	ST::GameObj g2 = gm.createGameObj(ST::TransformComponent{}, ST::HierarchyComponent{});
-	ST::GameObj g3 = gm.createGameObj(ST::HierarchyComponent{});
-	ST::GameObj g4 = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
+	std::vector<ST::GameObj> objects;
+	for (int i = 0; i < 500; i++){
+		int random = ST::Engine::getRandom(0.0f,100.0f);
+		if (random > 20.0f) {
+			objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
+			objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
+			objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
+		}else {
+			objects.push_back(gm.createGameObj(ST::TransformComponent{}));
+		}
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f));
+	}
 
 	// --------------------------
 
@@ -33,8 +42,8 @@ int main() {
 		myCam.fpsMovement(w, 10.0f);
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		/*ST::SystemRender::Render(*gm.getComponentVector<ST::RenderComponent>(),
-								 *gm.getComponentVector<ST::TransformComponent>());*/
+		ST::SystemRender::Render(*gm.getComponentVector<ST::RenderComponent>(),
+								 *gm.getComponentVector<ST::TransformComponent>(), false, &myCam);
 
 		//if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 		//	ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm);
