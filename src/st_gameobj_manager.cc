@@ -9,9 +9,10 @@
 
 ST::GameObj_Manager::GameObj_Manager(){
 
-	addComponentClass<ST::RenderComponent>();
 	addComponentClass<ST::TransformComponent>();
 	addComponentClass<ST::HierarchyComponent>();
+	addComponentClass<ST::RenderComponent>();
+	addComponentClass<ST::ColliderComponent>();
 	
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();

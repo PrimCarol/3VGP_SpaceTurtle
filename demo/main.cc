@@ -8,12 +8,14 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	//ST::GameObj* objSelected = nullptr;
+	size_t objSelected = -1;
 
 	ST::Camera myCam;
 
 	ST::Cube mesh_cube;
 	ST::Quad mesh_quad;
+	ST::Geometry mesh_cat;
+	mesh_cat.loadFromFile("../others/cat_petit.obj");
 
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/checker_texture.jpg");
@@ -25,9 +27,16 @@ int main() {
 		int random = ST::Engine::getRandom(0.0f,100.0f);
 		if (random > 20.0f) {
 			objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
+			
 			objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
 			objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
+		
+			if (ST::Engine::getRandom(0.0f, 100.0f) > 50.0f) {
+				objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&translucentTexture);
+			}else {
+				objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+			}
+			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.2f, 1.0f));
 			objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		}else {
 			objects.push_back(gm.createGameObj(ST::TransformComponent{}));
@@ -48,10 +57,21 @@ int main() {
 
 		//if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 		//	ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm);
+		//	//if (g) {
+		//	//	objSelected = g;
+		//	//}
 		//	if (g) {
-		//		objSelected = g;
+		//		printf("[%d]\n", g->getID());
 		//	}
 		//}
+
+		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
+			objSelected = ST::SystemPicking::tryPickObj(w, gm);
+			//printf("[%d]\n", objSelected);
+		}
+
+		ST::SystemHUD::Inspector(gm, objSelected);
+
 
 		//ST::SystemHUD::DrawHud(w, gm, objSelected);
 		// ----------------------------

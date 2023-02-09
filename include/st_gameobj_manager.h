@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <optional>
 
+#define MAX_OBJECTS 100000
+
 namespace ST {
 	class GameObj;
 
@@ -33,7 +35,7 @@ namespace ST {
 		ST::GameObj createGameObj(Cs... components);
 		
 		template<typename C>
-		ST::GameObj  getGameObj(const C& component) const;
+		ST::GameObj getGameObj(const C& component) const;
 
 		template<typename C>
 		bool addComponent(ST::GameObj ref, C component);
@@ -42,7 +44,7 @@ namespace ST {
 		C* getComponent(ST::GameObj ref);
 
 		template<class T>
-		std::vector<std::optional<T>>* getComponentVector();
+		std::vector<std::optional<T>>* getComponentVector() const;
 
 		size_t size() const;
 
@@ -56,7 +58,6 @@ namespace ST {
 		using ComponentMap = std::unordered_map<std::type_index, UniqueCLH>;
 		ComponentMap component_map_;
 
-
 		GameObj_Manager(const GameObj_Manager& o);
 	};
 }
@@ -64,8 +65,10 @@ namespace ST {
 template<typename... Cs>
 ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {
 	GameObj ref{ last_gameObj_++, *this };
-	for (auto& [type, components_vector_] : component_map_) {
-		components_vector_->grow(last_gameObj_);
+	if (last_gameObj_ >= MAX_OBJECTS) {
+		for (auto& [type, components_vector_] : component_map_) {
+			components_vector_->grow(last_gameObj_);
+		}
 	}
 	(addComponent<Cs>(ref, components), ...);
 	return ref;
@@ -90,7 +93,7 @@ ST::GameObj ST::GameObj_Manager::getGameObj(const C& component) const {
 }
 
 template<typename C>
-std::vector<std::optional<C>>* ST::GameObj_Manager::getComponentVector() {
+std::vector<std::optional<C>>* ST::GameObj_Manager::getComponentVector() const{
 	auto result = component_map_.find(std::type_index{ typeid(C) });
 	if (result == component_map_.end()) return nullptr;
 	auto ptr = static_cast<ComponentListImpl<C>*>(result->second.get());
@@ -100,7 +103,7 @@ std::vector<std::optional<C>>* ST::GameObj_Manager::getComponentVector() {
 template<typename C>
 void ST::GameObj_Manager::addComponentClass() {
 	std::unique_ptr<ComponentVector> ptr = std::make_unique<ComponentListImpl<C>>();
-	ptr->grow(last_gameObj_);
+	ptr->grow(MAX_OBJECTS); // ***** TEST *****
 	component_map_.insert({ typeid(C) , std::move(ptr) });
 }
 

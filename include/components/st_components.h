@@ -6,25 +6,25 @@
 namespace ST {
 
 	// --------------------------- Struct Comps ID ----------------------------
-	enum CompType {
-		kComp_None,
-		kComp_Trans,
-		kComp_Render,
-		kComp_Hierarchy,
-		kComp_Light,
-		kComp_Collider,
-	};
+	//enum CompType {
+	//	kComp_None,
+	//	kComp_Trans,
+	//	kComp_Render,
+	//	kComp_Hierarchy,
+	//	kComp_Light,
+	//	kComp_Collider,
+	//};
 
-	struct ComponentId {
-		size_t value = -1;
-		CompType type = ST::kComp_None;
-	};
+	//struct ComponentId {
+	//	size_t value = -1;
+	//	CompType type = ST::kComp_None;
+	//};
 
-	struct TransformComponentId : ComponentId {};
-	struct RenderComponentId : ComponentId {};
-	struct HierarchyComponentId : ComponentId {};
-	struct LightComponentId : ComponentId {};
-	struct ColliderComponentId : ComponentId {};
+	//struct TransformComponentId : ComponentId {};
+	//struct RenderComponentId : ComponentId {};
+	//struct HierarchyComponentId : ComponentId {};
+	//struct LightComponentId : ComponentId {};
+	//struct ColliderComponentId : ComponentId {};
 
 	// --------------------------- Usability ----------------------------
 

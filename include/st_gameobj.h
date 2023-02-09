@@ -33,11 +33,11 @@ namespace ST {
 		~GameObj();
 		//GameObj(const GameObj& o);
 
+		static constexpr size_t null_id = 0xFFFFFFFF;
 	private:
 		// The creator manager reference
 		GameObj_Manager& gm_;
 
-		static constexpr size_t null_id = 0xFFFFFFFF;
 
 		//std::vector<ST::ComponentId> components;
 		size_t ID_ = null_id;
