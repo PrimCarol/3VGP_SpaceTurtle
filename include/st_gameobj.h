@@ -5,31 +5,25 @@
 
 #include <st_components.h>
 
+//#include <st_gameobj_manager.h>
+
 namespace ST {
+	class GameObj_Manager;
 
 	class GameObj{
 	public:
-		GameObj();
+		GameObj(size_t id, GameObj_Manager& gm) : ID_{ id }, gm_{ gm } {}
 
 		// Basic Info
 		int getID() const;
-		void setID(int id);
-
-		// The creator manager reference
-		class GameObj_Manager* gm_;
-
-		// --- Components ---
-		//class HierarchyComponent* getComponentHierarchy();
-		//class TransformComponent* getComponentTransform();
-		//class RenderComponent* getComponentRender();
+		//void setID(int id);
 		
-		template<class T>
-		T* getComponent();
+		template<typename C> C* getComponent();
 
-		void addComponents(std::vector<ComponentId> c);
-
-		template<class T>
-		void addComponents(T* component);
+		// Iterator interface
+		bool operator!=(const GameObj& other) const;
+		//GameObj& operator++();
+		GameObj& operator*();
 
 		// Podriamos pasarle en cuanto tiempo quieres que se destuya, como en Unity?
 		// Que al llamar a esta funcion, se añanada al GameManager, a una lista para destruyir
@@ -40,8 +34,13 @@ namespace ST {
 		//GameObj(const GameObj& o);
 
 	private:
-		std::vector<ST::ComponentId> components;
-		int ID_;
+		// The creator manager reference
+		GameObj_Manager& gm_;
+
+		static constexpr size_t null_id = 0xFFFFFFFF;
+
+		//std::vector<ST::ComponentId> components;
+		size_t ID_ = null_id;
 	};
 }
 

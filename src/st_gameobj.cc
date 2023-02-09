@@ -1,24 +1,39 @@
 #include <st_gameobj.h>
-#include <st_gameobj_manager.h>
 
-#include <components/st_hierarchy.h>
-#include <components/st_transform.h>
-#include <components/st_render.h>
+//#include <components/st_hierarchy.h>
+//#include <components/st_transform.h>
+//#include <components/st_render.h>
 
-ST::GameObj::GameObj(){
-	gm_ = nullptr;
-	ID_ = -1;
-	//parent = nullptr;
-	//childs = nullptr;
-	//name_ = "Null";
-}
+//ST::GameObj::GameObj(size_t id,
+//	GameObj_Manager& em) {
+//
+//}
 
 int ST::GameObj::getID() const{
 	return ID_;
 }
 
-void ST::GameObj::setID(int id){
-	ID_ = id;
+//void ST::GameObj::setID(int id){
+//	ID_ = id;
+//}
+
+template<typename C> C* ST::GameObj::getComponent() {
+	return  id_ == null_id ? nullptr : gm_.getComponent<C>(*this);
+}
+
+// Iterator interface
+bool ST::GameObj::operator!=(const ST::GameObj& other) const {
+	return other.ID_ != ID_;
+}
+
+//ST::GameObj& ST::GameObj::operator++() {
+//	if (ID_ >= gm_.size() - 1) ID_ = null_id;
+//	else ++ID_;
+//	return *this;
+//}
+
+ST::GameObj& ST::GameObj::operator*() {
+	return *this;
 }
 
 //const char* ST::GameObj::getName(){
@@ -102,15 +117,15 @@ ST::GameObj* ST::GameObj::getParent(){
 //	return nullptr;
 //}
 
-template<class T>
-T* ST::GameObj::getComponent(){
-	std::vector<std::optional<T>>* vector = gm_->GetComponentVector<T>();
-	std::optional<T>* component = &vector->at(id_); // Algo parecido para añadir.
-
-	if (component->has_value()) return &(component->value());
-
-	return nullptr;
-}
+//template<class T>
+//T* ST::GameObj::getComponent(){
+//	std::vector<std::optional<T>>* vector = gm_->GetComponentVector<T>();
+//	std::optional<T>* component = &vector->at(id_); // Algo parecido para añadir.
+//
+//	if (component->has_value()) return &(component->value());
+//
+//	return nullptr;
+//}
 
 //void ST::GameObj::addComponents(std::vector<ComponentId> c){
 //	for (int i = 0; i < c.size(); i++){
@@ -118,10 +133,10 @@ T* ST::GameObj::getComponent(){
 //	}
 //}
 
-template<class T>
-void ST::GameObj::addComponents(T* component){
-
-}
+//template<class T>
+//void ST::GameObj::addComponents(T* component){
+//
+//}
 
 //void ST::GameObj::Destroy(){
 //

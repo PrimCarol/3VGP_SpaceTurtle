@@ -1,38 +1,56 @@
 #ifndef _SPACE_TURTLE_GAMEOBJ_MANAGER_H_
 #define _SPACE_TURTLE_GAMEOBJ_MANAGER_H_ 1
 
-#include <st_gameobj.h>
-
+#include <typeindex>
 #include <st_program.h>
 #include <memory>
-#include <map>
+#include <vector>
+#include <unordered_map>
 #include <optional>
 
-struct ComponentVector {};
-template<typename T>
-struct ComponentVector_Implementation : ComponentVector {
-	std::vector<std::optional<T>> vector;
-};
 
 namespace ST {
+	class GameObj;
 
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
+
+		struct ComponentVector {
+			virtual void grow(size_t new_size) = 0;
+		};
+		template<typename T>
+		struct ComponentListImpl : ComponentVector {
+			virtual void grow(size_t new_size) override { components_vector_.resize(new_size); }
+			std::vector<std::optional<T>> components_vector_;
+		};
+
 	public:
 		GameObj_Manager();
 		
-		std::unique_ptr<ST::GameObj> createGameObj();
+		template<typename C>
+		void addComponentClass();
+
+		template<typename... Cs>
+		ST::GameObj createGameObj(Cs... components);
 		
-		const int getGameObjNum();
-		
-		std::vector<GameObj*> GameObjsList_;
+		template<typename C>
+		ST::GameObj  getGameObj(const C& component) const;
+
+		template<typename C>
+		bool addComponent(ST::GameObj ref, C component);
 
 		template<class T>
-		std::vector<std::optional<T>>* GetComponentVector();
+		std::vector<std::optional<T>>* getComponentVector();
+
+		size_t size() const;
 
 		~GameObj_Manager();
 	private:
-		std::map<size_t, std::unique_ptr<ComponentVector> > components_map;
+		size_t last_gameObj_ = 0;
+
+		using UniqueCLH = std::unique_ptr<ComponentVector>;
+		using ComponentMap = std::unordered_map<std::type_index, UniqueCLH>;
+		ComponentMap component_map_;
 
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 

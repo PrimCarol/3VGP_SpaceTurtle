@@ -8,6 +8,10 @@
 #include <st_window.h>
 #include <st_gameobj_manager.h>
 
+#include <components/st_transform.h>
+#include <components/st_render.h>
+#include <components/st_hierarchy.h>
+
 #include <systems/st_system_render.h>
 #include <systems/st_system_transform.h>
 #include <systems/st_system_picking.h>

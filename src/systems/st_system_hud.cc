@@ -25,65 +25,65 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 
 	// --------------------- General ---------------------
 	ImGui::Begin("Info");
-	ImGui::Text("GameObjects: %d", gm.getGameObjNum());
+	ImGui::Text("GameObjects: %d", gm.size());
 	ImGui::End();
 
 	// --------------------- Inspector ---------------------
-	ImGui::Begin("Object Seleected");
-	if (objSeletected) {
-		ImGui::Text("Obj ID -> %d ", objSeletected->getID());
-		ImGui::Spacing();ImGui::Spacing();
+	//ImGui::Begin("Object Seleected");
+	//if (objSeletected) {
+	//	ImGui::Text("Obj ID -> %d ", objSeletected->getID());
+	//	ImGui::Spacing();ImGui::Spacing();
 
-		ST::TransformComponent* trans = objSeletected->getComponentTransform();
-		if (trans) {
-			ImGui::Text("---- Transform ----");
-			// Position
-			glm::vec3 pos = trans->getPosition();
-			ImGui::DragFloat3("##Pos", &pos.x, 0.5f);
-			trans->setPosition(pos);
-			// Rotation
-			glm::vec3 rot = trans->getRotation();
-			ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
-			trans->setRotateX(rot.x);
-			trans->setRotateY(rot.y);
-			trans->setRotateZ(rot.z);
-			// Scale
-			glm::vec3 sca = trans->getScale();
-			ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
-			trans->setScale(sca);
-		}
-		ImGui::Spacing(); ImGui::Spacing();
-		ST::RenderComponent* render = objSeletected->getComponentRender();
-		if (render) {
-			ImGui::Text("---- Render ----");
-			ImGui::Checkbox("Translucent", &render->material->translucent);
-			ImGui::Spacing();
-			ImGui::Text("- Color -");
-			glm::vec4 c = render->material->getColor();
-			if (render->material->translucent) {
-				ImGui::ColorEdit4("Color", &c.x);
-			}else {
-				ImGui::ColorEdit3("Color", &c.x);
-			}
-			render->material->setColor(c);
-			ImGui::Text("- Texture -");
-			if (render->material->haveAlbedo) {
-				ImGui::Image((void*)(intptr_t)render->material->getAlbedo()->getID(), ImVec2(144, 144));
-			}
-			else {
-				ImGui::Text("None");
-			}
-			ImGui::Text("---- Mesh ----");
-			ImGui::Text("Mesh: ");
-			ImGui::SameLine();
-			if (render->mesh) {
-				ImGui::Text(render->mesh->getName());
-			}else {
-				ImGui::Text("None");
-			}
-		}
-	}
-	ImGui::End();
+	//	ST::TransformComponent* trans = objSeletected->getComponentTransform();
+	//	if (trans) {
+	//		ImGui::Text("---- Transform ----");
+	//		// Position
+	//		glm::vec3 pos = trans->getPosition();
+	//		ImGui::DragFloat3("##Pos", &pos.x, 0.5f);
+	//		trans->setPosition(pos);
+	//		// Rotation
+	//		glm::vec3 rot = trans->getRotation();
+	//		ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
+	//		trans->setRotateX(rot.x);
+	//		trans->setRotateY(rot.y);
+	//		trans->setRotateZ(rot.z);
+	//		// Scale
+	//		glm::vec3 sca = trans->getScale();
+	//		ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
+	//		trans->setScale(sca);
+	//	}
+	//	ImGui::Spacing(); ImGui::Spacing();
+	//	ST::RenderComponent* render = objSeletected->getComponentRender();
+	//	if (render) {
+	//		ImGui::Text("---- Render ----");
+	//		ImGui::Checkbox("Translucent", &render->material->translucent);
+	//		ImGui::Spacing();
+	//		ImGui::Text("- Color -");
+	//		glm::vec4 c = render->material->getColor();
+	//		if (render->material->translucent) {
+	//			ImGui::ColorEdit4("Color", &c.x);
+	//		}else {
+	//			ImGui::ColorEdit3("Color", &c.x);
+	//		}
+	//		render->material->setColor(c);
+	//		ImGui::Text("- Texture -");
+	//		if (render->material->haveAlbedo) {
+	//			ImGui::Image((void*)(intptr_t)render->material->getAlbedo()->getID(), ImVec2(144, 144));
+	//		}
+	//		else {
+	//			ImGui::Text("None");
+	//		}
+	//		ImGui::Text("---- Mesh ----");
+	//		ImGui::Text("Mesh: ");
+	//		ImGui::SameLine();
+	//		if (render->mesh) {
+	//			ImGui::Text(render->mesh->getName());
+	//		}else {
+	//			ImGui::Text("None");
+	//		}
+	//	}
+	//}
+	//ImGui::End();
 }
 
 //#include <imgui_internal.h>

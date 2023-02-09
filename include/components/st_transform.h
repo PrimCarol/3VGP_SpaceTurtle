@@ -4,7 +4,8 @@
 #include <components/st_components.h>
 #include <transform.hpp>
 
-#include <st_gameobj.h>
+//#include <st_gameobj.h>
+//class ST::GameObj;
 
 namespace ST {
 	
