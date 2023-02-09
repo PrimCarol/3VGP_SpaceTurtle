@@ -27,7 +27,8 @@ int main() {
 			objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
 			objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
 			objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
+			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
+			objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		}else {
 			objects.push_back(gm.createGameObj(ST::TransformComponent{}));
 		}
