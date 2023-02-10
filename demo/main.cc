@@ -66,7 +66,7 @@ int main() {
 		//}
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			objSelected = ST::SystemPicking::tryPickObj(w, gm);
+			objSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
 			//printf("[%d]\n", objSelected);
 		}
 

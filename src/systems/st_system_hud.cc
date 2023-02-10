@@ -85,6 +85,7 @@ void ST::SystemHUD::DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::Ga
 	//}
 	//ImGui::End();
 }
+#include <components/st_render.h>
 
 void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletected){
 	ImGui::Begin("Inspector");
@@ -110,24 +111,24 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 			ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
 			trans->setScale(sca);
 		}
-		/*ImGui::Spacing(); ImGui::Spacing();
-		ST::RenderComponent* render = objSeletected->getComponentRender();
+		ImGui::Spacing(); ImGui::Spacing();
+		ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
 		if (render) {
 			ImGui::Text("---- Render ----");
-			ImGui::Checkbox("Translucent", &render->material->translucent);
+			ImGui::Checkbox("Translucent", &render->material.translucent);
 			ImGui::Spacing();
 			ImGui::Text("- Color -");
-			glm::vec4 c = render->material->getColor();
-			if (render->material->translucent) {
+			glm::vec4 c = render->material.getColor();
+			if (render->material.translucent) {
 				ImGui::ColorEdit4("Color", &c.x);
 			}
 			else {
 				ImGui::ColorEdit3("Color", &c.x);
 			}
-			render->material->setColor(c);
+			render->material.setColor(c);
 			ImGui::Text("- Texture -");
-			if (render->material->haveAlbedo) {
-				ImGui::Image((void*)(intptr_t)render->material->getAlbedo()->getID(), ImVec2(144, 144));
+			if (render->material.haveAlbedo) {
+				ImGui::Image((void*)(intptr_t)render->material.getAlbedo()->getID(), ImVec2(144, 144));
 			}
 			else {
 				ImGui::Text("None");
@@ -141,7 +142,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 			else {
 				ImGui::Text("None");
 			}
-		}*/
+		}
 	}
 	ImGui::End();
 }
