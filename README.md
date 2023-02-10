@@ -9,6 +9,7 @@
   - Entity Component System (ECS)<br>
   - Hierarchy Transformations <br>
   - Load OBJ<br>
+  - Translucent<br>
   - Camera Movement (FPS style)<br>
   - Load Textures<br>
   - Material Configuration<br>
@@ -67,4 +68,5 @@ int main() {
   · MiniAudio (https://github.com/mackron/miniaudio)<br>
   · STB (https://github.com/nothings/stb)<br>
   · TyniObj (https://github.com/tinyobjloader/tinyobjloader)<br>
+  · FastNoiseLite (https://github.com/Auburn/FastNoiseLite)<br>
 </p>
