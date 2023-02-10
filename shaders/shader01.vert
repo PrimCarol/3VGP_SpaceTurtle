@@ -41,6 +41,6 @@ void main(){
 	float distance = length(positionRelativeCam.xyz);
 
 	//visibility = exp(-pow((distance*u_FogDensity),u_FogGradient));
-	visibility = exp(-pow((distance*0.05),10.0));
+	visibility = exp(-pow((distance*0.0),10.0)); // <---- 0.05 good fog
 	visibility = clamp(visibility,0.0,1.0);
 }
