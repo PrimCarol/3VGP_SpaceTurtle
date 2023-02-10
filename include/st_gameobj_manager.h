@@ -39,9 +39,16 @@ namespace ST {
 
 		template<typename C>
 		bool addComponent(ST::GameObj ref, C component);
+		template<typename C>
+		bool addComponent(size_t ObjID);
+
+		template<typename C>
+		bool removeComponent(size_t ObjID);
 
 		template<typename C>
 		C* getComponent(ST::GameObj ref);
+		template<typename C>
+		C* getComponent(size_t ObjID);
 
 		template<class T>
 		std::vector<std::optional<T>>* getComponentVector() const;
@@ -116,10 +123,35 @@ bool ST::GameObj_Manager::addComponent(ST::GameObj ref, C component) {
 }
 
 template<typename C>
+bool ST::GameObj_Manager::addComponent(size_t ObjID) {
+	auto cl = getComponentVector<C>();
+	if (!cl) return false;
+	C component{};
+	cl->at(ObjID) = std::forward<C>(component);
+	return true;
+}
+
+template<typename C>
+bool ST::GameObj_Manager::removeComponent(size_t ObjID) {
+	auto cl = getComponentVector<C>();
+	if (!cl) return false;
+	cl->at(ObjID) = std::nullopt;
+	return true;
+}
+
+template<typename C>
 C* ST::GameObj_Manager::getComponent(ST::GameObj ref) {
 	auto cl = getComponentVector<C>();
 	if (!cl) return nullptr;
 	auto& c = cl->at(ref.getID());
+	if (!c.has_value()) return nullptr;
+	return &c.value();
+}
+template<typename C>
+C* ST::GameObj_Manager::getComponent(size_t ObjID) {
+	auto cl = getComponentVector<C>();
+	if (!cl) return nullptr;
+	auto& c = cl->at(ObjID);
 	if (!c.has_value()) return nullptr;
 	return &c.value();
 }

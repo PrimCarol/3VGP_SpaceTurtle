@@ -55,22 +55,12 @@ int main() {
 		ST::SystemRender::Render(*gm.getComponentVector<ST::RenderComponent>(),
 								 *gm.getComponentVector<ST::TransformComponent>(), false, &myCam);
 
-		//if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-		//	ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm);
-		//	//if (g) {
-		//	//	objSelected = g;
-		//	//}
-		//	if (g) {
-		//		printf("[%d]\n", g->getID());
-		//	}
-		//}
-
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			objSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
-			//printf("[%d]\n", objSelected);
 		}
 
 		ST::SystemHUD::Inspector(gm, objSelected);
+		ST::SystemHUD::Stats(w, gm);
 
 
 		//ST::SystemHUD::DrawHud(w, gm, objSelected);

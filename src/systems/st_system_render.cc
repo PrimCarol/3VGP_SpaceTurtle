@@ -105,9 +105,10 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
 	for (int i = 0; i < objs.size(); i++){
-		setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
-		if (objs[i].render_->mesh) {
-			objs[i].render_->mesh->render();
+		if (setUpUniforms(objs[i].render_->material, objs[i].transform_, cam)) {
+			if (objs[i].render_->mesh) {
+				objs[i].render_->mesh->render();
+			}
 		}
 
 		// TEST -------------------
@@ -148,49 +149,48 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 	}
 }
 
-void ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
+bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
 	const ST::Program* p = nullptr;
-	//static GLuint lastProgramID = 0;
 
 	p = mat.getProgram();
-
-	//if (lastProgramID != p->getID()) {
+	if (p) {
 		p->use();
-		//lastProgramID = p->getID();
-	//}
-
-	// ------ Camara -------
-	GLuint camPos = p->getUniform("u_view_pos");
-	glm::vec3 camTransPos = cam.transform_.getPosition();
-	glUniform3fv(camPos, 1, &camTransPos.x);
-	GLuint camView = p->getUniform("u_view_matrix");
-	glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.view[0][0]);
-	GLuint camProjection = p->getUniform("u_projection_matrix");
-	glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
-	GLuint camVP = p->getUniform("u_vp_matrix");
-	glm::mat4 cam_m_vp = cam.projection * cam.view;
-	glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
-	// ------ Camara -------
-
-	// De momento esta mal, funciona 1:1.
-	if (t) {
-		GLuint u_m_trans = p->getUniform("u_m_trans");
-		glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
-	}
-
-	// Material 
-	GLuint u_color = p->getUniform("u_color");
-	glm::vec4 c = mat.getColor();
-	glUniform4fv(u_color, 1, &c[0]);
-
-	GLuint u_haveAlbedo = p->getUniform("u_haveAlbedo");
-	glUniform1i(u_haveAlbedo, mat.haveAlbedo);
-
-	if (mat.haveAlbedo) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
-	}
 	
+		// ------ Camara -------
+		GLuint camPos = p->getUniform("u_view_pos");
+		glm::vec3 camTransPos = cam.transform_.getPosition();
+		glUniform3fv(camPos, 1, &camTransPos.x);
+		GLuint camView = p->getUniform("u_view_matrix");
+		glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.view[0][0]);
+		GLuint camProjection = p->getUniform("u_projection_matrix");
+		glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
+		GLuint camVP = p->getUniform("u_vp_matrix");
+		glm::mat4 cam_m_vp = cam.projection * cam.view;
+		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
+		// ------ Camara -------
+
+		// De momento esta mal, funciona 1:1.
+		if (t) {
+			GLuint u_m_trans = p->getUniform("u_m_trans");
+			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
+		}
+
+		// Material 
+		GLuint u_color = p->getUniform("u_color");
+		glm::vec4 c = mat.getColor();
+		glUniform4fv(u_color, 1, &c[0]);
+
+		GLuint u_haveAlbedo = p->getUniform("u_haveAlbedo");
+		glUniform1i(u_haveAlbedo, mat.haveAlbedo);
+
+		if (mat.haveAlbedo) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
+		}
+
+		return true;
+	}
+	return false;
 }
 
 void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders, ST::Camera* cam){
