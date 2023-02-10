@@ -1,15 +1,13 @@
 #ifndef _SPACE_TURTLE_RENDER_H_
 #define _SPACE_TURTLE_RENDER_H_ 1
 
-#include <components/st_components.h>
-
 #include <st_mesh.h>
 #include <st_material.h>
 #include <memory>
 
 namespace ST {
 
-	class RenderComponent : public Components {
+	class RenderComponent {
 	public:
 		RenderComponent();
 

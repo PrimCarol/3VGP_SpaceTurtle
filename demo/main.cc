@@ -23,24 +23,23 @@ int main() {
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
 	std::vector<ST::GameObj> objects;
-	for (int i = 0; i < 500; i++){
+	for (int i = 0; i < 100; i++){
 		int random = ST::Engine::getRandom(0.0f,100.0f);
-		if (random > 20.0f) {
-			objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
+
+		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::HierarchyComponent{}, ST::RenderComponent{}));
 			
-			objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
-			objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
+		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 		
-			if (ST::Engine::getRandom(0.0f, 100.0f) > 50.0f) {
-				objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&translucentTexture);
-			}else {
-				objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-			}
-			objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.2f, 1.0f));
+		if (ST::Engine::getRandom(0.0f, 100.0f) > 50.0f) {
+			objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&translucentTexture);
 			objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		}else {
-			objects.push_back(gm.createGameObj(ST::TransformComponent{}));
+			objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		}
+		objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.2f, 1.0f));
+		
+
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f));
 	}
 
@@ -62,8 +61,6 @@ int main() {
 		ST::SystemHUD::Inspector(gm, objSelected);
 		ST::SystemHUD::Stats(w, gm);
 
-
-		//ST::SystemHUD::DrawHud(w, gm, objSelected);
 		// ----------------------------
 
 		w.Render();

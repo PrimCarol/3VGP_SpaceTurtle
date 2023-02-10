@@ -3,10 +3,6 @@
 
 #include <vector>
 
-#include <st_components.h>
-
-//#include <st_gameobj_manager.h>
-
 namespace ST {
 	class GameObj_Manager;
 

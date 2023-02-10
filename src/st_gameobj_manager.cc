@@ -3,9 +3,10 @@
 #include <st_gameobj.h>
 
 #include <components/st_transform.h>
+#include <components/st_hierarchy.h>
 #include <components/st_render.h>
 #include <components/st_collider.h>
-#include <components/st_hierarchy.h>
+#include <components/st_light.h>
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -13,6 +14,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	addComponentClass<ST::HierarchyComponent>();
 	addComponentClass<ST::RenderComponent>();
 	addComponentClass<ST::ColliderComponent>();
+	addComponentClass<ST::LightComponent>();
 	
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
