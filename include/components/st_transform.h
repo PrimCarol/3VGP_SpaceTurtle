@@ -1,14 +1,11 @@
 #ifndef _SPACE_TURTLE_TRANSFORM_H_
 #define _SPACE_TURTLE_TRANSFORM_H_ 1
 
-#include <components/st_components.h>
 #include <transform.hpp>
-
-#include <st_gameobj.h>
 
 namespace ST {
 	
-	class TransformComponent : public Components {
+	class TransformComponent {
 	public:
 		TransformComponent();
 

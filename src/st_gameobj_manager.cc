@@ -1,50 +1,21 @@
 #include <st_gameobj_manager.h>
 
-//template<typename ...Component>
-//inline ST::GameObj& ST::GameObj_Manager::createGameObj(Component ...comp){
-//	static_assert(true && ... && std::is_base_of<Component, Component>::value);
-//	Entity e{ std::fordware<Patata>(patata)... };
-//	return e;
-//}
+#include <st_gameobj.h>
 
-/*
- template <class T>
-	inline T* get_component() {
-		for (unsigned int i = 0; components_.size(); i++) {
-			T* aux = dynamic_cast<T*>(components_[i]);
-			if (aux) {
-				return aux;
-			}
-		}
-		return nullptr;
-	}
-
-	 TransformComponent* transform_cmp = m.get_component<TransformComponent>();
-*/
-
-//#include <st_raycast.h>
-
-#define MAX_OBJS 50000
-#define MAX_TRANSFORM_COMPONENTS MAX_OBJS
-#define MAX_RENDER_COMPONENTS MAX_OBJS
-#define MAX_COLLIDER_COMPONENTS MAX_OBJS
+#include <components/st_transform.h>
+#include <components/st_hierarchy.h>
+#include <components/st_render.h>
+#include <components/st_collider.h>
+#include <components/st_light.h>
 
 ST::GameObj_Manager::GameObj_Manager(){
 
-	//printf("***** GameObj Manager Created *****\n");
-
-	GameObjsList_.reserve(MAX_OBJS);
-
-	hierarchyComponentList_.reserve(MAX_OBJS); // Hierarchy
-	transformComponentList_.reserve(MAX_TRANSFORM_COMPONENTS); // Transforms
-	renderComponentList_.reserve(MAX_RENDER_COMPONENTS); // Render
-	//colliderComponentList_.reserve(MAX_COLLIDER_COMPONENTS); // Colliders
-
-	TransCompIndex_ = 0;
-	RenderCompIndex_ = 0;
-	ColliderCompIndex_ = 0;
-	HierarchyCompIndex_ = 0;
-
+	addComponentClass<ST::TransformComponent>();
+	addComponentClass<ST::HierarchyComponent>();
+	addComponentClass<ST::RenderComponent>();
+	addComponentClass<ST::ColliderComponent>();
+	addComponentClass<ST::LightComponent>();
+	
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
 
@@ -61,182 +32,55 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->link();
 }
 
-/*ST::ComponentId ST::GameObj_Manager::createTransformComponent() {
-	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
-		return ST::TransformComponentId();
-	}
+//template <class T>
+//std::vector<std::optional<T>>* ST::GameObj_Manager::GetComponentVector() {
+//	auto comp_vector = component_map_.find(typeid(T).hash_code());
+//	if (comp_vector == component_map_.end()) return nullptr;
+//
+//	auto casted_comp_vector = static_cast<ComponentVector_Implementation<T>*>(comp_vector->second.get());
+//
+//	return &casted_comp_vector->vector;
+//}
+//
+//std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
+//
+//	auto go = std::make_unique<ST::GameObj>();
+//	if (go) {
+//		//printf("\n***** Obj Created *****\n");
+//		//go->components = c;
+//
+//		components_map[typeid(ST::RenderComponent).hash_code()] = std::make_unique<ComponentVector_Implementation<RenderComponent> >();
+//
+//		std::vector<ST::ComponentId> comps;
+//		//comps.push_back(createHierarchyComponent());
+//		//comps.push_back(createTransformComponent());
+//		//comps.push_back(createRenderComponent());
+//		//comps.push_back(createColliderComponent());
+//		go->addComponents(comps);
+//		go->gm_ = this;
+//
+//		go->setID((int)GameObjsList_.size());
+//
+//		//char provisionalName[20];
+//		//sprintf(provisionalName, "GameObj %d", (int)GameObjsList_.size());
+//		//go->setName(provisionalName);
+//
+//		GameObjsList_.push_back(go.get());
+//	}
+//	return go;
+//}
 
-	ST::TransformComponentId result;
-	result.value = TransCompIndex_;
-	result.type = ST::kComp_Trans;
-
-	transformComponentList_.push_back(ST::TransformComponent());
-	TransCompIndex_++;
-
-	return result;
-}*/
-
-ST::ComponentId ST::GameObj_Manager::createTransformComponent() {
-	//if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
-	//	return ST::TransformComponentId();
-	//}
-
-	/*ST::TransformComponentId result;
-	bool disponible = false;
-	for (int i = 0; i < transformComponentList_.size() && !disponible; i++){
-		if (!transformComponentList_[i].has_value()) {
-			disponible = true;
-			result.value = i;
-			result.type = ST::kComp_Trans;
-		}
-	}
-
-
-	transformComponentList_.push_back(ST::TransformComponent());
-	TransCompIndex_++;
-
-	return result;*/
-
-	if (TransCompIndex_ >= MAX_TRANSFORM_COMPONENTS) {
-		return ST::TransformComponentId();
-	}
-
-	ST::TransformComponentId result;
-	result.value = TransCompIndex_;
-	result.type = ST::kComp_Trans;
-
-	transformComponentList_.push_back(ST::TransformComponent());
-	TransCompIndex_++;
-
-	return result;
+size_t ST::GameObj_Manager::size() const{
+	return last_gameObj_;
 }
 
-ST::ComponentId ST::GameObj_Manager::createRenderComponent(){
-	if (RenderCompIndex_ >= MAX_RENDER_COMPONENTS) {
-		return ST::RenderComponentId();
-	}
+ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){
 
-	ST::RenderComponentId result;
-	result.value = RenderCompIndex_;
-	result.type = ST::kComp_Render;
-
-	renderComponentList_.push_back(ST::RenderComponent());
-	renderComponentList_[RenderCompIndex_]->material->setProgram(basicProgram);
-	RenderCompIndex_++;
-
-	return result;
 }
-
-ST::ComponentId ST::GameObj_Manager::createColliderComponent() {
-	if (ColliderCompIndex_ >= 0) {
-		return ST::ColliderComponentId();
-	}
-
-	ST::ColliderComponentId result;
-	result.value = ColliderCompIndex_;
-	result.type = ST::kComp_Collider;
-
-	//colliderComponentList_.push_back(ST::ColliderComponent());
-	ColliderCompIndex_++;
-
-	return result;
-}
-
-ST::ComponentId ST::GameObj_Manager::createHierarchyComponent(){
-	if (HierarchyCompIndex_ >= MAX_OBJS) {
-		return ST::HierarchyComponentId();
-	}
-
-	ST::HierarchyComponentId result;
-	result.value = HierarchyCompIndex_;
-	result.type = ST::kComp_Hierarchy;
-
-	hierarchyComponentList_.push_back(ST::HierarchyComponent());
-	HierarchyCompIndex_++;
-
-	return result;
-}
-
-/*std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj(const std::vector<ComponentId> c) {
-
-	auto go = std::make_unique<ST::GameObj>();
-	if (go) {
-		//printf("\n***** Obj Created *****\n");
-		//go->components = c;
-		go->addComponents(c);
-		go->gm_ = this;		
-
-		go->setID((int)GameObjsList_.size());
-
-		GameObjsList_.push_back(go.get());
-	}
-
-	//numGameObjs++;
-
-	return go;
-}*/
-
-/*std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
-
-	auto go = std::make_unique<ST::GameObj>();
-	if (go) {
-		//printf("\n***** Obj Created *****\n");
-		//go->components = c;
-
-		std::vector<ST::ComponentId> comps;
-		comps.push_back(createHierarchyComponent());
-		comps.push_back(createTransformComponent());
-		comps.push_back(createRenderComponent());
-		comps.push_back(createColliderComponent());
-		go->addComponents(comps);
-		go->gm_ = this;
-
-		go->setID((int)GameObjsList_.size());
-
-		//char provisionalName[20];
-		//sprintf(provisionalName, "GameObj %d", (int)GameObjsList_.size());
-		//go->setName(provisionalName);
-
-		GameObjsList_.push_back(go.get());
-	}
-	return go;
-}*/
-
-std::unique_ptr<ST::GameObj> ST::GameObj_Manager::createGameObj() {
-
-	auto go = std::make_unique<ST::GameObj>();
-	if (go) {
-		//printf("\n***** Obj Created *****\n");
-		//go->components = c;
-
-		std::vector<ST::ComponentId> comps;
-		comps.push_back(createHierarchyComponent());
-		comps.push_back(createTransformComponent());
-		comps.push_back(createRenderComponent());
-		//comps.push_back(createColliderComponent());
-		go->addComponents(comps);
-		go->gm_ = this;
-
-		go->setID((int)GameObjsList_.size());
-
-		//char provisionalName[20];
-		//sprintf(provisionalName, "GameObj %d", (int)GameObjsList_.size());
-		//go->setName(provisionalName);
-
-		GameObjsList_.push_back(go.get());
-	}
-	return go;
-}
-
-const int ST::GameObj_Manager::getGameObjNum(){
-	return (int)GameObjsList_.size();
-}
-
-ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){}
 
 ST::GameObj_Manager::~GameObj_Manager(){
-	transformComponentList_.clear();
-	renderComponentList_.clear();
-	hierarchyComponentList_.clear();
-	colliderComponentList_.clear();
+	//transformComponentList_.clear();
+	//renderComponentList_.clear();
+	//hierarchyComponentList_.clear();
+	//colliderComponentList_.clear();
 }

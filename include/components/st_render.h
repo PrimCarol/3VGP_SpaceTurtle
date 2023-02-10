@@ -1,15 +1,13 @@
 #ifndef _SPACE_TURTLE_RENDER_H_
 #define _SPACE_TURTLE_RENDER_H_ 1
 
-#include <components/st_components.h>
-
 #include <st_mesh.h>
 #include <st_material.h>
 #include <memory>
 
 namespace ST {
 
-	class RenderComponent : public Components {
+	class RenderComponent {
 	public:
 		RenderComponent();
 
@@ -18,17 +16,18 @@ namespace ST {
 		void setMesh(ST::Mesh *m);
 
 		/* Set the unique material. Basic already has one. */
-		void setMaterial(std::unique_ptr<ST::Material>& m);
+		//void setMaterial(std::unique_ptr<ST::Material>& m);
 
-		std::unique_ptr<ST::Material> material;
-		ST::Mesh* mesh = nullptr;
+		//std::unique_ptr<ST::Material> material;
+		ST::Material material;
+		ST::Mesh* mesh;
 
-		RenderComponent(const RenderComponent& o);
+		//RenderComponent(const RenderComponent& o);
 
 		~RenderComponent();
 
-		RenderComponent(RenderComponent&&) = default;
-		RenderComponent& operator=(RenderComponent&&) = default;
+		//RenderComponent(RenderComponent&&) = default;
+		//RenderComponent& operator=(RenderComponent&&) = default;
 	};
 }
 

@@ -10,8 +10,9 @@ namespace ST {
 
 	class SystemHUD {
 	public:
-		// Draw a basic HUD with basic information of the game.
-		static void DrawHud(const ST::Window& w, ST::GameObj_Manager& gm, ST::GameObj* objSeletected = nullptr);
+		static void Inspector(ST::GameObj_Manager& gm, const size_t objSeletected);
+		static void Hierarchy(const ST::Window& w, ST::GameObj_Manager& gm, ST::GameObj* objSeletected = nullptr);
+		static void Stats(const ST::Window& w, const ST::GameObj_Manager& gm);
 		
 		// Work in progress...
 		//static void EditTransform(const ST::Camera& c, ST::GameObj* objSeletected = nullptr, bool editTransformDecomposition = false);

@@ -7,38 +7,41 @@ int main() {
 	// ----------------------------------------------------------------
 
 	ST::GameObj_Manager gm;
-	ST::GameObj* objSelected = nullptr;
+
+	size_t objSelected = -1;
 
 	ST::Camera myCam;
 
 	ST::Cube mesh_cube;
 	ST::Quad mesh_quad;
+	ST::Geometry mesh_cat;
+	mesh_cat.loadFromFile("../others/cat_petit.obj");
 
 	ST::Texture textureTest;
 	textureTest.loadSource("../others/checker_texture.jpg");
 	ST::Texture translucentTexture;
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
-	std::unique_ptr<ST::GameObj> Sun = gm.createGameObj();
-	Sun->getComponentRender()->setMesh(&mesh_cube);
-	Sun->getComponentRender()->material->setTexture_Albedo(&textureTest);
-	Sun->getComponentRender()->material->translucent = true;
+	std::vector<ST::GameObj> objects;
+	for (int i = 0; i < 100; i++){
+		int random = ST::Engine::getRandom(0.0f,100.0f);
 
-	std::unique_ptr<ST::GameObj> Earth = gm.createGameObj();
-	Earth->getComponentRender()->setMesh(&mesh_cube);
-	Earth->getComponentRender()->material->setTexture_Albedo(&translucentTexture);
-	Earth->getComponentRender()->material->translucent = true;
-	Earth->getComponentTransform()->setPosition(glm::vec3(0.0f, 0.0f, -3.0f));
-	Earth->getComponentTransform()->setScale(glm::vec3(0.4f,0.4f,0.4f));
-	//Earth->getComponentHierarchy()->setParent(*Sun);
+		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::HierarchyComponent{}, ST::RenderComponent{}));
+			
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
+		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+		
+		if (ST::Engine::getRandom(0.0f, 100.0f) > 50.0f) {
+			objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&translucentTexture);
+			objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
+		}else {
+			objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+		}
+		objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.2f, 1.0f));
+		
 
-	std::unique_ptr<ST::GameObj> Moon = gm.createGameObj();
-	Moon->getComponentTransform()->setPosition(glm::vec3(3.0f, 0.0f, 0.0f));
-	Moon->getComponentTransform()->setScale(glm::vec3(0.4f, 0.4f, 0.4f));
-	Moon->getComponentRender()->setMesh(&mesh_cube);
-	Moon->getComponentRender()->material->setColor(ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f), ST::Engine::getRandom(0.0f, 1.0f));
-	Moon->getComponentRender()->material->setTexture_Albedo(&translucentTexture);
-	//Moon->getComponentHierarchy()->setParent(*Earth);
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f));
+	}
 
 	// --------------------------
 
@@ -47,19 +50,17 @@ int main() {
 
 		myCam.fpsMovement(w, 10.0f);
 
-		Sun->getComponentTransform()->RotateY(0.5f * w.DeltaTime());
-
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemRender::Render(gm.renderComponentList_, gm.transformComponentList_, false, &myCam );
+		ST::SystemRender::Render(*gm.getComponentVector<ST::RenderComponent>(),
+								 *gm.getComponentVector<ST::TransformComponent>(), false, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			ST::GameObj* g = ST::SystemPicking::tryPickObj(w, gm , &myCam );
-			if (g) {
-				objSelected = g;
-			}
+			objSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
 		}
 
-		ST::SystemHUD::DrawHud(w, gm, objSelected);
+		ST::SystemHUD::Inspector(gm, objSelected);
+		ST::SystemHUD::Stats(w, gm);
+
 		// ----------------------------
 
 		w.Render();

@@ -31,7 +31,7 @@ void ST::Camera::setPerspective(float fov, float ratio ,float nearPlane, float f
 
 void ST::Camera::setOrthographic(float h, float v, float nearPlane, float farPlane){
 	horizontal_ = h;
-	vertical_ = v;
+	vertical_ = -v;
 	nearPlane_ = nearPlane;
 	farPlane_ = farPlane;
 	type = kCam_Orthographic;
