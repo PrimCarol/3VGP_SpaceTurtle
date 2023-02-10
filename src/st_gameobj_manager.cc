@@ -1,5 +1,6 @@
 #include <st_gameobj_manager.h>
 
+#include <st_engine.h>
 #include <st_gameobj.h>
 
 #include <components/st_transform.h>
@@ -19,12 +20,27 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
 
+	bool shaderError = false;
 	ST::Shader vertex(E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::basic_vShader_text;
-	vertex.loadSource(textVertex);
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader01.vert");
+	if (!textVertex) {
+		shaderError = true;
+		printf("Error load Vertex Shader");
+	}
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::basic_fShader_text;
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader01.frag");
+	if (!textFragment) {
+		shaderError = true;
+		printf("Error load Fragment Shader");
+	}
+
+	if (shaderError) {
+		textVertex = (GLchar*)ST::basic_vShader_text;
+		textFragment = (GLchar*)ST::basic_fShader_text;
+	}
+
+	vertex.loadSource(textVertex);
 	fragment.loadSource(textFragment);
 
 	basicProgram->attach(vertex);

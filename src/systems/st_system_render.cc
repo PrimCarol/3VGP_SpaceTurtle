@@ -66,17 +66,12 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 			thisObj.render_ = &r[i].value();
 			thisObj.transform_ = &t[i].value();
 
-			//mat = thisObj.render_->material.get(); // <----------------- Careful ---------------------
-			//mat = thisObj.render_->material;
-
-			//if (mat) {
-				if (!thisObj.render_->material.translucent) {
-					objs_opaque.push_back(thisObj);
-				}
-				else {
-					objs_translucent.push_back(thisObj);
-				}
-			//}
+			if (!thisObj.render_->material.translucent) {
+				objs_opaque.push_back(thisObj);
+			}
+			else {
+				objs_translucent.push_back(thisObj);
+			}
 		}
 	}
 
@@ -207,7 +202,7 @@ void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r
 
 	setUpRender(r,t, *cam);
 
-	//glUseProgram(0);
+	glUseProgram(0);
 
 		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
