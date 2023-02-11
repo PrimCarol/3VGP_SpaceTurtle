@@ -81,15 +81,7 @@ void main(){
 	vec3 normal_ = normalize(normals);
 	vec3 camera_dir = normalize(modelPosition - u_view_pos);
 
-//	vec4 result;
-//	if(u_haveAlbedo){ result = (TextureColor * color); }
-//	else { result = color; }
 
-	DirLight myDirLight;
-	myDirLight.direction = vec3(1.0,-0.5,0.0);
-	myDirLight.ambient = vec3(0.4,0.4,0.4);
-	myDirLight.diffuse = vec3(1.0,1.0,1.0);
-	myDirLight.specular = vec3(1.0,1.0,1.0);
 	//vec4 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
 	vec4 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
 

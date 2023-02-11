@@ -8,7 +8,7 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	size_t objSelected = -1;
+	//size_t objSelected = -1;
 
 	ST::Camera myCam;
 
@@ -67,10 +67,11 @@ int main() {
 								 *gm.getComponentVector<ST::TransformComponent>(), false, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			objSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
+			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
 		}
 
-		ST::SystemHUD::Inspector(gm, objSelected);
+		ST::SystemHUD::Hierarchy(gm);
+		ST::SystemHUD::Inspector(gm);
 		ST::SystemHUD::Stats(w, gm);
 
 		// ----------------------------

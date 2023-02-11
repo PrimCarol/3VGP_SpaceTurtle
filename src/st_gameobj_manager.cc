@@ -17,6 +17,9 @@ ST::GameObj_Manager::GameObj_Manager(){
 	addComponentClass<ST::ColliderComponent>();
 	addComponentClass<ST::LightComponent>();
 	
+	objectSelected = ST::GameObj::null_id;
+	root.addComponent<ST::HierarchyComponent>();
+
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
 

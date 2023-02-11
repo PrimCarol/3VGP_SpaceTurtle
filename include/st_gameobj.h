@@ -14,7 +14,7 @@ namespace ST {
 		int getID() const;
 		//void setID(int id);
 		
-		template<typename C> C* getComponent();
+		template<typename C> C* getComponent() const;
 		template<typename C> bool addComponent();
 		template<typename C> bool removeComponent();
 
@@ -42,7 +42,7 @@ namespace ST {
 	};
 }
 
-template<typename C> C* ST::GameObj::getComponent() {
+template<typename C> C* ST::GameObj::getComponent() const{
 	return  ID_ == null_id ? nullptr : gm_.getComponent<C>(*this);
 }
 

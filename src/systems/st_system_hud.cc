@@ -4,6 +4,7 @@
 
 #include <components/st_render.h>
 #include <components/st_light.h>
+#include <components/st_hierarchy.h>
 #include <st_gameobj_manager.h>
 #include <st_gameobj.h>
 
@@ -100,7 +101,10 @@ ST::LightType lightStringToEnum(const char* c) {
 	}
 }
 
-void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletected){
+void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
+
+	size_t objSeletected = gm.objectSelected;
+
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
 		ImGui::Text("Obj ID -> %d ", objSeletected);
@@ -268,6 +272,33 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 		}
 
 	}
+	ImGui::End();
+}
+
+void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
+
+	char buffer[50];
+	for (int i = 0; i < parent.childSize(); i++) {
+		snprintf(buffer, 50, "GameObj[%d]", parent.getChildID(i));
+
+		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+		bool opened = ImGui::TreeNodeEx(buffer, node_flags);
+		if (ImGui::IsItemClicked()) {
+			gm.objectSelected = parent.getChildID(i);
+		}
+		
+		if (opened) {
+			ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+			ImGui::TreePop();
+		}
+		
+	}
+}
+
+void ST::SystemHUD::Hierarchy(ST::GameObj_Manager& gm){
+	ImGui::Begin("Hierarchy");
+		ST::HierarchyComponent* rootHierarchy = gm.root.getComponent<ST::HierarchyComponent>();
+		ShowChilds(gm, *rootHierarchy);
 	ImGui::End();
 }
 
