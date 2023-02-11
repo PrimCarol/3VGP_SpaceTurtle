@@ -10,6 +10,7 @@
   - Hierarchy Transformations <br>
   - Load OBJ<br>
   - Translucent<br>
+  - Lights<br>
   - Camera Movement (FPS style)<br>
   - Load Textures<br>
   - Material Configuration<br>
