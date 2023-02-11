@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include <components/st_render.h>
+#include <components/st_light.h>
 #include <st_gameobj_manager.h>
 #include <st_gameobj.h>
 
@@ -70,6 +71,35 @@ void DrawVec3Control(const std::string& label, glm::vec3& values, float resetVal
 	ImGui::PopID();
 }
 
+const char* lightEnumToString(ST::LightType t) {
+	switch (t){
+	case ST::Directional:
+		return "Directional";
+		break;
+	case ST::Point:
+		return "Point";
+		break;
+	case ST::Spot:
+		return "Spot";
+		break;
+	default:
+		return "None";
+		break;
+	}
+}
+
+ST::LightType lightStringToEnum(const char* c) {
+	if (c == "Directional") {
+		return ST::Directional;
+	}
+	if (c == "Point") {
+		return ST::Point;
+	}
+	if (c == "Spot") {
+		return ST::Spot;
+	}
+}
+
 void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletected){
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
@@ -109,6 +139,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 
 				ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
 
+				ImGui::Checkbox("Visible", &render->visible_);
 				ImGui::Checkbox("Translucent", &render->material.translucent);
 				ImGui::Spacing();
 				ImGui::Text("- Color -");
@@ -137,9 +168,12 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 					ImGui::Text("None");
 				}
 
-				if (ImGui::Button("Remove Render Component")) {
+				// ---------- Remove Button ----------
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
+				if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f))) {
 					gm.removeComponent<ST::RenderComponent>(objSeletected);
 				}
+				ImGui::PopStyleColor();
 
 				ImGui::TreePop();
 			}
@@ -150,6 +184,89 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 		//		//gm.getComponent<ST::RenderComponent>(objSeletected)->material.setProgram(gm.basicProgram);
 		//	}
 		//}
+
+
+		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};
+		const char* typeLightSelected = NULL;
+
+		ImGui::Spacing(); ImGui::Spacing();
+
+		if (gm.getComponentVector<ST::LightComponent>()->at(objSeletected).has_value()) {
+			if (ImGui::TreeNodeEx("Light")) {
+
+				ST::LightComponent* light = &gm.getComponentVector<ST::LightComponent>()->at(objSeletected).value();
+
+				// ---------- Selector de Typo de luz ----------
+				typeLightSelected = lightEnumToString(light->type_);
+				ImGui::SetNextItemWidth(120);
+				if (ImGui::BeginCombo("##combo", typeLightSelected)){
+					for (int n = 0; n < IM_ARRAYSIZE(typeLightsChar); n++){
+						bool is_selected = (typeLightSelected == typeLightsChar[n]);
+						if (ImGui::Selectable(typeLightsChar[n], is_selected)){
+							typeLightSelected = typeLightsChar[n];
+							light->type_ = lightStringToEnum(typeLightSelected);
+						}
+						if (is_selected) {
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+				
+
+				ImGui::Spacing(); ImGui::Spacing();
+
+				switch (light->type_){
+				case ST::Directional:
+					ImGui::ColorPicker3("Ambient", &light->ambient_.x);
+					ImGui::ColorEdit3("Diffuse", &light->diffuse_.x);
+					ImGui::ColorEdit3("Specular", &light->specular_.x);
+					break;
+				case ST::Point:
+					ImGui::ColorPicker3("Color", &light->color_.x);
+
+					ImGui::Spacing();
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Constant", &light->constant_);
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Linear", &light->linear_);
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Quadratic", &light->quadratic_);
+					break;
+				case ST::Spot:
+					ImGui::ColorPicker3("Color", &light->color_.x);
+
+					ImGui::Spacing();
+
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Constant", &light->constant_);
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Linear", &light->linear_);
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Quadratic", &light->quadratic_);
+
+					ImGui::Spacing();
+
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Cut Off", &light->cutOff_);
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Outer Cut Off", &light->outerCutOff_);
+					break;
+				}
+
+				ImGui::Spacing(); ImGui::Spacing();
+
+				// ---------- Remove Button ----------
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f,0.0f,0.0f,1.0f));
+				if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f) )) {
+					gm.removeComponent<ST::LightComponent>(objSeletected);
+				}
+				ImGui::PopStyleColor();
+
+				ImGui::TreePop();
+			}
+		}
+
 	}
 	ImGui::End();
 }

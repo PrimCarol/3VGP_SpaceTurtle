@@ -15,6 +15,8 @@ namespace ST {
 		//void setID(int id);
 		
 		template<typename C> C* getComponent();
+		template<typename C> bool addComponent();
+		template<typename C> bool removeComponent();
 
 		// Iterator interface
 		bool operator!=(const GameObj& other) const;
@@ -42,6 +44,18 @@ namespace ST {
 
 template<typename C> C* ST::GameObj::getComponent() {
 	return  ID_ == null_id ? nullptr : gm_.getComponent<C>(*this);
+}
+
+template<typename C>
+inline bool ST::GameObj::addComponent(){
+	gm_.addComponent<C>(ID_);
+	return false;
+}
+
+template<typename C>
+inline bool ST::GameObj::removeComponent(){
+	gm_.removeComponent<C>(ID_);
+	return false;
 }
 
 #endif

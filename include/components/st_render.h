@@ -24,6 +24,8 @@ namespace ST {
 
 		//RenderComponent(const RenderComponent& o);
 
+		bool visible_;
+
 		~RenderComponent();
 
 		//RenderComponent(RenderComponent&&) = default;

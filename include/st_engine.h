@@ -9,11 +9,13 @@
 #include <st_gameobj_manager.h>
 
 #include <components/st_transform.h>
-#include <components/st_render.h>
 #include <components/st_hierarchy.h>
+#include <components/st_render.h>
+#include <components/st_light.h>
 
-#include <systems/st_system_render.h>
 #include <systems/st_system_transform.h>
+#include <systems/st_system_render.h>
+#include <systems/st_system_light.h>
 #include <systems/st_system_picking.h>
 #include <systems/st_system_hud.h>
 

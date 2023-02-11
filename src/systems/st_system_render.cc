@@ -59,18 +59,18 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 	for (int i = 0; i < r.size(); i++){
 		
-		//if(isVisible){}
 		if (r[i].has_value() && t[i].has_value()) {
+			if (r[i]->visible_) {
+				MyObjToRender thisObj;
+				thisObj.render_ = &r[i].value();
+				thisObj.transform_ = &t[i].value();
 
-			MyObjToRender thisObj;
-			thisObj.render_ = &r[i].value();
-			thisObj.transform_ = &t[i].value();
-
-			if (!thisObj.render_->material.translucent) {
-				objs_opaque.push_back(thisObj);
-			}
-			else {
-				objs_translucent.push_back(thisObj);
+				if (!thisObj.render_->material.translucent) {
+					objs_opaque.push_back(thisObj);
+				}
+				else {
+					objs_translucent.push_back(thisObj);
+				}
 			}
 		}
 	}

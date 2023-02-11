@@ -23,7 +23,7 @@ int main() {
 	translucentTexture.loadSource("../others/icon_nobg.png");
 
 	std::vector<ST::GameObj> objects;
-	for (int i = 0; i < 100; i++){
+	for (int i = 0; i < 5; i++){
 		int random = ST::Engine::getRandom(0.0f,100.0f);
 
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::HierarchyComponent{}, ST::RenderComponent{}));
@@ -43,6 +43,15 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f));
 	}
 
+	// ----- Hacemos un "SOL" -----
+	objects.at(1).getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,0.0f);
+	objects.at(1).getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
+	objects.at(1).getComponent<ST::TransformComponent>()->setRotateX(1.0f);
+	objects.at(1).addComponent<ST::LightComponent>();
+	objects.at(1).getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	objects.at(1).getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.1f, 0.1f, 0.1f);
+	objects.at(1).removeComponent<ST::RenderComponent>();
+
 	// --------------------------
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -51,6 +60,9 @@ int main() {
 		myCam.fpsMovement(w, 10.0f);
 
 		ST::SystemTransform::UpdateTransforms(gm);
+		
+		ST::SystemLight::CompileLights(gm);
+
 		ST::SystemRender::Render(*gm.getComponentVector<ST::RenderComponent>(),
 								 *gm.getComponentVector<ST::TransformComponent>(), false, &myCam);
 

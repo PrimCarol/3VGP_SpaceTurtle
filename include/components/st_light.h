@@ -22,7 +22,7 @@ namespace ST {
 
 		// ---- Light Intensity ----
 		float constant_;
-		float lLinear_;
+		float linear_;
 		float quadratic_;
 
 		// ---- Light Colors ----
@@ -37,9 +37,10 @@ namespace ST {
 		float cutOff_;
 		float outerCutOff_;
 
+		glm::vec3 color_;
+
 		~LightComponent();
 	private:
-		glm::vec3 color_;
 	};
 }
 

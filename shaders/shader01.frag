@@ -67,7 +67,7 @@ in float visibility;
 out vec4 fragColor;
 
 //Cabeceras
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
+vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 
@@ -90,8 +90,8 @@ void main(){
 	myDirLight.ambient = vec3(0.4,0.4,0.4);
 	myDirLight.diffuse = vec3(1.0,1.0,1.0);
 	myDirLight.specular = vec3(1.0,1.0,1.0);
-	//vec3 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
-	vec3 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
+	//vec4 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
+	vec4 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
 
 //	// Point Lights
 //	int CountPointLights = u_numPointLights;
@@ -109,14 +109,14 @@ void main(){
 
 	//fragColor = mix(u_FogColor, vec4(result, 1.0), visibility);
 	
-	fragColor = mix(vec4(1.0,1.0,1.0,1.0), vec4(result, 1.0) * color, visibility);
+	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result * color, visibility);
 }
 
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
+vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
 	vec3 lightDir = normalize(light.direction);
 
 	float diff = max(dot(-lightDir, normal), 0.0);
@@ -124,9 +124,9 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 
 	vec3 reflectDir = reflect(lightDir, normal);
 	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // Tendria que tenerlo el material.
 
-	vec3 ambient = light.ambient * vec3(TexDiff);
-	vec3 diffuse = light.diffuse * diff * vec3(TexDiff);
-	vec3 specular = light.specular * spec  * vec3(TexSpec);
+	vec4 ambient = vec4(light.ambient,1.0) * TexDiff;
+	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
+	vec4 specular = vec4(light.specular,1.0) * spec  * TexSpec;
 
 	return (ambient + diffuse + specular);
 }
