@@ -17,17 +17,19 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 		if (ImGui::BeginMenu("Create...")) {
 			// Empty
 			if (ImGui::MenuItem("Empty")) {
-				//CreateEmpyNode(&state);
 				ST::Engine::createEmptyObj(gm);
 			}
 
 			// Geometrys
 			if (ImGui::BeginMenu("Geometry...")) {
 				if (ImGui::MenuItem("Triangle", NULL, false)) {
-					//CreateGeometryGeometry(&state, 0);
+					ST::Engine::createTriangle(gm);
 				}
 				if (ImGui::MenuItem("Quad", NULL, false)) {
-					//CreateGeometryGeometry(&state, 1);
+					ST::Engine::createQuad(gm);
+				}
+				if (ImGui::MenuItem("Circle", NULL, false)) {
+					ST::Engine::createCircle(gm);
 				}
 				if (ImGui::MenuItem("Cube", NULL, false)) {
 					ST::Engine::createCube(gm);
@@ -41,7 +43,7 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 					ST::Engine::createDirectLight(gm);
 				}
 				if (ImGui::MenuItem("Point Light", NULL, false)) {
-					//CreatePointLight(&state);
+					ST::Engine::createPointLight(gm);
 				}
 				if (ImGui::MenuItem("Spot Light", NULL, false)) {
 					//CreateSpotLight(&state);
@@ -279,11 +281,11 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 					ImGui::Spacing();
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Constant", &light->constant_);
+					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_);
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Quadratic", &light->quadratic_);
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
 					break;
 				case ST::Spot:
 					ImGui::ColorPicker3("Color", &light->color_.x);

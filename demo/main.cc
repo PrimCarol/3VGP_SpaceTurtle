@@ -8,11 +8,8 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	//size_t objSelected = -1;
-
 	ST::Camera myCam;
 
-	ST::Cube mesh_cube;
 	ST::Quad mesh_quad;
 	ST::Geometry mesh_cat;
 	mesh_cat.loadFromFile("../others/cat_petit.obj");
@@ -61,9 +58,7 @@ int main() {
 		myCam.fpsMovement(w, 10.0f);
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		
 		ST::SystemLight::CompileLights(gm);
-
 		ST::SystemRender::Render(gm, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {

@@ -143,8 +143,17 @@ vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, 
 	float attenuation = 1.0 / (light.constant + light.linear * distance +
 							   light.quadratic * (distance * distance));
 
-	vec4 ambient = vec4(light.ambient, 1.0) * TexDiff;
-	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
+	
+	vec4 ambient;
+	vec4 diffuse;
+
+	if(u_haveAlbedo){
+		ambient = vec4(light.ambient,1.0) * (TexDiff * color);
+		diffuse = vec4(light.diffuse, 1.0) * diff * (TexDiff * color);
+	}else{
+		ambient = vec4(light.ambient,1.0) * color;
+		diffuse = vec4(light.diffuse, 1.0) * diff * color;
+	}
 	vec4 specular = vec4(light.specular, 1.0) * spec * TexSpec;
 
 	ambient *= attenuation;

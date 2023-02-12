@@ -31,9 +31,13 @@ namespace ST {
 		static const unsigned char* readFile(const char* filename);
 
 		static void createEmptyObj(ST::GameObj_Manager& gm);
+		static void createTriangle(ST::GameObj_Manager& gm);
+		static void createQuad(ST::GameObj_Manager& gm);
+		static void createCircle(ST::GameObj_Manager& gm);
 		static void createCube(ST::GameObj_Manager& gm);
 
 		static void createDirectLight(ST::GameObj_Manager& gm);
+		static void createPointLight(ST::GameObj_Manager& gm);
 
 	private:
 		Engine();

@@ -64,15 +64,15 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 							
 							snprintf(buffer, 50, "u_PointLight[%d].ambient", countPointLights);
 							idUniform = thisProgram->getUniform(buffer);
-							glUniform3f(idUniform, thisLight.ambient_.x, thisLight.ambient_.y, thisLight.ambient_.z);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
 							
 							snprintf(buffer, 50, "u_PointLight[%d].diffuse", countPointLights);
 							idUniform = thisProgram->getUniform(buffer);
-							glUniform3f(idUniform, thisLight.diffuse_.x, thisLight.diffuse_.y, thisLight.diffuse_.z);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
 							
 							snprintf(buffer, 50, "u_PointLight[%d].specular", countPointLights);
 							idUniform = thisProgram->getUniform(buffer);
-							glUniform3f(idUniform, thisLight.specular_.x, thisLight.specular_.y, thisLight.specular_.z);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
 							
 							snprintf(buffer, 50, "u_PointLight[%d].constant", countPointLights);
 							idUniform = thisProgram->getUniform(buffer);
