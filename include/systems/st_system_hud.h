@@ -10,6 +10,7 @@ namespace ST {
 
 	class SystemHUD {
 	public:
+		static void NavBar(ST::GameObj_Manager& gm);
 		static void Inspector(ST::GameObj_Manager& gm);
 		static void Hierarchy(ST::GameObj_Manager& gm);
 		static void Stats(const ST::Window& w, const ST::GameObj_Manager& gm);

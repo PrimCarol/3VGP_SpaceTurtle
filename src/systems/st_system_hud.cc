@@ -2,11 +2,56 @@
 
 #include <imgui.h>
 
+#include <st_engine.h>
+
 #include <components/st_render.h>
+#include <components/st_name.h>
 #include <components/st_light.h>
 #include <components/st_hierarchy.h>
 #include <st_gameobj_manager.h>
 #include <st_gameobj.h>
+
+void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Edit")) {
+		if (ImGui::BeginMenu("Create...")) {
+			// Empty
+			if (ImGui::MenuItem("Empty")) {
+				//CreateEmpyNode(&state);
+				ST::Engine::createEmptyObj(gm);
+			}
+
+			// Geometrys
+			if (ImGui::BeginMenu("Geometry...")) {
+				if (ImGui::MenuItem("Triangle", NULL, false)) {
+					//CreateGeometryGeometry(&state, 0);
+				}
+				if (ImGui::MenuItem("Quad", NULL, false)) {
+					//CreateGeometryGeometry(&state, 1);
+				}
+				if (ImGui::MenuItem("Cube", NULL, false)) {
+					ST::Engine::createCube(gm);
+				}
+				ImGui::EndMenu();
+			}
+
+			//Lights
+			if (ImGui::BeginMenu("Lights...")) {
+				if (ImGui::MenuItem("Point Light", NULL, false)) {
+					//CreatePointLight(&state);
+				}
+				if (ImGui::MenuItem("Spot Light", NULL, false)) {
+					//CreateSpotLight(&state);
+				}
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
+}
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 0.0f){
 	ImGuiIO& io = ImGui::GetIO();
@@ -276,10 +321,11 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 }
 
 void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
+	std::vector<std::optional<ST::NameComponent>>* nameComponents = gm.getComponentVector<ST::NameComponent>();
 
 	char buffer[50];
 	for (int i = 0; i < parent.childSize(); i++) {
-		snprintf(buffer, 50, "GameObj[%d]", parent.getChildID(i));
+		snprintf(buffer, 50, nameComponents->at(parent.getChildID(i)).value().getName() );
 
 		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 		bool opened = ImGui::TreeNodeEx(buffer, node_flags);

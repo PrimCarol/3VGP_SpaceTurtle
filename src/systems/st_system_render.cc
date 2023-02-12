@@ -1,6 +1,7 @@
 #include "st_system_render.h"
 
 #include <map>
+#include <st_gameobj_manager.h>
 
 void drawCollision(glm::vec3 min, glm::vec3 max){
 	glBegin(GL_LINES);
@@ -188,9 +189,11 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	return false;
 }
 
-void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders, ST::Camera* cam){
-	
+void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
 
+	std::vector<std::optional<ST::RenderComponent>>& r = *gm.getComponentVector<ST::RenderComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
+	
 	glEnable(GL_DEPTH_TEST);
 
 	if (cam == nullptr) {

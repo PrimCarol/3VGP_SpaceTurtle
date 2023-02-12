@@ -12,8 +12,7 @@ namespace ST {
 
 		// Basic Info
 		int getID() const;
-		//void setID(int id);
-		
+
 		template<typename C> C* getComponent() const;
 		template<typename C> bool addComponent();
 		template<typename C> bool removeComponent();
@@ -23,21 +22,13 @@ namespace ST {
 		//GameObj& operator++();
 		GameObj& operator*();
 
-		// Podriamos pasarle en cuanto tiempo quieres que se destuya, como en Unity?
-		// Que al llamar a esta funcion, se añanada al GameManager, a una lista para destruyir
-		// y que en esa tenga el contador.
-		//void Destroy();
-
 		~GameObj();
-		//GameObj(const GameObj& o);
 
 		static constexpr size_t null_id = 0xFFFFFFFF;
 	private:
 		// The creator manager reference
 		GameObj_Manager& gm_;
 
-
-		//std::vector<ST::ComponentId> components;
 		size_t ID_ = null_id;
 	};
 }

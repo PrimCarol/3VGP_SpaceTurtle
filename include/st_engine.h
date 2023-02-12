@@ -10,6 +10,7 @@
 
 #include <components/st_transform.h>
 #include <components/st_hierarchy.h>
+#include <components/st_name.h>
 #include <components/st_render.h>
 #include <components/st_light.h>
 
@@ -28,6 +29,9 @@ namespace ST {
 		static const float getRandom(float min, float max);
 		/* Read the file in the path you pass */
 		static const unsigned char* readFile(const char* filename);
+
+		static void createEmptyObj(ST::GameObj_Manager& gm);
+		static void createCube(ST::GameObj_Manager& gm);
 
 	private:
 		Engine();

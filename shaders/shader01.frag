@@ -68,7 +68,7 @@ out vec4 fragColor;
 
 //Cabeceras
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
+vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 
 void main(){
@@ -85,12 +85,12 @@ void main(){
 	//vec4 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
 	vec4 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
 
-//	// Point Lights
-//	int CountPointLights = u_numPointLights;
-//	if(CountPointLights >= MAX_POINT_LIGHTS){ CountPointLights = MAX_POINT_LIGHTS; }
-//	for	(int i = 0; i < CountPointLights; i++){
-//		result += CalcPointLight(u_PointLight[i], normal_, modelPosition, camera_dir, TextureColor, TextureSpecular);
-//	}
+	// Point Lights
+	int CountPointLights = u_numPointLights;
+	if(CountPointLights >= MAX_POINT_LIGHTS){ CountPointLights = MAX_POINT_LIGHTS; }
+	for	(int i = 0; i < CountPointLights; i++){
+		result += CalcPointLight(u_PointLight[i], normal_, modelPosition, camera_dir, TextureColor, TextureSpecular);
+	}
 //	
 //	// Spot Lights
 //	int CountSpotLights = u_numSpotLights;
@@ -123,7 +123,7 @@ vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 
 	return (ambient + diffuse + specular);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
+vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
 	
 	vec3 lightDir = normalize(light.position - modelPos);
 	float diff = max(dot(normal, lightDir), 0.0);
@@ -135,9 +135,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, 
 	float attenuation = 1.0 / (light.constant + light.linear * distance +
 							   light.quadratic * (distance * distance));
 
-	vec3 ambient = light.ambient * vec3(TexDiff);
-	vec3 diffuse = light.diffuse * diff * vec3(TexDiff);
-	vec3 specular = light.specular * spec * vec3(TexSpec);
+	vec4 ambient = vec4(light.ambient, 1.0) * TexDiff;
+	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
+	vec4 specular = vec4(light.specular, 1.0) * spec * TexSpec;
 
 	ambient *= attenuation;
 	diffuse *= attenuation;

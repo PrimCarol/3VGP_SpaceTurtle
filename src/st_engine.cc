@@ -20,3 +20,14 @@ const unsigned char* ST::Engine::readFile(const char* filename){
 	}
 	return file_contents;
 }
+
+void ST::Engine::createEmptyObj(ST::GameObj_Manager& gm){
+	gm.createGameObj(ST::HierarchyComponent{}, ST::NameComponent{}, ST::TransformComponent{});
+}
+
+void ST::Engine::createCube(ST::GameObj_Manager& gm) {
+	static ST::Cube mesh_Cube_;
+	ST::GameObj temp = gm.createGameObj(ST::HierarchyComponent{}, ST::NameComponent{}, ST::TransformComponent{},
+									    ST::RenderComponent{});
+	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Cube_);
+}
