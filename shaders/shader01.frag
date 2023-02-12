@@ -101,7 +101,7 @@ void main(){
 
 	//fragColor = mix(u_FogColor, vec4(result, 1.0), visibility);
 	
-	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result * color, visibility);
+	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result, visibility);
 }
 
 // -------------------------------------------------------------------------------------
@@ -116,8 +116,16 @@ vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 
 	vec3 reflectDir = reflect(lightDir, normal);
 	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // Tendria que tenerlo el material.
 
-	vec4 ambient = vec4(light.ambient,1.0) * TexDiff;
-	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
+	vec4 ambient;
+	vec4 diffuse;
+
+	if(u_haveAlbedo){
+		ambient = vec4(light.ambient,1.0) * (TexDiff * color);
+		diffuse = vec4(light.diffuse, 1.0) * diff * (TexDiff * color);
+	}else{
+		ambient = vec4(light.ambient,1.0) * color;
+		diffuse = vec4(light.diffuse, 1.0) * diff * color;
+	}
 	vec4 specular = vec4(light.specular,1.0) * spec  * TexSpec;
 
 	return (ambient + diffuse + specular);

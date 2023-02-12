@@ -30,4 +30,17 @@ void ST::Engine::createCube(ST::GameObj_Manager& gm) {
 	ST::GameObj temp = gm.createGameObj(ST::HierarchyComponent{}, ST::NameComponent{}, ST::TransformComponent{},
 									    ST::RenderComponent{});
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Cube_);
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+}
+
+void ST::Engine::createDirectLight(ST::GameObj_Manager& gm){
+	ST::GameObj temp = gm.createGameObj(ST::HierarchyComponent{}, ST::NameComponent{}, ST::TransformComponent{},
+		ST::LightComponent{});
+
+	temp.getComponent<ST::NameComponent>()->setName("Directional Light");
+	temp.getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
+	temp.getComponent<ST::TransformComponent>()->setRotateX(1.0f);
+	temp.addComponent<ST::LightComponent>();
+	temp.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	temp.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.3f, 0.3f, 0.3f);
 }

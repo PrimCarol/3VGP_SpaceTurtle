@@ -37,6 +37,9 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 
 			//Lights
 			if (ImGui::BeginMenu("Lights...")) {
+				if (ImGui::MenuItem("Directional Light", NULL, false)) {
+					ST::Engine::createDirectLight(gm);
+				}
 				if (ImGui::MenuItem("Point Light", NULL, false)) {
 					//CreatePointLight(&state);
 				}
@@ -334,7 +337,9 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 		}
 		
 		if (opened) {
-			ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+			if (gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).has_value()) {
+				ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+			}
 			ImGui::TreePop();
 		}
 		

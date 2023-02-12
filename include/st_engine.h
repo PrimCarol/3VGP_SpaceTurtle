@@ -33,6 +33,8 @@ namespace ST {
 		static void createEmptyObj(ST::GameObj_Manager& gm);
 		static void createCube(ST::GameObj_Manager& gm);
 
+		static void createDirectLight(ST::GameObj_Manager& gm);
+
 	private:
 		Engine();
 		~Engine();
