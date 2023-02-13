@@ -1,6 +1,7 @@
 #include "st_system_render.h"
 
 #include <map>
+#include <st_gameobj_manager.h>
 
 void drawCollision(glm::vec3 min, glm::vec3 max){
 	glBegin(GL_LINES);
@@ -59,24 +60,19 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 	for (int i = 0; i < r.size(); i++){
 		
-		//if(isVisible){}
 		if (r[i].has_value() && t[i].has_value()) {
+			if (r[i]->visible_) {
+				MyObjToRender thisObj;
+				thisObj.render_ = &r[i].value();
+				thisObj.transform_ = &t[i].value();
 
-			MyObjToRender thisObj;
-			thisObj.render_ = &r[i].value();
-			thisObj.transform_ = &t[i].value();
-
-			//mat = thisObj.render_->material.get(); // <----------------- Careful ---------------------
-			//mat = thisObj.render_->material;
-
-			//if (mat) {
 				if (!thisObj.render_->material.translucent) {
 					objs_opaque.push_back(thisObj);
 				}
 				else {
 					objs_translucent.push_back(thisObj);
 				}
-			//}
+			}
 		}
 	}
 
@@ -193,9 +189,11 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	return false;
 }
 
-void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders, ST::Camera* cam){
-	
+void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
 
+	std::vector<std::optional<ST::RenderComponent>>& r = *gm.getComponentVector<ST::RenderComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
+	
 	glEnable(GL_DEPTH_TEST);
 
 	if (cam == nullptr) {
@@ -207,7 +205,7 @@ void ST::SystemRender::Render(std::vector<std::optional<ST::RenderComponent>>& r
 
 	setUpRender(r,t, *cam);
 
-	//glUseProgram(0);
+	glUseProgram(0);
 
 		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 

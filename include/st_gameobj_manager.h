@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <optional>
 
+#include <st_gameobj.h>
+
 #define MAX_OBJECTS 100000
 
 namespace ST {
@@ -27,13 +29,15 @@ namespace ST {
 
 	public:
 		GameObj_Manager();
-		
+
 		template<typename C>
 		void addComponentClass();
 
 		template<typename... Cs>
 		ST::GameObj createGameObj(Cs... components);
 		
+		void deleteGameObj(int ObjID);
+
 		template<typename C>
 		ST::GameObj getGameObj(const C& component) const;
 
@@ -66,6 +70,11 @@ namespace ST {
 		ComponentMap component_map_;
 
 		GameObj_Manager(const GameObj_Manager& o);
+		
+		bool rootCreated = false;
+	public:
+		size_t objectSelected;
+		ST::GameObj root = createGameObj();
 	};
 }
 
@@ -78,6 +87,14 @@ ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {
 		}
 	}
 	(addComponent<Cs>(ref, components), ...);
+
+	//static bool rootCreated = false;
+	if (rootCreated) {
+		root.getComponent<ST::HierarchyComponent>()->addChild(ref);
+	}else {
+		rootCreated = true;
+	}
+
 	return ref;
 }
 

@@ -7,6 +7,7 @@ ST::RenderComponent::RenderComponent(){
 	mesh = nullptr;
 	//material = nullptr;
 
+	visible_ = true;
 	//mesh = new ST::Circle();
 	//material = std::make_unique<ST::Material>();
 }

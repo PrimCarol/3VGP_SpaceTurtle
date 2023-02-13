@@ -13,10 +13,12 @@ namespace ST {
 		ST::TransformComponent* transform_;
 		ST::RenderComponent* render_;
 	};
+	
+	class GameObj_Manager;
 
 	class SystemRender {
 	public:
-		static void Render(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, bool renderColliders = false, ST::Camera* cam = nullptr);
+		static void Render(ST::GameObj_Manager& gm, ST::Camera* cam = nullptr);
 
 	private:
 		SystemRender();

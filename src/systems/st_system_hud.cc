@@ -2,9 +2,61 @@
 
 #include <imgui.h>
 
+#include <st_engine.h>
+
 #include <components/st_render.h>
+#include <components/st_name.h>
+#include <components/st_light.h>
+#include <components/st_hierarchy.h>
 #include <st_gameobj_manager.h>
 #include <st_gameobj.h>
+
+void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Edit")) {
+		if (ImGui::BeginMenu("Create...")) {
+			// Empty
+			if (ImGui::MenuItem("Empty")) {
+				ST::Engine::createEmptyObj(gm);
+			}
+
+			// Geometrys
+			if (ImGui::BeginMenu("Geometry...")) {
+				if (ImGui::MenuItem("Triangle", NULL, false)) {
+					ST::Engine::createTriangle(gm);
+				}
+				if (ImGui::MenuItem("Quad", NULL, false)) {
+					ST::Engine::createQuad(gm);
+				}
+				if (ImGui::MenuItem("Circle", NULL, false)) {
+					ST::Engine::createCircle(gm);
+				}
+				if (ImGui::MenuItem("Cube", NULL, false)) {
+					ST::Engine::createCube(gm);
+				}
+				ImGui::EndMenu();
+			}
+
+			//Lights
+			if (ImGui::BeginMenu("Lights...")) {
+				if (ImGui::MenuItem("Directional Light", NULL, false)) {
+					ST::Engine::createDirectLight(gm);
+				}
+				if (ImGui::MenuItem("Point Light", NULL, false)) {
+					ST::Engine::createPointLight(gm);
+				}
+				if (ImGui::MenuItem("Spot Light", NULL, false)) {
+					ST::Engine::createSpotLight(gm);
+				}
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
+}
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 0.0f){
 	ImGuiIO& io = ImGui::GetIO();
@@ -70,7 +122,39 @@ void DrawVec3Control(const std::string& label, glm::vec3& values, float resetVal
 	ImGui::PopID();
 }
 
-void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletected){
+const char* lightEnumToString(ST::LightType t) {
+	switch (t){
+	case ST::Directional:
+		return "Directional";
+		break;
+	case ST::Point:
+		return "Point";
+		break;
+	case ST::Spot:
+		return "Spot";
+		break;
+	default:
+		return "None";
+		break;
+	}
+}
+
+ST::LightType lightStringToEnum(const char* c) {
+	if (c == "Directional") {
+		return ST::Directional;
+	}
+	if (c == "Point") {
+		return ST::Point;
+	}
+	if (c == "Spot") {
+		return ST::Spot;
+	}
+}
+
+void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
+
+	size_t objSeletected = gm.objectSelected;
+
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
 		ImGui::Text("Obj ID -> %d ", objSeletected);
@@ -109,6 +193,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 
 				ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
 
+				ImGui::Checkbox("Visible", &render->visible_);
 				ImGui::Checkbox("Translucent", &render->material.translucent);
 				ImGui::Spacing();
 				ImGui::Text("- Color -");
@@ -137,9 +222,12 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 					ImGui::Text("None");
 				}
 
-				if (ImGui::Button("Remove Render Component")) {
+				// ---------- Remove Button ----------
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
+				if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f))) {
 					gm.removeComponent<ST::RenderComponent>(objSeletected);
 				}
+				ImGui::PopStyleColor();
 
 				ImGui::TreePop();
 			}
@@ -150,7 +238,124 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm, const size_t objSeletecte
 		//		//gm.getComponent<ST::RenderComponent>(objSeletected)->material.setProgram(gm.basicProgram);
 		//	}
 		//}
+
+
+		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};
+		const char* typeLightSelected = NULL;
+
+		ImGui::Spacing(); ImGui::Spacing();
+
+		if (gm.getComponentVector<ST::LightComponent>()->at(objSeletected).has_value()) {
+			if (ImGui::TreeNodeEx("Light")) {
+
+				ST::LightComponent* light = &gm.getComponentVector<ST::LightComponent>()->at(objSeletected).value();
+
+				// ---------- Selector de Typo de luz ----------
+				typeLightSelected = lightEnumToString(light->type_);
+				ImGui::SetNextItemWidth(120);
+				if (ImGui::BeginCombo("##combo", typeLightSelected)){
+					for (int n = 0; n < IM_ARRAYSIZE(typeLightsChar); n++){
+						bool is_selected = (typeLightSelected == typeLightsChar[n]);
+						if (ImGui::Selectable(typeLightsChar[n], is_selected)){
+							typeLightSelected = typeLightsChar[n];
+							light->type_ = lightStringToEnum(typeLightSelected);
+						}
+						if (is_selected) {
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+				
+
+				ImGui::Spacing(); ImGui::Spacing();
+
+				switch (light->type_){
+				case ST::Directional:
+					ImGui::ColorPicker3("Ambient", &light->ambient_.x);
+					ImGui::ColorEdit3("Diffuse", &light->diffuse_.x);
+					ImGui::ColorEdit3("Specular", &light->specular_.x);
+					break;
+				case ST::Point:
+					ImGui::ColorPicker3("Color", &light->color_.x);
+
+					ImGui::Spacing();
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
+					break;
+				case ST::Spot:
+					ImGui::ColorPicker3("Color", &light->color_.x);
+
+					ImGui::Spacing();
+
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
+
+					ImGui::Spacing();
+
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Cut Off", &light->cutOff_, 0.01f, light->outerCutOff_ + 0.01f, 0.99f, "%.2f");
+					ImGui::SetNextItemWidth(70);
+					ImGui::DragFloat("Outer Cut Off", &light->outerCutOff_, 0.01f, 0.0f, light->cutOff_ - 0.01f, "%.2f");
+					break;
+				}
+
+				ImGui::Spacing(); ImGui::Spacing();
+
+				// ---------- Remove Button ----------
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f,0.0f,0.0f,1.0f));
+				if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f) )) {
+					gm.removeComponent<ST::LightComponent>(objSeletected);
+				}
+				ImGui::PopStyleColor();
+
+				ImGui::TreePop();
+			}
+		}
+		ImGui::BeginChild("Footer Zone");
+		if (ImGui::Button("Delete")) {
+			gm.deleteGameObj(gm.objectSelected);
+		}
+		ImGui::EndChild();
 	}
+	ImGui::End();
+}
+
+void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
+	std::vector<std::optional<ST::NameComponent>>* nameComponents = gm.getComponentVector<ST::NameComponent>();
+
+	char buffer[50];
+	for (int i = 0; i < parent.childSize(); i++) {
+		snprintf(buffer, 50, "%s %d",nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+
+		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+		bool opened = ImGui::TreeNodeEx(buffer, node_flags);
+		if (ImGui::IsItemClicked()) {
+			gm.objectSelected = parent.getChildID(i);
+		}
+		
+		if (opened) {
+			if (gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).has_value()) {
+				ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+			}
+			ImGui::TreePop();
+		}
+		
+	}
+}
+
+void ST::SystemHUD::Hierarchy(ST::GameObj_Manager& gm){
+	ImGui::Begin("Hierarchy");
+		ST::HierarchyComponent* rootHierarchy = gm.root.getComponent<ST::HierarchyComponent>();
+		ShowChilds(gm, *rootHierarchy);
 	ImGui::End();
 }
 
