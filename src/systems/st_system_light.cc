@@ -25,6 +25,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 				char buffer[50];
 				int countPointLights = 0;
+				int countSpotLights = 0;
 
 				// ---- Lights ----
 				for (int n = 0; n < lightComps->size(); n++) {
@@ -90,6 +91,48 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 							break;
 						case ST::Spot:
 
+							snprintf(buffer, 50, "u_SpotLight[%d].position", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform3f(idUniform, transformComps->at(n).value().getPosition().x, transformComps->at(n).value().getPosition().y, transformComps->at(n).value().getPosition().z);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].ambient", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].diffuse", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].specular", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].constant", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform1f(idUniform, thisLight.constant_);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].linear", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform1f(idUniform, thisLight.linear_);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].quadratic", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform1f(idUniform, thisLight.quadratic_);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].direction", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform3f(idUniform, transformComps->at(n).value().getRotation().x, transformComps->at(n).value().getRotation().y, transformComps->at(n).value().getRotation().z);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].cutOff", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform1f(idUniform, thisLight.cutOff_);
+
+							snprintf(buffer, 50, "u_SpotLight[%d].outerCutOff", countSpotLights);
+							idUniform = thisProgram->getUniform(buffer);
+							glUniform1f(idUniform, thisLight.outerCutOff_);
+
+							countSpotLights++;
+
 							break;
 						}
 					}
@@ -100,6 +143,9 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 				idUniform = thisProgram->getUniform("u_numPointLights");
 				glUniform1i(idUniform, countPointLights);
+
+				idUniform = thisProgram->getUniform("u_numSpotLights");
+				glUniform1i(idUniform, countSpotLights);
 
 				glUseProgram(0);
 

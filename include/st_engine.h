@@ -38,6 +38,7 @@ namespace ST {
 
 		static void createDirectLight(ST::GameObj_Manager& gm);
 		static void createPointLight(ST::GameObj_Manager& gm);
+		static void createSpotLight(ST::GameObj_Manager& gm);
 
 	private:
 		Engine();

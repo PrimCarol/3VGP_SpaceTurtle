@@ -75,3 +75,12 @@ void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::NameComponent>()->setName("Point Light");
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Point;
 }
+
+void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
+	ST::GameObj temp = gm.createGameObj(ST::HierarchyComponent{}, ST::NameComponent{}, ST::TransformComponent{},
+		ST::LightComponent{});
+
+	temp.getComponent<ST::NameComponent>()->setName("Spot Light");
+	temp.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	temp.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);
+}

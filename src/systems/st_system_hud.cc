@@ -46,7 +46,7 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 					ST::Engine::createPointLight(gm);
 				}
 				if (ImGui::MenuItem("Spot Light", NULL, false)) {
-					//CreateSpotLight(&state);
+					ST::Engine::createSpotLight(gm);
 				}
 				ImGui::EndMenu();
 			}
@@ -293,18 +293,18 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::Spacing();
 
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Constant", &light->constant_);
+					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_);
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Quadratic", &light->quadratic_);
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
 
 					ImGui::Spacing();
 
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Cut Off", &light->cutOff_);
+					ImGui::DragFloat("Cut Off", &light->cutOff_, 0.01f, light->outerCutOff_ + 0.01f, 0.99f, "%.2f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Outer Cut Off", &light->outerCutOff_);
+					ImGui::DragFloat("Outer Cut Off", &light->outerCutOff_, 0.01f, 0.0f, light->cutOff_ - 0.01f, "%.2f");
 					break;
 				}
 
@@ -320,7 +320,11 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::TreePop();
 			}
 		}
-
+		ImGui::BeginChild("Footer Zone");
+		if (ImGui::Button("Delete")) {
+			gm.deleteGameObj(gm.objectSelected);
+		}
+		ImGui::EndChild();
 	}
 	ImGui::End();
 }
@@ -330,7 +334,7 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 
 	char buffer[50];
 	for (int i = 0; i < parent.childSize(); i++) {
-		snprintf(buffer, 50, nameComponents->at(parent.getChildID(i)).value().getName() );
+		snprintf(buffer, 50, "%s %d",nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
 
 		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 		bool opened = ImGui::TreeNodeEx(buffer, node_flags);

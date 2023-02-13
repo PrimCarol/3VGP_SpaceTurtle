@@ -10,14 +10,14 @@ int main() {
 
 	ST::Camera myCam;
 
-	ST::Quad mesh_quad;
-	ST::Geometry mesh_cat;
-	mesh_cat.loadFromFile("../others/cat_petit.obj");
+	//ST::Cube mesh_cube;
+	//ST::Geometry mesh_cat;
+	//mesh_cat.loadFromFile("../others/cat_petit.obj");
 
-	ST::Texture textureTest;
-	textureTest.loadSource("../others/checker_texture.jpg");
-	ST::Texture translucentTexture;
-	translucentTexture.loadSource("../others/icon_nobg.png");
+	//ST::Texture textureTest;
+	//textureTest.loadSource("../others/checker_texture.jpg");
+	//ST::Texture translucentTexture;
+	//translucentTexture.loadSource("../others/icon_nobg.png");
 
 	//std::vector<ST::GameObj> objects;
 	//for (int i = 0; i < 5; i++){
@@ -49,6 +49,12 @@ int main() {
 	//objects.at(1).getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	//objects.at(1).getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.1f, 0.1f, 0.1f);
 	////objects.at(1).removeComponent<ST::RenderComponent>();
+
+	//objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::NameComponent{}, ST::HierarchyComponent{}, ST::RenderComponent{}));
+	//objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
+	//objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	//objects.back().getComponent<ST::HierarchyComponent>()->setParent(*objects.at(3));
+
 
 	// --------------------------
 

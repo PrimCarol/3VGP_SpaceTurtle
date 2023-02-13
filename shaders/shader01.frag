@@ -69,7 +69,7 @@ out vec4 fragColor;
 //Cabeceras
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
+vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 
 void main(){
 	
@@ -91,13 +91,13 @@ void main(){
 	for	(int i = 0; i < CountPointLights; i++){
 		result += CalcPointLight(u_PointLight[i], normal_, modelPosition, camera_dir, TextureColor, TextureSpecular);
 	}
-//	
-//	// Spot Lights
-//	int CountSpotLights = u_numSpotLights;
-//	if(CountSpotLights >= MAX_SPOT_LIGHTS){ CountSpotLights = MAX_SPOT_LIGHTS; }
-//	for	(int i = 0; i < CountSpotLights; i++){
-//		result += CalcSpotLight(u_SpotLight[i], normal_, modelPosition, camera_dir, TextureColor, TextureSpecular);
-//	}
+	
+	// Spot Lights
+	int CountSpotLights = u_numSpotLights;
+	if(CountSpotLights >= MAX_SPOT_LIGHTS){ CountSpotLights = MAX_SPOT_LIGHTS; }
+	for	(int i = 0; i < CountSpotLights; i++){
+		result += CalcSpotLight(u_SpotLight[i], normal_, modelPosition, camera_dir, TextureColor, TextureSpecular);
+	}
 
 	//fragColor = mix(u_FogColor, vec4(result, 1.0), visibility);
 	
@@ -163,7 +163,7 @@ vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, 
 	return (ambient + diffuse + specular);
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
+vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec){
     vec3 lightDir = normalize(light.position - modelPos);
 	float diff = max(dot(normal, lightDir), 0.0);
 
@@ -178,9 +178,17 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, ve
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
-    vec3 ambient = light.ambient * vec3(TexDiff);
-	vec3 diffuse = light.diffuse * diff * vec3(TexDiff);
-	vec3 specular = light.specular * spec * vec3(TexSpec);
+	vec4 ambient;
+	vec4 diffuse;
+
+    if(u_haveAlbedo){
+		ambient = vec4(light.ambient,1.0) * (TexDiff * color);
+		diffuse = vec4(light.diffuse, 1.0) * diff * (TexDiff * color);
+	}else{
+		ambient = vec4(light.ambient,1.0) * color;
+		diffuse = vec4(light.diffuse, 1.0) * diff * color;
+	}
+	vec4 specular = vec4(light.specular, 1.0) * spec * TexSpec;
 
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;

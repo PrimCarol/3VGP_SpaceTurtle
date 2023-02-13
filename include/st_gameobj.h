@@ -25,9 +25,10 @@ namespace ST {
 		~GameObj();
 
 		static constexpr size_t null_id = 0xFFFFFFFF;
-	private:
+
 		// The creator manager reference
 		GameObj_Manager& gm_;
+	private:
 
 		size_t ID_ = null_id;
 	};

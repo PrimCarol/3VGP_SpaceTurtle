@@ -36,6 +36,8 @@ namespace ST {
 		template<typename... Cs>
 		ST::GameObj createGameObj(Cs... components);
 		
+		void deleteGameObj(int ObjID);
+
 		template<typename C>
 		ST::GameObj getGameObj(const C& component) const;
 
