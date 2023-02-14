@@ -148,6 +148,8 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
 	const ST::Program* p = nullptr;
 
+	static GLuint lastTextureAlbedo = -1;
+
 	p = mat.getProgram();
 	if (p) {
 		p->use();
@@ -192,8 +194,11 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 			mat_Uniform = p->getUniform("cols");
 			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
+			if (lastTextureAlbedo != mat.getAlbedo()->getID()) {
+				lastTextureAlbedo = mat.getAlbedo()->getID();
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
+			}
 		}
 
 		return true;
