@@ -18,6 +18,10 @@ uniform float u_FogDensity;
 uniform float u_FogGradient;
 out float visibility;
 
+//Texture Atlas
+uniform int rows;
+uniform int cols;
+uniform ivec2 texIndex;
 
 // Basic Out
 out vec4 color;
@@ -28,7 +32,16 @@ out vec2 texCoords;
 void main(){
 	color = u_color;
 
-	texCoords = a_uv;
+	int indexX = 3;
+	int indexY = 2;
+
+	float row = texIndex.y % rows;
+	float column = texIndex.x % cols;
+
+	vec2 tempUV = vec2((a_uv.x/cols) + (column / cols), (a_uv.y/rows) + (row / rows));
+	texCoords = tempUV;
+
+	//texCoords = a_uv;
 
 	modelPosition = (u_m_trans * vec4(a_position,1)).xyz;
 	normals = normalize((u_m_trans * vec4(a_normal,0.0)).xyz);

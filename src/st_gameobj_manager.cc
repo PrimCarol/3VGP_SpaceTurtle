@@ -55,7 +55,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
 	for (auto& [type, components_vector_] : component_map_) {
-
+		components_vector_->deleteOn(ObjID);
 	}
 }
 

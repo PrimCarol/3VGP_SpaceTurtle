@@ -171,15 +171,27 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
 		}
 
-		// Material 
-		GLuint u_color = p->getUniform("u_color");
+		// Material
+		GLuint mat_Uniform = -1;
+		mat_Uniform = p->getUniform("u_color");
 		glm::vec4 c = mat.getColor();
-		glUniform4fv(u_color, 1, &c[0]);
+		glUniform4fv(mat_Uniform, 1, &c[0]);
 
-		GLuint u_haveAlbedo = p->getUniform("u_haveAlbedo");
-		glUniform1i(u_haveAlbedo, mat.haveAlbedo);
+		mat_Uniform = p->getUniform("texIndex");
+		glm::ivec2 texindex = mat.getTexIndex();
+		glUniform2iv(mat_Uniform, 1, &texindex.x);
+
+		mat_Uniform = p->getUniform("u_haveAlbedo");
+		glUniform1i(mat_Uniform, mat.haveAlbedo);
 
 		if (mat.haveAlbedo) {
+
+			mat_Uniform = p->getUniform("rows");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
+
+			mat_Uniform = p->getUniform("cols");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
+
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
 		}

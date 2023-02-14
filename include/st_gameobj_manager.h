@@ -20,10 +20,16 @@ namespace ST {
 
 		struct ComponentVector {
 			virtual void grow(size_t new_size) = 0;
+			virtual void deleteOn(int index) = 0;
 		};
 		template<typename T>
 		struct ComponentListImpl : ComponentVector {
 			virtual void grow(size_t new_size) override { components_vector_.resize(new_size); }
+			virtual void deleteOn(int index) override { 
+				if (index >= 0 && index < components_vector_.size()) {
+					components_vector_.at(index) = std::nullopt;
+				}
+			}
 			std::vector<std::optional<T>> components_vector_;
 		};
 
@@ -87,6 +93,9 @@ ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {
 		}
 	}
 	(addComponent<Cs>(ref, components), ...);
+
+	addComponent<ST::NameComponent>(last_gameObj_ - 1);
+	addComponent<ST::HierarchyComponent>(last_gameObj_ -1);
 
 	//static bool rootCreated = false;
 	if (rootCreated) {

@@ -14,6 +14,7 @@ ST::Material::Material(){
 	haveAlbedo = false;
 	albedo = nullptr;
 	translucent = false;
+	texIndex_ = { 0,0 };
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -36,7 +37,7 @@ void ST::Material::setColor(float r, float g, float b, float a) {
 	color.a = a;
 }
 
-const glm::vec4 ST::Material::getColor() {
+const glm::vec4 ST::Material::getColor() const{
 	return color;
 }
 
@@ -59,6 +60,15 @@ void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
 		albedo = texAlbedo;
 		haveAlbedo = true;
 	}
+}
+
+const glm::ivec2 ST::Material::getTexIndex() const{
+	return texIndex_;
+}
+
+void ST::Material::setTexIndex(glm::ivec2 texIndex){
+	texIndex_.x = texIndex.x > 0 ? texIndex.x : 0;
+	texIndex_.y = texIndex.y > 0 ? texIndex.y : 0;
 }
 
 ST::Material::~Material(){

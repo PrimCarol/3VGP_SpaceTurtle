@@ -27,7 +27,7 @@ namespace ST {
 		bool visible_;
 
 		~RenderComponent();
-
+	private:
 		//RenderComponent(RenderComponent&&) = default;
 		//RenderComponent& operator=(RenderComponent&&) = default;
 	};

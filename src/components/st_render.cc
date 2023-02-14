@@ -1,14 +1,12 @@
 #include <components/st_render.h>
 
-
-// -------------------- Mesh ---------------------
 ST::RenderComponent::RenderComponent(){
-	//printf("Create Component: Render\n");
 	mesh = nullptr;
-	//material = nullptr;
 
 	visible_ = true;
-	//mesh = new ST::Circle();
+
+	//material = nullptr;
+	//// esto no me deja hacerlo por el optional.
 	//material = std::make_unique<ST::Material>();
 }
 

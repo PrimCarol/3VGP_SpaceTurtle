@@ -48,22 +48,30 @@ namespace ST {
 		Texture();
 		
 		bool loadSource(const char* shaderText);
-        void createChecker(const unsigned int w, const unsigned int h);
-        void set_data(const Format f, /* const Type t,*/ const void* data, unsigned int mipmap_LOD = 0);
 		
-        const GLuint getID();
+        void setRows(int num);
+        void setCols(int num);
 
-        const TextType getType();
-        const int width();
-        const int height();
+        const GLuint getID() const;
+
+        const TextType getType() const;
+        const int width() const;
+        const int height() const;
+
+        const int getRows() const;
+        const int getCols() const;
 
 		~Texture();
 	private:
+        void set_data(const Format f, /* const Type t,*/ const void* data, unsigned int mipmap_LOD = 0);
 		GLuint internalID;
 
         TextType type_;
         int width_;
         int height_;
+
+        int rows;
+        int cols;
 
         //unsigned int* texChecker;
 

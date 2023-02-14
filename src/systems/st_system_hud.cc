@@ -283,7 +283,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::SetNextItemWidth(70);
 					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 10.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
 					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
 					break;
@@ -295,7 +295,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::SetNextItemWidth(70);
 					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 2.00f, "%.3f");
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 10.00f, "%.3f");
 					ImGui::SetNextItemWidth(70);
 					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
 
@@ -334,7 +334,11 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 
 	char buffer[50];
 	for (int i = 0; i < parent.childSize(); i++) {
-		snprintf(buffer, 50, "%s %d",nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+		if (nameComponents->at(parent.getChildID(i)).has_value()) {
+			snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+		}else {
+			snprintf(buffer, 50, "NULL");
+		}
 
 		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 		bool opened = ImGui::TreeNodeEx(buffer, node_flags);
@@ -355,7 +359,9 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 void ST::SystemHUD::Hierarchy(ST::GameObj_Manager& gm){
 	ImGui::Begin("Hierarchy");
 		ST::HierarchyComponent* rootHierarchy = gm.root.getComponent<ST::HierarchyComponent>();
-		ShowChilds(gm, *rootHierarchy);
+		if (rootHierarchy) {
+			ShowChilds(gm, *rootHierarchy);
+		}
 	ImGui::End();
 }
 
