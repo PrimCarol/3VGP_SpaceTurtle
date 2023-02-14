@@ -323,6 +323,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		ImGui::BeginChild("Footer Zone");
 		if (ImGui::Button("Delete")) {
 			gm.deleteGameObj(gm.objectSelected);
+			gm.objectSelected = -1;
 		}
 		ImGui::EndChild();
 	}
@@ -336,23 +337,20 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 	for (int i = 0; i < parent.childSize(); i++) {
 		if (nameComponents->at(parent.getChildID(i)).has_value()) {
 			snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
-		}else {
-			snprintf(buffer, 50, "NULL");
-		}
 
-		ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
-		bool opened = ImGui::TreeNodeEx(buffer, node_flags);
-		if (ImGui::IsItemClicked()) {
-			gm.objectSelected = parent.getChildID(i);
-		}
-		
-		if (opened) {
-			if (gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).has_value()) {
-				ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+			ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+			bool opened = ImGui::TreeNodeEx(buffer, node_flags);
+			if (ImGui::IsItemClicked()) {
+				gm.objectSelected = parent.getChildID(i);
 			}
-			ImGui::TreePop();
-		}
 		
+			if (opened) {
+				if (gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).has_value()) {
+					ShowChilds(gm, gm.getComponentVector<ST::HierarchyComponent>()->at(parent.getChildID(i)).value());
+				}
+				ImGui::TreePop();
+			}
+		}
 	}
 }
 
