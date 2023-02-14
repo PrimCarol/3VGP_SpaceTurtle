@@ -13,6 +13,7 @@
   - Lights<br>
   - Camera Movement (FPS style)<br>
   - Load Textures<br>
+  - Texture Atlas<br>
   - Material Configuration<br>
   - Picking System<br>
 
