@@ -212,6 +212,12 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				else {
 					ImGui::Text("None");
 				}
+
+				glm::ivec2 textIndex = render->material.getTexIndex();
+				ImGui::SetNextItemWidth(50);
+				ImGui::InputInt2("TextIndex", &textIndex.x);
+				render->material.setTexIndex(textIndex);
+
 				ImGui::Text("---- Mesh ----");
 				ImGui::Text("Mesh: ");
 				ImGui::SameLine();
@@ -321,10 +327,12 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 		}
 		ImGui::BeginChild("Footer Zone");
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
 		if (ImGui::Button("Delete")) {
 			gm.deleteGameObj(gm.objectSelected);
 			gm.objectSelected = -1;
 		}
+		ImGui::PopStyleColor();
 		ImGui::EndChild();
 	}
 	ImGui::End();
