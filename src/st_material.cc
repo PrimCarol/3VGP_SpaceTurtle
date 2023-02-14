@@ -6,13 +6,16 @@
 
 ST::Material::Material(){
 
-
-	//settings_ = new Settings();
-	//settings_ = NULL;
-	//color = { 1.0f,0.8f,0.9f };
 	color = { 1.0f,1.0f,1.0f,1.0f };
+
 	haveAlbedo = false;
+	haveNormal = false;
+	haveSpecular = false;
+
 	albedo = nullptr;
+	normal = nullptr;
+	specular = nullptr;
+
 	translucent = false;
 	texIndex_ = { 0,0 };
 }
@@ -59,6 +62,28 @@ void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
 	if (texAlbedo) {
 		albedo = texAlbedo;
 		haveAlbedo = true;
+	}
+}
+
+ST::Texture* ST::Material::getNormal(){
+	return normal;
+}
+
+void ST::Material::setTexture_Normal(ST::Texture* texNormal){
+	if (texNormal) {
+		normal = texNormal;
+		haveNormal = true;
+	}
+}
+
+ST::Texture* ST::Material::getSpecular(){
+	return specular;
+}
+
+void ST::Material::setTexture_Specular(ST::Texture* texSpecular){
+	if (texSpecular) {
+		specular = texSpecular;
+		haveSpecular = true;
 	}
 }
 

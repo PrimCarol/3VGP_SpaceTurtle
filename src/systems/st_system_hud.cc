@@ -210,7 +210,19 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::Image((void*)(intptr_t)render->material.getAlbedo()->getID(), ImVec2(144, 144));
 				}
 				else {
-					ImGui::Text("None");
+					ImGui::Text("Albedo: None");
+				}
+				if (render->material.haveNormal) {
+					ImGui::Image((void*)(intptr_t)render->material.getNormal()->getID(), ImVec2(144, 144));
+				}
+				else {
+					ImGui::Text("Normal: None");
+				}
+				if (render->material.haveSpecular) {
+					ImGui::Image((void*)(intptr_t)render->material.getSpecular()->getID(), ImVec2(144, 144));
+				}
+				else {
+					ImGui::Text("Specular: None");
 				}
 
 				glm::ivec2 textIndex = render->material.getTexIndex();

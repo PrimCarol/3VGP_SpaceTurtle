@@ -6,6 +6,10 @@ uniform vec3 u_view_pos;
 // Texture
 uniform bool u_haveAlbedo;
 uniform sampler2D u_tex_Albedo;
+uniform bool u_haveSpecular;
+uniform sampler2D u_tex_Specular;
+uniform bool u_haveNormal;
+uniform sampler2D u_tex_Normal;
 
 // Light Dir
 struct DirLight{
@@ -73,14 +77,19 @@ vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, ve
 
 void main(){
 	
-	vec4 TextureColor = texture(u_tex_Albedo, texCoords);
+	vec4 TextureColor = color;
+	if(u_haveAlbedo){ TextureColor = texture(u_tex_Albedo, texCoords) * color;}
 
-	//vec4 TextureSpecular = texture(u_specularTexture, texCoords);
 	vec4 TextureSpecular = vec4(1.0,1.0,1.0,1.0);
+	if(u_haveSpecular){	TextureSpecular = texture(u_tex_Specular, texCoords);}
 
 	vec3 normal_ = normalize(normals);
-	vec3 camera_dir = normalize(modelPosition - u_view_pos);
+//	if(u_haveNormal){
+//		normal_ = texture(u_tex_Normal, texCoords).xyz; 
+//		normal_ = normalize(normal_ * 2.0 - 1.0); 
+//	}
 
+	vec3 camera_dir = normalize(modelPosition - u_view_pos);
 
 	//vec4 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
 	vec4 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
@@ -116,17 +125,9 @@ vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 
 	vec3 reflectDir = reflect(lightDir, normal);
 	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // Tendria que tenerlo el material.
 
-	vec4 ambient;
-	vec4 diffuse;
-
-	if(u_haveAlbedo){
-		ambient = vec4(light.ambient,1.0) * (TexDiff * color);
-		diffuse = vec4(light.diffuse, 1.0) * diff * (TexDiff * color);
-	}else{
-		ambient = vec4(light.ambient,1.0) * color;
-		diffuse = vec4(light.diffuse, 1.0) * diff * color;
-	}
-	vec4 specular = vec4(light.specular,1.0) * spec  * TexSpec;
+	vec4 ambient = vec4(light.ambient,1.0) * TexDiff;
+	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
+	vec4 specular = vec4(light.specular, 1.0) * spec  * TexSpec;
 
 	return (ambient + diffuse + specular);
 }

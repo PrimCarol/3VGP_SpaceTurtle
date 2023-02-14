@@ -149,6 +149,8 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	const ST::Program* p = nullptr;
 
 	static GLuint lastTextureAlbedo = -1;
+	static GLuint lastTextureNormal = -1;
+	static GLuint lastTextureSpecular = -1;
 
 	p = mat.getProgram();
 	if (p) {
@@ -185,19 +187,56 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 		mat_Uniform = p->getUniform("u_haveAlbedo");
 		glUniform1i(mat_Uniform, mat.haveAlbedo);
+		mat_Uniform = p->getUniform("u_haveSpecular");
+		glUniform1i(mat_Uniform, mat.haveSpecular);
+		mat_Uniform = p->getUniform("u_haveNormal");
+		glUniform1i(mat_Uniform, mat.haveAlbedo);
+		
+		//int TextCount = 0;
 
 		if (mat.haveAlbedo) {
-
-			mat_Uniform = p->getUniform("rows");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
-
-			mat_Uniform = p->getUniform("cols");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
-
 			if (lastTextureAlbedo != mat.getAlbedo()->getID()) {
 				lastTextureAlbedo = mat.getAlbedo()->getID();
-				glActiveTexture(GL_TEXTURE0);
+
+				mat_Uniform = p->getUniform("rows");
+				glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
+
+				mat_Uniform = p->getUniform("cols");
+				glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
+
+				glUniform1i(p->getUniform("u_tex_Albedo"), 0);
+				glActiveTexture(GL_TEXTURE0 + 0);
 				glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
+			}
+		}
+		if (mat.haveNormal) {
+			if (lastTextureNormal != mat.getNormal()->getID()) {
+				lastTextureNormal = mat.getNormal()->getID();
+
+				mat_Uniform = p->getUniform("rows");
+				glUniform1i(mat_Uniform, mat.getNormal()->getRows());
+
+				mat_Uniform = p->getUniform("cols");
+				glUniform1i(mat_Uniform, mat.getNormal()->getCols());
+
+				glUniform1i(p->getUniform("u_tex_Normal"), 1);
+				glActiveTexture(GL_TEXTURE0 + 1);
+				glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
+			}
+		}
+		if (mat.haveSpecular) {
+			if (lastTextureSpecular != mat.getSpecular()->getID()) {
+				lastTextureSpecular = mat.getSpecular()->getID();
+
+				mat_Uniform = p->getUniform("rows");
+				glUniform1i(mat_Uniform, mat.getSpecular()->getRows());
+
+				mat_Uniform = p->getUniform("cols");
+				glUniform1i(mat_Uniform, mat.getSpecular()->getCols());
+
+				glUniform1i(p->getUniform("u_tex_Specular"), 2);
+				glActiveTexture(GL_TEXTURE0 + 2);
+				glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());
 			}
 		}
 

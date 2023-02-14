@@ -21,6 +21,12 @@ namespace ST {
 
 		ST::Texture* getAlbedo();
 		void setTexture_Albedo(ST::Texture* texAlbedo);
+		
+		ST::Texture* getNormal();
+		void setTexture_Normal(ST::Texture* texNormal);
+
+		ST::Texture* getSpecular();
+		void setTexture_Specular(ST::Texture* texSpecular);
 
 		const glm::ivec2 getTexIndex() const;
 		void setTexIndex(glm::ivec2 texIndex);
@@ -28,9 +34,13 @@ namespace ST {
 		~Material();
 	
 		bool haveAlbedo;
+		bool haveNormal;
+		bool haveSpecular;
 		bool translucent;
 	private:
 		ST::Texture* albedo;
+		ST::Texture* normal;
+		ST::Texture* specular;
 
 		glm::ivec2 texIndex_;
 
