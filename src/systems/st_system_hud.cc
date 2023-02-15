@@ -205,6 +205,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::ColorEdit3("Color", &c.x);
 				}
 				render->material.setColor(c);
+				ImGui::DragFloat("Shiness", &render->material.shininess, 1.0f, 1.0f);
 				ImGui::Text("- Texture -");
 				if (render->material.haveAlbedo) {
 					ImGui::Image((void*)(intptr_t)render->material.getAlbedo()->getID(), ImVec2(144, 144));

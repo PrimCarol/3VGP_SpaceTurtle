@@ -4,10 +4,11 @@
 namespace ST {
 
 	class GameObj_Manager;
+	class Program;
 
 	class SystemLight {
 	public:
-		static void CompileLights(ST::GameObj_Manager& gm);
+		static void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
 	private:
 		SystemLight();
 		~SystemLight();

@@ -18,6 +18,8 @@ ST::Material::Material(){
 
 	translucent = false;
 	texIndex_ = { 0,0 };
+
+	shininess = 64.0f;
 }
 
 /*void ST::Material::setSettings(Settings* s) {

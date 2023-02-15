@@ -37,6 +37,9 @@ namespace ST {
 		bool haveNormal;
 		bool haveSpecular;
 		bool translucent;
+
+		float shininess;
+
 	private:
 		ST::Texture* albedo;
 		ST::Texture* normal;

@@ -5,7 +5,9 @@
 #include <components/st_render.h>
 #include <components/st_transform.h>
 
-void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
+#include <st_program.h>
+
+void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& p){
 
 	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
 	auto* renderComps = gm.getComponentVector<ST::RenderComponent>();
@@ -17,13 +19,13 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 			GLuint lastProgram = -1;
 
-			for (int i = 0; i < renderComps->size(); i++) {
-				if (renderComps->at(i).has_value()) {
-					ST::RenderComponent renderComp = renderComps->at(i).value();
-					const ST::Program* thisProgram = nullptr;
+			//for (int i = 0; i < renderComps->size(); i++) {
+				//if (renderComps->at(i).has_value()) {
+					//ST::RenderComponent renderComp = renderComps->at(i).value();
+					const ST::Program* thisProgram = &p;
 
 					// last program ?
-					thisProgram = renderComp.material.getProgram();
+					//thisProgram = renderComp.material.getProgram();
 
 					if (thisProgram) {
 						if (lastProgram != thisProgram->getID()) {
@@ -37,7 +39,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 						// ---- Lights ----
 
-						if (transformComps->at(i).has_value()) {
+						if (transformComps->at(n).has_value()) {
 							thisLight.dirLight_ = transformComps->at(n).value().getRotation();
 							//thisLight.dirLight_.x = sinf(transformComps->at(n).value().getRotation().x);
 							//thisLight.dirLight_.y = sinf(transformComps->at(n).value().getRotation().y);
@@ -150,34 +152,44 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 					} // if Have Program
 
-				} // if Have Render
-			} // For Render
-			
+				//} // if Have Render
+			//} // For Render
+
 			glUseProgram(0);
 
 		} // if Have Light
 	} // For Lights
 
-	//for (int i = 0; i < renderComps->size(); i++){
-	//	if (renderComps->at(i).has_value()) {
-	//		
-	//		ST::RenderComponent renderComp = renderComps->at(i).value();
-	//		const ST::Program* thisProgram = nullptr;
 
-	//		thisProgram = renderComp.material.getProgram();
+	//auto* lightComps = gm.getComponentVector<ST::LightComponent>();
+	//auto* renderComps = gm.getComponentVector<ST::RenderComponent>();
+	//auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
 
-	//		if (thisProgram) {
+	//for (int n = 0; n < lightComps->size(); n++) {
+	//	if (lightComps->at(n).has_value()) {
+	//		ST::LightComponent thisLight = lightComps->at(n).value();
 
-	//			thisProgram->use();
+	//		GLuint lastProgram = -1;
 
-	//			char buffer[50];
-	//			int countPointLights = 0;
-	//			int countSpotLights = 0;
+	//		for (int i = 0; i < renderComps->size(); i++) {
+	//			if (renderComps->at(i).has_value()) {
+	//				ST::RenderComponent renderComp = renderComps->at(i).value();
+	//				const ST::Program* thisProgram = nullptr;
 
-	//			// ---- Lights ----
-	//			for (int n = 0; n < lightComps->size(); n++) {
-	//				if (lightComps->at(n).has_value()) {
-	//					ST::LightComponent thisLight = lightComps->at(n).value();
+	//				// last program ?
+	//				thisProgram = renderComp.material.getProgram();
+
+	//				if (thisProgram) {
+	//					if (lastProgram != thisProgram->getID()) {
+	//						thisProgram->use();
+	//						lastProgram = thisProgram->getID();
+	//					}
+
+	//					char buffer[50];
+	//					int countPointLights = 0;
+	//					int countSpotLights = 0;
+
+	//					// ---- Lights ----
 
 	//					if (transformComps->at(i).has_value()) {
 	//						thisLight.dirLight_ = transformComps->at(n).value().getRotation();
@@ -209,19 +221,19 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 	//						snprintf(buffer, 50, "u_PointLight[%d].position", countPointLights);
 	//						idUniform = thisProgram->getUniform(buffer);
 	//						glUniform3f(idUniform, transformComps->at(n).value().getPosition().x, transformComps->at(n).value().getPosition().y, transformComps->at(n).value().getPosition().z);
-	//						
+
 	//						snprintf(buffer, 50, "u_PointLight[%d].ambient", countPointLights);
 	//						idUniform = thisProgram->getUniform(buffer);
 	//						glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-	//						
+
 	//						snprintf(buffer, 50, "u_PointLight[%d].diffuse", countPointLights);
 	//						idUniform = thisProgram->getUniform(buffer);
 	//						glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-	//						
+
 	//						snprintf(buffer, 50, "u_PointLight[%d].specular", countPointLights);
 	//						idUniform = thisProgram->getUniform(buffer);
 	//						glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-	//						
+
 	//						snprintf(buffer, 50, "u_PointLight[%d].constant", countPointLights);
 	//						idUniform = thisProgram->getUniform(buffer);
 	//						glUniform1f(idUniform, thisLight.constant_);
@@ -282,22 +294,21 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm){
 
 	//						break;
 	//					}
-	//				}
 
-	//			} // For lightComps
+	//					idUniform = thisProgram->getUniform("u_numPointLights");
+	//					glUniform1i(idUniform, countPointLights);
 
-	//			GLint idUniform = -1;
+	//					idUniform = thisProgram->getUniform("u_numSpotLights");
+	//					glUniform1i(idUniform, countSpotLights);
 
-	//			idUniform = thisProgram->getUniform("u_numPointLights");
-	//			glUniform1i(idUniform, countPointLights);
 
-	//			idUniform = thisProgram->getUniform("u_numSpotLights");
-	//			glUniform1i(idUniform, countSpotLights);
+	//				} // if Have Program
 
-	//			glUseProgram(0);
+	//			} // if Have Render
+	//		} // For Render
+	//		
+	//		glUseProgram(0);
 
-	//		} // if thisProgram
-
-	//	} // if have render
-	//} // For Renders
+	//	} // if Have Light
+	//} // For Lights
 }

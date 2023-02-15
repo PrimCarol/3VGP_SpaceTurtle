@@ -169,7 +169,6 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
 		// ------ Camara -------
 
-		// De momento esta mal, funciona 1:1.
 		if (t) {
 			GLuint u_m_trans = p->getUniform("u_m_trans");
 			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
@@ -180,6 +179,9 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		mat_Uniform = p->getUniform("u_color");
 		glm::vec4 c = mat.getColor();
 		glUniform4fv(mat_Uniform, 1, &c[0]);
+
+		mat_Uniform = p->getUniform("u_shininess");
+		glUniform1f(mat_Uniform, mat.shininess);
 
 		mat_Uniform = p->getUniform("texIndex");
 		glm::ivec2 texindex = mat.getTexIndex();
