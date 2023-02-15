@@ -10,8 +10,9 @@
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
 	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
-	auto* renderComps = gm.getComponentVector<ST::RenderComponent>();
 	auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
+
+	char buffer[50];
 
 	thisProgram.use();
 
@@ -21,11 +22,10 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 	GLint idUniform = -1;
 
+
 	for (int n = 0; n < lightComps->size(); n++) {
 		if (lightComps->at(n).has_value()) {
 			ST::LightComponent thisLight = lightComps->at(n).value();
-
-			char buffer[50];
 
 			// ---- Lights ----
 
