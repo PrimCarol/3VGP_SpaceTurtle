@@ -20,7 +20,9 @@ struct DirLight{
 	vec3 diffuse;
 	vec3 specular;
 };
-uniform DirLight u_DirectLight;
+#define MAX_DIRECT_LIGHTS 3
+uniform int u_numDirectLights;
+uniform DirLight u_DirectLight[MAX_DIRECT_LIGHTS];
 
 struct PointLight{
 	vec3 position;
@@ -34,7 +36,7 @@ struct PointLight{
 	vec3 specular;
 };
 #define MAX_POINT_LIGHTS 10
-uniform int u_numPointLights = 0;
+uniform int u_numPointLights;
 uniform PointLight u_PointLight[MAX_POINT_LIGHTS];
 
 struct SpotLight {
@@ -53,12 +55,13 @@ struct SpotLight {
     vec3 specular;       
 };
 #define MAX_SPOT_LIGHTS 4
-uniform int u_numSpotLights = 0;
+uniform int u_numSpotLights;
 uniform SpotLight u_SpotLight[MAX_SPOT_LIGHTS];
 
 // Fog
 uniform vec4 u_FogColor;
 
+// Material
 uniform float u_shininess;
 
 // Basic In
@@ -93,8 +96,18 @@ void main(){
 
 	vec3 camera_dir = normalize(modelPosition - u_view_pos);
 
-	//vec4 result = CalcDirLight(myDirLight, normal_, camera_dir, TextureColor, TextureSpecular);
-	vec4 result = CalcDirLight(u_DirectLight, normal_, camera_dir, TextureColor, TextureSpecular);
+	vec4 result = vec4(0.0);
+
+	if(u_numDirectLights == 0 ){
+		result = TextureColor;
+	}
+
+	// Directional Lights
+	int CountDirectLights = u_numDirectLights;
+	if(CountDirectLights >= MAX_DIRECT_LIGHTS){ CountDirectLights = MAX_DIRECT_LIGHTS; }
+	for(int i = 0; i < CountDirectLights; i++){
+		result += CalcDirLight(u_DirectLight[i], normal_, camera_dir, TextureColor, TextureSpecular);
+	}
 
 	// Point Lights
 	int CountPointLights = u_numPointLights;
