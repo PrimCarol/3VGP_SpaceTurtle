@@ -151,6 +151,9 @@ ST::LightType lightStringToEnum(const char* c) {
 	}
 }
 
+#include <imgui_internal.h>
+#include <ImGuizmo.h>
+
 void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 	size_t objSeletected = gm.objectSelected;
@@ -161,8 +164,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		ImGui::Spacing(); ImGui::Spacing();
 	
 		if (gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).has_value()) {
+			ST::TransformComponent* trans = &gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).value();
 			if (ImGui::TreeNodeEx("Transform")) {
-				ST::TransformComponent* trans = &gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).value();
 					
 				// Position
 				glm::vec3 pos = trans->getPosition();
@@ -184,6 +187,21 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 				ImGui::TreePop();
 			}
+
+			//// Guizmos
+			//ImGui::Begin("Viewport");
+			//ImGuizmo::SetOrthographic(false);
+			//ImGuizmo::SetDrawlist();
+
+			//float windowHeight = (float)ImGui::GetWindowHeight();
+			//float windowWidth = (float)ImGui::GetWindowWidth();
+			//
+			//ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			//ImGuizmo::Manipulate((const float*)&gm.mainCamera->view, (const float*)&gm.mainCamera->projection,
+			//	ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&trans->m_transform_[0][0]);
+
+			//ImGui::End();
 		}
 			
 		ImGui::Spacing(); ImGui::Spacing();

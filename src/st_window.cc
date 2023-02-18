@@ -77,26 +77,13 @@ ST::Window::Window(int width, int height){
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     ImGui::StyleColorsDark();
 
-
-
-    // Internal 
-    //ImGui::DockBuilderRemoveNode(dockspace_id); // Clear out existing layout
-    //ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_Dockspace); // Add empty node
-    //ImGui::DockBuilderSetNodeSize(dockspace_id, dockspace_size);
-
-    //ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-    //ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, NULL, &dock_main_id);
-    //ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, NULL, &dock_main_id);
-
-    //ImGui::DockBuilderDockWindow("Log", dock_id_bottom);
-    //ImGui::DockBuilderDockWindow("Properties", dock_id_prop);
-    //ImGui::DockBuilderDockWindow("Mesh", dock_id_prop);
-    //ImGui::DockBuilderDockWindow("Extra", dock_id_prop);
-    //ImGui::DockBuilderFinish(dockspace_id);
-
-
     ImGui_ImplGlfw_InitForOpenGL(glWindow, true);
     ImGui_ImplOpenGL3_Init("#version 130");
+
+    printf("-----------------------------------------\n");
+    printf("------------- Space Turtle --------------\n");
+    printf("--------- By: Pere Prim Carol -----------\n");
+    printf("-----------------------------------------\n");
 }
 
 ST::Window::Window(const Window& o){}
@@ -153,7 +140,7 @@ void ST::Window::Clear() const{
     ImGuizmo::BeginFrame();
 
     // Para que toda la ventana tenga la posibilidad de hacer Dock
-    ImGui::DockSpaceOverViewport();
+    ImGui::DockSpaceOverViewport(); // <----- Modificado
 }
 
 int ST::Window::getWindowsHeight() const{

@@ -9,6 +9,7 @@
 #include <optional>
 
 #include <st_gameobj.h>
+#include <st_camera.h>
 
 #define MAX_OBJECTS 100000
 
@@ -66,6 +67,8 @@ namespace ST {
 		size_t size() const;
 
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
+
+		//ST::Camera* mainCamera;
 
 		~GameObj_Manager();
 	private:

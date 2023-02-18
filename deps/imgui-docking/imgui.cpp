@@ -16735,9 +16735,40 @@ ImGuiID ImGui::DockSpaceOverViewport(const ImGuiViewport* viewport, ImGuiDockNod
     Begin(label, NULL, host_window_flags);
     PopStyleVar(3);
 
-    ImGuiID dockspace_id = GetID("DockSpace");
-    //DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, window_class);
-    DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode, window_class);
+    // ----------------- Predocking ----------------
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+
+    static auto firts_time = true;
+    if (firts_time) {
+        firts_time = false;
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+            //ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+            ImGui::DockBuilderRemoveNode(dockspace_id);
+            ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_PassthruCentralNode | ImGuiDockNodeFlags_DockSpace);
+            ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+            auto dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dockspace_id);
+            auto dock_id_right = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, nullptr, &dockspace_id);
+            auto dock_id_bottom = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Down, 0.2f, nullptr, &dockspace_id);
+            ImGui::DockBuilderDockWindow("Hierarchy", dock_id_left);
+            ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
+            ImGui::DockBuilderDockWindow("Stats", dock_id_bottom);
+
+            ImGui::DockBuilderFinish(dockspace_id);
+            ImGui::SetWindowFocus(NULL);
+        }
+    }else {
+        ImGuiID dockspace_id = GetID("DockSpace");
+        DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode, window_class);
+    }
+
+
+    //ImGuiID dockspace_id = GetID("DockSpace");
+    //DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode, window_class);
     End();
 
     return dockspace_id;
