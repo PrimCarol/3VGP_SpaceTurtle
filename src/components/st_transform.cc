@@ -12,6 +12,8 @@ ST::TransformComponent::TransformComponent(){
 	rotation_ = glm::vec3(0);
 	scale_ = glm::vec3(1.0f);
 
+	dirty = true;
+
 	setPosition(position_);
 	setScale(scale_);
 }
@@ -36,53 +38,55 @@ ST::TransformComponent::TransformComponent(){
 // ------------------------- Movement -------------------------
 void ST::TransformComponent::Move(const glm::vec3 newPos) {
 	position_ += newPos;
-	//updateTransformMatrix();
+	dirty = true;
 }
 
 void ST::TransformComponent::RotateX(const float r) {
 	rotation_.x += r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 void ST::TransformComponent::RotateY(const float r) {
 	rotation_.y += r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 void ST::TransformComponent::RotateZ(const float r) {
 	rotation_.z += r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 
 // ------------------------- Setters -------------------------
 void ST::TransformComponent::setPosition(const glm::vec3 pos) {
 	position_ = pos;
-	//updateTransformMatrix();
+	dirty = true;
 }
-void ST::TransformComponent::setPosition(const float posX, const float posY, const float posZ){
+void ST::TransformComponent::setPosition(const float posX, const float posY, const float posZ) {
 	position_.x = posX;
 	position_.y = posY;
 	position_.z = posZ;
+	dirty = true;
 }
 void ST::TransformComponent::setRotateX(const float r) {
 	rotation_.x = r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 void ST::TransformComponent::setRotateY(const float r) {
 	rotation_.y = r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 void ST::TransformComponent::setRotateZ(const float r) {
 	rotation_.z = r;
-	//updateTransformMatrix();
+	dirty = true;
 }
 void ST::TransformComponent::setScale(const glm::vec3 newScale) {
 	scale_ = newScale;
-	//updateTransformMatrix();
+	dirty = true;
 }
 
-void ST::TransformComponent::setScale(const float scaleX, const float scaleY, const float scaleZ){
+void ST::TransformComponent::setScale(const float scaleX, const float scaleY, const float scaleZ) {
 	scale_.x = scaleX;
 	scale_.y = scaleY;
 	scale_.z = scaleZ;
+	dirty = true;
 }
 
 void ST::TransformComponent::updateDirectionalVectors(){

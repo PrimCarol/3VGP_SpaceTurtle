@@ -24,6 +24,10 @@ void ST::Mesh::setName(char* n){
 	if (n) { name_ = n; }
 }
 
+bool ST::Mesh::operator==(const Mesh& rhs){
+	return internalId == rhs.internalId;
+}
+
 ST::Mesh::~Mesh(){
 	glDeleteVertexArrays(1, &internalId);
 }
@@ -109,7 +113,11 @@ void ST::Triangle::render(){
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
-ST::Triangle::~Triangle() {}
+ST::Triangle::~Triangle() {
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
@@ -164,7 +172,11 @@ void ST::Quad::render() {
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
-ST::Quad::~Quad() {}
+ST::Quad::~Quad() {
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ----------------- Circle ------------------
 ST::Circle::Circle() : Mesh() {
@@ -271,7 +283,11 @@ int ST::Circle::getRebolutions(){
 	return (rebolutions_ -1);
 }
 
-ST::Circle::~Circle() {}
+ST::Circle::~Circle() {
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ------------------- Cube -------------------
 ST::Cube::Cube() : Mesh() {
@@ -369,7 +385,11 @@ void ST::Cube::render() {
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
-ST::Cube::~Cube() {}
+ST::Cube::~Cube() {
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ------------------- OBJ -------------------
 ST::Geometry::Geometry() : Mesh() {
@@ -483,4 +503,94 @@ void ST::Geometry::render(){
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
-ST::Geometry::~Geometry() {}
+ST::Geometry::~Geometry() {
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}
+
+ST::Test::Test()
+{
+}
+
+ST::Test::Test(int howMany, std::vector<glm::mat4>* matrices){
+	instancing = howMany;
+
+	setName("Test");
+
+	vertices_.push_back({ {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(0);
+	indices_.push_back(1);
+	indices_.push_back(2);
+	indices_.push_back(0);
+	indices_.push_back(2);
+	indices_.push_back(3);
+
+	glGenVertexArrays(1, &internalId);
+	glBindVertexArray(internalId);
+
+	GLuint gVBO = 0;
+	glGenBuffers(1, &gVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(VertexInfo), &vertices_.front(), GL_STATIC_DRAW);
+
+	// Position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
+	glEnableVertexAttribArray(0);
+	// Normal
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);
+	// UV's
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
+	glEnableVertexAttribArray(2);
+
+
+	// Instancing ------
+	GLuint instancingID = 0;
+	glGenBuffers(1, &instancingID);
+	glBindBuffer(GL_ARRAY_BUFFER, instancingID);
+	glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), matrices->data(), GL_STATIC_DRAW);
+	if (howMany != 1) {
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+	}
+	// Instancing ------
+
+
+	// Indices
+	GLuint gEBO = 0;
+	glGenBuffers(1, &gEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizei)indices_.size() * sizeof(unsigned int), &indices_.front(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+}
+
+void ST::Test::render(){
+	glBindVertexArray(internalId);
+	if (instancing > 1) {
+		glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, instancing);
+	}
+}
+
+ST::Test::~Test(){
+	glDeleteVertexArrays(1, &internalId);
+	vertices_.clear();
+	indices_.clear();
+}

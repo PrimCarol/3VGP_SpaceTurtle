@@ -52,6 +52,8 @@ namespace ST {
 
 		void updateDirectionalVectors();
 
+		bool dirty;
+
 		~TransformComponent();
 	private:
 

@@ -39,6 +39,8 @@ namespace ST {
 		std::vector<VertexInfo> vertices_;
 		std::vector<unsigned int> indices_;
 
+		bool operator==(const Mesh& rhs);
+
 		~Mesh();
 		Mesh(const Mesh& o);
 	protected:
@@ -46,6 +48,16 @@ namespace ST {
 		GLuint internalId;
 
 		CullMode cullmode_;
+	};
+
+	// ------------------- Test -------------------
+	class Test : public Mesh {
+	public:
+		Test();
+		Test(int howMany, std::vector<glm::mat4>* matrices);
+		void render() override;
+		int instancing = 1;
+		~Test();
 	};
 
 	// ------------------- Basics 2D -------------------

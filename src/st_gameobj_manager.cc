@@ -27,7 +27,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	bool shaderError = false;
 	ST::Shader vertex(E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader01.vert");
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
 	if (!textVertex) {
 		shaderError = true;
 		printf("Error load Vertex Shader");

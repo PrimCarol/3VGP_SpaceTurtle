@@ -97,14 +97,42 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	doRender(objs_translucent_sorted, cam);
+
+	objs_opaque.clear();
+	objs_translucent.clear();
+	objs_translucent_sorted.clear();
+
 }
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
+	
+	std::vector<glm::mat4> sameGeometry;
+
+	GLuint actualMeshRendering = 0;
+	bool firstTime = true;
+
 	for (int i = 0; i < objs.size(); i++){
-		if (setUpUniforms(objs[i].render_->material, objs[i].transform_, cam)) {
-			if (objs[i].render_->mesh) {
-				objs[i].render_->mesh->render();
-			}
+		//if (setUpUniforms(objs[i].render_->material, objs[i].transform_, cam)) {
+		//	if (objs[i].render_->mesh) {
+		//		objs[i].render_->mesh->render();
+		//	}
+		//}
+
+		if (firstTime) {
+			actualMeshRendering = objs[i].render_->mesh->getId();
+			firstTime = false;
+		}
+
+		if (objs[i].render_->mesh->getId() == actualMeshRendering) {
+			sameGeometry.push_back(objs[i].transform_->m_transform_);
+		}else {
+			setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
+			ST::Test renderTest(sameGeometry.size(), &sameGeometry);
+			renderTest.render();
+			sameGeometry.clear();
+
+			actualMeshRendering = objs[i].render_->mesh->getId();
+			sameGeometry.push_back(objs[i].transform_->m_transform_);
 		}
 
 		// TEST -------------------
@@ -142,7 +170,15 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		//drawCollision(colliderPoint_min, colliderPoint_max);
 		*/
 		// TEST -------------------
+
+	}// End For
+
+	if (sameGeometry.size() > 0) {
+		setUpUniforms(objs[objs.size() - 1].render_->material, objs[objs.size() - 1].transform_, cam);
+		ST::Test renderTest(sameGeometry.size(), &sameGeometry);
+		renderTest.render();
 	}
+	sameGeometry.clear();
 }
 
 bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){

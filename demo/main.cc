@@ -11,17 +11,17 @@ int main() {
 	ST::Camera myCam;
 
 	//// ----- Hacemos un "SOL" -----
-	ST::GameObj Sun = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	Sun.getComponent<ST::NameComponent>()->setName("Sun");
-	Sun.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,0.0f);
-	Sun.getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
-	Sun.getComponent<ST::TransformComponent>()->setRotateZ(1.0f);
-	Sun.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	Sun.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.5f, 0.5f, 0.5f);
+	//ST::GameObj Sun = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	//Sun.getComponent<ST::NameComponent>()->setName("Sun");
+	//Sun.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,0.0f);
+	//Sun.getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
+	//Sun.getComponent<ST::TransformComponent>()->setRotateZ(1.0f);
+	//Sun.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	//Sun.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	// --------------
 	ST::Texture textureTest;
-	textureTest.loadSource("../others/NormalMap.png");
+	textureTest.loadSource("../others/basic_anim.png");
 	textureTest.setRows(1);
 	textureTest.setCols(8);
 
@@ -35,16 +35,18 @@ int main() {
 	textureNormal.setRows(1);
 	textureNormal.setCols(8);
 
-	ST::Quad mesh_quad;
+	ST::Test mesh_quad;
+
+	int HOWMANY = 100000;
 
 	std::vector<ST::GameObj> objects;
-	for (int i = 0; i < 200; i++){
+	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
 		objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_quad);
-		objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
+		objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-20.0f,20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-100.0f,100.0f), ST::Engine::getRandom(-100.0f, 100.0f), ST::Engine::getRandom(0.0f, 200.0f)));
 	}
 
 	//ST::Texture textureTest;
@@ -71,19 +73,19 @@ int main() {
 		myCam.fpsMovement(w, 10.0f);
 
 		// --------- Animation --------
-		for (int i = 0; i < 200; i++){
-			objects.at(i).getComponent<ST::RenderComponent>()->material.setTexIndex({ contadorAnimation, 6 });
-		}
+		//for (int i = 0; i < HOWMANY; i++){
+		//	objects.at(i).getComponent<ST::RenderComponent>()->material.setTexIndex({ contadorAnimation, 6 });
+		//}
 
-		if (contadorCadaCuantosFrames >= 0.2f) {
-			contadorCadaCuantosFrames = 0;
-			contadorAnimation++;
-		}
-		contadorCadaCuantosFrames += w.DeltaTime();
+		//if (contadorCadaCuantosFrames >= 0.2f) {
+		//	contadorCadaCuantosFrames = 0;
+		//	contadorAnimation++;
+		//}
+		//contadorCadaCuantosFrames += w.DeltaTime();
 		
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
+		//ST::SystemLight::CompileLights(gm, *gm.basicProgram);
 		ST::SystemRender::Render(gm, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
@@ -91,8 +93,8 @@ int main() {
 		}
 
 		ST::SystemHUD::NavBar(gm);
-		ST::SystemHUD::Hierarchy(gm);
-		ST::SystemHUD::Inspector(gm);
+		//ST::SystemHUD::Hierarchy(gm);
+		//ST::SystemHUD::Inspector(gm);
 		ST::SystemHUD::Stats(w, gm);
 
 		// ----------------------------
