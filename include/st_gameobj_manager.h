@@ -68,7 +68,7 @@ namespace ST {
 
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
-		//ST::Camera* mainCamera;
+		ST::Camera* mainCamera;
 
 		~GameObj_Manager();
 	private:

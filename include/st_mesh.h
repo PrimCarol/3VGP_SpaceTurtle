@@ -54,7 +54,7 @@ namespace ST {
 	class Test : public Mesh {
 	public:
 		Test();
-		Test(int howMany, std::vector<glm::mat4>* matrices);
+		Test(std::vector<glm::mat4>* matrices);
 		void render() override;
 		int instancing = 1;
 		~Test();

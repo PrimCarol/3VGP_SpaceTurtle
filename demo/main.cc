@@ -9,6 +9,7 @@ int main() {
 	ST::GameObj_Manager gm;
 
 	ST::Camera myCam;
+	gm.mainCamera = &myCam;
 
 	//// ----- Hacemos un "SOL" -----
 	//ST::GameObj Sun = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
@@ -25,28 +26,28 @@ int main() {
 	textureTest.setRows(1);
 	textureTest.setCols(8);
 
-	ST::Texture textureSpecular;
-	textureSpecular.loadSource("../others/SpecularMap.png");
-	textureSpecular.setRows(1);
-	textureSpecular.setCols(8);
+	//ST::Texture textureSpecular;
+	//textureSpecular.loadSource("../others/SpecularMap.png");
+	//textureSpecular.setRows(1);
+	//textureSpecular.setCols(8);
 
-	ST::Texture textureNormal;
-	textureNormal.loadSource("../others/NormalMap.png");
-	textureNormal.setRows(1);
-	textureNormal.setCols(8);
+	//ST::Texture textureNormal;
+	//textureNormal.loadSource("../others/NormalMap.png");
+	//textureNormal.setRows(1);
+	//textureNormal.setCols(8);
 
-	ST::Test mesh_quad;
+	ST::Test test_mesh;
 
-	int HOWMANY = 100000;
+	int HOWMANY = 10000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_quad);
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 		objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-100.0f,100.0f), ST::Engine::getRandom(-100.0f, 100.0f), ST::Engine::getRandom(0.0f, 200.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
 	}
 
 	//ST::Texture textureTest;
@@ -77,7 +78,7 @@ int main() {
 		//	objects.at(i).getComponent<ST::RenderComponent>()->material.setTexIndex({ contadorAnimation, 6 });
 		//}
 
-		//if (contadorCadaCuantosFrames >= 0.2f) {
+		//if (contadorCadaCuantosFrames >= 0.12f) {
 		//	contadorCadaCuantosFrames = 0;
 		//	contadorAnimation++;
 		//}
@@ -94,7 +95,7 @@ int main() {
 
 		ST::SystemHUD::NavBar(gm);
 		//ST::SystemHUD::Hierarchy(gm);
-		//ST::SystemHUD::Inspector(gm);
+		ST::SystemHUD::Inspector(gm);
 		ST::SystemHUD::Stats(w, gm);
 
 		// ----------------------------

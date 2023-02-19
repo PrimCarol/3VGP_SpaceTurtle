@@ -124,10 +124,11 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		}
 
 		if (objs[i].render_->mesh->getId() == actualMeshRendering) {
+			// Comprobar si la textura tambien es la misma.
 			sameGeometry.push_back(objs[i].transform_->m_transform_);
 		}else {
 			setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
-			ST::Test renderTest(sameGeometry.size(), &sameGeometry);
+			ST::Test renderTest(&sameGeometry);
 			renderTest.render();
 			sameGeometry.clear();
 
@@ -175,7 +176,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 	if (sameGeometry.size() > 0) {
 		setUpUniforms(objs[objs.size() - 1].render_->material, objs[objs.size() - 1].transform_, cam);
-		ST::Test renderTest(sameGeometry.size(), &sameGeometry);
+		ST::Test renderTest(&sameGeometry);
 		renderTest.render();
 	}
 	sameGeometry.clear();

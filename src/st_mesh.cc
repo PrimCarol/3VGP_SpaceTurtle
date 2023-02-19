@@ -513,8 +513,10 @@ ST::Test::Test()
 {
 }
 
-ST::Test::Test(int howMany, std::vector<glm::mat4>* matrices){
-	instancing = howMany;
+ST::Test::Test(std::vector<glm::mat4>* matrices){
+	if (matrices) {
+		instancing = matrices->size();
+	}
 
 	setName("Test");
 
@@ -548,25 +550,33 @@ ST::Test::Test(int howMany, std::vector<glm::mat4>* matrices){
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
+	if (matrices) {
+		// Instancing ------
+		GLuint instancingID = 0;
+		glGenBuffers(1, &instancingID);
+		glBindBuffer(GL_ARRAY_BUFFER, instancingID);
+		// Las matrices
+		glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), matrices->data(), GL_STATIC_DRAW);
+		if (instancing != 1) {
+			// Las matrices
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+			glEnableVertexAttribArray(3);
+			glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
+			glEnableVertexAttribArray(4);
+			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+			glEnableVertexAttribArray(5);
+			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+			glEnableVertexAttribArray(6);
+			glVertexAttribDivisor(3, 1);
+			glVertexAttribDivisor(4, 1);
+			glVertexAttribDivisor(5, 1);
+			glVertexAttribDivisor(6, 1);
 
-	// Instancing ------
-	GLuint instancingID = 0;
-	glGenBuffers(1, &instancingID);
-	glBindBuffer(GL_ARRAY_BUFFER, instancingID);
-	glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), matrices->data(), GL_STATIC_DRAW);
-	if (howMany != 1) {
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
-		glEnableVertexAttribArray(5);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
-		glVertexAttribDivisor(5, 1);
-		glVertexAttribDivisor(6, 1);
+			// Los colores?
+			glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+			glEnableVertexAttribArray(7);
+			glVertexAttribDivisor(7, 1);
+		}
 	}
 	// Instancing ------
 
@@ -584,6 +594,7 @@ ST::Test::Test(int howMany, std::vector<glm::mat4>* matrices){
 
 void ST::Test::render(){
 	glBindVertexArray(internalId);
+	//SetCullMode(cullmode_);
 	if (instancing > 1) {
 		glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, instancing);
 	}
