@@ -26,10 +26,8 @@ int main() {
 	textureTest.setRows(1);
 	textureTest.setCols(8);
 
-	//ST::Texture textureSpecular;
-	//textureSpecular.loadSource("../others/SpecularMap.png");
-	//textureSpecular.setRows(1);
-	//textureSpecular.setCols(8);
+	ST::Texture textureSpecular;
+	textureSpecular.loadSource("../others/icon.png");
 
 	//ST::Texture textureNormal;
 	//textureNormal.loadSource("../others/NormalMap.png");
@@ -38,7 +36,7 @@ int main() {
 
 	ST::Test test_mesh;
 
-	int HOWMANY = 1000;
+	int HOWMANY = 100000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
@@ -49,6 +47,15 @@ int main() {
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
 	}
+
+	//for (int i = 0; i < HOWMANY; i++) {
+	//	objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
+	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	//	objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
+	//	objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureSpecular);
+	//	objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	//	objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
+	//}
 
 	//ST::Texture textureTest;
 	//textureTest.loadSource("../others/bricks_albedo.png");

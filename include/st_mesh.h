@@ -34,11 +34,12 @@ namespace ST {
 
 	public:
 		Mesh();
-		const GLuint getId();
+		const GLuint getID();
 
 		const char* getName();
 		void setName(char* n);
 
+		virtual void setInstanceData(const std::vector<InstanceInfo>& data);
 		virtual void render();
 
 		std::vector<VertexInfo> vertices_;
@@ -59,10 +60,12 @@ namespace ST {
 	class Test : public Mesh {
 	public:
 		Test();
-		Test(std::vector<glm::mat4>* matrices);
 		void render() override;
-		int instancing = 1;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Test();
+	private:
+		GLuint instanceBuffer;
+		int numInstances;
 	};
 
 	// ------------------- Basics 2D -------------------
@@ -70,6 +73,7 @@ namespace ST {
 	public:
 		Triangle();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Triangle();
 	};
 
@@ -77,6 +81,7 @@ namespace ST {
 	public:
 		Quad();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Quad();
 	};
 
@@ -84,6 +89,8 @@ namespace ST {
 	public:
 		Circle();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
+
 		void changeRebolutions(int r);
 		int getRebolutions();
 		~Circle();
@@ -98,6 +105,7 @@ namespace ST {
 	public:
 		Cube();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Cube();
 	};
 
@@ -108,6 +116,7 @@ namespace ST {
 	
 		bool loadFromFile(const char* path);
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 	
 		~Geometry();
 	};

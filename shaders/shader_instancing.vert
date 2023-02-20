@@ -6,6 +6,7 @@ layout (location=1) in vec3 a_normal;
 layout (location=2) in vec2 a_uv;
 // Instancing Transformations
 layout (location = 3) in mat4 instance_Matrix;
+layout (location = 7) in vec4 instance_Color;
 
 // Basic Info
 uniform mat4 u_view_matrix;
@@ -32,7 +33,7 @@ out vec3 modelPosition;
 out vec2 texCoords;
 
 void main(){
-	color = u_color;
+	color = instance_Color;
 
 	int indexX = 3;
 	int indexY = 2;

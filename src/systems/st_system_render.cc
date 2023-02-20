@@ -55,9 +55,7 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	std::vector<MyObjToRender> objs_opaque;
 	std::vector<MyObjToRender> objs_translucent;
 
-	//objs_opaque.clear();
-	//objs_translucent.clear();
-
+	// ----- Opacos -----
 	for (int i = 0; i < r.size(); i++){
 		
 		if (r[i].has_value() && t[i].has_value()) {
@@ -79,6 +77,8 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glDisable(GL_BLEND);
 	doRender(objs_opaque, cam);
 
+
+	// ----- Translucidos -----
 	std::map<float, int> sorted;
 	for (int i = 0; i < objs_translucent.size(); i++){
 		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
@@ -106,34 +106,43 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
 	
-	std::vector<glm::mat4> sameGeometry;
+	std::vector<InstanceInfo> instancing;
 
 	GLuint actualMeshRendering = 0;
+	GLuint actualTextureRendering = 0;
 	bool firstTime = true;
 
 	for (int i = 0; i < objs.size(); i++){
-		//if (setUpUniforms(objs[i].render_->material, objs[i].transform_, cam)) {
-		//	if (objs[i].render_->mesh) {
-		//		objs[i].render_->mesh->render();
-		//	}
-		//}
 
 		if (firstTime) {
-			actualMeshRendering = objs[i].render_->mesh->getId();
+			actualMeshRendering = objs[i].render_->mesh->getID();
+			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
 			firstTime = false;
 		}
 
-		if (objs[i].render_->mesh->getId() == actualMeshRendering) {
+		if (objs[i].render_->mesh->getID() == actualMeshRendering) {
 			// Comprobar si la textura tambien es la misma.
-			sameGeometry.push_back(objs[i].transform_->m_transform_);
+			instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+
+			//if (objs[i].render_->material.getAlbedo()->getID() == actualTextureRendering) {
+			//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+			//}else {
+			//	setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
+			//	objs[i].render_->mesh->setInstanceData(instancing);
+			//	objs[i].render_->mesh->render();
+			//	instancing.clear();
+			//
+			//	actualMeshRendering = objs[i].render_->mesh->getID();
+			//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+			//}
 		}else {
 			setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
-			ST::Test renderTest(&sameGeometry);
-			renderTest.render();
-			sameGeometry.clear();
+			objs[i].render_->mesh->setInstanceData(instancing);
+			objs[i].render_->mesh->render();
+			instancing.clear();
 
-			actualMeshRendering = objs[i].render_->mesh->getId();
-			sameGeometry.push_back(objs[i].transform_->m_transform_);
+			actualMeshRendering = objs[i].render_->mesh->getID();
+			instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
 		}
 
 		// TEST -------------------
@@ -174,12 +183,12 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 	}// End For
 
-	if (sameGeometry.size() > 0) {
-		setUpUniforms(objs[objs.size() - 1].render_->material, objs[objs.size() - 1].transform_, cam);
-		ST::Test renderTest(&sameGeometry);
-		renderTest.render();
+	if (instancing.size() > 0) {
+		setUpUniforms(objs[0].render_->material, objs[0].transform_, cam);
+		objs[0].render_->mesh->setInstanceData(instancing);
+		objs[0].render_->mesh->render();
 	}
-	sameGeometry.clear();
+	instancing.clear();
 }
 
 bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
@@ -213,9 +222,9 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 		// Material
 		GLuint mat_Uniform = -1;
-		mat_Uniform = p->getUniform("u_color");
+		/*mat_Uniform = p->getUniform("u_color");
 		glm::vec4 c = mat.getColor();
-		glUniform4fv(mat_Uniform, 1, &c[0]);
+		glUniform4fv(mat_Uniform, 1, &c[0]);*/
 
 		mat_Uniform = p->getUniform("u_shininess");
 		glUniform1f(mat_Uniform, mat.shininess);

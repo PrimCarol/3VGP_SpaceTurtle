@@ -11,7 +11,7 @@ ST::Mesh::Mesh(){
 	cullmode_ = ST::kCull_Back;
 }
 
-const GLuint ST::Mesh::getId(){
+const GLuint ST::Mesh::getID(){
 	return internalId;
 }
 
@@ -38,6 +38,8 @@ ST::Mesh::Mesh(const Mesh& o){
 
 	cullmode_ = o.cullmode_;
 }
+
+void ST::Mesh::setInstanceData(const std::vector<InstanceInfo>& data){}
 
 void ST::Mesh::render(){}
 
@@ -105,6 +107,8 @@ ST::Triangle::Triangle() : Mesh() {
 	glBindVertexArray(0);
 }
 
+void ST::Triangle::setInstanceData(const std::vector<InstanceInfo>& data) {}
+
 void ST::Triangle::render(){
 	glBindVertexArray(internalId);
 
@@ -164,6 +168,8 @@ ST::Quad::Quad() : Mesh() {
 	glBindVertexArray(0);
 }
 
+void ST::Quad::setInstanceData(const std::vector<InstanceInfo>& data) {}
+
 void ST::Quad::render() {
 	glBindVertexArray(internalId);
 	
@@ -186,6 +192,8 @@ ST::Circle::Circle() : Mesh() {
 	const int rebolutions = 10 + 1;
 	changeRebolutions(rebolutions);
 }
+
+void ST::Circle::setInstanceData(const std::vector<InstanceInfo>& data) {}
 
 void ST::Circle::render() {
 	glBindVertexArray(internalId);
@@ -376,6 +384,8 @@ ST::Cube::Cube() : Mesh() {
 	glBindVertexArray(0);
 }
 
+void ST::Cube::setInstanceData(const std::vector<InstanceInfo>& data) {}
+
 void ST::Cube::render() {
 	glBindVertexArray(internalId);
 	
@@ -494,6 +504,8 @@ bool ST::Geometry::loadFromFile(const char* path) {
 	return true;
 }
 
+void ST::Geometry::setInstanceData(const std::vector<InstanceInfo>& data) {}
+
 void ST::Geometry::render(){
 	glBindVertexArray(internalId);
 	
@@ -509,14 +521,7 @@ ST::Geometry::~Geometry() {
 	indices_.clear();
 }
 
-ST::Test::Test()
-{
-}
-
-ST::Test::Test(std::vector<glm::mat4>* matrices){
-	if (matrices) {
-		instancing = matrices->size();
-	}
+ST::Test::Test(){
 
 	setName("Cube");
 
@@ -592,36 +597,38 @@ ST::Test::Test(std::vector<glm::mat4>* matrices){
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
-	if (matrices) {
-		// Instancing ------
-		GLuint instancingID = 0;
-		glGenBuffers(1, &instancingID);
-		glBindBuffer(GL_ARRAY_BUFFER, instancingID);
-		// Las matrices
-		glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), matrices->data(), GL_STATIC_DRAW);
-		if (instancing != 1) {
-			// Las matrices
-			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
-			glEnableVertexAttribArray(4);
-			glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
-			glEnableVertexAttribArray(5);
-			glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
-			glEnableVertexAttribArray(6);
-			glVertexAttribDivisor(3, 1);
-			glVertexAttribDivisor(4, 1);
-			glVertexAttribDivisor(5, 1);
-			glVertexAttribDivisor(6, 1);
+	//// Instancing ------
+	//if (matrices) {
+	//	GLuint instancingID = 0;
+	//	glGenBuffers(1, &instancingID);
+	//	glBindBuffer(GL_ARRAY_BUFFER, instancingID);
+	//	// Las matrices
+	//	glBufferData(GL_ARRAY_BUFFER, matrices->size() * sizeof(glm::mat4), matrices->data(), GL_STATIC_DRAW);
+	//	if (instancing != 1) {
+	//		// Las matrices
+	//		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+	//		glEnableVertexAttribArray(3);
+	//		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
+	//		glEnableVertexAttribArray(4);
+	//		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+	//		glEnableVertexAttribArray(5);
+	//		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+	//		glEnableVertexAttribArray(6);
+	//		glVertexAttribDivisor(3, 1);
+	//		glVertexAttribDivisor(4, 1);
+	//		glVertexAttribDivisor(5, 1);
+	//		glVertexAttribDivisor(6, 1);
 
-			// Los colores?
-			//glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-			//glEnableVertexAttribArray(7);
-			//glVertexAttribDivisor(7, 1);
-		}
-	}
-	// Instancing ------
+	//		// Los colores?
+	//		//glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+	//		//glEnableVertexAttribArray(7);
+	//		//glVertexAttribDivisor(7, 1);
+	//	}
+	//}
+	//// Instancing ------
 
+	glGenBuffers(1, &instanceBuffer);
+	numInstances = 1;
 
 	// Indices
 	GLuint gEBO = 0;
@@ -634,16 +641,47 @@ ST::Test::Test(std::vector<glm::mat4>* matrices){
 
 }
 
+void ST::Test::setInstanceData(const std::vector<InstanceInfo>& data){
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
+}
+
 void ST::Test::render(){
-	glBindVertexArray(internalId);
+	glBindVertexArray(internalId); // VAO
+
 	//SetCullMode(cullmode_);
-	if (instancing > 1) {
-		glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, instancing);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
 	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+	
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+	
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 ST::Test::~Test(){
 	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
 	vertices_.clear();
 	indices_.clear();
 }
