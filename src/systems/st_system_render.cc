@@ -110,15 +110,16 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 	GLuint actualMeshRendering = 0;
 	GLuint actualTextureRendering = 0;
-	int indiceLastMesh = 0;
-	int indiceLastTexture = 0;
+	int lastIndice = 0;
 	bool firstTime = true;
 
 	for (int i = 0; i < objs.size(); i++){
 
 		if (firstTime) {
 			actualMeshRendering = objs[i].render_->mesh->getID();
-			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+			if (objs[i].render_->material.haveAlbedo) {
+				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+			}
 			firstTime = false;
 		}
 
@@ -148,29 +149,31 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		//}
 
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
-			setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
-			objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
-			objs[indiceLastMesh].render_->mesh->render();
+			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+			objs[lastIndice].render_->mesh->setInstanceData(instancing);
+			objs[lastIndice].render_->mesh->render();
 			instancing.clear();
 
 			actualMeshRendering = objs[i].render_->mesh->getID();
 		}
 
-		if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
-			setUpUniforms(objs[indiceLastTexture].render_->material, objs[indiceLastTexture].transform_, cam);
-			objs[indiceLastTexture].render_->mesh->setInstanceData(instancing);
-			objs[indiceLastTexture].render_->mesh->render();
-			instancing.clear();
+		if (objs[i].render_->material.haveAlbedo) {
+			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
+				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+				objs[lastIndice].render_->mesh->setInstanceData(instancing);
+				objs[lastIndice].render_->mesh->render();
+				instancing.clear();
 
-			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+			}
 		}
 
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),
 							   objs[i].render_->material.getTexIndex(),
 							   objs[i].render_->material.shininess });
-		indiceLastMesh = i;
-		indiceLastTexture = i;
+		lastIndice = i;
+		lastIndice = i;
 
 		// TEST -------------------
 		/*
@@ -211,9 +214,9 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 	}// End For
 
 	if (instancing.size() > 0) {
-		setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
-		objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
-		objs[indiceLastMesh].render_->mesh->render();
+		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+		objs[lastIndice].render_->mesh->setInstanceData(instancing);
+		objs[lastIndice].render_->mesh->render();
 		instancing.clear();
 	}
 }

@@ -10,6 +10,7 @@
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
 	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
+	auto* renderComps = gm.getComponentVector<ST::RenderComponent>();
 	auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
 
 	char buffer[50];
@@ -21,7 +22,6 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	int countSpotLights = 0;
 
 	GLint idUniform = -1;
-
 
 	for (int n = 0; n < lightComps->size(); n++) {
 		if (lightComps->at(n).has_value()) {
@@ -135,6 +135,11 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 				break;
 			}
+
+			if (renderComps->at(n).has_value()) {
+				renderComps->at(n).value().material.setColor(thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
+			}
+
 		} // if Have Light
 	} // For Lights
 	
