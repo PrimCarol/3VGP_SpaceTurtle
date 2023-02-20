@@ -28,7 +28,7 @@ namespace ST {
 
 		static bool setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam);
 
-		~SystemRender();
+		//~SystemRender();
 		SystemRender(const SystemRender& o);
 	};
 }

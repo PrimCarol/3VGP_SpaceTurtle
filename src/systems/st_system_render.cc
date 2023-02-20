@@ -110,6 +110,8 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 	GLuint actualMeshRendering = 0;
 	GLuint actualTextureRendering = 0;
+	int indiceLastMesh = 0;
+	int indiceLastTexture = 0;
 	bool firstTime = true;
 
 	for (int i = 0; i < objs.size(); i++){
@@ -120,30 +122,52 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 			firstTime = false;
 		}
 
-		if (objs[i].render_->mesh->getID() == actualMeshRendering) {
-			// Comprobar si la textura tambien es la misma.
-			instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//if (objs[i].render_->mesh->getID() == actualMeshRendering) {
+		//	// Comprobar si la textura tambien es la misma.
+		//	//instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
 
-			//if (objs[i].render_->material.getAlbedo()->getID() == actualTextureRendering) {
-			//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-			//}else {
-			//	setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
-			//	objs[i].render_->mesh->setInstanceData(instancing);
-			//	objs[i].render_->mesh->render();
-			//	instancing.clear();
-			//
-			//	actualMeshRendering = objs[i].render_->mesh->getID();
-			//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-			//}
-		}else {
-			setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
+		//	if (objs[i].render_->material.getAlbedo()->getID() == actualTextureRendering) {
+		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//	}else {
+		//		setUpUniforms(objs[i-1].render_->material, objs[i-1].transform_, cam);
+		//		objs[i].render_->mesh->setInstanceData(instancing);
+		//		objs[i].render_->mesh->render();
+		//		instancing.clear();
+		//	
+		//		actualMeshRendering = objs[i].render_->mesh->getID();
+		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//	}
+		//}else {
+		//	setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
+		//	objs[i].render_->mesh->setInstanceData(instancing);
+		//	objs[i].render_->mesh->render();
+		//	instancing.clear();
+
+		//	actualMeshRendering = objs[i].render_->mesh->getID();
+		//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//}
+
+		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
+			setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
 			objs[i].render_->mesh->setInstanceData(instancing);
 			objs[i].render_->mesh->render();
 			instancing.clear();
 
 			actualMeshRendering = objs[i].render_->mesh->getID();
-			instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
 		}
+
+		if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
+			setUpUniforms(objs[indiceLastTexture].render_->material, objs[indiceLastTexture].transform_, cam);
+			objs[i].render_->mesh->setInstanceData(instancing);
+			objs[i].render_->mesh->render();
+			instancing.clear();
+
+			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+		}
+
+		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		indiceLastMesh = i;
+		indiceLastTexture = i;
 
 		// TEST -------------------
 		/*
@@ -184,11 +208,11 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 	}// End For
 
 	if (instancing.size() > 0) {
-		setUpUniforms(objs[0].render_->material, objs[0].transform_, cam);
-		objs[0].render_->mesh->setInstanceData(instancing);
-		objs[0].render_->mesh->render();
+		setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
+		objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
+		objs[indiceLastMesh].render_->mesh->render();
+		instancing.clear();
 	}
-	instancing.clear();
 }
 
 bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
@@ -215,10 +239,10 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
 		// ------ Camara -------
 
-		if (t) {
-			GLuint u_m_trans = p->getUniform("u_m_trans");
-			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
-		}
+		//if (t) {
+		//	GLuint u_m_trans = p->getUniform("u_m_trans");
+		//	glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
+		//}
 
 		// Material
 		GLuint mat_Uniform = -1;
