@@ -149,8 +149,8 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
 			setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
-			objs[i].render_->mesh->setInstanceData(instancing);
-			objs[i].render_->mesh->render();
+			objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
+			objs[indiceLastMesh].render_->mesh->render();
 			instancing.clear();
 
 			actualMeshRendering = objs[i].render_->mesh->getID();
@@ -158,14 +158,17 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 
 		if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
 			setUpUniforms(objs[indiceLastTexture].render_->material, objs[indiceLastTexture].transform_, cam);
-			objs[i].render_->mesh->setInstanceData(instancing);
-			objs[i].render_->mesh->render();
+			objs[indiceLastTexture].render_->mesh->setInstanceData(instancing);
+			objs[indiceLastTexture].render_->mesh->render();
 			instancing.clear();
 
 			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
 		}
 
-		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		instancing.push_back({ objs[i].transform_->m_transform_,
+							   objs[i].render_->material.getColor(),
+							   objs[i].render_->material.getTexIndex(),
+							   objs[i].render_->material.shininess });
 		indiceLastMesh = i;
 		indiceLastTexture = i;
 
@@ -250,12 +253,12 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glm::vec4 c = mat.getColor();
 		glUniform4fv(mat_Uniform, 1, &c[0]);*/
 
-		mat_Uniform = p->getUniform("u_shininess");
-		glUniform1f(mat_Uniform, mat.shininess);
+		//mat_Uniform = p->getUniform("u_shininess");
+		//glUniform1f(mat_Uniform, mat.shininess);
 
-		mat_Uniform = p->getUniform("texIndex");
-		glm::ivec2 texindex = mat.getTexIndex();
-		glUniform2iv(mat_Uniform, 1, &texindex.x);
+		//mat_Uniform = p->getUniform("texIndex");
+		//glm::ivec2 texindex = mat.getTexIndex();
+		//glUniform2iv(mat_Uniform, 1, &texindex.x);
 
 		mat_Uniform = p->getUniform("u_haveAlbedo");
 		glUniform1i(mat_Uniform, mat.haveAlbedo);

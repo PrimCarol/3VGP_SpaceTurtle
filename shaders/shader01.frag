@@ -62,7 +62,7 @@ uniform SpotLight u_SpotLight[MAX_SPOT_LIGHTS];
 uniform vec4 u_FogColor;
 
 // Material
-uniform float u_shininess;
+in float shininess;
 
 // Basic In
 in vec3 modelPosition;
@@ -138,7 +138,7 @@ vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 
 	float diff = max(dot(-lightDir, normal), 0.0);
 
 	vec3 reflectDir = reflect(lightDir, normal);
-	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), u_shininess); // Tendria que tenerlo el material.
+	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), shininess); // Tendria que tenerlo el material.
 
 	vec4 ambient = vec4(light.ambient,1.0) * TexDiff;
 	vec4 diffuse = vec4(light.diffuse, 1.0) * diff * TexDiff;
@@ -153,7 +153,7 @@ vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, 
 	float diff = max(dot(normal, lightDir), 0.0);
 
 	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), u_shininess); // <-------
+	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), shininess); // <-------
 
 	float distance = length(light.position - modelPos);
 	float attenuation = 1.0 / (light.constant + light.linear * distance +
@@ -184,7 +184,7 @@ vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, ve
 	float diff = max(dot(normal, lightDir), 0.0);
 
 	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), u_shininess); // <-------
+	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), shininess); // <-------
 
 	float distance = length(light.position - modelPos);
 	float attenuation = 1.0 / (light.constant + light.linear * distance +

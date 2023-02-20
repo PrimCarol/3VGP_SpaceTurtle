@@ -7,6 +7,8 @@ layout (location=2) in vec2 a_uv;
 // Instancing Transformations
 layout (location = 3) in mat4 instance_Matrix;
 layout (location = 7) in vec4 instance_Color;
+layout (location = 8) in ivec2 instance_TexIndex;
+layout (location = 9) in float instance_MatShininess;
 
 // Basic Info
 uniform mat4 u_view_matrix;
@@ -21,22 +23,20 @@ out float visibility;
 //Texture Atlas
 uniform int rows;
 uniform int cols;
-uniform ivec2 texIndex;
 
 // Basic Out
 out vec4 color;
 out vec3 normals;
 out vec3 modelPosition;
 out vec2 texCoords;
+out float shininess;
 
 void main(){
 	color = instance_Color;
+	shininess = instance_MatShininess;
 
-	int indexX = 3;
-	int indexY = 2;
-
-	float row = texIndex.y % rows;
-	float column = texIndex.x % cols;
+	float row = instance_TexIndex.y % rows;
+	float column = instance_TexIndex.x % cols;
 
 	vec2 tempUV = vec2((a_uv.x/cols) + (column / cols), (a_uv.y/rows) + (row / rows));
 	texCoords = tempUV;

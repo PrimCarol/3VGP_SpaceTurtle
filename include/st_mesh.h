@@ -20,6 +20,8 @@ namespace ST {
 	struct InstanceInfo {
 		glm::mat4 matrix;
 		glm::vec4 color;
+		glm::ivec2 textureIndex;
+		float shininess;
 	};
 
 	enum CullMode{
@@ -53,19 +55,10 @@ namespace ST {
 		const char* name_;
 		GLuint internalId;
 
-		CullMode cullmode_;
-	};
-
-	// ------------------- Test -------------------
-	class Test : public Mesh {
-	public:
-		Test();
-		void render() override;
-		void setInstanceData(const std::vector<InstanceInfo>& data) override;
-		~Test();
-	private:
 		GLuint instanceBuffer;
 		int numInstances;
+
+		CullMode cullmode_;
 	};
 
 	// ------------------- Basics 2D -------------------
