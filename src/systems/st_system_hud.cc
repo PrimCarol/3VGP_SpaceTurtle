@@ -189,13 +189,51 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 
 			// ---- Guizmos ----
-			ImGuizmo::BeginFrame();
-			const ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGuiIO& io = ImGui::GetIO();
-			ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
+			if (gm.mainCamera) {
+				ImGuizmo::BeginFrame();
+				const ImGuiViewport* viewport = ImGui::GetMainViewport();
+				ImGuiIO& io = ImGui::GetIO();
+				ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
+				
+				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
+				static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
+				static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
 
-			ImGuizmo::Manipulate((const float*)&gm.mainCamera->view, (const float*)&gm.mainCamera->projection,
-				ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&trans->m_transform_[0][0]);
+				if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
+					GuizmoOperation = ImGuizmo::TRANSLATE;
+				}
+				if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
+					GuizmoOperation = ImGuizmo::ROTATE;
+				}
+				if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
+					GuizmoOperation = ImGuizmo::SCALE;
+				}
+				if (GuizmoOperation != ImGuizmo::SCALE) {
+					if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
+						GuizmoMode = ImGuizmo::LOCAL;
+					}
+					if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
+						GuizmoMode = ImGuizmo::WORLD;
+					}
+				}
+				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
+
+				float tempMatrixGuizmo[16];
+				glm::vec3 pos = trans->getPosition();
+				glm::vec3 rot = trans->getRotation();
+				glm::vec3 sca = trans->getScale();
+
+				ImGuizmo::RecomposeMatrixFromComponents(&pos.x, &rot.x, &sca.x, tempMatrixGuizmo);
+				ImGuizmo::Manipulate((const float*)&gm.mainCamera->view, (const float*)&gm.mainCamera->projection,
+					GuizmoOperation, GuizmoMode, tempMatrixGuizmo);
+				ImGuizmo::DecomposeMatrixToComponents(tempMatrixGuizmo, &pos.x, &rot.x, &sca.x);
+
+				trans->setPosition(pos);
+				trans->setRotateX(rot.x);
+				trans->setRotateY(rot.y);
+				trans->setRotateZ(rot.z);
+				trans->setScale(sca);
+			}
 			// --------
 		}
 			

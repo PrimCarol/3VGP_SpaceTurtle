@@ -9,7 +9,7 @@ int main() {
 	ST::GameObj_Manager gm;
 
 	ST::Camera myCam;
-	gm.mainCamera = &myCam;
+	gm.mainCamera = &myCam; // <--- Esto deberia hacerlo solo.
 
 	// --------------
 	ST::Texture textureTest;
@@ -19,7 +19,7 @@ int main() {
 
 	ST::Cube test_mesh;
 	
-	int HOWMANY = 100000;
+	int HOWMANY = 50000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
