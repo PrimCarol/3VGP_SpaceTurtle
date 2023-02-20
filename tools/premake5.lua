@@ -24,8 +24,8 @@ solution("3VGP_SpaceTurtle" .. _ACTION)
 
         targetdir(ROOT .. "./ST_Engine/")
 
-        filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "StaticLib" debugdir(ROOT.."/bin")
-        filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "StaticLib" debugdir(ROOT.."/bin")
+        filter "configurations:Debug"    defines { "DEBUG" }  symbols  "On" kind "StaticLib" targetsuffix "_d"
+        filter "configurations:Release"  defines { "NDEBUG" } optimize "On" kind "StaticLib"
         
         filter { "platforms:*64" } architecture "x64"
 

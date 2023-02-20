@@ -123,31 +123,6 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 			firstTime = false;
 		}
 
-		//if (objs[i].render_->mesh->getID() == actualMeshRendering) {
-		//	// Comprobar si la textura tambien es la misma.
-		//	//instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-
-		//	if (objs[i].render_->material.getAlbedo()->getID() == actualTextureRendering) {
-		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-		//	}else {
-		//		setUpUniforms(objs[i-1].render_->material, objs[i-1].transform_, cam);
-		//		objs[i].render_->mesh->setInstanceData(instancing);
-		//		objs[i].render_->mesh->render();
-		//		instancing.clear();
-		//	
-		//		actualMeshRendering = objs[i].render_->mesh->getID();
-		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-		//	}
-		//}else {
-		//	setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
-		//	objs[i].render_->mesh->setInstanceData(instancing);
-		//	objs[i].render_->mesh->render();
-		//	instancing.clear();
-
-		//	actualMeshRendering = objs[i].render_->mesh->getID();
-		//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
-		//}
-
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
 			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
@@ -172,7 +147,6 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 							   objs[i].render_->material.getColor(),
 							   objs[i].render_->material.getTexIndex(),
 							   objs[i].render_->material.shininess });
-		lastIndice = i;
 		lastIndice = i;
 
 		// TEST -------------------
