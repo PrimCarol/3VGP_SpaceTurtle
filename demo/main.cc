@@ -38,7 +38,7 @@ int main() {
 
 	ST::Test test_mesh;
 
-	int HOWMANY = 10000;
+	int HOWMANY = 1000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
@@ -86,7 +86,7 @@ int main() {
 		
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		//ST::SystemLight::CompileLights(gm, *gm.basicProgram);
+		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
 		ST::SystemRender::Render(gm, &myCam);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {

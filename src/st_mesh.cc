@@ -518,19 +518,61 @@ ST::Test::Test(std::vector<glm::mat4>* matrices){
 		instancing = matrices->size();
 	}
 
-	setName("Test");
+	setName("Cube");
 
-	vertices_.push_back({ {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
-	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
-	vertices_.push_back({ {-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
-	vertices_.push_back({ {-1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} });
+	//Front
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} });
 
-	indices_.push_back(0);
-	indices_.push_back(1);
-	indices_.push_back(2);
-	indices_.push_back(0);
-	indices_.push_back(2);
-	indices_.push_back(3);
+	indices_.push_back(0); indices_.push_back(1); indices_.push_back(2);
+	indices_.push_back(0); indices_.push_back(2); indices_.push_back(3);
+
+	//Right
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(4); indices_.push_back(5); indices_.push_back(6);
+	indices_.push_back(4); indices_.push_back(6); indices_.push_back(7);
+
+	//Left
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, { 1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(8); indices_.push_back(9); indices_.push_back(10);
+	indices_.push_back(8); indices_.push_back(10); indices_.push_back(11);
+
+	//Back
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 0.0f, 0.0f, 1.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(12); indices_.push_back(13); indices_.push_back(14);
+	indices_.push_back(12); indices_.push_back(14); indices_.push_back(15);
+
+	//Bottom
+	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, { 0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ { 1.0f, -1.0f,  1.0f}, { 0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f,  1.0f}, { 0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ {-1.0f, -1.0f, -1.0f}, { 0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(16); indices_.push_back(17); indices_.push_back(18);
+	indices_.push_back(16); indices_.push_back(18); indices_.push_back(19);
+
+	//Top
+	vertices_.push_back({ {-1.0f,  1.0f, -1.0f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} });
+	vertices_.push_back({ {-1.0f,  1.0f,  1.0f}, { 0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f,  1.0f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} });
+	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, { 0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} });
+
+	indices_.push_back(20); indices_.push_back(21); indices_.push_back(22);
+	indices_.push_back(20); indices_.push_back(22); indices_.push_back(23);
 
 	glGenVertexArrays(1, &internalId);
 	glBindVertexArray(internalId);
@@ -544,7 +586,7 @@ ST::Test::Test(std::vector<glm::mat4>* matrices){
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), 0);
 	glEnableVertexAttribArray(0);
 	// Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	// UV's
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
@@ -573,9 +615,9 @@ ST::Test::Test(std::vector<glm::mat4>* matrices){
 			glVertexAttribDivisor(6, 1);
 
 			// Los colores?
-			glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-			glEnableVertexAttribArray(7);
-			glVertexAttribDivisor(7, 1);
+			//glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+			//glEnableVertexAttribArray(7);
+			//glVertexAttribDivisor(7, 1);
 		}
 	}
 	// Instancing ------

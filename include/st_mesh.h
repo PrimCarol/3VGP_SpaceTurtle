@@ -17,6 +17,11 @@ namespace ST {
 		}
 	};
 
+	struct InstanceInfo {
+		glm::mat4 matrix;
+		glm::vec4 color;
+	};
+
 	enum CullMode{
 		kCull_Disable,
 		kCull_Front,

@@ -5,7 +5,7 @@ layout (location=0) in vec3 a_position;
 layout (location=1) in vec3 a_normal;
 layout (location=2) in vec2 a_uv;
 // Instancing Transformations
-layout (location = 3) in mat4 instanceMatrix;
+layout (location = 3) in mat4 instance_Matrix;
 
 // Basic Info
 uniform mat4 u_view_matrix;
@@ -45,7 +45,7 @@ void main(){
 
 	//texCoords = a_uv;
 
-	modelPosition = (instanceMatrix * vec4(a_position,1)).xyz;
+	modelPosition = (instance_Matrix * vec4(a_position,1)).xyz;
 	normals = normalize((u_m_trans * vec4(a_normal,0.0)).xyz);
 
 	gl_Position = u_vp_matrix * vec4(modelPosition,1.0);
