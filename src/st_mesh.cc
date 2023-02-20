@@ -11,7 +11,7 @@ ST::Mesh::Mesh(){
 	cullmode_ = ST::kCull_Back;
 }
 
-const GLuint ST::Mesh::getId(){
+const GLuint ST::Mesh::getID(){
 	return internalId;
 }
 
@@ -24,6 +24,10 @@ void ST::Mesh::setName(char* n){
 	if (n) { name_ = n; }
 }
 
+bool ST::Mesh::operator==(const Mesh& rhs){
+	return internalId == rhs.internalId;
+}
+
 ST::Mesh::~Mesh(){
 	glDeleteVertexArrays(1, &internalId);
 }
@@ -34,6 +38,8 @@ ST::Mesh::Mesh(const Mesh& o){
 
 	cullmode_ = o.cullmode_;
 }
+
+void ST::Mesh::setInstanceData(const std::vector<InstanceInfo>& data){}
 
 void ST::Mesh::render(){}
 
@@ -91,6 +97,10 @@ ST::Triangle::Triangle() : Mesh() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
+	// Instancing
+	glGenBuffers(1, &instanceBuffer);
+	numInstances = 1;
+
 	// Indices
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
@@ -101,15 +111,67 @@ ST::Triangle::Triangle() : Mesh() {
 	glBindVertexArray(0);
 }
 
+void ST::Triangle::setInstanceData(const std::vector<InstanceInfo>& data) {
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW); // Esto es mejor?????
+
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
+}
+
 void ST::Triangle::render(){
-	glBindVertexArray(internalId);
+	/*glBindVertexArray(internalId);
 
 	SetCullMode(cullmode_);
 
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
+	glBindVertexArray(internalId); // VAO
+
+	//SetCullMode(cullmode_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
+	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+
+	// Atributo de Texture Index
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
+	glVertexAttribDivisor(8, 1);
+
+	// Atributo de Mat Shiness
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribDivisor(9, 1);
+
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-ST::Triangle::~Triangle() {}
+ST::Triangle::~Triangle() {
+	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
@@ -146,6 +208,10 @@ ST::Quad::Quad() : Mesh() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
+	// Instancing
+	glGenBuffers(1, &instanceBuffer);
+	numInstances = 1;
+
 	// Indices
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
@@ -156,15 +222,67 @@ ST::Quad::Quad() : Mesh() {
 	glBindVertexArray(0);
 }
 
+void ST::Quad::setInstanceData(const std::vector<InstanceInfo>& data) {
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW); // Esto es mejor?????
+
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
+}
+
 void ST::Quad::render() {
-	glBindVertexArray(internalId);
+	/*glBindVertexArray(internalId);
 	
 	SetCullMode(cullmode_);
 
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
+	glBindVertexArray(internalId); // VAO
+
+	//SetCullMode(cullmode_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
+	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+
+	// Atributo de Texture Index
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
+	glVertexAttribDivisor(8, 1);
+
+	// Atributo de Mat Shiness
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribDivisor(9, 1);
+
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-ST::Quad::~Quad() {}
+ST::Quad::~Quad() {
+	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ----------------- Circle ------------------
 ST::Circle::Circle() : Mesh() {
@@ -175,14 +293,61 @@ ST::Circle::Circle() : Mesh() {
 	changeRebolutions(rebolutions);
 }
 
+void ST::Circle::setInstanceData(const std::vector<InstanceInfo>& data) {
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW); // Esto es mejor?????
+
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
+}
+
 void ST::Circle::render() {
-	glBindVertexArray(internalId);
+	//glBindVertexArray(internalId);
 
-	SetCullMode(cullmode_);
+	//SetCullMode(cullmode_);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
+	////glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	////glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
+	glBindVertexArray(internalId); // VAO
+
+	//SetCullMode(cullmode_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
+	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+
+	// Atributo de Texture Index
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
+	glVertexAttribDivisor(8, 1);
+
+	// Atributo de Mat Shiness
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribDivisor(9, 1);
+
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ST::Circle::changeRebolutions(int r){
@@ -256,6 +421,10 @@ void ST::Circle::changeRebolutions(int r){
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 		glEnableVertexAttribArray(2);
 
+		// Instancing
+		glGenBuffers(1, &instanceBuffer);
+		numInstances = 1;
+
 		// Indices
 		GLuint gEBO = 0;
 		glGenBuffers(1, &gEBO);
@@ -271,7 +440,12 @@ int ST::Circle::getRebolutions(){
 	return (rebolutions_ -1);
 }
 
-ST::Circle::~Circle() {}
+ST::Circle::~Circle() {
+	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ------------------- Cube -------------------
 ST::Cube::Cube() : Mesh() {
@@ -350,6 +524,10 @@ ST::Cube::Cube() : Mesh() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
+	// Instancing
+	glGenBuffers(1, &instanceBuffer);
+	numInstances = 1;
+
 	// Indices
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
@@ -360,16 +538,69 @@ ST::Cube::Cube() : Mesh() {
 	glBindVertexArray(0);
 }
 
-void ST::Cube::render() {
-	glBindVertexArray(internalId);
-	
-	SetCullMode(cullmode_);
+void ST::Cube::setInstanceData(const std::vector<InstanceInfo>& data) {
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW); // Esto es mejor?????
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
 }
 
-ST::Cube::~Cube() {}
+void ST::Cube::render() {
+	//glBindVertexArray(internalId);
+	//
+	//SetCullMode(cullmode_);
+
+	////glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+
+	glBindVertexArray(internalId); // VAO
+
+	//SetCullMode(cullmode_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
+	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+
+	// Atributo de Texture Index
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
+	glVertexAttribDivisor(8, 1);
+
+	// Atributo de Mat Shiness
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribDivisor(9, 1);
+
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+ST::Cube::~Cube() {
+	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
+	vertices_.clear();
+	indices_.clear();
+}
 
 // ------------------- OBJ -------------------
 ST::Geometry::Geometry() : Mesh() {
@@ -462,6 +693,10 @@ bool ST::Geometry::loadFromFile(const char* path) {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfo), (void*)(sizeof(float) * 6));
 	glEnableVertexAttribArray(2);
 
+	// Instancing
+	glGenBuffers(1, &instanceBuffer);
+	numInstances = 1;
+
 	// Indices
 	GLuint gEBO = 0;
 	glGenBuffers(1, &gEBO);
@@ -474,13 +709,67 @@ bool ST::Geometry::loadFromFile(const char* path) {
 	return true;
 }
 
-void ST::Geometry::render(){
-	glBindVertexArray(internalId);
-	
-	SetCullMode(cullmode_);
+void ST::Geometry::setInstanceData(const std::vector<InstanceInfo>& data) {
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW); // Esto es mejor?????
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(InstanceInfo), data.data(), GL_DYNAMIC_DRAW);
+	numInstances = data.size();
 }
 
-ST::Geometry::~Geometry() {}
+void ST::Geometry::render(){
+	//glBindVertexArray(internalId);
+	//
+	//SetCullMode(cullmode_);
+
+	////glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);
+
+	glBindVertexArray(internalId); // VAO
+
+	//SetCullMode(cullmode_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+
+	// Atributo de matrices
+	for (int i = 0; i < 4; i++) {
+		glEnableVertexAttribArray(3 + i);
+		glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)(sizeof(glm::vec4) * i));
+		glVertexAttribDivisor(3 + i, 1);
+	}
+
+	// Atributo de color
+	glEnableVertexAttribArray(7);
+	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
+	glVertexAttribDivisor(7, 1);
+
+	// Atributo de Texture Index
+	glEnableVertexAttribArray(8);
+	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
+	glVertexAttribDivisor(8, 1);
+
+	// Atributo de Mat Shiness
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribDivisor(9, 1);
+
+	// Draw
+	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
+
+	// Clean
+	for (int i = 0; i < 4; i++) {
+		glDisableVertexAttribArray(3 + i);
+	}
+	glDisableVertexAttribArray(7);
+	glDisableVertexAttribArray(8);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+ST::Geometry::~Geometry() {
+	glDeleteVertexArrays(1, &internalId);
+	glDeleteBuffers(1, &instanceBuffer);
+	vertices_.clear();
+	indices_.clear();
+}

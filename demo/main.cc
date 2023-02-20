@@ -9,56 +9,29 @@ int main() {
 	ST::GameObj_Manager gm;
 
 	ST::Camera myCam;
-
-	//// ----- Hacemos un "SOL" -----
-	ST::GameObj Sun = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	Sun.getComponent<ST::NameComponent>()->setName("Sun");
-	Sun.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,0.0f);
-	Sun.getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
-	Sun.getComponent<ST::TransformComponent>()->setRotateZ(1.0f);
-	Sun.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	Sun.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.5f, 0.5f, 0.5f);
+	gm.mainCamera = &myCam;
 
 	// --------------
 	ST::Texture textureTest;
-	textureTest.loadSource("../others/NormalMap.png");
-	textureTest.setRows(1);
+	textureTest.loadSource("../others/checker_texture.jpg");
+	textureTest.setRows(8);
 	textureTest.setCols(8);
 
-	ST::Texture textureSpecular;
-	textureSpecular.loadSource("../others/SpecularMap.png");
-	textureSpecular.setRows(1);
-	textureSpecular.setCols(8);
-
-	ST::Texture textureNormal;
-	textureNormal.loadSource("../others/NormalMap.png");
-	textureNormal.setRows(1);
-	textureNormal.setCols(8);
-
-	ST::Quad mesh_quad;
+	ST::Cube test_mesh;
+	
+	int HOWMANY = 100000;
 
 	std::vector<ST::GameObj> objects;
-	for (int i = 0; i < 200; i++){
+	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(&mesh_quad);
-		objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+		objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,8.0f),ST::Engine::getRandom(0.0f,8.0f) });
+		objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-20.0f,20.0f), ST::Engine::getRandom(-20.0f, 20.0f), ST::Engine::getRandom(0.0f, 40.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
 	}
-
-	//ST::Texture textureTest;
-	//textureTest.loadSource("../others/bricks_albedo.png");
-	//ST::Texture textureNormal;
-	//textureNormal.loadSource("../others/bricks_normal.png");
-
-
-	//ST::Cube mesh_cube;
-	//ST::GameObj obj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
-	//obj.getComponent<ST::RenderComponent>()->setMesh(&mesh_cube);
-	//obj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-	//obj.getComponent<ST::RenderComponent>()->material.setTexture_Normal(&textureNormal);
-	//obj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 
 	// --------------------------
 
@@ -71,15 +44,15 @@ int main() {
 		myCam.fpsMovement(w, 10.0f);
 
 		// --------- Animation --------
-		for (int i = 0; i < 200; i++){
-			objects.at(i).getComponent<ST::RenderComponent>()->material.setTexIndex({ contadorAnimation, 6 });
-		}
+		//for (int i = 0; i < HOWMANY; i++){
+		//	objects.at(i).getComponent<ST::RenderComponent>()->material.setTexIndex({ contadorAnimation, 6 });
+		//}
 
-		if (contadorCadaCuantosFrames >= 0.2f) {
-			contadorCadaCuantosFrames = 0;
-			contadorAnimation++;
-		}
-		contadorCadaCuantosFrames += w.DeltaTime();
+		//if (contadorCadaCuantosFrames >= 0.12f) {
+		//	contadorCadaCuantosFrames = 0;
+		//	contadorAnimation++;
+		//}
+		//contadorCadaCuantosFrames += w.DeltaTime();
 		
 
 		ST::SystemTransform::UpdateTransforms(gm);
@@ -91,7 +64,7 @@ int main() {
 		}
 
 		ST::SystemHUD::NavBar(gm);
-		ST::SystemHUD::Hierarchy(gm);
+		//ST::SystemHUD::Hierarchy(gm);
 		ST::SystemHUD::Inspector(gm);
 		ST::SystemHUD::Stats(w, gm);
 

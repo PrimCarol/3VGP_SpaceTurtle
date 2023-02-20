@@ -188,20 +188,15 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::TreePop();
 			}
 
-			//// Guizmos
-			//ImGui::Begin("Viewport");
-			//ImGuizmo::SetOrthographic(false);
-			//ImGuizmo::SetDrawlist();
+			// ---- Guizmos ----
+			ImGuizmo::BeginFrame();
+			const ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGuiIO& io = ImGui::GetIO();
+			ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
 
-			//float windowHeight = (float)ImGui::GetWindowHeight();
-			//float windowWidth = (float)ImGui::GetWindowWidth();
-			//
-			//ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-			//ImGuizmo::Manipulate((const float*)&gm.mainCamera->view, (const float*)&gm.mainCamera->projection,
-			//	ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&trans->m_transform_[0][0]);
-
-			//ImGui::End();
+			ImGuizmo::Manipulate((const float*)&gm.mainCamera->view, (const float*)&gm.mainCamera->projection,
+				ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&trans->m_transform_[0][0]);
+			// --------
 		}
 			
 		ImGui::Spacing(); ImGui::Spacing();

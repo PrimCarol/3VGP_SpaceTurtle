@@ -55,9 +55,7 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	std::vector<MyObjToRender> objs_opaque;
 	std::vector<MyObjToRender> objs_translucent;
 
-	//objs_opaque.clear();
-	//objs_translucent.clear();
-
+	// ----- Opacos -----
 	for (int i = 0; i < r.size(); i++){
 		
 		if (r[i].has_value() && t[i].has_value()) {
@@ -79,6 +77,8 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glDisable(GL_BLEND);
 	doRender(objs_opaque, cam);
 
+
+	// ----- Translucidos -----
 	std::map<float, int> sorted;
 	for (int i = 0; i < objs_translucent.size(); i++){
 		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
@@ -97,15 +97,80 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	doRender(objs_translucent_sorted, cam);
+
+	objs_opaque.clear();
+	objs_translucent.clear();
+	objs_translucent_sorted.clear();
+
 }
 
 void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
+	
+	std::vector<InstanceInfo> instancing;
+
+	GLuint actualMeshRendering = 0;
+	GLuint actualTextureRendering = 0;
+	int indiceLastMesh = 0;
+	int indiceLastTexture = 0;
+	bool firstTime = true;
+
 	for (int i = 0; i < objs.size(); i++){
-		if (setUpUniforms(objs[i].render_->material, objs[i].transform_, cam)) {
-			if (objs[i].render_->mesh) {
-				objs[i].render_->mesh->render();
-			}
+
+		if (firstTime) {
+			actualMeshRendering = objs[i].render_->mesh->getID();
+			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+			firstTime = false;
 		}
+
+		//if (objs[i].render_->mesh->getID() == actualMeshRendering) {
+		//	// Comprobar si la textura tambien es la misma.
+		//	//instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+
+		//	if (objs[i].render_->material.getAlbedo()->getID() == actualTextureRendering) {
+		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//	}else {
+		//		setUpUniforms(objs[i-1].render_->material, objs[i-1].transform_, cam);
+		//		objs[i].render_->mesh->setInstanceData(instancing);
+		//		objs[i].render_->mesh->render();
+		//		instancing.clear();
+		//	
+		//		actualMeshRendering = objs[i].render_->mesh->getID();
+		//		instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//	}
+		//}else {
+		//	setUpUniforms(objs[i].render_->material, objs[i].transform_, cam);
+		//	objs[i].render_->mesh->setInstanceData(instancing);
+		//	objs[i].render_->mesh->render();
+		//	instancing.clear();
+
+		//	actualMeshRendering = objs[i].render_->mesh->getID();
+		//	instancing.push_back({ objs[i].transform_->m_transform_, objs[i].render_->material.getColor() });
+		//}
+
+		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
+			setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
+			objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
+			objs[indiceLastMesh].render_->mesh->render();
+			instancing.clear();
+
+			actualMeshRendering = objs[i].render_->mesh->getID();
+		}
+
+		if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
+			setUpUniforms(objs[indiceLastTexture].render_->material, objs[indiceLastTexture].transform_, cam);
+			objs[indiceLastTexture].render_->mesh->setInstanceData(instancing);
+			objs[indiceLastTexture].render_->mesh->render();
+			instancing.clear();
+
+			actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+		}
+
+		instancing.push_back({ objs[i].transform_->m_transform_,
+							   objs[i].render_->material.getColor(),
+							   objs[i].render_->material.getTexIndex(),
+							   objs[i].render_->material.shininess });
+		indiceLastMesh = i;
+		indiceLastTexture = i;
 
 		// TEST -------------------
 		/*
@@ -142,6 +207,14 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 		//drawCollision(colliderPoint_min, colliderPoint_max);
 		*/
 		// TEST -------------------
+
+	}// End For
+
+	if (instancing.size() > 0) {
+		setUpUniforms(objs[indiceLastMesh].render_->material, objs[indiceLastMesh].transform_, cam);
+		objs[indiceLastMesh].render_->mesh->setInstanceData(instancing);
+		objs[indiceLastMesh].render_->mesh->render();
+		instancing.clear();
 	}
 }
 
@@ -169,23 +242,23 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
 		// ------ Camara -------
 
-		if (t) {
-			GLuint u_m_trans = p->getUniform("u_m_trans");
-			glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
-		}
+		//if (t) {
+		//	GLuint u_m_trans = p->getUniform("u_m_trans");
+		//	glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
+		//}
 
 		// Material
 		GLuint mat_Uniform = -1;
-		mat_Uniform = p->getUniform("u_color");
+		/*mat_Uniform = p->getUniform("u_color");
 		glm::vec4 c = mat.getColor();
-		glUniform4fv(mat_Uniform, 1, &c[0]);
+		glUniform4fv(mat_Uniform, 1, &c[0]);*/
 
-		mat_Uniform = p->getUniform("u_shininess");
-		glUniform1f(mat_Uniform, mat.shininess);
+		//mat_Uniform = p->getUniform("u_shininess");
+		//glUniform1f(mat_Uniform, mat.shininess);
 
-		mat_Uniform = p->getUniform("texIndex");
-		glm::ivec2 texindex = mat.getTexIndex();
-		glUniform2iv(mat_Uniform, 1, &texindex.x);
+		//mat_Uniform = p->getUniform("texIndex");
+		//glm::ivec2 texindex = mat.getTexIndex();
+		//glUniform2iv(mat_Uniform, 1, &texindex.x);
 
 		mat_Uniform = p->getUniform("u_haveAlbedo");
 		glUniform1i(mat_Uniform, mat.haveAlbedo);

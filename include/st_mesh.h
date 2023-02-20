@@ -17,6 +17,13 @@ namespace ST {
 		}
 	};
 
+	struct InstanceInfo {
+		glm::mat4 matrix;
+		glm::vec4 color;
+		glm::ivec2 textureIndex;
+		float shininess;
+	};
+
 	enum CullMode{
 		kCull_Disable,
 		kCull_Front,
@@ -29,21 +36,27 @@ namespace ST {
 
 	public:
 		Mesh();
-		const GLuint getId();
+		const GLuint getID();
 
 		const char* getName();
 		void setName(char* n);
 
+		virtual void setInstanceData(const std::vector<InstanceInfo>& data);
 		virtual void render();
 
 		std::vector<VertexInfo> vertices_;
 		std::vector<unsigned int> indices_;
+
+		bool operator==(const Mesh& rhs);
 
 		~Mesh();
 		Mesh(const Mesh& o);
 	protected:
 		const char* name_;
 		GLuint internalId;
+
+		GLuint instanceBuffer;
+		int numInstances;
 
 		CullMode cullmode_;
 	};
@@ -53,6 +66,7 @@ namespace ST {
 	public:
 		Triangle();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Triangle();
 	};
 
@@ -60,6 +74,7 @@ namespace ST {
 	public:
 		Quad();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Quad();
 	};
 
@@ -67,6 +82,8 @@ namespace ST {
 	public:
 		Circle();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
+
 		void changeRebolutions(int r);
 		int getRebolutions();
 		~Circle();
@@ -81,6 +98,7 @@ namespace ST {
 	public:
 		Cube();
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 		~Cube();
 	};
 
@@ -91,6 +109,7 @@ namespace ST {
 	
 		bool loadFromFile(const char* path);
 		void render() override;
+		void setInstanceData(const std::vector<InstanceInfo>& data) override;
 	
 		~Geometry();
 	};
