@@ -41,20 +41,6 @@ void ST::Texture::setCols(int num){
     }
 }
 
-//void ST::Texture::createChecker(const unsigned int w, const unsigned int h){
-//    auto argb = std::make_unique<unsigned int[]>(w * h);
-//    unsigned int x, y;
-//    for (y = 0; y < h; y++) {
-//        for (x = 0; x < w; x++) {
-//            argb[x + y * w] = (x ^ y);
-//        }
-//    }
-//    width_ = w;
-//    height_ = h;
-//
-//    set_data(F_RGBA, (const void*)argb.get());
-//}
-
 void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap_LOD) {
     //GLenum data_type;
 
@@ -65,6 +51,7 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s()));
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t()));
 
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
