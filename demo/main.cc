@@ -19,7 +19,7 @@ int main() {
 
 	ST::Cube test_mesh;
 	
-	int HOWMANY = 50000;
+	int HOWMANY = 2000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
@@ -35,13 +35,13 @@ int main() {
 	}
 
 	// --------------------------
-
+	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
-		myCam.fpsMovement(w, 10.0f);
-
-		printf("%f\n",w.mouseWheelY());
+		myCam.fpsMovement(w, cameraSpeed);
+		cameraSpeed += w.mouseWheelY();
+		//printf("%f\n",w.mouseWheelY());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);

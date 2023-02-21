@@ -141,6 +141,8 @@ void ST::Window::Render(){
     glfwSwapBuffers(glWindow);
 
     glfwGetCursorPos(glWindow, &mouseX, &mouseY);
+    mouseWheelX_ = 0.0f;
+    mouseWheelY_ = 0.0f;
 
     glfwPollEvents();
 }
