@@ -18,6 +18,9 @@ ST::Window::Window(){
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
         
+        glfwSetWindowUserPointer(glWindow, this);
+        glfwSetScrollCallback(glWindow, scroll_callback);
+
         GLFWimage images[1];
         images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); 
         glfwSetWindowIcon(glWindow, 1, images);
@@ -55,6 +58,9 @@ ST::Window::Window(int width, int height){
     if (glfwInit()) {
         glWindow = glfwCreateWindow(width, height, "Space Turtle", NULL, NULL);
 
+        glfwSetWindowUserPointer(glWindow, this);
+        glfwSetScrollCallback(glWindow, scroll_callback);
+
         GLFWimage images[1];
         images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
         glfwSetWindowIcon(glWindow, 1, images);
@@ -87,6 +93,16 @@ ST::Window::Window(int width, int height){
 }
 
 ST::Window::Window(const Window& o){}
+
+void ST::Window::scroll_callback(GLFWwindow* w, double x, double y){
+    ST::Window* instance = static_cast<ST::Window*>(glfwGetWindowUserPointer(w));
+    instance->scroll_callback(x, y);
+}
+
+void ST::Window::scroll_callback(double x, double y){
+    mouseWheelX_ = x;
+    mouseWheelY_ = y;
+}
 
 void ST::Window::Focus() const{
     glfwMakeContextCurrent(glWindow);
@@ -475,13 +491,19 @@ bool ST::Window::inputReleased(const char key) {
 //}
 
 double ST::Window::mousePosX() const{
-    //glfwGetCursorPos(glWindow, &mouseX, &mouseY);
     return mouseX;
 }
 
 double ST::Window::mousePosY() const{
-    //glfwGetCursorPos(glWindow, &mouseX, &mouseY);
     return mouseY;
+}
+
+double ST::Window::mouseWheelX() const {
+    return mouseWheelX_;
+}
+
+double ST::Window::mouseWheelY() const {
+    return mouseWheelY_;
 }
 
 bool ST::Window::isOpen() const{
@@ -512,4 +534,5 @@ double ST::Window::FPS(const float time) const{
 
 ST::Window::~Window(){
     glfwTerminate();
+    glfwDestroyWindow(glWindow);
 }

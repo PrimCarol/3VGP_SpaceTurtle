@@ -41,6 +41,8 @@ int main() {
 
 		myCam.fpsMovement(w, 10.0f);
 
+		printf("%f\n",w.mouseWheelY());
+
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
 		ST::SystemRender::Render(gm, &myCam);

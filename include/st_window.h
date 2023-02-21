@@ -48,6 +48,8 @@ namespace ST {
 		// Mouse
 		double mousePosX() const;
 		double mousePosY() const;
+		double mouseWheelX() const;
+		double mouseWheelY() const;
 
 		/* Return if window is opened */
 		bool isOpen() const;
@@ -71,7 +73,11 @@ namespace ST {
 		clock_t deltaTime;
 
 		int window_Width_, window_Height_;
-		double mouseX=0.0f, mouseY=0.0f;
+		double mouseX = 0.0f, mouseY = 0.0f;
+		double mouseWheelX_ = 0.0f, mouseWheelY_ = 0.0f;
+		static void scroll_callback(GLFWwindow* w, double x, double y);
+		void scroll_callback(double x, double y);
+		
 		//int lastKeyPressed = -1;
 		//int lastMousePressed = -1;
 	};
