@@ -87,20 +87,33 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 		sorted[distance] = i;
 	}
 
-	std::vector<MyObjToRender> objs_translucent_sorted;
-	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it){
-		objs_translucent_sorted.push_back(objs_translucent[it->second]);
-	}
+	bool sortTranslucents = false; // <---------- Temporal
 
-	// Por defecto de momento.
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	doRender(objs_translucent_sorted, cam);
+	if (sortTranslucents) {
+		std::vector<MyObjToRender> objs_translucent_sorted;
+		
+		for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+			objs_translucent_sorted.push_back(objs_translucent[it->second]);
+		}
+
+		// Por defecto de momento.
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		doRender(objs_translucent_sorted, cam);
+
+		objs_translucent_sorted.clear();
+	}else {
+		// Por defecto de momento.
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		doRender(objs_translucent, cam);
+	}
 
 	objs_opaque.clear();
 	objs_translucent.clear();
-	objs_translucent_sorted.clear();
+	
 
 }
 
@@ -303,6 +316,7 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
 	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
 	
 	glEnable(GL_DEPTH_TEST);
+	//glDepthMask(GL_FALSE);
 
 	if (cam == nullptr) {
 		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();

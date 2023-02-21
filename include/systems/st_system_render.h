@@ -19,7 +19,6 @@ namespace ST {
 	class SystemRender {
 	public:
 		static void Render(ST::GameObj_Manager& gm, ST::Camera* cam = nullptr);
-
 	private:
 		SystemRender();
 
