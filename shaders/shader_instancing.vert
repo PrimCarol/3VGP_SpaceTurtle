@@ -38,7 +38,27 @@ void main(){
 	float row = instance_TexIndex.y % rows;
 	float column = instance_TexIndex.x % cols;
 
-	vec2 tempUV = vec2((a_uv.x/cols) + (column / cols), (a_uv.y/rows) + (row / rows));
+	float atlas_width = 16*cols;
+	float atlas_height= 16*rows;
+	float offset_width = 0.5 / atlas_width;
+	float offset_height = 0.5 / atlas_height;
+	
+	float tempUVx = a_uv.x;
+	float tempUVy = a_uv.y;
+
+	if(tempUVx < 0.5){
+		tempUVx = offset_width;
+	}else{
+		tempUVx = 1 - offset_width;
+	}
+
+//	if(tempUVy < 0.5){
+//		tempUVy = atlas_height;
+//	}else{
+//		tempUVy = 1 - atlas_height;
+//	}
+
+	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	texCoords = tempUV;
 
 	//texCoords = a_uv;

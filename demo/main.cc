@@ -13,16 +13,17 @@ int main() {
 
 	// --------------
 	ST::Texture textureTest;
-	textureTest.generateMipmap = true;
-	textureTest.set_mag_filter(ST::Texture::F_LINEAR);
-	textureTest.set_min_filter(ST::Texture::F_LINEAR_MIPMAP_LINEAR);
-	textureTest.loadSource("../others/icon_nobg_big.png");
-	//textureTest.setRows(8);
-	//textureTest.setCols(8);
+	//textureTest.generateMipmap = true;
+	textureTest.set_mag_filter(ST::Texture::F_NEAREST);
+	textureTest.set_min_filter(ST::Texture::F_NEAREST);
+	textureTest.loadSource("../others/tilesheet.png");
+	textureTest.setCols(71);
+	textureTest.setRows(19);
 
-	ST::Cube test_mesh;
+	ST::Quad test_mesh;
 	
 	int HOWMANY = 10000;
+
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
@@ -30,11 +31,21 @@ int main() {
 		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,8.0f),ST::Engine::getRandom(0.0f,8.0f) });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
 		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
+		//objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(0.0f, 600.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 1.0f);
+		
+	}
+
+	for (int y = 0; y < 100; y++) {
+		for (int x = 0; x < 100; x++) {
+			int tile_index = y * 100 + x;
+			objects.at(tile_index).getComponent<ST::TransformComponent>()->setPosition(glm::vec3(x, y, 0.0f));
+		}
 	}
 
 	// --------------------------
