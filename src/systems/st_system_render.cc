@@ -269,6 +269,12 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 				mat_Uniform = p->getUniform("cols");
 				glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
 
+				mat_Uniform = p->getUniform("sizeTileX");
+				glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
+
+				mat_Uniform = p->getUniform("sizeTileY");
+				glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
+
 				glUniform1i(p->getUniform("u_tex_Albedo"), 0);
 				glActiveTexture(GL_TEXTURE0 + 0);
 				glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
@@ -278,11 +284,11 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 			if (lastTextureNormal != mat.getNormal()->getID()) {
 				lastTextureNormal = mat.getNormal()->getID();
 
-				mat_Uniform = p->getUniform("rows");
+				/*mat_Uniform = p->getUniform("rows");
 				glUniform1i(mat_Uniform, mat.getNormal()->getRows());
 
 				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getNormal()->getCols());
+				glUniform1i(mat_Uniform, mat.getNormal()->getCols());*/
 
 				glUniform1i(p->getUniform("u_tex_Normal"), 1);
 				glActiveTexture(GL_TEXTURE0 + 1);
@@ -293,11 +299,11 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 			if (lastTextureSpecular != mat.getSpecular()->getID()) {
 				lastTextureSpecular = mat.getSpecular()->getID();
 
-				mat_Uniform = p->getUniform("rows");
+				/*mat_Uniform = p->getUniform("rows");
 				glUniform1i(mat_Uniform, mat.getSpecular()->getRows());
 
 				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getSpecular()->getCols());
+				glUniform1i(mat_Uniform, mat.getSpecular()->getCols());*/
 
 				glUniform1i(p->getUniform("u_tex_Specular"), 2);
 				glActiveTexture(GL_TEXTURE0 + 2);

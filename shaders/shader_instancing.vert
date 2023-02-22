@@ -23,6 +23,8 @@ out float visibility;
 //Texture Atlas
 uniform int rows;
 uniform int cols;
+uniform int sizeTileX;
+uniform int sizeTileY;
 
 // Basic Out
 out vec4 color;
@@ -38,19 +40,21 @@ void main(){
 	float row = instance_TexIndex.y % rows;
 	float column = instance_TexIndex.x % cols;
 
-	float atlas_width = 16*cols;
-	float atlas_height= 16*rows;
+	float atlas_width = sizeTileX*cols;
+	float atlas_height= sizeTileY*rows;
 	float offset_width = 0.5 / atlas_width;
 	float offset_height = 0.5 / atlas_height;
 	
 	float tempUVx = a_uv.x;
 	float tempUVy = a_uv.y;
 
-	if(tempUVx < 0.5){
-		tempUVx = offset_width;
-	}else{
-		tempUVx = 1 - offset_width;
-	}
+	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width);
+
+//	if(tempUVx < 0.5){
+//		tempUVx = offset_width;
+//	}else{
+//		tempUVx = 1 - offset_width;
+//	}
 
 //	if(tempUVy < 0.5){
 //		tempUVy = atlas_height;
