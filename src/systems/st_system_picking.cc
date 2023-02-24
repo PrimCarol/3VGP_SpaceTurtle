@@ -150,6 +150,7 @@
 
 #include <components/st_transform.h>
 #include <components/st_render.h>
+#include <components/st_collider.h>
 
 int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c){
 	float objClose = 100000.0f;
@@ -161,32 +162,22 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 		c = cam_.get();
 	}
 
-	std::vector<std::optional<ST::RenderComponent>>& r = *gm.getComponentVector<ST::RenderComponent>();
-	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::ColliderComponent>>& collider = *gm.getComponentVector<ST::ColliderComponent>();
 
 	for (int i = 0; i < gm.size(); i++) {
-		if (r[i].has_value() && t[i].has_value()) {
-			if (r[i].value().visible_) {
+		if (collider[i].has_value() && collider[i]->active_) {
+			if (render[i].has_value() && transform[i].has_value()) {
 				ST::Raycast ray;
 
-				glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-
-				/*if (r[i]->mesh) {
-					for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
-						if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
-						if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
-						if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
-
-						if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
-						if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
-						if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
-					}
-				}*/
+				glm::vec3 maxPos = collider[i]->getMaxPoint();
+				glm::vec3 minPos = collider[i]->getMinPoint();
 
 				// Normal, este funciona.
-				glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
-				glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
-				glm::mat4 tcopia = t[i]->m_Position_ * t[i]->m_Rotation_;
+				glm::vec3 colliderPoint_min(minPos * transform[i]->getScale());
+				glm::vec3 colliderPoint_max(maxPos * transform[i]->getScale());
+				glm::mat4 tcopia = transform[i]->m_Position_ * transform[i]->m_Rotation_;
 
 				float outputDistance = 100000.0f;
 

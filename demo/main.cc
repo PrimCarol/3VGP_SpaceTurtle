@@ -22,14 +22,16 @@ int main() {
 
 	ST::Quad test_mesh;
 	
-	int HOWMANY = 10000;
+	int HOWMANY = 200000;
 
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
-		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}));
+		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = false;
+		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });

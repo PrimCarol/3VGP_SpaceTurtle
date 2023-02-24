@@ -12,6 +12,7 @@
 #include <components/st_hierarchy.h>
 #include <components/st_name.h>
 #include <components/st_render.h>
+#include <components/st_collider.h>
 #include <components/st_light.h>
 
 #include <systems/st_system_transform.h>

@@ -199,23 +199,23 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
 				static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
 
-				if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
-					GuizmoOperation = ImGuizmo::TRANSLATE;
-				}
-				if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
-					GuizmoOperation = ImGuizmo::ROTATE;
-				}
-				if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
-					GuizmoOperation = ImGuizmo::SCALE;
-				}
-				if (GuizmoOperation != ImGuizmo::SCALE) {
-					if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
-						GuizmoMode = ImGuizmo::LOCAL;
-					}
-					if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
-						GuizmoMode = ImGuizmo::WORLD;
-					}
-				}
+				//if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
+				//	GuizmoOperation = ImGuizmo::TRANSLATE;
+				//}
+				//if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
+				//	GuizmoOperation = ImGuizmo::ROTATE;
+				//}
+				//if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
+				//	GuizmoOperation = ImGuizmo::SCALE;
+				//}
+				//if (GuizmoOperation != ImGuizmo::SCALE) {
+				//	if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
+				//		GuizmoMode = ImGuizmo::LOCAL;
+				//	}
+				//	if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
+				//		GuizmoMode = ImGuizmo::WORLD;
+				//	}
+				//}
 				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
 
 				float tempMatrixGuizmo[16];

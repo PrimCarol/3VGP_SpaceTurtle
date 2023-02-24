@@ -4,9 +4,25 @@
 
 // -------------------- Collider ---------------------
 ST::ColliderComponent::ColliderComponent(){
-	//printf("Create Component: Collider\n");
-	//center_ = glm::vec3(0.0f, 0.0f, 0.0f);
-	//size_ = glm::vec3(1.0f,1.0f,1.0f);
+	minPoint_ = glm::vec3(-1.0f);
+	maxPoint_ = glm::vec3(1.0f);
+	active_ = true;
+}
+
+void ST::ColliderComponent::setMinPoint(const glm::vec3 xyz) {
+	minPoint_ = xyz;
+}
+
+void ST::ColliderComponent::setMaxPoint(const glm::vec3 xyz) {
+	maxPoint_ = xyz;
+}
+
+glm::vec3 ST::ColliderComponent::getMaxPoint() const{
+	return maxPoint_;
+}
+
+glm::vec3 ST::ColliderComponent::getMinPoint() const {
+	return minPoint_;
 }
 
 /*#include <glad.h>
