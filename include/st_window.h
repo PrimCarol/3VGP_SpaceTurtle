@@ -78,6 +78,7 @@ namespace ST {
 		static void scroll_callback(GLFWwindow* w, double x, double y);
 		void scroll_callback(double x, double y);
 		
+		void setImGuiTheme();
 		//int lastKeyPressed = -1;
 		//int lastMousePressed = -1;
 	};

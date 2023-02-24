@@ -166,39 +166,40 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 
 	for (int i = 0; i < gm.size(); i++) {
 		if (r[i].has_value() && t[i].has_value()) {
-			ST::Raycast ray;
+			if (r[i].value().visible_) {
+				ST::Raycast ray;
 
-			glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
+				glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
 
-			/*if (r[i]->mesh) {
-				for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
-					if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
-					if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
-					if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
+				/*if (r[i]->mesh) {
+					for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
+						if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
+						if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
+						if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
 
-					if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
-					if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
-					if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
-				}
-			}*/
+						if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
+						if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
+						if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
+					}
+				}*/
 
-			// Normal, este funciona.
-			glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
-			glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
-			glm::mat4 tcopia = t[i]->m_Position_ * t[i]->m_Rotation_;
+				// Normal, este funciona.
+				glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
+				glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
+				glm::mat4 tcopia = t[i]->m_Position_ * t[i]->m_Rotation_;
 
-			float outputDistance = 100000.0f;
+				float outputDistance = 100000.0f;
 
-			// Donde pulse con el mouse.
-			if (ray.TraceRay(c->transform_.getPosition(), ray.ScreenPosToWorldRay(w, *c), colliderPoint_min, colliderPoint_max,
-				tcopia, outputDistance)) {
+				// Donde pulse con el mouse.
+				if (ray.TraceRay(c->transform_.getPosition(), ray.ScreenPosToWorldRay(w, *c), colliderPoint_min, colliderPoint_max,
+					tcopia, outputDistance)) {
 
-				if (outputDistance < objClose) {
-					objClose = outputDistance;
-					objIndexClose = i;
+					if (outputDistance < objClose) {
+						objClose = outputDistance;
+						objIndexClose = i;
+					}
 				}
 			}
-
 		}
 	}
 
