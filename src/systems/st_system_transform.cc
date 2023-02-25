@@ -49,6 +49,7 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 	//}
 
 	auto* transformVector = gm.getComponentVector<ST::TransformComponent>();
+	auto* hierarchyVector = gm.getComponentVector<ST::HierarchyComponent>();
 
 	if (transformVector) {
 		for (int i = 0; i < transformVector->size(); i++) {
@@ -80,13 +81,13 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 					t->m_World_Rotation_ = t->m_Rotation_;
 					t->m_world_transform_ = m;
 
-					if (gm.getComponentVector<ST::HierarchyComponent>()->at(i).has_value()) {
-						ST::HierarchyComponent* h = &gm.getComponentVector<ST::HierarchyComponent>()->at(i).value();
+					if (hierarchyVector->at(i).has_value()) {
+						ST::HierarchyComponent* h = &hierarchyVector->at(i).value();
 						if (h->getParentID() != -1) {
 
-							if (gm.getComponentVector<ST::HierarchyComponent>()->at(h->getParentID()).has_value()) {
-								if (gm.getComponentVector<ST::TransformComponent>()->at(h->getParentID()).has_value()) {
-									ST::TransformComponent* tparent = &gm.getComponentVector<ST::TransformComponent>()->at(h->getParentID()).value();
+							if (hierarchyVector->at(h->getParentID()).has_value()) {
+								if (transformVector->at(h->getParentID()).has_value()) {
+									ST::TransformComponent* tparent = &transformVector->at(h->getParentID()).value();
 
 									t->m_transform_ = tparent->m_world_transform_ * m;
 									t->m_world_transform_ = tparent->m_world_transform_ * m;

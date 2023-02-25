@@ -15,8 +15,8 @@ int main() {
 	// --------------
 	ST::Texture textureTest;
 	//textureTest.generateMipmap = true;
-	textureTest.set_mag_filter(ST::Texture::F_NEAREST);
-	textureTest.set_min_filter(ST::Texture::F_LINEAR);
+	//textureTest.set_mag_filter(ST::Texture::F_NEAREST);
+	//textureTest.set_min_filter(ST::Texture::F_LINEAR);
 	textureTest.loadSource("../others/tilesheet.png");
 	textureTest.setCols(71);
 	textureTest.setRows(19);
@@ -24,7 +24,7 @@ int main() {
 	ST::Quad test_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	int HOWMANY = 10000;
+	int HOWMANY = 50000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
