@@ -25,51 +25,51 @@ glm::vec3 ST::ColliderComponent::getMinPoint() const {
 	return minPoint_;
 }
 
-/*#include <glad.h>
+#include <glad.h>
 void ST::ColliderComponent::draw() const{
 	glBegin(GL_LINES);
-	
+
 	glColor3f(0.0, 1.0, 0.0);
 
-	glVertex3f(size_.x, size_.y, size_.z);
-	glVertex3f(-size_.x, size_.y, size_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, maxPoint_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, maxPoint_.z);
 
-	glVertex3f(-size_.x, size_.y, size_.z);
-	glVertex3f(-size_.x, size_.y, -size_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, maxPoint_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, minPoint_.z);
 
-	glVertex3f(-size_.x, size_.y, -size_.z);
-	glVertex3f(size_.x, size_.y, -size_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, minPoint_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, minPoint_.z);
 
-	glVertex3f(size_.x, size_.y, size_.z);
-	glVertex3f(size_.x, size_.y, -size_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, maxPoint_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, minPoint_.z);
 
-	glVertex3f(size_.x, -size_.y, size_.z);
-	glVertex3f(-size_.x, -size_.y, size_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, maxPoint_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, maxPoint_.z);
 
-	glVertex3f(-size_.x, -size_.y, size_.z);
-	glVertex3f(-size_.x, -size_.y, -size_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, maxPoint_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, minPoint_.z);
 
-	glVertex3f(-size_.x, -size_.y, -size_.z);
-	glVertex3f(size_.x, -size_.y, -size_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, minPoint_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, minPoint_.z);
 
-	glVertex3f(size_.x, -size_.y, size_.z);
-	glVertex3f(size_.x, -size_.y, -size_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, maxPoint_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, minPoint_.z);
 
-	glVertex3f(size_.x, -size_.y, size_.z);
-	glVertex3f(size_.x, size_.y, size_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, maxPoint_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, maxPoint_.z);
 
-	glVertex3f(size_.x, -size_.y, -size_.z);
-	glVertex3f(size_.x, size_.y, -size_.z);
+	glVertex3f(maxPoint_.x, minPoint_.y, minPoint_.z);
+	glVertex3f(maxPoint_.x, maxPoint_.y, minPoint_.z);
 
-	glVertex3f(-size_.x, -size_.y, size_.z);
-	glVertex3f(-size_.x, size_.y, size_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, maxPoint_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, maxPoint_.z);
 
-	glVertex3f(-size_.x, -size_.y, -size_.z);
-	glVertex3f(-size_.x, size_.y, -size_.z);
+	glVertex3f(minPoint_.x, minPoint_.y, minPoint_.z);
+	glVertex3f(minPoint_.x, maxPoint_.y, minPoint_.z);
 
 	//glVertex3f(-size_.x, -size_.y, -size_.z);
 	glEnd();
-}*/
+}
 
 ST::ColliderComponent::~ColliderComponent(){
 	//printf("Destroy Component: Collider\n");

@@ -21,8 +21,9 @@ int main() {
 	textureTest.setRows(19);
 
 	ST::Quad test_mesh;
+	//test_mesh.loadFromFile("../others/cat_petit.obj");;
 	
-	int HOWMANY = 200000;
+	int HOWMANY = 1000;
 
 
 	std::vector<ST::GameObj> objects;

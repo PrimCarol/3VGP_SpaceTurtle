@@ -15,7 +15,7 @@ namespace ST {
 		void setMinPoint(const glm::vec3 xyz);
 		void setMaxPoint(const glm::vec3 xyz);
 		
-		//void draw() const;
+		void draw() const;
 
 		bool active_;
 
