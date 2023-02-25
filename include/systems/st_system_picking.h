@@ -15,7 +15,7 @@ namespace ST {
 		/* Return the reference of the object.
 		Don't work correctly with Herarchy.*/
 		//static ST::GameObj tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c = nullptr);
-		static int tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c = nullptr);
+		static int tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm);
 	private:
 		SystemPicking();
 		~SystemPicking();

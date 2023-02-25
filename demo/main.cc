@@ -8,22 +8,23 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	ST::Camera myCam;
-	gm.mainCamera = &myCam; // <--- Esto deberia hacerlo solo.
+	//ST::Camera myCam;
+	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+	gm.mainCameraID = camera.getID(); // <--- Esto deberia hacerlo solo.
 
 	// --------------
 	ST::Texture textureTest;
 	//textureTest.generateMipmap = true;
 	textureTest.set_mag_filter(ST::Texture::F_NEAREST);
-	textureTest.set_min_filter(ST::Texture::F_NEAREST);
+	textureTest.set_min_filter(ST::Texture::F_LINEAR);
 	textureTest.loadSource("../others/tilesheet.png");
 	textureTest.setCols(71);
 	textureTest.setRows(19);
 
 	ST::Quad test_mesh;
-	//test_mesh.loadFromFile("../others/cat_petit.obj");;
+	//test_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	int HOWMANY = 50000;
+	int HOWMANY = 100000;
 
 
 	std::vector<ST::GameObj> objects;
@@ -49,15 +50,17 @@ int main() {
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
-		myCam.fpsMovement(w, cameraSpeed);
+		//myCam.fpsMovement(w, cameraSpeed);
 		cameraSpeed += w.mouseWheelY();
+
+		ST::SystemCamera::UpdateCamera(gm);
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		ST::SystemRender::Render(gm, &myCam);
+		ST::SystemRender::Render(gm);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm, &myCam);
+			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm/*, &myCam*/);
 		}
 
 		ST::SystemHUD::NavBar(gm);

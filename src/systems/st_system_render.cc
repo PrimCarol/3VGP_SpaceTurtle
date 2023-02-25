@@ -3,66 +3,66 @@
 #include <map>
 #include <st_gameobj_manager.h>
 
-void drawCollision(glm::vec3 min, glm::vec3 max){
-	glBegin(GL_LINES);
+//void drawCollision(glm::vec3 min, glm::vec3 max){
+//	glBegin(GL_LINES);
+//
+//	glColor3f(0.0, 1.0, 0.0);
+//
+//	glVertex3f(max.x, max.y, max.z);
+//	glVertex3f(min.x, max.y, max.z);
+//
+//	glVertex3f(min.x, max.y, max.z);
+//	glVertex3f(min.x, max.y, min.z);
+//
+//	glVertex3f(min.x, max.y, min.z);
+//	glVertex3f(max.x, max.y, min.z);
+//
+//	glVertex3f(max.x, max.y, max.z);
+//	glVertex3f(max.x, max.y, min.z);
+//
+//	glVertex3f(max.x, min.y, max.z);
+//	glVertex3f(min.x, min.y, max.z);
+//
+//	glVertex3f(min.x, min.y, max.z);
+//	glVertex3f(min.x, min.y, min.z);
+//
+//	glVertex3f(min.x, min.y, min.z);
+//	glVertex3f(max.x, min.y, min.z);
+//
+//	glVertex3f(max.x, min.y, max.z);
+//	glVertex3f(max.x, min.y, min.z);
+//
+//	glVertex3f(max.x, min.y, max.z);
+//	glVertex3f(max.x, max.y, max.z);
+//
+//	glVertex3f(max.x, min.y, min.z);
+//	glVertex3f(max.x, max.y, min.z);
+//
+//	glVertex3f(min.x, min.y, max.z);
+//	glVertex3f(min.x, max.y, max.z);
+//
+//	glVertex3f(min.x, min.y, min.z);
+//	glVertex3f(min.x, max.y, min.z);
+//
+//	//glVertex3f(-size_.x, -size_.y, -size_.z);
+//	glEnd();
+//}
 
-	glColor3f(0.0, 1.0, 0.0);
-
-	glVertex3f(max.x, max.y, max.z);
-	glVertex3f(min.x, max.y, max.z);
-
-	glVertex3f(min.x, max.y, max.z);
-	glVertex3f(min.x, max.y, min.z);
-
-	glVertex3f(min.x, max.y, min.z);
-	glVertex3f(max.x, max.y, min.z);
-
-	glVertex3f(max.x, max.y, max.z);
-	glVertex3f(max.x, max.y, min.z);
-
-	glVertex3f(max.x, min.y, max.z);
-	glVertex3f(min.x, min.y, max.z);
-
-	glVertex3f(min.x, min.y, max.z);
-	glVertex3f(min.x, min.y, min.z);
-
-	glVertex3f(min.x, min.y, min.z);
-	glVertex3f(max.x, min.y, min.z);
-
-	glVertex3f(max.x, min.y, max.z);
-	glVertex3f(max.x, min.y, min.z);
-
-	glVertex3f(max.x, min.y, max.z);
-	glVertex3f(max.x, max.y, max.z);
-
-	glVertex3f(max.x, min.y, min.z);
-	glVertex3f(max.x, max.y, min.z);
-
-	glVertex3f(min.x, min.y, max.z);
-	glVertex3f(min.x, max.y, max.z);
-
-	glVertex3f(min.x, min.y, min.z);
-	glVertex3f(min.x, max.y, min.z);
-
-	//glVertex3f(-size_.x, -size_.y, -size_.z);
-	glEnd();
-}
-
-void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera& cam){
+void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform, MyCamera& cam){
 	
 	//ST::Material* mat = nullptr;
-	
+
 	std::vector<MyObjToRender> objs_opaque;
 	std::vector<MyObjToRender> objs_translucent;
 
 	// ----- Opacos -----
-	for (int i = 0; i < r.size(); i++){
+	for (int i = 0; i < render.size(); i++){
 		
-		if (r[i].has_value() && t[i].has_value()) {
-			if (r[i]->visible_) {
+		if (render[i].has_value() && transform[i].has_value()) {
+			if (render[i]->visible_) {
 				MyObjToRender thisObj;
-				thisObj.render_ = &r[i].value();
-				thisObj.transform_ = &t[i].value();
+				thisObj.render_ = &render[i].value();
+				thisObj.transform_ = &transform[i].value();
 
 				if (!thisObj.render_->material.translucent) {
 					objs_opaque.push_back(thisObj);
@@ -77,19 +77,18 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 	glDisable(GL_BLEND);
 	doRender(objs_opaque, cam);
 
-
 	// ----- Translucidos -----
-	std::map<float, int> sorted;
-	for (int i = 0; i < objs_translucent.size(); i++){
-		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
-		glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
-		float distance = glm::length(cam.transform_.getPosition() - worldPos);
-		sorted[distance] = i;
-	}
-
 	bool sortTranslucents = false; // <---------- Temporal
 
 	if (sortTranslucents) {
+		std::map<float, int> sorted;
+		for (int i = 0; i < objs_translucent.size(); i++){
+			glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+			glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+			float distance = glm::length(cam.transform_->getPosition() - worldPos);
+			sorted[distance] = i;
+		}
+
 		std::vector<MyObjToRender> objs_translucent_sorted;
 		
 		for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
@@ -113,11 +112,10 @@ void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent
 
 	objs_opaque.clear();
 	objs_translucent.clear();
-	
 
 }
 
-void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam){
+void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam){
 	
 	std::vector<InstanceInfo> instancing;
 
@@ -208,7 +206,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, ST::Camera& ca
 	}
 }
 
-bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam){
+bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, MyCamera& cam){
 	const ST::Program* p = nullptr;
 
 	static GLuint lastTextureAlbedo = -1;
@@ -218,37 +216,23 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	p = mat.getProgram();
 	if (p) {
 		p->use();
-	
+
 		// ------ Camara -------
 		GLuint camPos = p->getUniform("u_view_pos");
-		glm::vec3 camTransPos = cam.transform_.getPosition();
+		glm::vec3 camTransPos = cam.transform_->getPosition();
 		glUniform3fv(camPos, 1, &camTransPos.x);
 		GLuint camView = p->getUniform("u_view_matrix");
-		glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.view[0][0]);
+		glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.cam_->view[0][0]);
 		GLuint camProjection = p->getUniform("u_projection_matrix");
-		glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
+		glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.cam_->projection[0][0]);
 		GLuint camVP = p->getUniform("u_vp_matrix");
-		glm::mat4 cam_m_vp = cam.projection * cam.view;
+		glm::mat4 cam_m_vp = cam.cam_->projection * cam.cam_->view;
 		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
 		// ------ Camara -------
 
-		//if (t) {
-		//	GLuint u_m_trans = p->getUniform("u_m_trans");
-		//	glUniformMatrix4fv(u_m_trans, 1, GL_FALSE, &t->m_transform_[0][0]);
-		//}
 
 		// Material
 		GLuint mat_Uniform = -1;
-		/*mat_Uniform = p->getUniform("u_color");
-		glm::vec4 c = mat.getColor();
-		glUniform4fv(mat_Uniform, 1, &c[0]);*/
-
-		//mat_Uniform = p->getUniform("u_shininess");
-		//glUniform1f(mat_Uniform, mat.shininess);
-
-		//mat_Uniform = p->getUniform("texIndex");
-		//glm::ivec2 texindex = mat.getTexIndex();
-		//glUniform2iv(mat_Uniform, 1, &texindex.x);
 
 		mat_Uniform = p->getUniform("u_haveAlbedo");
 		glUniform1i(mat_Uniform, mat.haveAlbedo);
@@ -256,8 +240,6 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glUniform1i(mat_Uniform, mat.haveSpecular);
 		mat_Uniform = p->getUniform("u_haveNormal");
 		glUniform1i(mat_Uniform, mat.haveAlbedo);
-		
-		//int TextCount = 0;
 
 		if (mat.haveAlbedo) {
 			if (lastTextureAlbedo != mat.getAlbedo()->getID()) {
@@ -316,7 +298,7 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	return false;
 }
 
-void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
+void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 
 	std::vector<std::optional<ST::RenderComponent>>& r = *gm.getComponentVector<ST::RenderComponent>();
 	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
@@ -324,14 +306,23 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
 	glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_FALSE);
 
-	if (cam == nullptr) {
+	/*if (cam == nullptr) {
 		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
 		cam = cam_.get();
+	}*/
+
+	//cam->update();
+
+	if (gm.mainCameraID >= 0) {
+		if (t[gm.mainCameraID].has_value()) {
+			MyCamera cam;
+			cam.transform_ = &t[gm.mainCameraID].value();
+			if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
+				cam.cam_ = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+				setUpRender(r, t, cam);
+			}
+		}
 	}
-
-	cam->update();
-
-	setUpRender(r,t, *cam);
 
 	glUseProgram(0);
 }

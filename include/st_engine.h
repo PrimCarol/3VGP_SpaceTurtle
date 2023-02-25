@@ -14,12 +14,14 @@
 #include <components/st_render.h>
 #include <components/st_collider.h>
 #include <components/st_light.h>
+#include <components/st_camera.h>
 
 #include <systems/st_system_transform.h>
 #include <systems/st_system_render.h>
 #include <systems/st_system_light.h>
 #include <systems/st_system_picking.h>
 #include <systems/st_system_hud.h>
+#include <systems/st_system_camera.h>
 
 namespace ST {
 

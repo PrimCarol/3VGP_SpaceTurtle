@@ -7,50 +7,54 @@
 #include <components/st_render.h>
 #include <components/st_collider.h>
 
-int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c){
+int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm){
 	float objClose = 100000.0f;
 	int objIndexClose = -1;
 
-	if (c == nullptr) {
-		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
-		cam_->update();
-		c = cam_.get();
-	}
+	//if (c == nullptr) {
+	//	static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
+	//	cam_->update();
+	//	c = cam_.get();
+	//}
 
 	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
 	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
 	std::vector<std::optional<ST::ColliderComponent>>& collider = *gm.getComponentVector<ST::ColliderComponent>();
 
-	for (int i = 0; i < gm.size(); i++) {
-		if (collider[i].has_value() && collider[i]->active_) {
-			if (render[i].has_value() && transform[i].has_value()) {
-				ST::Raycast ray;
+	if (gm.mainCameraID >= 0 && (transform[gm.mainCameraID].has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value())) {
+		ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
 
-				glm::vec3 maxPos = collider[i]->getMaxPoint();
-				glm::vec3 minPos = collider[i]->getMinPoint();
+		for (int i = 0; i < gm.size(); i++) {
+			if (collider[i].has_value() && collider[i]->active_) {
+				if (render[i].has_value() && transform[i].has_value()) {
+					ST::Raycast ray;
 
-				// Normal, este funciona.
-				glm::vec3 colliderPoint_min(minPos * transform[i]->getScale());
-				glm::vec3 colliderPoint_max(maxPos * transform[i]->getScale());
-				glm::mat4 tcopia = transform[i]->m_Position_ * transform[i]->m_Rotation_;
+					glm::vec3 maxPos = collider[i]->getMaxPoint();
+					glm::vec3 minPos = collider[i]->getMinPoint();
 
-				float outputDistance = 100000.0f;
+					// Normal, este funciona.
+					glm::vec3 colliderPoint_min(minPos * transform[i]->getScale());
+					glm::vec3 colliderPoint_max(maxPos * transform[i]->getScale());
+					glm::mat4 tcopia = transform[i]->m_Position_ * transform[i]->m_Rotation_;
 
-				// Donde pulse con el mouse.
-				if (ray.TraceRay(c->transform_.getPosition(), ray.ScreenPosToWorldRay(w, *c), colliderPoint_min, colliderPoint_max,
-					tcopia, outputDistance)) {
+					float outputDistance = 100000.0f;
 
-					if (outputDistance < objClose) {
-						objClose = outputDistance;
-						objIndexClose = i;
+					// Donde pulse con el mouse.
+					if (ray.TraceRay(transform[gm.mainCameraID]->getPosition(), ray.ScreenPosToWorldRay(w, *camComp), colliderPoint_min, colliderPoint_max,
+						tcopia, outputDistance)) {
+
+						if (outputDistance < objClose) {
+							objClose = outputDistance;
+							objIndexClose = i;
+						}
 					}
 				}
 			}
 		}
-	}
 
-	if (objIndexClose != -1) {
-		return objIndexClose;
+		if (objIndexClose != -1) {
+			return objIndexClose;
+		}
 	}
 	
 	return -1;

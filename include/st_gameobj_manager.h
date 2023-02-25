@@ -9,13 +9,13 @@
 #include <optional>
 
 #include <st_gameobj.h>
-#include <st_camera.h>
+//#include <st_camera.h>
 
 #define MAX_OBJECTS 100000
 
 namespace ST {
 	class GameObj;
-
+	class CameraComponent;
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 
@@ -68,7 +68,8 @@ namespace ST {
 
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
-		ST::Camera* mainCamera;
+		//ST::Camera* mainCamera;
+		int mainCameraID;
 
 		~GameObj_Manager();
 	private:
