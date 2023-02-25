@@ -24,8 +24,7 @@ int main() {
 	ST::Quad test_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	int HOWMANY = 100000;
-
+	int HOWMANY = 10000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){

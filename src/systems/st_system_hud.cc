@@ -158,6 +158,32 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 	size_t objSeletected = gm.objectSelected;
 
+	// ImGuizmo <----------------------------------------
+	static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
+	static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
+
+	ImGui::Begin("ControllersTransform");
+	ImVec2 sizeButton(30, 30);
+	if (ImGui::Button("T", sizeButton)) {
+		GuizmoOperation = ImGuizmo::TRANSLATE;
+	} ImGui::SameLine();
+	if (ImGui::Button("R", sizeButton)) {
+		GuizmoOperation = ImGuizmo::ROTATE;
+	} ImGui::SameLine();
+	if (ImGui::Button("S", sizeButton)) {
+		GuizmoOperation = ImGuizmo::SCALE;
+	}
+	if (GuizmoOperation != ImGuizmo::SCALE) {
+		if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
+			GuizmoMode = ImGuizmo::LOCAL;
+		} ImGui::SameLine();
+		if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
+			GuizmoMode = ImGuizmo::WORLD;
+		}
+	}
+	ImGui::End();
+	// ImGuizmo <----------------------------------------
+
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
 		ImGui::Text("Obj ID -> %d ", objSeletected);
@@ -195,29 +221,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGuiIO& io = ImGui::GetIO();
 				ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
 				
-				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
-				static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
-				static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
-
-				//if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
-				//	GuizmoOperation = ImGuizmo::TRANSLATE;
-				//}
-				//if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
-				//	GuizmoOperation = ImGuizmo::ROTATE;
-				//}
-				//if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
-				//	GuizmoOperation = ImGuizmo::SCALE;
-				//}
-				//if (GuizmoOperation != ImGuizmo::SCALE) {
-				//	if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
-				//		GuizmoMode = ImGuizmo::LOCAL;
-				//	}
-				//	if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
-				//		GuizmoMode = ImGuizmo::WORLD;
-				//	}
-				//}
-				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
-
 				float tempMatrixGuizmo[16];
 				glm::vec3 pos = trans->getPosition();
 				glm::vec3 rot = trans->getRotation();
