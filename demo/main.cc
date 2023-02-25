@@ -23,7 +23,7 @@ int main() {
 	ST::Quad test_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");;
 	
-	int HOWMANY = 1000;
+	int HOWMANY = 50000;
 
 
 	std::vector<ST::GameObj> objects;
@@ -51,7 +51,6 @@ int main() {
 
 		myCam.fpsMovement(w, cameraSpeed);
 		cameraSpeed += w.mouseWheelY();
-		//printf("%f\n",w.mouseWheelY());
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
