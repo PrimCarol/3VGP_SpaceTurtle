@@ -23,10 +23,6 @@ namespace ST {
 
 		void setTarget(glm::vec3 target);
 
-		//void fpsMovement(ST::Window& w, float MoveSpeed = 30.0f, float RotateSpeed = 0.5f);
-
-		//void update();
-
 		glm::mat4 view;
 		glm::mat4 projection;
 

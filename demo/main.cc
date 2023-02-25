@@ -52,6 +52,7 @@ int main() {
 		//myCam.fpsMovement(w, cameraSpeed);
 		cameraSpeed += w.mouseWheelY();
 
+		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
 
 		ST::SystemTransform::UpdateTransforms(gm);
@@ -59,7 +60,7 @@ int main() {
 		ST::SystemRender::Render(gm);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
-			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm/*, &myCam*/);
+			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);
 		}
 
 		ST::SystemHUD::NavBar(gm);

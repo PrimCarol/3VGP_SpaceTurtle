@@ -2,6 +2,7 @@
 
 #include <st_gameobj_manager.h>
 #include <st_gameobj.h>
+#include <st_window.h>
 #include <components/st_transform.h>
 #include <components/st_camera.h>
 
@@ -52,6 +53,49 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 				Camera->projection = glm::ortho(-(Camera->horizontal_ / 2.0f), Camera->horizontal_ / 2.0f, Camera->vertical_ / 2.0f, -(Camera->vertical_ / 2.0f), Camera->nearPlane_, Camera->farPlane_);
 				break;
 			}
+		}
+	}
+}
+
+void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float MoveSpeed, float RotateSpeed){
+	static bool firtsMouse = true;
+	static float lastX = 0.0f;
+	static float lastY = 0.0f;
+
+	if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value()) {
+		ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+		ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).value();
+
+		glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
+		float extra_speed = 1.0f;
+		if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+			extra_speed = 5.0f;
+		}
+		if (w.inputPressed(ST::ST_INPUT_UP)) {
+			transComp->Move(transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+		}
+		if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+			transComp->Move(-transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+		}
+		if (w.inputPressed(ST::ST_INPUT_LEFT)) {
+			transComp->Move(-transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+		}
+		if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+			transComp->Move(transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+		}
+
+		if (firtsMouse) {
+			lastX = mousePos.x;
+			lastY = mousePos.y;
+			firtsMouse = false;
+		}
+		float yoffset = mousePos.x - lastX;
+		float xoffset = mousePos.y - lastY;
+		lastX = mousePos.x;
+		lastY = mousePos.y;
+		if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+			transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
+			transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
 		}
 	}
 }
