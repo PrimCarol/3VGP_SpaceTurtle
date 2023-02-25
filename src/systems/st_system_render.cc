@@ -334,39 +334,4 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, ST::Camera* cam){
 	setUpRender(r,t, *cam);
 
 	glUseProgram(0);
-
-		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-
-		//if (r[i].value().mesh) {
-		//	r[i].value().mesh->render();
-
-		//	if (renderColliders) {
-		//		//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-		//		for (int j = 0; j < r[i]->mesh->vertices_.size(); j++) {
-		//			if (r[i]->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = r[i]->mesh->vertices_[j].pos.x; }
-		//			if (r[i]->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = r[i]->mesh->vertices_[j].pos.y; }
-		//			if (r[i]->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = r[i]->mesh->vertices_[j].pos.z; }
-
-		//			if (r[i]->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = r[i]->mesh->vertices_[j].pos.x; }
-		//			if (r[i]->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = r[i]->mesh->vertices_[j].pos.y; }
-		//			if (r[i]->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = r[i]->mesh->vertices_[j].pos.z; }
-		//		}
-
-		//		//glm::vec3 colliderPoint_min(minPos * t[i]->getScale());
-		//		//glm::vec3 colliderPoint_max(maxPos * t[i]->getScale());
-		//		//
-		//		//drawCollision(colliderPoint_min, colliderPoint_max);
-		//	}
-		//}
-
-
-		//if (renderColliders) {
-		//	glm::vec3 colliderPoint_min(minPos);
-		//	glm::vec3 colliderPoint_max(maxPos);
-
-		//	drawCollision(colliderPoint_min, colliderPoint_max);
-		//}
-
-	//	//colliderComponentList_[i].draw(); // Bad thing.
-	//}
 }

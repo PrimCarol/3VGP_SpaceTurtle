@@ -24,6 +24,30 @@ void ST::Mesh::setName(char* n){
 	if (n) { name_ = n; }
 }
 
+glm::vec3 ST::Mesh::getMinPoint() const {
+	glm::vec3 minPos(0.0f, 0.0f, 0.0f);
+
+	for (int j = 0; j < vertices_.size(); j++) {
+		if (vertices_[j].pos.y < minPos.y) { minPos.y = vertices_[j].pos.y; }
+		if (vertices_[j].pos.z < minPos.z) { minPos.z = vertices_[j].pos.z; }
+		if (vertices_[j].pos.x < minPos.x) { minPos.x = vertices_[j].pos.x; }
+	}
+	
+	return minPos;
+}
+
+glm::vec3 ST::Mesh::getMaxPoint() const {
+	glm::vec3 maxPos(0.0f, 0.0f, 0.0f);
+
+	for (int j = 0; j < vertices_.size(); j++) {
+		if (vertices_[j].pos.x > maxPos.x) { maxPos.x = vertices_[j].pos.x; }
+		if (vertices_[j].pos.y > maxPos.y) { maxPos.y = vertices_[j].pos.y; }
+		if (vertices_[j].pos.z > maxPos.z) { maxPos.z = vertices_[j].pos.z; }
+	}
+
+	return maxPos;
+}
+
 bool ST::Mesh::operator==(const Mesh& rhs){
 	return internalId == rhs.internalId;
 }
@@ -32,16 +56,16 @@ ST::Mesh::~Mesh(){
 	glDeleteVertexArrays(1, &internalId);
 }
 
+void ST::Mesh::setInstanceData(const std::vector<InstanceInfo>& data){}
+
+void ST::Mesh::render(){}
+
 ST::Mesh::Mesh(const Mesh& o){
 	name_ = o.name_;
 	internalId = o.internalId;
 
 	cullmode_ = o.cullmode_;
 }
-
-void ST::Mesh::setInstanceData(const std::vector<InstanceInfo>& data){}
-
-void ST::Mesh::render(){}
 
 // ------ Extra Functions ------
 void SetCullMode(ST::CullMode c) {

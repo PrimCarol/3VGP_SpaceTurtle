@@ -199,23 +199,23 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
 				static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
 
-				if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
-					GuizmoOperation = ImGuizmo::TRANSLATE;
-				}
-				if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
-					GuizmoOperation = ImGuizmo::ROTATE;
-				}
-				if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
-					GuizmoOperation = ImGuizmo::SCALE;
-				}
-				if (GuizmoOperation != ImGuizmo::SCALE) {
-					if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
-						GuizmoMode = ImGuizmo::LOCAL;
-					}
-					if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
-						GuizmoMode = ImGuizmo::WORLD;
-					}
-				}
+				//if (ImGui::RadioButton("Translate", GuizmoOperation == ImGuizmo::TRANSLATE)) {
+				//	GuizmoOperation = ImGuizmo::TRANSLATE;
+				//}
+				//if (ImGui::RadioButton("Rotate", GuizmoOperation == ImGuizmo::ROTATE)) {
+				//	GuizmoOperation = ImGuizmo::ROTATE;
+				//}
+				//if (ImGui::RadioButton("Scale", GuizmoOperation == ImGuizmo::SCALE)) {
+				//	GuizmoOperation = ImGuizmo::SCALE;
+				//}
+				//if (GuizmoOperation != ImGuizmo::SCALE) {
+				//	if (ImGui::RadioButton("Local", GuizmoMode == ImGuizmo::LOCAL)) {
+				//		GuizmoMode = ImGuizmo::LOCAL;
+				//	}
+				//	if (ImGui::RadioButton("World", GuizmoMode == ImGuizmo::WORLD)) {
+				//		GuizmoMode = ImGuizmo::WORLD;
+				//	}
+				//}
 				// Esto deberia de cogerlo de algun sitio global. <----------------------------------------
 
 				float tempMatrixGuizmo[16];
@@ -309,11 +309,31 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		//	}
 		//}
 
+		ImGui::Spacing(); ImGui::Spacing();
+
+		if (gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).has_value()) {
+			if (ImGui::TreeNodeEx("Collider")) {
+				ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
+
+				ImGui::Checkbox("Active", &collider->active_);
+
+				glm::vec3 min = collider->getMinPoint();
+				ImGui::InputFloat3("MinPoint", &min.x);
+				collider->setMinPoint(min);
+
+				glm::vec3 max = collider->getMaxPoint();
+				ImGui::InputFloat3("MaxPoint", &max.x);
+				collider->setMaxPoint(max);
+
+				//collider->draw(); // <<----- ????
+			}
+		}
+
+
+		ImGui::Spacing(); ImGui::Spacing();
 
 		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};
 		const char* typeLightSelected = NULL;
-
-		ImGui::Spacing(); ImGui::Spacing();
 
 		if (gm.getComponentVector<ST::LightComponent>()->at(objSeletected).has_value()) {
 			if (ImGui::TreeNodeEx("Light")) {
@@ -390,6 +410,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::TreePop();
 			}
 		}
+
 		ImGui::BeginChild("Footer Zone");
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
 		if (ImGui::Button("Delete")) {

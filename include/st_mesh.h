@@ -41,6 +41,9 @@ namespace ST {
 		const char* getName();
 		void setName(char* n);
 
+		glm::vec3 getMinPoint() const;
+		glm::vec3 getMaxPoint() const;
+
 		virtual void setInstanceData(const std::vector<InstanceInfo>& data);
 		virtual void render();
 
