@@ -1,5 +1,7 @@
 #include "st_raycast.h"
 
+#include <components/st_camera.h>
+
 ST::Raycast::Raycast(){
 
 }
@@ -104,7 +106,7 @@ bool ST::Raycast::TraceRay(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::v
 	return true;
 }
 
-glm::vec3 ST::Raycast::ScreenPosToWorldRay(const ST::Window& w, const ST::Camera& cam){
+glm::vec3 ST::Raycast::ScreenPosToWorldRay(const ST::Window& w, const ST::CameraComponent& cam){
 	
 	glm::vec4 lRayStart_NDC(
 		((float)w.mousePosX() / (float)w.getWindowsWidth() - 0.5f) * 2.0f,

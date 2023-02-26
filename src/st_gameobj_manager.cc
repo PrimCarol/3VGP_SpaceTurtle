@@ -9,6 +9,7 @@
 #include <components/st_render.h>
 #include <components/st_collider.h>
 #include <components/st_light.h>
+#include <components/st_camera.h>
 
 ST::GameObj_Manager::GameObj_Manager(){
 
@@ -18,9 +19,12 @@ ST::GameObj_Manager::GameObj_Manager(){
 	addComponentClass<ST::RenderComponent>();
 	addComponentClass<ST::ColliderComponent>();
 	addComponentClass<ST::LightComponent>();
+	addComponentClass<ST::CameraComponent>();
 	
 	objectSelected = ST::GameObj::null_id;
 	root.addComponent<ST::HierarchyComponent>();
+
+	mainCameraID = -1;
 
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();

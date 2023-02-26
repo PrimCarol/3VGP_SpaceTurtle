@@ -3,11 +3,12 @@
 
 #include <transform.hpp>
 
-#include <st_camera.h>
 #include <st_window.h>
 
 namespace ST {
-	
+
+	class CameraComponent;
+
 	class Raycast {
 	public:
 		Raycast();
@@ -21,7 +22,7 @@ namespace ST {
 			float& intersection_distance
 		);
 
-		glm::vec3 ScreenPosToWorldRay(const ST::Window& w, const ST::Camera& cam);
+		glm::vec3 ScreenPosToWorldRay(const ST::Window& w, const ST::CameraComponent& cam);
 
 		~Raycast();
 	private:

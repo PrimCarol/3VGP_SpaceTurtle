@@ -3,7 +3,7 @@
 
 #include <components/st_render.h>
 #include <components/st_transform.h>
-#include <st_camera.h>
+#include <components/st_camera.h>
 
 #include <optional>
 
@@ -13,19 +13,24 @@ namespace ST {
 		ST::TransformComponent* transform_;
 		ST::RenderComponent* render_;
 	};
+
+	struct MyCamera {
+		ST::TransformComponent* transform_;
+		ST::CameraComponent* cam_;
+	};
 	
 	class GameObj_Manager;
 
 	class SystemRender {
 	public:
-		static void Render(ST::GameObj_Manager& gm, ST::Camera* cam = nullptr);
+		static void Render(ST::GameObj_Manager& gm);
 	private:
 		SystemRender();
 
-		static void setUpRender(std::vector<std::optional<ST::RenderComponent>>& r, std::vector<std::optional<ST::TransformComponent>>& t, ST::Camera& cam);
-		static void doRender(std::vector<MyObjToRender>& objs, ST::Camera& cam);
+		static void setUpRender(std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform, MyCamera& cam);
+		static void doRender(std::vector<MyObjToRender>& objs, MyCamera& cam);
 
-		static bool setUpUniforms(ST::Material& mat, ST::TransformComponent* t, ST::Camera& cam);
+		static bool setUpUniforms(ST::Material& mat, ST::TransformComponent* t, MyCamera& cam);
 
 		//~SystemRender();
 		SystemRender(const SystemRender& o);
