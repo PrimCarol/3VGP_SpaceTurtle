@@ -69,12 +69,12 @@ void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::NameComponent>()->setName("Point Light");
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Point;
 
-	static ST::Cube mesh_Quad_;
+	static ST::Quad mesh_Quad_;
 	static ST::Texture halo_Light;
 	halo_Light.loadSource("../others/halo_light.png");
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
-	//temp.getComponent<ST::RenderComponent>()->material.translucent = true;
+	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
 }
 

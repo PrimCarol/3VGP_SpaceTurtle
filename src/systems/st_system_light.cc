@@ -41,6 +41,12 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 			switch (thisLight.type_) {
 			case ST::Directional:
 
+				/*
+				
+				Creamos una camara (CameraComponent) en orthografic, para saber lo que ve la camara.
+				
+				*/
+
 				snprintf(buffer, 50, "u_DirectLight[%d].direction", countDirectionalLights);
 				idUniform = thisProgram.getUniform(buffer);
 				glUniform3f(idUniform, dirLight.x, dirLight.y, dirLight.z);

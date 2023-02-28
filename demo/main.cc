@@ -1,7 +1,7 @@
 #include <st_engine.h>
 
 int main() {
-	ST::Window w;
+	ST::Window w(1600, 840);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
 
 	// ----------------------------------------------------------------
