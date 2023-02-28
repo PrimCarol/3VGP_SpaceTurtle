@@ -333,6 +333,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				collider->setMaxPoint(max);
 
 				//collider->draw(); // <<----- ????
+				ImGui::TreePop();
 			}
 		}
 

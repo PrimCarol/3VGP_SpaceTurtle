@@ -61,6 +61,9 @@ int main() {
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
+	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.4f);
+	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	// --------------------------
 	float cameraSpeed = 10.0f;

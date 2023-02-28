@@ -79,9 +79,18 @@ void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
 }
 
 void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
-	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 
 	temp.getComponent<ST::NameComponent>()->setName("Spot Light");
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	temp.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);
+
+
+	static ST::Quad mesh_Quad_;
+	static ST::Texture halo_Light;
+	halo_Light.loadSource("../others/halo_light.png");
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
+	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
 }
