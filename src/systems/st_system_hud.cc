@@ -436,7 +436,8 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 	char buffer[50];
 	for (int i = 0; i < parent.childSize(); i++) {
 		if (nameComponents->at(parent.getChildID(i)).has_value()) {
-			snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+			//snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+			snprintf(buffer, 50, "%s", nameComponents->at(parent.getChildID(i)).value().getName());
 
 			ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 			bool opened = ImGui::TreeNodeEx(buffer, node_flags);

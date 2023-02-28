@@ -64,7 +64,7 @@ void ST::Engine::createDirectLight(ST::GameObj_Manager& gm){
 }
 
 void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
-	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{});
+	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 
 	temp.getComponent<ST::NameComponent>()->setName("Point Light");
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Point;
