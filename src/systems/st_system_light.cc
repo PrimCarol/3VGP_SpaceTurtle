@@ -29,8 +29,10 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 			// ---- Lights ----
 
+			glm::vec3 dirLight(0.0f,-1.0f,0.0f);
+
 			if (transformComps->at(n).has_value()) {
-				thisLight.dirLight_ = transformComps->at(n).value().getRotation();
+				dirLight = transformComps->at(n).value().getRotation();
 				//thisLight.dirLight_.x = sinf(transformComps->at(n).value().getRotation().x);
 				//thisLight.dirLight_.y = sinf(transformComps->at(n).value().getRotation().y);
 				//thisLight.dirLight_.z = sinf(transformComps->at(n).value().getRotation().z);
@@ -41,7 +43,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 				snprintf(buffer, 50, "u_DirectLight[%d].direction", countDirectionalLights);
 				idUniform = thisProgram.getUniform(buffer);
-				glUniform3f(idUniform, thisLight.dirLight_.x, thisLight.dirLight_.y, thisLight.dirLight_.z);
+				glUniform3f(idUniform, dirLight.x, dirLight.y, dirLight.z);
 
 				snprintf(buffer, 50, "u_DirectLight[%d].ambient", countDirectionalLights);
 				idUniform = thisProgram.getUniform(buffer);

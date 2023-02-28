@@ -187,9 +187,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
 		ImGui::Text("Obj ID -> %d ", objSeletected);
-		ImGui::Spacing(); ImGui::Spacing();
 	
 		if (gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			ST::TransformComponent* trans = &gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).value();
 			if (ImGui::TreeNodeEx("Transform")) {
 					
@@ -244,9 +244,10 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			// --------
 		}
 			
-		ImGui::Spacing(); ImGui::Spacing();
+		
 
 		if (gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Render")) {
 
 				ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
@@ -316,9 +317,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		//	}
 		//}
 
-		ImGui::Spacing(); ImGui::Spacing();
-
 		if (gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Collider")) {
 				ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
 
@@ -337,13 +337,11 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 		}
 
-
-		ImGui::Spacing(); ImGui::Spacing();
-
 		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};
 		const char* typeLightSelected = NULL;
 
 		if (gm.getComponentVector<ST::LightComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Light")) {
 
 				ST::LightComponent* light = &gm.getComponentVector<ST::LightComponent>()->at(objSeletected).value();
@@ -419,6 +417,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 		}
 
+		ImGui::Spacing(); ImGui::Spacing();
 		ImGui::BeginChild("Footer Zone");
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
 		if (ImGui::Button("Delete")) {

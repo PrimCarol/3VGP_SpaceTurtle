@@ -17,7 +17,7 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 	//	c = cam_.get();
 	//}
 
-	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
+	//std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
 	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
 	std::vector<std::optional<ST::ColliderComponent>>& collider = *gm.getComponentVector<ST::ColliderComponent>();
 
@@ -26,7 +26,7 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 
 		for (int i = 0; i < gm.size(); i++) {
 			if (collider[i].has_value() && collider[i]->active_) {
-				if (render[i].has_value() && transform[i].has_value()) {
+				if (transform[i].has_value()) {
 					ST::Raycast ray;
 
 					glm::vec3 maxPos = collider[i]->getMaxPoint();

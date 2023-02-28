@@ -7,8 +7,6 @@ ST::LightComponent::LightComponent(){
 	diffuse_ = color_;
 	specular_ = color_;
 
-	// -----> Temporal <----
-	//dirLight_ = { 0.0f,-1.0f,0.0f };
 	ambient_ = { 0.4f,0.4f,0.4f };
 	diffuse_ = { 0.4f,0.4f,0.4f };
 	specular_ = { 0.4f,0.4f,0.4f };
