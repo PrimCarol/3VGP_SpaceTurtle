@@ -6,6 +6,7 @@
 #include <components/st_transform.h>
 
 #include <components/st_camera.h>
+#include <st_rendertarget.h>
 
 #include <st_program.h>
 
@@ -179,6 +180,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisP
 
 	GLint idUniform = -1;
 
+	ST::RenderTarget renderTarget;
+	renderTarget.setUp(700,700, ST::Texture::T_2D, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH);
+
 	for (int n = 0; n < lightComps->size(); n++) {
 		if (lightComps->at(n).has_value() && transformComps->at(n).has_value()) {
 			ST::LightComponent thisLight = lightComps->at(n).value();
@@ -186,12 +190,20 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisP
 
 			if (thisLight.type_ == ST::Directional) {
 
+				glm::mat4 lightSpaceMatrix;
+
 				ST::CameraComponent cam;
 				cam.setOrthographic(-10.0f,10.0f, 1.0f, 7.5f);
 				cam.lookAt(thisTrans.getPosition(), thisTrans.getUp(), thisTrans.getRotation());
+				lightSpaceMatrix = cam.projection * cam.view;
+
 
 				idUniform = thisProgram.getUniform("lightSpaceMatrix");
-				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &cam.view[0][0]);
+				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &lightSpaceMatrix[0][0]);
+
+				renderTarget.start();
+				//Render Scene.
+				renderTarget.end();
 			}
 
 		}

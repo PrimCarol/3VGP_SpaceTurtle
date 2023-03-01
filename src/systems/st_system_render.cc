@@ -324,5 +324,5 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 		}
 	}
 
-	glUseProgram(0);
+	//glUseProgram(0);
 }

@@ -72,6 +72,11 @@ namespace ST {
         const GLuint getID() const;
 
         const TextType getType() const;
+        const GLenum getTypeGL() const;
+        const Format getFormat() const;
+        const GLenum getFormatGL() const;
+        const DataType getDataType() const;
+        const GLenum getDataTypeGL() const;
         const int width() const;
         const int height() const;
 

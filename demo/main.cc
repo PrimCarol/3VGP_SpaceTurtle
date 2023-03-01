@@ -1,5 +1,7 @@
 #include <st_engine.h>
 
+#include <imgui.h>
+
 int main() {
 	ST::Window w(1600, 840);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
@@ -67,6 +69,8 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	// --------------------------
+	ST::RenderTarget renderTargetTest;
+	renderTargetTest.setUp(700, 700);
 	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
@@ -79,7 +83,14 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
+		
+		renderTargetTest.start();
 		ST::SystemRender::Render(gm);
+		renderTargetTest.end();
+
+		ImGui::Begin("View");
+		ImGui::Image((void*)(intptr_t)renderTargetTest.getID(), ImVec2(144, 144));
+		ImGui::End();
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

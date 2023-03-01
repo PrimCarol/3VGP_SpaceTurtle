@@ -315,6 +315,26 @@ const ST::Texture::TextType ST::Texture::getType() const{
     return type_;
 }
 
+const GLenum ST::Texture::getTypeGL() const{
+    return textureTypeToGl(type_);
+}
+
+const ST::Texture::Format ST::Texture::getFormat() const{
+    return format_;
+}
+
+const GLenum ST::Texture::getFormatGL() const{
+    return formatToGl(format_);
+}
+
+const ST::Texture::DataType ST::Texture::getDataType() const{
+    return dataType_;
+}
+
+const GLenum ST::Texture::getDataTypeGL() const{
+    return dataTypeToGl(dataType_);
+}
+
 const int ST::Texture::width() const{
     return width_;
 }
