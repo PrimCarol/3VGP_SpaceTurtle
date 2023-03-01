@@ -98,20 +98,16 @@ void main(){
 
 	vec4 result = vec4(0.0);
 
-	if(u_numDirectLights == 0 ){
-		result = TextureColor;
-	}
-
 	// Directional Lights
-	int CountDirectLights = u_numDirectLights;
-	if(CountDirectLights == 0){ 
+	if(u_numDirectLights == 0 ){
 		DirLight noDirectional;
 		noDirectional.direction = vec3(0.0);
-		noDirectional.ambient = vec3(0.0);
+		noDirectional.ambient = vec3(0.1);
 		noDirectional.diffuse = vec3(0.0);
 		noDirectional.specular = vec3(0.0);
 		result += CalcDirLight(noDirectional, normal_, camera_dir, TextureColor, TextureSpecular);
 	}else{
+		int CountDirectLights = u_numDirectLights;
 		if(CountDirectLights >= MAX_DIRECT_LIGHTS){ CountDirectLights = MAX_DIRECT_LIGHTS; }
 		for(int i = 0; i < CountDirectLights; i++){
 			result += CalcDirLight(u_DirectLight[i], normal_, camera_dir, TextureColor, TextureSpecular);

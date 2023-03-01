@@ -159,7 +159,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	idUniform = thisProgram.getUniform("u_numSpotLights");
 	glUniform1i(idUniform, countSpotLights);
 
-	glUseProgram(0);
+	//glUseProgram(0);
 }
 
 void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisProgram){
