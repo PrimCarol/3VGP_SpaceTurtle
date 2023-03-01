@@ -1,4 +1,5 @@
 #include "st_rendertarget.h"
+#include <stdio.h>
 
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
@@ -11,23 +12,39 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::TextType t, ST::Texture:
 	height_ = h;
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 
-	textureToRender_.set_dataType(dt);
+	//GLenum error = glGetError();
+	//if (error != GL_NO_ERROR) {
+	//	printf("OpenGL Error: %d\n", error);
+	//}
 
+	textureToRender_.set_Type(t);
+	textureToRender_.bind();
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureToRender_.getTypeGL(), textureToRender_.getID(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureToRender_.getID(), 0);
+
+	//error = glGetError();
+	//if (error != GL_NO_ERROR) {
+	//	printf("OpenGL Error: %d\n", error);
+	//}
+
 	textureToRender_.init(width_, height_, t, dt, f);
 	//textureToRender_.set_wrap_s(ST::Texture::W_MIRRORED_REPEAT);
 	//textureToRender_.set_wrap_t(ST::Texture::W_MIRRORED_REPEAT);
-	//textureToRender_.set_data(0);
+	textureToRender_.set_data(0);
 
-	/*unsigned int rbo;
+	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);*/
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	
+	//error = glGetError();
+	//if (error != GL_NO_ERROR) {
+	//	printf("OpenGL Error: %d\n", error);
+	//}
 
+	//textureToRender_.unbind();
 	//glDrawBuffer(GL_NONE);
 	//glReadBuffer(GL_NONE);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);

@@ -9,7 +9,7 @@ namespace ST {
 	public:
 
         enum TextType{
-            T_Invalid,
+            //T_Invalid,
             T_1D,
             T_2D,
             T_3D,
@@ -60,6 +60,10 @@ namespace ST {
 		bool loadSource(const char* shaderText, TextType t = TextType::T_2D, Format f = F_RGBA/*, int mipmaps = 0*/);
         void init(int width, int height, TextType t = TextType::T_2D, DataType dt = DT_U_BYTE, Format f = Format::F_RGBA);
 
+        void bind();
+        void unbind();
+
+        void set_Type(TextType t) { type_ = t; }
         void set_dataType(DataType dt) { dataType_ = dt; }
         void set_min_filter(Filter f) { min_filter_ = f; }
         void set_mag_filter(Filter f) { mag_filter_ = f; }

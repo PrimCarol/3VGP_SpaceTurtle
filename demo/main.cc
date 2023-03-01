@@ -12,7 +12,7 @@ int main() {
 
 	//ST::Camera myCam;
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
-	gm.mainCameraID = camera.getID(); // <--- Esto deberia hacerlo solo.
+	//gm.mainCameraID = camera.getID(); // <--- Esto deberia hacerlo solo. Y ya lo hace :D
 	camera.getComponent<ST::NameComponent>()->setName("Camera");
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 
@@ -69,15 +69,14 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	// --------------------------
-	//ST::RenderTarget renderTargetTest;
-	//renderTargetTest.setUp(700, 700);
+	ST::RenderTarget renderTargetTest;
+	renderTargetTest.setUp(1920, 1080);
 	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
-		//myCam.fpsMovement(w, cameraSpeed);
+		// ---- Camera ----
 		cameraSpeed += w.mouseWheelY();
-
 		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
 
@@ -87,9 +86,8 @@ int main() {
 		//renderTargetTest.start();
 		ST::SystemRender::Render(gm);
 		//renderTargetTest.end();
-
-		//ImGui::Begin("View");
-		//ImGui::Image((void*)(intptr_t)renderTargetTest.textureID(), ImVec2(200, 200));
+		//ImGui::Begin("View", 0, ImGuiWindowFlags_NoInputs);
+		//ImGui::Image((void*)(intptr_t)renderTargetTest.textureID(), ImGui::GetWindowSize());
 		//ImGui::End();
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {

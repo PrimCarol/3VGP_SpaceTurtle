@@ -75,9 +75,9 @@ GLenum dataTypeToGl(const ST::Texture::DataType dt) {
 GLenum textureTypeToGl(const ST::Texture::TextType f) {
     GLenum aux = GL_NONE;
     switch (f) {
-    case ST::Texture::T_Invalid:
+    /*case ST::Texture::T_Invalid:
         aux = GL_NONE;
-        break;
+        break;*/
     case ST::Texture::T_1D:
         aux = GL_TEXTURE_1D;
         break;
@@ -146,6 +146,7 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
 
 
 ST::Texture::Texture(){
+    gladLoadGL();
     glGenTextures(1, &internalID);
     
     rows = 1;
@@ -153,7 +154,7 @@ ST::Texture::Texture(){
     width_ = 0;
     height_ = 0;
     depth_ = 1; // <---- ???
-    type_ = T_Invalid;
+    type_ = T_2D;
     dataType_ = DT_U_BYTE;
     format_ = F_RGBA;
 
@@ -191,6 +192,14 @@ void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f)
     type_ = t;
     dataType_ = dt;
     format_ = f;
+}
+
+void ST::Texture::bind(){
+    glBindTexture(getTypeGL(), internalID);
+}
+
+void ST::Texture::unbind(){
+    glBindTexture(getTypeGL(), 0);
 }
 
 void ST::Texture::setRows(int num){

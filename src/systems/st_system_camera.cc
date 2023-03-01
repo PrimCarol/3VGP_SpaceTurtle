@@ -12,9 +12,15 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 	//view = glm::lookAt(transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
 
-	//transform_.updateTransformMatrix();
-	//view = glm::inverse(transform_.m_transform_);
-	if (gm.mainCameraID >= 0) {
+	if (gm.mainCameraID == -1) {
+		auto camVector = gm.getComponentVector<ST::CameraComponent>();
+		for (int i = 0; i < camVector->size(); i++) {
+			if (camVector->at(i).has_value()) {
+				gm.mainCameraID = i;
+			}
+		}
+	}
+	if (gm.mainCameraID != -1) {
 		//ST::GameObj mainCamera = gm.getGameObj(*gm.mainCamera);
 
 		if (gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
@@ -66,40 +72,50 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 	static float lastX = 0.0f;
 	static float lastY = 0.0f;
 
-	if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value()) {
-		ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
-		ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).value();
+	if (gm.mainCameraID == -1) {
+		auto camVector = gm.getComponentVector<ST::CameraComponent>();
+		for (int i = 0; i < camVector->size(); i++){
+			if (camVector->at(i).has_value()) {
+				gm.mainCameraID = i;
+			}
+		}
+	}
+	if (gm.mainCameraID != -1) {
+		if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value()) {
+			//ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+			ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).value();
 
-		glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
-		float extra_speed = 1.0f;
-		if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
-			extra_speed = 5.0f;
-		}
-		if (w.inputPressed(ST::ST_INPUT_UP)) {
-			transComp->Move(transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
-		}
-		if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-			transComp->Move(-transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
-		}
-		if (w.inputPressed(ST::ST_INPUT_LEFT)) {
-			transComp->Move(-transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
-		}
-		if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
-			transComp->Move(transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
-		}
+			glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
+			float extra_speed = 1.0f;
+			if (w.inputPressed(ST::ST_INPUT_SHIFT)) {
+				extra_speed = 5.0f;
+			}
+			if (w.inputPressed(ST::ST_INPUT_UP)) {
+				transComp->Move(transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
+				transComp->Move(-transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_LEFT)) {
+				transComp->Move(-transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+			}
+			if (w.inputPressed(ST::ST_INPUT_RIGHT)) {
+				transComp->Move(transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
+			}
 
-		if (firtsMouse) {
+			if (firtsMouse) {
+				lastX = mousePos.x;
+				lastY = mousePos.y;
+				firtsMouse = false;
+			}
+			float yoffset = mousePos.x - lastX;
+			float xoffset = mousePos.y - lastY;
 			lastX = mousePos.x;
 			lastY = mousePos.y;
-			firtsMouse = false;
-		}
-		float yoffset = mousePos.x - lastX;
-		float xoffset = mousePos.y - lastY;
-		lastX = mousePos.x;
-		lastY = mousePos.y;
-		if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
-			transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
-			transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
+			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+				transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
+				transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
+			}
 		}
 	}
 }

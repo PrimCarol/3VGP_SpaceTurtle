@@ -311,7 +311,7 @@ int ST::Window::getWindowsWidth() const{
 bool ST::Window::inputPressed(ST_INPUT input){
 
     auto& io = ImGui::GetIO();
-    if (io.WantCaptureMouse || io.WantTextInput) {
+    if ((io.WantCaptureMouse) || io.WantTextInput) {
         return false;
     }
     
