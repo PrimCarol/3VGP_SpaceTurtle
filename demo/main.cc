@@ -19,9 +19,9 @@ int main() {
 	//textureTest.generateMipmap = true;
 	//textureTest.set_mag_filter(ST::Texture::F_NEAREST);
 	//textureTest.set_min_filter(ST::Texture::F_LINEAR);
-	textureTest.loadSource("../others/tilesheet.png");
-	textureTest.setCols(71);
-	textureTest.setRows(19);
+	textureTest.loadSource("../others/icon.png");
+	//textureTest.setCols(71);
+	//textureTest.setRows(19);
 
 	ST::Cube test_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
@@ -56,6 +56,7 @@ int main() {
 	testObj.getComponent<ST::NameComponent>()->setName("testObj");
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);

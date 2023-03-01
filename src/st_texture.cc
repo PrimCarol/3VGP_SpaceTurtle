@@ -4,50 +4,6 @@
 #include "stb_image.h"
 #include <memory>
 
-ST::Texture::Texture(){
-	glGenTextures(1, &internalID);
-    rows = 1;
-    cols = 1;
-    width_ = 0;
-    height_ = 0;
-    depth_ = 1; // <---- ???
-    type_ = T_Invalid;
-
-    generateMipmap = false;
-    forceNoMipmap = false;
-
-    set_min_filter(Filter::F_NEAREST);
-    set_mag_filter(Filter::F_NEAREST);
-    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
-}
-
-bool ST::Texture::loadSource(const char* filePath, TextType t, int mipmaps){
-
-    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
-    if (image_data == NULL)
-        return false;
-
-    type_ = t;
-    set_data(F_RGBA, (const void*)image_data, mipmaps);
-
-    stbi_image_free(image_data);
-
-	return true;
-}
-
-void ST::Texture::setRows(int num){
-    if (num > 0) {
-        rows = num;
-    }
-}
-
-void ST::Texture::setCols(int num){
-    if(num > 0){
-        cols = num;
-    }
-}
 
 GLenum formatToGl(const ST::Texture::Format f) {
     GLenum aux = GL_NONE;
@@ -81,6 +37,35 @@ GLenum formatToGl(const ST::Texture::Format f) {
         break;
     default:
         printf("Texture Data >> Invalid Format");
+        break;
+    }
+
+    return aux;
+}
+
+GLenum dataTypeToGl(const ST::Texture::DataType dt) {
+    GLenum aux = GL_NONE;
+    switch (dt) {
+    case ST::Texture::DT_U_BYTE:
+        aux = GL_UNSIGNED_BYTE;
+        break;
+    case ST::Texture::DT_BYTE:
+        aux = GL_BYTE;
+        break;
+    case ST::Texture::DT_U_SHORT:
+        aux = GL_UNSIGNED_SHORT;
+        break;
+    case ST::Texture::DT_SHORT:
+        aux = GL_SHORT;
+        break;
+    case ST::Texture::DT_U_INT:
+        aux = GL_UNSIGNED_INT;
+        break;
+    case ST::Texture::DT_FLOAT:
+        aux = GL_FLOAT;
+        break;
+    default:
+        printf("Data Type >> Invalid Format");
         break;
     }
 
@@ -159,7 +144,67 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
     return aux;
 }
 
-void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap_LOD) {
+
+ST::Texture::Texture(){
+    internalID = -1;
+    
+    rows = 1;
+    cols = 1;
+    width_ = 0;
+    height_ = 0;
+    depth_ = 1; // <---- ???
+    type_ = T_Invalid;
+    dataType_ = DT_U_BYTE;
+
+    generateMipmap = false;
+    forceNoMipmap = false;
+
+    set_min_filter(Filter::F_NEAREST);
+    set_mag_filter(Filter::F_NEAREST);
+    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
+}
+
+bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int mipmaps*/) {
+    glGenTextures(1, &internalID);
+
+    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
+    if (image_data == NULL)
+        return false;
+    
+    format_ = f;
+    type_ = t;
+    set_data((const void*)image_data);
+
+    stbi_image_free(image_data);
+
+	return true;
+}
+
+void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f) {
+    glGenTextures(1, &internalID);
+    width_ = width;
+    height_ = height;
+    dataType_ = dt;
+    format_ = f;
+}
+
+void ST::Texture::setRows(int num){
+    if (num > 0) {
+        rows = num;
+    }
+}
+
+void ST::Texture::setCols(int num){
+    if(num > 0){
+        cols = num;
+    }
+}
+
+
+
+void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
     //GLenum data_type;
 
     //glBindTexture(GL_TEXTURE_2D, internalID);
@@ -176,6 +221,13 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
     //glTexImage2D(GL_TEXTURE_2D, mipmap_LOD, GL_RGBA, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     //glBindTexture(GL_TEXTURE_2D, 0); 
 
+    /*
+    
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    
+    */
+
     switch (type_) {
     case TextType::T_1D:
         glBindTexture(GL_TEXTURE_1D, internalID);
@@ -190,7 +242,7 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
 
-        glTexImage1D(GL_TEXTURE_1D, mipmap_LOD, formatToGl(f), width(), 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexImage1D(GL_TEXTURE_1D, 0, formatToGl(format_), width(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_1D);
@@ -214,7 +266,7 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
 
-        glTexImage2D(GL_TEXTURE_2D, mipmap_LOD, formatToGl(f), width(), height(), 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_2D);
@@ -238,7 +290,7 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
 
-        glTexImage3D(GL_TEXTURE_3D, mipmap_LOD, formatToGl(f), width(), height(), depth_, 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexImage3D(GL_TEXTURE_3D, 0, formatToGl(format_), width(), height(), depth_, 0, formatToGl(format_), dataTypeToGl(dataType_), data);
         
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_3D);

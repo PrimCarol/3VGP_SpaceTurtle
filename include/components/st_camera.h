@@ -21,18 +21,16 @@ namespace ST {
 
 		ST::CameraType getCameraType() const;
 
-		void setTarget(glm::vec3 target);
-
 		glm::mat4 view;
 		glm::mat4 projection;
+
+		void lookAt(glm::vec3 myPos, glm::vec3 target, glm::vec3 upCamVector);
 
 		~CameraComponent();
 		//CameraComponent(const CameraComponent& o);
 	
 	//private:
 		CameraType type;
-
-		glm::vec3 target_;
 
 		// Perspective
 		float fov_;

@@ -5,6 +5,8 @@
 #include <components/st_render.h>
 #include <components/st_transform.h>
 
+#include <components/st_camera.h>
+
 #include <st_program.h>
 
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
@@ -38,14 +40,13 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 				//thisLight.dirLight_.z = sinf(transformComps->at(n).value().getRotation().z);
 			}
 
-			switch (thisLight.type_) {
-			case ST::Directional:
-
+			if (thisLight.type_ == ST::Directional) {
 				/*
-				
+
 				Creamos una camara (CameraComponent) en orthografic, para saber lo que ve la camara.
-				
+
 				*/
+				//ST::CameraComponent cam;
 
 				snprintf(buffer, 50, "u_DirectLight[%d].direction", countDirectionalLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -64,8 +65,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 				glUniform3f(idUniform, thisLight.specular_.x, thisLight.specular_.y, thisLight.specular_.z);
 
 				countDirectionalLights++;
-				break;
-			case ST::Point:
+
+			} else if (thisLight.type_ == ST::Point) {
 
 				snprintf(buffer, 50, "u_PointLight[%d].position", countPointLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -96,8 +97,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 				glUniform1f(idUniform, thisLight.quadratic_);
 
 				countPointLights++;
-				break;
-			case ST::Spot:
+
+			} else if (thisLight.type_ == ST::Spot){
 
 				snprintf(buffer, 50, "u_SpotLight[%d].position", countSpotLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -140,8 +141,6 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 				glUniform1f(idUniform, thisLight.outerCutOff_);
 
 				countSpotLights++;
-
-				break;
 			}
 
 			if (renderComps->at(n).has_value()) {
@@ -161,4 +160,36 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	glUniform1i(idUniform, countSpotLights);
 
 	glUseProgram(0);
+}
+
+void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisProgram){
+
+	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
+	auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
+
+	thisProgram.use();
+
+	int countDirectionalLights = 0;
+	int countPointLights = 0;
+	int countSpotLights = 0;
+
+	GLint idUniform = -1;
+
+	for (int n = 0; n < lightComps->size(); n++) {
+		if (lightComps->at(n).has_value() && transformComps->at(n).has_value()) {
+			ST::LightComponent thisLight = lightComps->at(n).value();
+			ST::TransformComponent thisTrans = transformComps->at(n).value();
+
+			if (thisLight.type_ == ST::Directional) {
+
+				ST::CameraComponent cam;
+				cam.setOrthographic(-10.0f,10.0f, 1.0f, 7.5f);
+				cam.lookAt(thisTrans.getPosition(), thisTrans.getUp(), thisTrans.getRotation());
+
+				idUniform = thisProgram.getUniform("lightSpaceMatrix");
+				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &cam.view[0][0]);
+			}
+
+		}
+	}
 }

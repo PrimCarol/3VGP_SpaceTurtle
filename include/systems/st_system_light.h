@@ -9,6 +9,7 @@ namespace ST {
 	class SystemLight {
 	public:
 		static void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
+		static void CompileShadows(ST::GameObj_Manager& gm, ST::Program& p);
 	private:
 		SystemLight();
 		~SystemLight();

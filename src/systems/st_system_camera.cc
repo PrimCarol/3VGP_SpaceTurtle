@@ -42,15 +42,19 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 				view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), transform_.getUp());
 			}*/
 
-			Camera->view = glm::lookAt(transformCamera->getPosition(), transformCamera->getPosition() + transformCamera->getForward(), transformCamera->getUp());
-
+			//Camera->view = glm::lookAt(transformCamera->getPosition(), transformCamera->getPosition() + transformCamera->getForward(), transformCamera->getUp());
+			
+			Camera->lookAt(transformCamera->getPosition(), transformCamera->getPosition() + transformCamera->getForward(), transformCamera->getUp());
+			
 			switch (Camera->getCameraType()) {
 			case ST::kCam_Perpective:
-				Camera->projection = glm::perspective(glm::radians(Camera->fov_), Camera->ratio_, Camera->nearPlane_, Camera->farPlane_);
+				//Camera->projection = glm::perspective(glm::radians(Camera->fov_), Camera->ratio_, Camera->nearPlane_, Camera->farPlane_);
+				Camera->setPerspective(Camera->fov_, Camera->ratio_, Camera->nearPlane_, Camera->farPlane_);
 				break;
 			case ST::kCam_Orthographic:
 				//ortho(-(800.0f / 2.0f), 800.0f / 2.0f, 600.0f / 2.0f, -(600.0f / 2.0f),-1000.0f, 1000.0f);
-				Camera->projection = glm::ortho(-(Camera->horizontal_ / 2.0f), Camera->horizontal_ / 2.0f, Camera->vertical_ / 2.0f, -(Camera->vertical_ / 2.0f), Camera->nearPlane_, Camera->farPlane_);
+				//Camera->projection = glm::ortho(-(Camera->horizontal_ / 2.0f), Camera->horizontal_ / 2.0f, Camera->vertical_ / 2.0f, -(Camera->vertical_ / 2.0f), Camera->nearPlane_, Camera->farPlane_);
+				Camera->setOrthographic(Camera->horizontal_, -Camera->vertical_, Camera->nearPlane_, Camera->farPlane_);
 				break;
 			}
 		}
