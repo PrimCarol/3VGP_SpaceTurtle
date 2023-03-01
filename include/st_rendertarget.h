@@ -13,6 +13,8 @@ namespace ST {
 				   ST::Texture::Format f = ST::Texture::Format::F_RGBA);
 
 		GLuint getID();
+		GLuint textureID();
+
 
 		void start();
 		void end();

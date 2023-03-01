@@ -146,7 +146,7 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
 
 
 ST::Texture::Texture(){
-    internalID = -1;
+    glGenTextures(1, &internalID);
     
     rows = 1;
     cols = 1;
@@ -155,6 +155,7 @@ ST::Texture::Texture(){
     depth_ = 1; // <---- ???
     type_ = T_Invalid;
     dataType_ = DT_U_BYTE;
+    format_ = F_RGBA;
 
     generateMipmap = false;
     forceNoMipmap = false;
@@ -167,7 +168,7 @@ ST::Texture::Texture(){
 }
 
 bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int mipmaps*/) {
-    glGenTextures(1, &internalID);
+    //glGenTextures(1, &internalID);
 
     unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
     if (image_data == NULL)
@@ -183,9 +184,11 @@ bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int m
 }
 
 void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f) {
-    glGenTextures(1, &internalID);
+    //glGenTextures(1, &internalID);
+
     width_ = width;
     height_ = height;
+    type_ = t;
     dataType_ = dt;
     format_ = f;
 }
@@ -248,7 +251,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_1D);
         }
 
-        glBindTexture(GL_TEXTURE_1D, 0);
+        //glBindTexture(GL_TEXTURE_1D, 0);
 
         break;
     case TextType::T_2D:
@@ -272,7 +275,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindTexture(GL_TEXTURE_2D, 0);
 
         break;
     case TextType::T_3D:
@@ -296,7 +299,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_3D);
         }
         
-        glBindTexture(GL_TEXTURE_3D, 0);
+        //glBindTexture(GL_TEXTURE_3D, 0);
 
         break;
     default:
@@ -304,7 +307,12 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         break;
     }
 
-    assert(glGetError() == GL_NO_ERROR);
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        printf("OpenGL Error: %d\n", error);
+    }
+
+    //assert(glGetError() == GL_NO_ERROR);
 }
 
 const GLuint ST::Texture::getID() const{

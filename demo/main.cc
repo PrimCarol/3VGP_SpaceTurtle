@@ -69,8 +69,8 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	// --------------------------
-	ST::RenderTarget renderTargetTest;
-	renderTargetTest.setUp(700, 700);
+	//ST::RenderTarget renderTargetTest;
+	//renderTargetTest.setUp(700, 700);
 	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
@@ -84,13 +84,13 @@ int main() {
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
 		
-		renderTargetTest.start();
+		//renderTargetTest.start();
 		ST::SystemRender::Render(gm);
-		renderTargetTest.end();
+		//renderTargetTest.end();
 
-		ImGui::Begin("View");
-		ImGui::Image((void*)(intptr_t)renderTargetTest.getID(), ImVec2(144, 144));
-		ImGui::End();
+		//ImGui::Begin("View");
+		//ImGui::Image((void*)(intptr_t)renderTargetTest.textureID(), ImVec2(200, 200));
+		//ImGui::End();
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

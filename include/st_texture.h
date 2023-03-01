@@ -60,6 +60,7 @@ namespace ST {
 		bool loadSource(const char* shaderText, TextType t = TextType::T_2D, Format f = F_RGBA/*, int mipmaps = 0*/);
         void init(int width, int height, TextType t = TextType::T_2D, DataType dt = DT_U_BYTE, Format f = Format::F_RGBA);
 
+        void set_dataType(DataType dt) { dataType_ = dt; }
         void set_min_filter(Filter f) { min_filter_ = f; }
         void set_mag_filter(Filter f) { mag_filter_ = f; }
         void set_wrap_s(Wrap c) { wrap_s_ = c; }
