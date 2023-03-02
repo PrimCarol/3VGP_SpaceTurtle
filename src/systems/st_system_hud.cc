@@ -215,7 +215,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 
 			// ---- Guizmos ----
-			if (gm.mainCameraID >= 0) {
+			if (gm.mainCameraID() != -1) {
 				ImGuizmo::BeginFrame();
 				const ImGuiViewport* viewport = ImGui::GetMainViewport();
 				ImGuiIO& io = ImGui::GetIO();
@@ -226,8 +226,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				glm::vec3 rot = trans->getRotation();
 				glm::vec3 sca = trans->getScale();
 
-				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
-					ST::CameraComponent* tempCam = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value()) {
+					ST::CameraComponent* tempCam = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 					if (tempCam) {
 						ImGuizmo::RecomposeMatrixFromComponents(&pos.x, &rot.x, &sca.x, tempMatrixGuizmo);
 						ImGuizmo::Manipulate((const float*)&tempCam->view, (const float*)&tempCam->projection,

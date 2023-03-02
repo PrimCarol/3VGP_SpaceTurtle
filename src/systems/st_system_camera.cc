@@ -12,20 +12,21 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 	//view = glm::lookAt(transform_.getPosition(), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	//view = glm::lookAt(transform_.getPosition(), transform_.getPosition() + transform_.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
 
-	if (gm.mainCameraID == -1) {
+	if (gm.mainCameraID() == -1) {
 		auto camVector = gm.getComponentVector<ST::CameraComponent>();
 		for (int i = 0; i < camVector->size(); i++) {
 			if (camVector->at(i).has_value()) {
-				gm.mainCameraID = i;
+				ST::GameObj tempObj(i, gm);
+				gm.setMainCamera(tempObj);
 			}
 		}
 	}
-	if (gm.mainCameraID != -1) {
+	if (gm.mainCameraID() != -1) {
 		//ST::GameObj mainCamera = gm.getGameObj(*gm.mainCamera);
 
-		if (gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
-			ST::TransformComponent* transformCamera = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).value();
-			ST::CameraComponent* Camera = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+		if (gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value()) {
+			ST::TransformComponent* transformCamera = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
+			ST::CameraComponent* Camera = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 
 			glm::mat4 m(1.0f);
 
@@ -72,18 +73,19 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 	static float lastX = 0.0f;
 	static float lastY = 0.0f;
 
-	if (gm.mainCameraID == -1) {
+	if (gm.mainCameraID() == -1) {
 		auto camVector = gm.getComponentVector<ST::CameraComponent>();
-		for (int i = 0; i < camVector->size(); i++){
+		for (int i = 0; i < camVector->size(); i++) {
 			if (camVector->at(i).has_value()) {
-				gm.mainCameraID = i;
+				ST::GameObj tempObj(i, gm);
+				gm.setMainCamera(tempObj);
 			}
 		}
 	}
-	if (gm.mainCameraID != -1) {
-		if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).has_value()) {
+	if (gm.mainCameraID() != -1) {
+		if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).has_value()) {
 			//ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
-			ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID).value();
+			ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
 
 			glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
 			float extra_speed = 1.0f;

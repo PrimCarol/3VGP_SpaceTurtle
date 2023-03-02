@@ -315,12 +315,23 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 
 	//cam->update();
 
-	if (gm.mainCameraID >= 0) {
-		if (t[gm.mainCameraID].has_value()) {
+
+	auto camVector = gm.getComponentVector<ST::CameraComponent>();
+	if (gm.mainCameraID() == -1) {
+		for (int i = 0; i < camVector->size(); i++) {
+			if (camVector->at(i).has_value()) {
+				ST::GameObj tempObj(i, gm);
+				gm.setMainCamera(tempObj);
+			}
+		}
+	}
+
+	if (gm.mainCameraID() != -1) {
+		if (t[gm.mainCameraID()].has_value()) {
 			MyCamera cam;
-			cam.transform_ = &t[gm.mainCameraID].value();
-			if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
-				cam.cam_ = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+			cam.transform_ = &t[gm.mainCameraID()].value();
+			if (camVector->at(gm.mainCameraID()).has_value()) {
+				cam.cam_ = &camVector->at(gm.mainCameraID()).value();
 				setUpRender(r, t, cam);
 			}
 		}

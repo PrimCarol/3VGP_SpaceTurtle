@@ -24,7 +24,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	objectSelected = ST::GameObj::null_id;
 	root.addComponent<ST::HierarchyComponent>();
 
-	mainCameraID = -1;
+	mainCameraID_ = -1;
 
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
@@ -65,6 +65,18 @@ void ST::GameObj_Manager::deleteGameObj(int ObjID){
 
 size_t ST::GameObj_Manager::size() const{
 	return last_gameObj_;
+}
+
+void ST::GameObj_Manager::setMainCamera(const ST::GameObj& cam){
+	if (cam.getComponent<ST::CameraComponent>()) {
+		mainCameraID_ = cam.getID();
+	}else {
+		mainCameraID_ = -1;
+	}
+}
+
+int ST::GameObj_Manager::mainCameraID() const{
+	return mainCameraID_;
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){

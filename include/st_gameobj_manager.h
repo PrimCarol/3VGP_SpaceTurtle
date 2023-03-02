@@ -68,8 +68,9 @@ namespace ST {
 
 		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
 
-		//ST::Camera* mainCamera;
-		int mainCameraID;
+		// ----- Camera -----
+		void setMainCamera(const ST::GameObj& cam);
+		int mainCameraID() const;
 
 		~GameObj_Manager();
 	private:
@@ -81,7 +82,9 @@ namespace ST {
 
 		GameObj_Manager(const GameObj_Manager& o);
 		
+		int mainCameraID_;
 		bool rootCreated = false;
+
 	public:
 		size_t objectSelected;
 		ST::GameObj root = createGameObj();

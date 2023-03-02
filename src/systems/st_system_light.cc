@@ -36,8 +36,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 			if (transformComps->at(n).has_value()) {
 				dirLight = transformComps->at(n)->getRotation();
-				if (gm.mainCameraID != -1) {
-					transformComps->at(n)->m_transform_ = glm::lookAt(transformComps->at(n)->getPosition(), transformComps->at(gm.mainCameraID)->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
+				if (gm.mainCameraID() != -1) {
+					transformComps->at(n)->m_transform_ = glm::lookAt(transformComps->at(n)->getPosition(), transformComps->at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
 					transformComps->at(n)->m_transform_ = glm::inverse(transformComps->at(n)->m_transform_);
 				}
 				//thisLight.dirLight_.x = sinf(transformComps->at(n).value().getRotation().x);
