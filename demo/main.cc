@@ -108,6 +108,10 @@ int main() {
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);
 		}
+		if (w.inputPressed(ST::ST_INPUT_DELETE) && gm.objectSelected != -1) {
+			gm.deleteGameObj(gm.objectSelected);
+			gm.objectSelected = -1;
+		}
 
 		ST::SystemHUD::NavBar(gm);
 		ST::SystemHUD::Hierarchy(gm);
