@@ -96,7 +96,7 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		ST::SystemLight::CompileShadows(gm, depthBuffer);
+		ST::SystemLight::CompileShadows(gm, depthBuffer); // <---- Testing
 		
 		//renderTargetTest.start();
 		ST::SystemRender::Render(gm);
