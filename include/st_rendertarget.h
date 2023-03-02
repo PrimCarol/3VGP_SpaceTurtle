@@ -3,9 +3,18 @@
 
 #include <st_texture.h>
 
+
+
 namespace ST {
 	class RenderTarget {
 	public:
+
+		enum RenderType {
+			RT_Color,
+			RT_Depth,
+			RT_Stencil
+		};
+
 		RenderTarget();
 		void setUp(int w, int h,
 				   ST::Texture::TextType t = ST::Texture::TextType::T_2D,
@@ -15,6 +24,7 @@ namespace ST {
 		GLuint getID();
 		GLuint textureID();
 
+		RenderType renderType_;
 
 		void start();
 		void end();
@@ -25,6 +35,7 @@ namespace ST {
 		int height_;
 
 		GLuint internalID;
+		unsigned int rbo;
 
 		ST::Texture textureToRender_;
 		RenderTarget(const RenderTarget& o);

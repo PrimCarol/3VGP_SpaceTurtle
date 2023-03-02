@@ -1,6 +1,7 @@
 #include <st_engine.h>
 
 #include <imgui.h>
+#include <st_shader.h>
 
 int main() {
 	ST::Window w(1600, 840);
@@ -69,8 +70,21 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	// --------------------------
-	ST::RenderTarget renderTargetTest;
-	renderTargetTest.setUp(1920, 1080);
+	// **************** TEST *****************
+	//ST::RenderTarget renderTargetTest;
+	//renderTargetTest.setUp(1920, 1080);
+	ST::Program depthBuffer;
+	ST::Shader vertex(ST::E_VERTEX_SHADER);
+	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.vert");
+	ST::Shader fragment(ST::E_FRAGMENT_SHADER);
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.frag");
+	vertex.loadSource(textVertex);
+	fragment.loadSource(textFragment);
+	depthBuffer.attach(vertex);
+	depthBuffer.attach(fragment);
+	depthBuffer.link();
+	// **************** TEST *****************
+
 	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
@@ -82,6 +96,7 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
+		ST::SystemLight::CompileShadows(gm, depthBuffer);
 		
 		//renderTargetTest.start();
 		ST::SystemRender::Render(gm);

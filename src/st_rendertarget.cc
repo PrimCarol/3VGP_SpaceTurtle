@@ -1,8 +1,29 @@
 #include "st_rendertarget.h"
 #include <stdio.h>
 
+GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
+	GLenum aux = GL_NONE;
+	switch (rt){
+	case ST::RenderTarget::RT_Color:
+		aux = GL_COLOR_ATTACHMENT0;
+		break;
+	case ST::RenderTarget::RT_Depth:
+		aux = GL_DEPTH_ATTACHMENT;
+		break;
+	case ST::RenderTarget::RT_Stencil:
+		aux = GL_STENCIL_ATTACHMENT;
+		break;
+	default:
+		printf("Render Type >> Invalid Format");
+		break;
+	}
+
+	return aux;
+}
+
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
+	renderType_ = RT_Color;
 	width_ = 0;
 	height_ = 0;
 }
@@ -12,39 +33,36 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::TextType t, ST::Texture:
 	height_ = h;
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 
-	//GLenum error = glGetError();
-	//if (error != GL_NO_ERROR) {
-	//	printf("OpenGL Error: %d\n", error);
-	//}
-
-	textureToRender_.set_Type(t);
-	textureToRender_.bind();
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureToRender_.getTypeGL(), textureToRender_.getID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureToRender_.getID(), 0);
-
-	//error = glGetError();
-	//if (error != GL_NO_ERROR) {
-	//	printf("OpenGL Error: %d\n", error);
-	//}
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
+	}
 
 	textureToRender_.init(width_, height_, t, dt, f);
-	//textureToRender_.set_wrap_s(ST::Texture::W_MIRRORED_REPEAT);
-	//textureToRender_.set_wrap_t(ST::Texture::W_MIRRORED_REPEAT);
+	textureToRender_.bind();
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_.getTypeGL(), textureToRender_.getID(), 0);
+
+	error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
+	}
+
 	textureToRender_.set_data(0);
 
-	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	// Porque GL_DEPTH24_STENCIL8 ????
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
+	// Y porque GL_DEPTH_STENCIL_ATTACHMENT ??????
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	
-	//error = glGetError();
-	//if (error != GL_NO_ERROR) {
-	//	printf("OpenGL Error: %d\n", error);
-	//}
+	error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
+	}
 
-	//textureToRender_.unbind();
+	textureToRender_.unbind();
 	//glDrawBuffer(GL_NONE);
 	//glReadBuffer(GL_NONE);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -86,6 +104,7 @@ void ST::RenderTarget::end(){
 }
 
 ST::RenderTarget::~RenderTarget(){
+	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &internalID);
 }
 

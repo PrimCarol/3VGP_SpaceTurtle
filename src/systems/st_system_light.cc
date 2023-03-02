@@ -167,6 +167,9 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	//glUseProgram(0);
 }
 
+
+#include <imgui.h>
+
 void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
 	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
@@ -180,8 +183,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisP
 
 	GLint idUniform = -1;
 
-	ST::RenderTarget renderTarget;
-	renderTarget.setUp(700,700, ST::Texture::T_2D, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH);
+	//ST::RenderTarget renderTarget;
+	//renderTarget.renderType_ = ST::RenderTarget::RT_Depth;
+	//renderTarget.setUp(700,700, ST::Texture::T_2D, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH);
 
 	for (int n = 0; n < lightComps->size(); n++) {
 		if (lightComps->at(n).has_value() && transformComps->at(n).has_value()) {
@@ -201,11 +205,15 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm, ST::Program& thisP
 				idUniform = thisProgram.getUniform("lightSpaceMatrix");
 				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &lightSpaceMatrix[0][0]);
 
-				renderTarget.start();
+				//renderTarget.start();
 				//Render Scene.
-				renderTarget.end();
+				//renderTarget.end();
 			}
 
 		}
 	}
+
+	/*ImGui::Begin("ViewDepth");
+	ImGui::Image((void*)(intptr_t)renderTarget.textureID(), ImGui::GetWindowSize());
+	ImGui::End();*/
 }

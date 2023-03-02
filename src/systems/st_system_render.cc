@@ -130,6 +130,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam)
 			actualMeshRendering = objs[i].render_->mesh->getID();
 			if (objs[i].render_->material.haveAlbedo) {
 				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				objs[i].render_->material.getAlbedo()->bind();
 			}
 			firstTime = false;
 		}
@@ -151,6 +152,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam)
 				instancing.clear();
 
 				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				objs[i].render_->material.getAlbedo()->bind();
 			}
 		}
 
