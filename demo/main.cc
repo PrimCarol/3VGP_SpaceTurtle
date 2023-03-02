@@ -13,9 +13,13 @@ int main() {
 
 	//ST::Camera myCam;
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
-	//gm.mainCameraID = camera.getID(); // <--- Esto deberia hacerlo solo. Y ya lo hace :D
-	camera.getComponent<ST::NameComponent>()->setName("Camera");
+	camera.getComponent<ST::NameComponent>()->setName("Camera 01");
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+
+	ST::GameObj camera2 = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+	camera2.getComponent<ST::NameComponent>()->setName("Camera 02");
+	camera2.getComponent<ST::TransformComponent>()->setPosition(0.0f, 10.0f, 0.0f);
+	camera2.getComponent<ST::TransformComponent>()->setRotateX(-1.58f);
 
 	// --------------
 	ST::Texture textureTest;
@@ -112,6 +116,12 @@ int main() {
 			gm.deleteGameObj(gm.objectSelected);
 			gm.objectSelected = -1;
 		}
+		if (w.inputPressed('1')) {
+			gm.setMainCamera(camera);
+		}else if (w.inputPressed('2')) {
+			gm.setMainCamera(camera2);
+		}
+
 
 		ST::SystemHUD::NavBar(gm);
 		ST::SystemHUD::Hierarchy(gm);
