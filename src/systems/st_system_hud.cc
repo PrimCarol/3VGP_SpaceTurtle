@@ -64,8 +64,9 @@ void DrawVec3Control(const std::string& label, glm::vec3& values, float resetVal
 
 	ImGui::PushID(label.c_str());
 
-	float cells_size = 60.0f;
-	float button_size = 20.0f;
+	//float cells_size = 60.0f;
+	const float cells_size = ImGui::GetContentRegionAvail().x / 5;
+	const float button_size = 20.0f;
 	
 	ImGui::PushItemWidth(cells_size); // Tamaño de las casillas
 	

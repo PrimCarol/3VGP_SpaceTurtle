@@ -14,12 +14,12 @@ int main() {
 	//ST::Camera myCam;
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 01");
-	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 10.0f, 0.0f);
+	camera.getComponent<ST::TransformComponent>()->setRotateX(-1.58f);
 
 	ST::GameObj camera2 = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera2.getComponent<ST::NameComponent>()->setName("Camera 02");
-	camera2.getComponent<ST::TransformComponent>()->setPosition(0.0f, 10.0f, 0.0f);
-	camera2.getComponent<ST::TransformComponent>()->setRotateX(-1.58f);
+	camera2.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 
 	// --------------
 	ST::Texture textureTest;
@@ -31,14 +31,15 @@ int main() {
 	//textureTest.setRows(19);
 
 	ST::Cube test_mesh;
+	ST::Quad quad_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	//int HOWMANY = 1000;
+	//int HOWMANY = 10000;
 
 	//std::vector<ST::GameObj> objects;
 	//for (int i = 0; i < HOWMANY; i++){
 	//	objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
-	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
 	//	objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	//	objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	//	//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
@@ -75,18 +76,25 @@ int main() {
 
 	// --------------------------
 	// **************** TEST *****************
-	//ST::RenderTarget renderTargetTest;
-	//renderTargetTest.setUp(1920, 1080);
-	ST::Program depthBuffer;
-	ST::Shader vertex(ST::E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.vert");
-	ST::Shader fragment(ST::E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.frag");
-	vertex.loadSource(textVertex);
-	fragment.loadSource(textFragment);
-	depthBuffer.attach(vertex);
-	depthBuffer.attach(fragment);
-	depthBuffer.link();
+	ST::RenderTarget renderTargetTest;
+	renderTargetTest.setUp(1920, 1080);
+
+	ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
+	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f,10.0f,1.0f);
+	quadTarget.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);
+
+	//ST::Program depthBuffer;
+	//ST::Shader vertex(ST::E_VERTEX_SHADER);
+	//GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.vert");
+	//ST::Shader fragment(ST::E_FRAGMENT_SHADER);
+	//GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.frag");
+	//vertex.loadSource(textVertex);
+	//fragment.loadSource(textFragment);
+	//depthBuffer.attach(vertex);
+	//depthBuffer.attach(fragment);
+	//depthBuffer.link();
 	// **************** TEST *****************
 
 	float cameraSpeed = 10.0f;
@@ -100,11 +108,15 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		ST::SystemLight::CompileShadows(gm, depthBuffer); // <---- Testing
+		//ST::SystemLight::CompileShadows(gm, depthBuffer); // <---- Testing
 		
-		//renderTargetTest.start();
+		renderTargetTest.start();
 		ST::SystemRender::Render(gm);
-		//renderTargetTest.end();
+		renderTargetTest.end();
+		
+		ST::SystemRender::Render(gm);
+
+
 		//ImGui::Begin("View", 0, ImGuiWindowFlags_NoInputs);
 		//ImGui::Image((void*)(intptr_t)renderTargetTest.textureID(), ImGui::GetWindowSize());
 		//ImGui::End();

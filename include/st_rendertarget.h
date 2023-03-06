@@ -29,6 +29,7 @@ namespace ST {
 		void start();
 		void end();
 
+		ST::Texture textureToRender_;
 		~RenderTarget();
 	private:
 		int width_;
@@ -37,7 +38,6 @@ namespace ST {
 		GLuint internalID;
 		unsigned int rbo;
 
-		ST::Texture textureToRender_;
 		RenderTarget(const RenderTarget& o);
 	};
 }
