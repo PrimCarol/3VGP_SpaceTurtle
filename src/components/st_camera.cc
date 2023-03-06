@@ -4,7 +4,7 @@
 
 ST::CameraComponent::CameraComponent(){
 	
-	type = kCam_Perpective;
+	type = kCam_Perspective;
 
 	fov_ = 90.0f;
 	ratio_ = (1080.0f / 720.0f);
@@ -12,7 +12,7 @@ ST::CameraComponent::CameraComponent(){
 	farPlane_ = 1000.0f;
 
 	horizontal_ = 10.0f;
-	vertical_ = 10.0f;
+	vertical_ = -10.0f;
 
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
@@ -23,7 +23,7 @@ void ST::CameraComponent::setPerspective(float fov, float ratio, float nearPlane
 	ratio_ = ratio;
 	nearPlane_ = nearPlane;
 	farPlane_ = farPlane;
-	type = kCam_Perpective;
+	type = kCam_Perspective;
 	projection = glm::perspective(glm::radians(fov_), ratio_, nearPlane_, farPlane_);
 }
 

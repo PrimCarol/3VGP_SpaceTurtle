@@ -8,7 +8,7 @@ namespace ST {
 	class Window;
 
 	enum CameraType {
-		kCam_Perpective,
+		kCam_Perspective,
 		kCam_Orthographic,
 	};
 

@@ -80,7 +80,9 @@ int main() {
 	renderTargetTest.setUp(1920, 1080);
 
 	ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
-	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f,10.0f,1.0f);
+	quadTarget.getComponent<ST::NameComponent>()->setName("Pantalla");
+	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f, 10.0f, 1.0f);
+	quadTarget.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,10.0f);
 	quadTarget.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
 	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);

@@ -54,7 +54,7 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 			Camera->lookAt(transformCamera->getPosition(), transformCamera->getPosition() + transformCamera->getForward(), transformCamera->getUp());
 			
 			switch (Camera->getCameraType()) {
-			case ST::kCam_Perpective:
+			case ST::kCam_Perspective:
 				//Camera->projection = glm::perspective(glm::radians(Camera->fov_), Camera->ratio_, Camera->nearPlane_, Camera->farPlane_);
 				Camera->setPerspective(Camera->fov_, Camera->ratio_, Camera->nearPlane_, Camera->farPlane_);
 				break;
@@ -84,7 +84,7 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 	}
 	if (gm.mainCameraID() != -1) {
 		if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value() && gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).has_value()) {
-			//ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+			ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 			ST::TransformComponent* transComp = &gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
 
 			glm::vec2 mousePos = { w.mousePosX(), w.mousePosY() };
@@ -93,10 +93,18 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 				extra_speed = 5.0f;
 			}
 			if (w.inputPressed(ST::ST_INPUT_UP)) {
-				transComp->Move(transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				if (camComp->type == ST::kCam_Perspective) {
+					transComp->Move(transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				}else {
+					transComp->Move(transComp->getUp() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				}
 			}
 			if (w.inputPressed(ST::ST_INPUT_DOWN)) {
-				transComp->Move(-transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				if (camComp->type == ST::kCam_Perspective) {
+					transComp->Move(-transComp->getForward() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				}else {
+					transComp->Move(-transComp->getUp() * (MoveSpeed * extra_speed * w.DeltaTime()));
+				}
 			}
 			if (w.inputPressed(ST::ST_INPUT_LEFT)) {
 				transComp->Move(-transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
@@ -105,18 +113,20 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 				transComp->Move(transComp->getRight() * (-MoveSpeed * extra_speed * w.DeltaTime()));
 			}
 
-			if (firtsMouse) {
+			if (camComp->type == ST::kCam_Perspective) {
+				if (firtsMouse) {
+					lastX = mousePos.x;
+					lastY = mousePos.y;
+					firtsMouse = false;
+				}
+				float yoffset = mousePos.x - lastX;
+				float xoffset = mousePos.y - lastY;
 				lastX = mousePos.x;
 				lastY = mousePos.y;
-				firtsMouse = false;
-			}
-			float yoffset = mousePos.x - lastX;
-			float xoffset = mousePos.y - lastY;
-			lastX = mousePos.x;
-			lastY = mousePos.y;
-			if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
-				transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
-				transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
+				if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+					transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
+					transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
+				}
 			}
 		}
 	}

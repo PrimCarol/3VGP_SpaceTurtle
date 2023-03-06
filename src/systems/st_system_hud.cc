@@ -152,6 +152,26 @@ ST::LightType lightStringToEnum(const char* c) {
 	}
 }
 
+const char* cameraEnumToString(ST::CameraType t) {
+	switch (t) {
+	case ST::kCam_Perspective:
+		return "Perspective";
+		break;
+	case ST::kCam_Orthographic:
+		return "Orthographic";
+		break;
+	}
+}
+
+ST::CameraType cameraStringToEnum(const char* c) {
+	if (c == "Perspective") {
+		return ST::kCam_Perspective;
+	}
+	if (c == "Orthographic") {
+		return ST::kCam_Orthographic;
+	}
+}
+
 #include <imgui_internal.h>
 #include <ImGuizmo.h>
 
@@ -413,6 +433,46 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					gm.removeComponent<ST::LightComponent>(objSeletected);
 				}
 				ImGui::PopStyleColor();
+
+				ImGui::TreePop();
+			}
+		}
+
+		const char* typeCameraChar[] = { "Perspective", "Orthographic" };
+		const char* typeCameraSelected = NULL;
+
+		if (gm.getComponentVector<ST::CameraComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
+			if (ImGui::TreeNodeEx("Camera")) {
+
+				ST::CameraComponent* camera = &gm.getComponentVector<ST::CameraComponent>()->at(objSeletected).value();
+
+				// ---------- Selector de Typo de Camera ----------
+				typeCameraSelected = cameraEnumToString(camera->type);
+				ImGui::SetNextItemWidth(120);
+				if (ImGui::BeginCombo("##combo", typeCameraSelected)) {
+					for (int n = 0; n < IM_ARRAYSIZE(typeCameraChar); n++) {
+						bool is_selected = (typeCameraSelected == typeCameraChar[n]);
+						if (ImGui::Selectable(typeCameraChar[n], is_selected)) {
+							typeCameraSelected = typeCameraChar[n];
+							camera->type = cameraStringToEnum(typeCameraSelected);
+						}
+						if (is_selected) {
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+				if (camera->type == ST::kCam_Perspective) {
+					ImGui::DragFloat("Fov", &camera->fov_);
+					ImGui::DragFloat("Ratio", &camera->ratio_);
+				}else {
+					ImGui::DragFloat("Horizontal", &camera->horizontal_);
+					ImGui::DragFloat("Vertical", &camera->vertical_);
+				}
+				ImGui::DragFloat("Near", &camera->nearPlane_);
+				ImGui::DragFloat("Far", &camera->farPlane_);
 
 				ImGui::TreePop();
 			}
