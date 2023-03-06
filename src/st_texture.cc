@@ -146,7 +146,7 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
 
 
 ST::Texture::Texture(){
-    gladLoadGL();
+    //gladLoadGL();
     glGenTextures(1, &internalID);
     
     rows = 1;

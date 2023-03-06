@@ -4,7 +4,7 @@
 #include <string>
 
 ST::Mesh::Mesh(){
-	gladLoadGL();
+	//gladLoadGL();
 	internalId = 0;
 
 	name_ = nullptr;

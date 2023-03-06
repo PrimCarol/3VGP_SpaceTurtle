@@ -7,6 +7,8 @@
 #include <ImGuizmo.h>
 #include <stdio.h>
 
+#include <glad.h>
+
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -17,15 +19,15 @@ ST::Window::Window(){
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
         glWindow = glfwCreateWindow(1080, 720, "Space Turtle", NULL, NULL);
-        
+
         glfwSetWindowUserPointer(glWindow, this);
         glfwSetScrollCallback(glWindow, scroll_callback);
 
         GLFWimage images[1];
-        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4); 
+        images[0].pixels = stbi_load("../others/icon_nobg_big.png", &images[0].width, &images[0].height, 0, 4);
         glfwSetWindowIcon(glWindow, 1, images);
         stbi_image_free(images[0].pixels);
-        
+
         Focus();
     }
 
@@ -52,9 +54,11 @@ ST::Window::Window(){
     printf("------------- Space Turtle --------------\n");
     printf("--------- By: Pere Prim Carol -----------\n");
     printf("-----------------------------------------\n");
+
+    gladLoadGL();
 }
 
-ST::Window::Window(int width, int height){
+ST::Window::Window(int width, int height) {
     glWindow = NULL;
     for (int i = 0; i < 4; i++) { color[i] = 0.0f; }
     if (glfwInit()) {
@@ -94,6 +98,8 @@ ST::Window::Window(int width, int height){
     printf("------------- Space Turtle --------------\n");
     printf("--------- By: Pere Prim Carol -----------\n");
     printf("-----------------------------------------\n");
+    
+    gladLoadGL();
 }
 
 ST::Window::Window(const Window& o){}

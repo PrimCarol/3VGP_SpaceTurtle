@@ -4,7 +4,7 @@
 #include <st_engine.h>
 
 ST::Program::Program(){
-	gladLoadGL();
+	//gladLoadGL();
 	internalID = glCreateProgram();
 }
 
