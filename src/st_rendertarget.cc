@@ -84,11 +84,15 @@ GLuint ST::RenderTarget::textureID(){
 	return textureToRender_.getID();
 }
 
-void ST::RenderTarget::start(){
+void ST::RenderTarget::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	if (renderType_ == RT_Depth) {
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}else {
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
 	//glActiveTexture(GL_TEXTURE0);
 	

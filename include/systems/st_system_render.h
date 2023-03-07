@@ -27,6 +27,7 @@ namespace ST {
 	private:
 		SystemRender();
 
+		//using setupUniformsCallType = bool (ST::Material& mat, ST::TransformComponent* t, MyCamera& cam);
 		static void setUpRender(std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform, MyCamera& cam);
 		static void doRender(std::vector<MyObjToRender>& objs, MyCamera& cam);
 
