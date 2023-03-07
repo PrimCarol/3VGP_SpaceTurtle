@@ -17,9 +17,9 @@ namespace ST {
 
 		RenderTarget();
 		void setUp(int w, int h,
-				   ST::Texture::TextType t = ST::Texture::TextType::T_2D,
-				   ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
-				   ST::Texture::Format f = ST::Texture::Format::F_RGBA);
+			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
+			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
+			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
 
 		GLuint getID();
 		GLuint textureID();

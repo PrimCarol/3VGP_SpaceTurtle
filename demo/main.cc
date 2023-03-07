@@ -77,7 +77,7 @@ int main() {
 	// --------------------------
 	// **************** TEST *****************
 	ST::RenderTarget renderTargetTest;
-	renderTargetTest.setUp(1920, 1080);
+	renderTargetTest.setUp(w.getWindowsWidth(), w.getWindowsHeight());
 
 	ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
 	quadTarget.getComponent<ST::NameComponent>()->setName("Pantalla");
