@@ -26,10 +26,11 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	mainCameraID_ = -1;
 
+
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
-
 	bool shaderError = false;
+
 	ST::Shader vertex(E_VERTEX_SHADER);
 	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
 	if (!textVertex) {
@@ -38,7 +39,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	}
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader01.frag");
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.frag");
 	if (!textFragment) {
 		shaderError = true;
 		printf("Error load Fragment Shader");
@@ -55,6 +56,36 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
+
+	// ------- Create Unlite Program -------
+	unliteProgram = std::make_unique<ST::Program>();
+	shaderError = false;
+
+	ST::Shader vertexUnlite(E_VERTEX_SHADER);
+	GLchar* textVertexUnlite = (GLchar*)ST::Engine::readFile("../shaders/shader_unlite.vert");
+	if (!textVertexUnlite) {
+		shaderError = true;
+		printf("Error load Vertex Shader Unlite");
+	}
+
+	ST::Shader fragmentUnlite(E_FRAGMENT_SHADER);
+	GLchar* textFragmentUnlite = (GLchar*)ST::Engine::readFile("../shaders/shader_unlite.frag");
+	if (!textFragmentUnlite) {
+		shaderError = true;
+		printf("Error load Fragment Shader Unlite");
+	}
+
+	if (shaderError) {
+		textVertexUnlite = (GLchar*)ST::basic_vShader_text;
+		textFragmentUnlite = (GLchar*)ST::basic_fShader_text;
+	}
+
+	vertexUnlite.loadSource(textVertexUnlite);
+	fragmentUnlite.loadSource(textFragmentUnlite);
+
+	unliteProgram->attach(vertexUnlite);
+	unliteProgram->attach(fragmentUnlite);
+	unliteProgram->link();
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

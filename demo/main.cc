@@ -82,9 +82,10 @@ int main() {
 	ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
 	quadTarget.getComponent<ST::NameComponent>()->setName("Pantalla");
 	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f, 10.0f, 1.0f);
-	quadTarget.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,10.0f);
+	quadTarget.getComponent<ST::TransformComponent>()->setPosition(0.0f, 5.0f, 10.0f);
+	quadTarget.getComponent<ST::TransformComponent>()->setRotateZ(3.14f);
 	quadTarget.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
 	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);
 
 	//ST::Program depthBuffer;
@@ -99,12 +100,10 @@ int main() {
 	//depthBuffer.link();
 	// **************** TEST *****************
 
-	float cameraSpeed = 10.0f;
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
 		// ---- Camera ----
-		cameraSpeed += w.mouseWheelY();
 		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
 

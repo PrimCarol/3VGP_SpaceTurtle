@@ -66,7 +66,10 @@ namespace ST {
 
 		size_t size() const;
 
-		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
+		// Default Shader Program to render.
+		std::shared_ptr<ST::Program> basicProgram; 
+		std::shared_ptr<ST::Program> unliteProgram;
+		std::shared_ptr<ST::Program> frameProgram;
 
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);

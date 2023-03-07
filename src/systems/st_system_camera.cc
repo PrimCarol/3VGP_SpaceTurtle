@@ -72,6 +72,9 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 	static bool firtsMouse = true;
 	static float lastX = 0.0f;
 	static float lastY = 0.0f;
+	static float cameraSpeed = 1.0f;
+
+	MoveSpeed *= cameraSpeed;
 
 	if (gm.mainCameraID() == -1) {
 		auto camVector = gm.getComponentVector<ST::CameraComponent>();
@@ -114,6 +117,12 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 			}
 
 			if (camComp->type == ST::kCam_Perspective) {
+				cameraSpeed += w.mouseWheelY();
+				//printf("CamSpeed %f \n", cameraSpeed);
+				if (cameraSpeed <= 0) {
+					cameraSpeed = 0;
+				}
+
 				if (firtsMouse) {
 					lastX = mousePos.x;
 					lastY = mousePos.y;
