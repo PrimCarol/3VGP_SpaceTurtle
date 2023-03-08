@@ -61,7 +61,7 @@ void ST::SystemCamera::UpdateCamera(ST::GameObj_Manager& gm){
 			case ST::kCam_Orthographic:
 				//ortho(-(800.0f / 2.0f), 800.0f / 2.0f, 600.0f / 2.0f, -(600.0f / 2.0f),-1000.0f, 1000.0f);
 				//Camera->projection = glm::ortho(-(Camera->horizontal_ / 2.0f), Camera->horizontal_ / 2.0f, Camera->vertical_ / 2.0f, -(Camera->vertical_ / 2.0f), Camera->nearPlane_, Camera->farPlane_);
-				Camera->setOrthographic(Camera->horizontal_, -Camera->vertical_, Camera->nearPlane_, Camera->farPlane_);
+				Camera->setOrthographic(Camera->horizontal_, Camera->vertical_, Camera->nearPlane_, Camera->farPlane_);
 				break;
 			}
 		}

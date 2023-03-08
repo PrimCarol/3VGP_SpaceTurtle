@@ -12,7 +12,7 @@ ST::CameraComponent::CameraComponent(){
 	farPlane_ = 1000.0f;
 
 	horizontal_ = 10.0f;
-	vertical_ = -10.0f;
+	vertical_ = 10.0f;
 
 	view = glm::mat4(1.0f);
 	projection = glm::mat4(1.0f);
@@ -29,11 +29,11 @@ void ST::CameraComponent::setPerspective(float fov, float ratio, float nearPlane
 
 void ST::CameraComponent::setOrthographic(float h, float v, float nearPlane, float farPlane) {
 	horizontal_ = h;
-	vertical_ = -v;
+	vertical_ = v;
 	nearPlane_ = nearPlane;
 	farPlane_ = farPlane;
 	type = kCam_Orthographic;
-	projection = glm::ortho(-(horizontal_ / 2.0f), horizontal_ / 2.0f, vertical_ / 2.0f, -(vertical_ / 2.0f), nearPlane_, farPlane_);
+	projection = glm::ortho(-(horizontal_ / 2.0f), horizontal_ / 2.0f, -(vertical_ / 2.0f), vertical_ / 2.0f, nearPlane_, farPlane_);
 }
 
 ST::CameraType ST::CameraComponent::getCameraType() const {

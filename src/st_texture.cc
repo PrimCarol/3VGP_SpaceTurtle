@@ -371,3 +371,25 @@ const int ST::Texture::getCols() const{
 ST::Texture::~Texture(){
     glDeleteTextures(1, &internalID);
 }
+
+ST::Texture::Texture(const Texture& o){
+    internalID = o.internalID;
+
+    rows = o.rows;
+    cols = o.cols;
+    width_ = o.width_;
+    height_ = o.height_;
+    depth_ = o.depth_; // <---- ???
+    type_ = o.type_;
+    dataType_ = o.dataType_;
+    format_ = o.format_;
+
+    generateMipmap = o.generateMipmap;
+    forceNoMipmap = o.forceNoMipmap;
+
+    set_min_filter(Filter::F_NEAREST);
+    set_mag_filter(Filter::F_NEAREST);
+    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
+}

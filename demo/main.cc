@@ -67,8 +67,9 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.0f,5.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);
-	DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
+	//DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.4f);
@@ -76,28 +77,28 @@ int main() {
 
 	// --------------------------
 	// **************** TEST *****************
-	ST::RenderTarget renderTargetTest;
-	renderTargetTest.setUp(w.getWindowsWidth(), w.getWindowsHeight()/*, ST::Texture::F_DEPTH*/);
+	//ST::RenderTarget renderTargetTest;
+	//renderTargetTest.setUp(w.getWindowsWidth(), w.getWindowsHeight()/*, ST::Texture::F_DEPTH*/);
 
-	ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
+	/*ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
 	quadTarget.getComponent<ST::NameComponent>()->setName("Pantalla");
 	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f, 10.0f, 1.0f);
 	quadTarget.getComponent<ST::TransformComponent>()->setPosition(0.0f, 5.0f, 10.0f);
 	quadTarget.getComponent<ST::TransformComponent>()->setRotateZ(3.14f);
 	quadTarget.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
 	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);
+	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);*/
 
-	ST::Program depthBuffer;
-	ST::Shader vertex(ST::E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.vert");
-	ST::Shader fragment(ST::E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.frag");
-	vertex.loadSource(textVertex);
-	fragment.loadSource(textFragment);
-	depthBuffer.attach(vertex);
-	depthBuffer.attach(fragment);
-	depthBuffer.link();
+	//ST::Program depthBuffer;
+	//ST::Shader vertex(ST::E_VERTEX_SHADER);
+	//GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.vert");
+	//ST::Shader fragment(ST::E_FRAGMENT_SHADER);
+	//GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shadowMaping.frag");
+	//vertex.loadSource(textVertex);
+	//fragment.loadSource(textFragment);
+	//depthBuffer.attach(vertex);
+	//depthBuffer.attach(fragment);
+	//depthBuffer.link();
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -109,11 +110,11 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		//ST::SystemLight::CompileShadows(gm, depthBuffer); // <---- Testing
+		ST::SystemLight::CompileShadows(gm); // <---- Testing
 		
-		renderTargetTest.start();
-		ST::SystemRender::Render(gm);
-		renderTargetTest.end();
+		//renderTargetTest.start();
+		//ST::SystemRender::Render(gm);
+		//renderTargetTest.end();
 		
 		ST::SystemRender::Render(gm);
 

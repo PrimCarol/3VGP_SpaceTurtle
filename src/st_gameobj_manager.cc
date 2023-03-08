@@ -86,6 +86,36 @@ ST::GameObj_Manager::GameObj_Manager(){
 	unliteProgram->attach(vertexUnlite);
 	unliteProgram->attach(fragmentUnlite);
 	unliteProgram->link();
+
+	// ------- Create Shadow Mapping Program -------
+	shadowMapping = std::make_unique<ST::Program>();
+	shaderError = false;
+
+	ST::Shader vertexShadowMapping(E_VERTEX_SHADER);
+	GLchar* textVertexShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.vert");
+	if (!textVertexShadowMapping) {
+		shaderError = true;
+		printf("Error load Vertex Shader ShadowMapping");
+	}
+
+	ST::Shader fragmentShadowMapping(E_FRAGMENT_SHADER);
+	GLchar* textFragmentShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.frag");
+	if (!textFragmentShadowMapping) {
+		shaderError = true;
+		printf("Error load Fragment Shader ShadowMapping");
+	}
+
+	if (shaderError) {
+		textVertexShadowMapping = (GLchar*)ST::basic_vShader_text;
+		textFragmentShadowMapping = (GLchar*)ST::basic_fShader_text;
+	}
+
+	vertexShadowMapping.loadSource(textVertexShadowMapping);
+	fragmentShadowMapping.loadSource(textFragmentShadowMapping);
+
+	shadowMapping->attach(vertexShadowMapping);
+	shadowMapping->attach(fragmentShadowMapping);
+	shadowMapping->link();
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
