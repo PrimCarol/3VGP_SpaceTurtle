@@ -221,11 +221,14 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				trans->setPosition(pos);
 				// Rotation
 				glm::vec3 rot = trans->getRotation();
+				rot.x *= 180 / 3.1416f;
+				rot.y *= 180 / 3.1416f;
+				rot.z *= 180 / 3.1416f;
 				//ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
 				DrawVec3Control("Rot", rot);
-				trans->setRotateX(rot.x);
-				trans->setRotateY(rot.y);
-				trans->setRotateZ(rot.z);
+				trans->setRotateX(rot.x * (3.1416f / 180));
+				trans->setRotateY(rot.y * (3.1416f / 180));
+				trans->setRotateZ(rot.z * (3.1416f / 180));
 				// Scale
 				glm::vec3 sca = trans->getScale();
 				//ImGui::DragFloat3("##Scale", &sca.x, 0.5f);

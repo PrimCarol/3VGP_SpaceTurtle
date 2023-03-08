@@ -68,7 +68,7 @@ int main() {
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.0f,5.0f,0.0f);
-	DirLight.getComponent<ST::TransformComponent>()->setRotateY(-1.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setRotateX(-1.0f);
 	//DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);

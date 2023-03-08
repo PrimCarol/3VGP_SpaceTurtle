@@ -12,9 +12,9 @@
 
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
-	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
-	auto* renderComps = gm.getComponentVector<ST::RenderComponent>();
-	auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::LightComponent>>& lightComps = *gm.getComponentVector<ST::LightComponent>();
+	std::vector<std::optional<ST::RenderComponent>>& renderComps = *gm.getComponentVector<ST::RenderComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
 	char buffer[50];
 
@@ -26,19 +26,19 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 	GLint idUniform = -1;
 
-	for (int n = 0; n < lightComps->size(); n++) {
-		if (lightComps->at(n).has_value()) {
-			ST::LightComponent thisLight = lightComps->at(n).value();
+	for (int n = 0; n < lightComps.size(); n++) {
+		if (lightComps.at(n).has_value()) {
+			ST::LightComponent thisLight = lightComps.at(n).value();
 
 			// ---- Lights ----
 
 			glm::vec3 dirLight(0.0f,-1.0f,0.0f);
 
-			if (transformComps->at(n).has_value()) {
-				dirLight = transformComps->at(n)->getForward();
+			if (transformComps.at(n).has_value()) {
+				dirLight = transformComps.at(n)->getForward();
 				if (gm.mainCameraID() != -1) {
-					transformComps->at(n)->m_transform_ = glm::lookAt(transformComps->at(n)->getPosition(), transformComps->at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
-					transformComps->at(n)->m_transform_ = glm::inverse(transformComps->at(n)->m_transform_);
+					transformComps.at(n)->m_transform_ = glm::lookAt(transformComps.at(n)->getPosition(), transformComps.at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
+					transformComps.at(n)->m_transform_ = glm::inverse(transformComps.at(n)->m_transform_);
 				}
 				//thisLight.dirLight_.x = sinf(transformComps->at(n).value().getRotation().x);
 				//thisLight.dirLight_.y = sinf(transformComps->at(n).value().getRotation().y);
@@ -75,7 +75,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 				snprintf(buffer, 50, "u_PointLight[%d].position", countPointLights);
 				idUniform = thisProgram.getUniform(buffer);
-				glUniform3f(idUniform, transformComps->at(n).value().getPosition().x, transformComps->at(n).value().getPosition().y, transformComps->at(n).value().getPosition().z);
+				glUniform3f(idUniform, transformComps.at(n).value().getPosition().x, transformComps.at(n).value().getPosition().y, transformComps.at(n).value().getPosition().z);
 
 				snprintf(buffer, 50, "u_PointLight[%d].ambient", countPointLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -107,7 +107,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 				snprintf(buffer, 50, "u_SpotLight[%d].position", countSpotLights);
 				idUniform = thisProgram.getUniform(buffer);
-				glUniform3f(idUniform, transformComps->at(n).value().getPosition().x, transformComps->at(n).value().getPosition().y, transformComps->at(n).value().getPosition().z);
+				glUniform3f(idUniform, transformComps.at(n).value().getPosition().x, transformComps.at(n).value().getPosition().y, transformComps.at(n).value().getPosition().z);
 
 				snprintf(buffer, 50, "u_SpotLight[%d].ambient", countSpotLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -135,7 +135,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 				snprintf(buffer, 50, "u_SpotLight[%d].direction", countSpotLights);
 				idUniform = thisProgram.getUniform(buffer);
-				glUniform3f(idUniform, transformComps->at(n).value().getRotation().x, transformComps->at(n).value().getRotation().y, transformComps->at(n).value().getRotation().z);
+				glUniform3f(idUniform, transformComps.at(n).value().getRotation().x, transformComps.at(n).value().getRotation().y, transformComps.at(n).value().getRotation().z);
 
 				snprintf(buffer, 50, "u_SpotLight[%d].cutOff", countSpotLights);
 				idUniform = thisProgram.getUniform(buffer);
@@ -148,8 +148,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 				countSpotLights++;
 			}
 
-			if (renderComps->at(n).has_value()) {
-				renderComps->at(n).value().material.setColor(thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
+			if (renderComps.at(n).has_value()) {
+				renderComps.at(n).value().material.setColor(thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
 			}
 
 		} // if Have Light
@@ -168,14 +168,13 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 }
 
 #include <imgui.h>
-#include <systems/st_system_render.h>
 
 void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 	static ST::RenderTarget renderTarget;
 	static bool firtsTime = true;
 	if (firtsTime) {
-		renderTarget.setUp(1920,840, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+		renderTarget.setUp(800,800, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 		static ST::Quad q;
 		ST::GameObj tempGo = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
 		tempGo.getComponent<ST::RenderComponent>()->setMesh(&q);
@@ -187,8 +186,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		firtsTime = false;
 	}
 
-	auto* lightComps = gm.getComponentVector<ST::LightComponent>();
-	auto* transformComps = gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::LightComponent>>& lightComps = *gm.getComponentVector<ST::LightComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
 	gm.shadowMapping->use();
 
@@ -199,10 +198,10 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 	GLint idUniform = -1;
 
 
-	for (int n = 0; n < lightComps->size(); n++) {
-		if (lightComps->at(n).has_value() && transformComps->at(n).has_value()) {
-			ST::LightComponent thisLight = lightComps->at(n).value();
-			ST::TransformComponent thisTrans = transformComps->at(n).value();
+	for (int n = 0; n < lightComps.size(); n++) {
+		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
+			ST::LightComponent thisLight = lightComps.at(n).value();
+			ST::TransformComponent thisTrans = transformComps.at(n).value();
 
 			if (thisLight.type_ == ST::Directional) {
 
@@ -234,8 +233,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
-	auto render = *gm.getComponentVector<ST::RenderComponent>();
-	auto transform = *gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
 	
 	std::vector<Light_MyObjToRender> objs_opaque;
 
