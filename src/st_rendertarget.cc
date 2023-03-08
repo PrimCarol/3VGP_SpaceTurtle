@@ -56,6 +56,8 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	}
 
 	if (renderType_ == RT_Depth) {
+		float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
+		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 	}else {

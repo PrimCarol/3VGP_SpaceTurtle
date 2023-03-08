@@ -12,9 +12,9 @@
 
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
-	std::vector<std::optional<ST::LightComponent>>& lightComps = *gm.getComponentVector<ST::LightComponent>();
-	std::vector<std::optional<ST::RenderComponent>>& renderComps = *gm.getComponentVector<ST::RenderComponent>();
-	std::vector<std::optional<ST::TransformComponent>>& transformComps = *gm.getComponentVector<ST::TransformComponent>();
+	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
+	auto& renderComps = *gm.getComponentVector<ST::RenderComponent>();
+	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
 	char buffer[50];
 
@@ -35,7 +35,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 			glm::vec3 dirLight(0.0f,-1.0f,0.0f);
 
 			if (transformComps.at(n).has_value()) {
-				dirLight = transformComps.at(n)->getForward();
+				dirLight = -transformComps.at(n)->getUp();
 				if (gm.mainCameraID() != -1) {
 					transformComps.at(n)->m_transform_ = glm::lookAt(transformComps.at(n)->getPosition(), transformComps.at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
 					transformComps.at(n)->m_transform_ = glm::inverse(transformComps.at(n)->m_transform_);
@@ -186,8 +186,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		firtsTime = false;
 	}
 
-	std::vector<std::optional<ST::LightComponent>>& lightComps = *gm.getComponentVector<ST::LightComponent>();
-	std::vector<std::optional<ST::TransformComponent>>& transformComps = *gm.getComponentVector<ST::TransformComponent>();
+	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
+	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
 	gm.shadowMapping->use();
 
@@ -208,9 +208,14 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				glm::mat4 lightSpaceMatrix;
 
 				ST::CameraComponent cam;
-				//cam.lookAt(thisTrans.getPosition(), thisTrans.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.lookAt(thisTrans.getPosition(), thisTrans.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
-				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f,1.0f,0.0f));
+				//cam.lookAt(thisTrans.getPosition(), -thisTrans.getUp(), glm::vec3(0.0f, 1.0f, 0.0f));
+				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				 
+				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // <-- La opcion mas cercana.
+				//cam.lookAt(20.0f * thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				
+				//cam.lookAt(result, glm::vec3(0.0f,0.0f,0.0f), gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value().getPosition());
 				cam.setOrthographic(10.0f, 10.0f, 1.0f, 50.0f);
 				lightSpaceMatrix = cam.projection * cam.view;
 
@@ -233,8 +238,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
-	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
-	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
+	auto& render = *gm.getComponentVector<ST::RenderComponent>();
+	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
 	
 	std::vector<Light_MyObjToRender> objs_opaque;
 
@@ -271,7 +276,6 @@ void ST::SystemLight::doRender(std::vector<Light_MyObjToRender>& objs){
 		}
 
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
-			//setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
 			objs[lastIndice].render_->mesh->render();
 			instancing.clear();
@@ -279,6 +283,7 @@ void ST::SystemLight::doRender(std::vector<Light_MyObjToRender>& objs){
 			actualMeshRendering = objs[i].render_->mesh->getID();
 		}
 
+		// Mirar EmplaceBack
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),
 							   objs[i].render_->material.getTexIndex(),
