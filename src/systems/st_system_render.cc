@@ -48,74 +48,77 @@
 //	glEnd();
 //}
 
-void ST::SystemRender::setUpRender(std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform, MyCamera& cam){
-	
-	//ST::Material* mat = nullptr;
+//void ST::SystemRender::setUpRender(ST::GameObj_Manager& gm, /*std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform,*/ MyCamera& cam){
+//	
+//	//ST::Material* mat = nullptr;
+//	auto& render = *gm.getComponentVector<ST::RenderComponent>();
+//	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
+//
+//
+//	std::vector<MyObjToRender> objs_opaque;
+//	std::vector<MyObjToRender> objs_translucent;
+//
+//	// ----- Opacos -----
+//	for (int i = 0; i < render.size(); i++){
+//		
+//		if (render[i].has_value() && transform[i].has_value()) {
+//			if (render[i]->visible_) {
+//				MyObjToRender thisObj;
+//				thisObj.render_ = &render[i].value();
+//				thisObj.transform_ = &transform[i].value();
+//
+//				if (!thisObj.render_->material.translucent) {
+//					objs_opaque.push_back(thisObj);
+//				}
+//				else {
+//					objs_translucent.push_back(thisObj);
+//				}
+//			}
+//		}
+//	}
+//
+//	glDisable(GL_BLEND);
+//	doRender(objs_opaque, cam);
+//
+//	// ----- Translucidos -----
+//	bool sortTranslucents = false; // <---------- Temporal
+//
+//	if (sortTranslucents) {
+//		std::map<float, int> sorted;
+//		for (int i = 0; i < objs_translucent.size(); i++){
+//			glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+//			glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+//			float distance = glm::length(cam.transform_->getPosition() - worldPos);
+//			sorted[distance] = i;
+//		}
+//
+//		std::vector<MyObjToRender> objs_translucent_sorted;
+//		
+//		for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+//			objs_translucent_sorted.push_back(objs_translucent[it->second]);
+//		}
+//
+//		// Por defecto de momento.
+//		glEnable(GL_BLEND);
+//		glBlendEquation(GL_FUNC_ADD);
+//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//		doRender(objs_translucent_sorted, cam);
+//
+//		objs_translucent_sorted.clear();
+//	}else {
+//		// Por defecto de momento.
+//		glEnable(GL_BLEND);
+//		glBlendEquation(GL_FUNC_ADD);
+//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//		doRender(objs_translucent, cam);
+//	}
+//
+//	objs_opaque.clear();
+//	objs_translucent.clear();
+//
+//}
 
-	std::vector<MyObjToRender> objs_opaque;
-	std::vector<MyObjToRender> objs_translucent;
-
-	// ----- Opacos -----
-	for (int i = 0; i < render.size(); i++){
-		
-		if (render[i].has_value() && transform[i].has_value()) {
-			if (render[i]->visible_) {
-				MyObjToRender thisObj;
-				thisObj.render_ = &render[i].value();
-				thisObj.transform_ = &transform[i].value();
-
-				if (!thisObj.render_->material.translucent) {
-					objs_opaque.push_back(thisObj);
-				}
-				else {
-					objs_translucent.push_back(thisObj);
-				}
-			}
-		}
-	}
-
-	glDisable(GL_BLEND);
-	doRender(objs_opaque, cam);
-
-	// ----- Translucidos -----
-	bool sortTranslucents = false; // <---------- Temporal
-
-	if (sortTranslucents) {
-		std::map<float, int> sorted;
-		for (int i = 0; i < objs_translucent.size(); i++){
-			glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
-			glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
-			float distance = glm::length(cam.transform_->getPosition() - worldPos);
-			sorted[distance] = i;
-		}
-
-		std::vector<MyObjToRender> objs_translucent_sorted;
-		
-		for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
-			objs_translucent_sorted.push_back(objs_translucent[it->second]);
-		}
-
-		// Por defecto de momento.
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		doRender(objs_translucent_sorted, cam);
-
-		objs_translucent_sorted.clear();
-	}else {
-		// Por defecto de momento.
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_ADD);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		doRender(objs_translucent, cam);
-	}
-
-	objs_opaque.clear();
-	objs_translucent.clear();
-
-}
-
-void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam){
+void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam, ST::GameObj_Manager& gm){
 	
 	std::vector<InstanceInfo> instancing;
 
@@ -136,7 +139,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam)
 		}
 
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
-			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
 			objs[lastIndice].render_->mesh->render();
 			instancing.clear();
@@ -146,7 +149,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam)
 
 		if (objs[i].render_->material.haveAlbedo) {
 			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
-				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 				objs[lastIndice].render_->mesh->setInstanceData(instancing);
 				objs[lastIndice].render_->mesh->render();
 				instancing.clear();
@@ -162,53 +165,19 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam)
 							   objs[i].render_->material.shininess });
 		lastIndice = i;
 
-		// TEST -------------------
-		/*
-		glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-
-		if (objs[i].render_->mesh) {
-			//glm::vec3 maxPos(-1.0f, -1.0f, -1.0f), minPos(1.0f, 1.0f, 1.0f);
-			for (int j = 0; j < objs[i].render_->mesh->vertices_.size(); j++) {
-				if (objs[i].render_->mesh->vertices_[j].pos.x > maxPos.x) { maxPos.x = objs[i].render_->mesh->vertices_[j].pos.x; }
-				if (objs[i].render_->mesh->vertices_[j].pos.y > maxPos.y) { maxPos.y = objs[i].render_->mesh->vertices_[j].pos.y; }
-				if (objs[i].render_->mesh->vertices_[j].pos.z > maxPos.z) { maxPos.z = objs[i].render_->mesh->vertices_[j].pos.z; }
-
-				if (objs[i].render_->mesh->vertices_[j].pos.x < minPos.x) { minPos.x = objs[i].render_->mesh->vertices_[j].pos.x; }
-				if (objs[i].render_->mesh->vertices_[j].pos.y < minPos.y) { minPos.y = objs[i].render_->mesh->vertices_[j].pos.y; }
-				if (objs[i].render_->mesh->vertices_[j].pos.z < minPos.z) { minPos.z = objs[i].render_->mesh->vertices_[j].pos.z; }
-			}
-
-			//glm::vec3 worldScale(objs[i].transform_->m_world_transform_[0][0], objs[i].transform_->m_world_transform_[1][1], objs[i].transform_->m_world_transform_[2][2]);
-			//glm::vec3 colliderPoint_min(minPos * worldScale);
-			//glm::vec3 colliderPoint_max(maxPos * worldScale);
-			
-			glm::vec3 colliderPoint_min(minPos);
-			glm::vec3 colliderPoint_max(maxPos);
-
-			//glm::vec3 colliderPoint_min(minPos * objs[i].transform_->getScale());
-			//glm::vec3 colliderPoint_max(maxPos * objs[i].transform_->getScale());
-
-			drawCollision(colliderPoint_min, colliderPoint_max);
-		}
-
-		//glm::vec3 colliderPoint_min(minPos);
-		//glm::vec3 colliderPoint_max(maxPos);
-		//
-		//drawCollision(colliderPoint_min, colliderPoint_max);
-		*/
-		// TEST -------------------
-
 	}// End For
 
+	// Para pintar los ultimos objetos iguales.
 	if (instancing.size() > 0) {
-		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam);
+		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 		objs[lastIndice].render_->mesh->setInstanceData(instancing);
 		objs[lastIndice].render_->mesh->render();
 		instancing.clear();
 	}
 }
 
-bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t, MyCamera& cam){
+bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t,
+									 MyCamera& cam, ST::GameObj_Manager& gm){
 	const ST::Program* p = nullptr;
 
 	static GLuint lastTextureAlbedo = -1;
@@ -295,6 +264,14 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 			}
 		}
 
+		// Shadow Mapping
+		glUniform1i(p->getUniform("shadowMap"), 3);
+		glActiveTexture(GL_TEXTURE0 + 3);
+		glBindTexture(GL_TEXTURE_2D, gm.shadowMap.textureID());
+
+		GLuint lighSpaceMatrix = p->getUniform("lightSpaceMatrix");
+		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &gm.shadowMappingMatTest[0][0]);
+
 		return true;
 	}
 	return false;
@@ -302,20 +279,14 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 
-	std::vector<std::optional<ST::RenderComponent>>& r = *gm.getComponentVector<ST::RenderComponent>();
-	std::vector<std::optional<ST::TransformComponent>>& t = *gm.getComponentVector<ST::TransformComponent>();
+	auto& render = *gm.getComponentVector<ST::RenderComponent>();
+	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
 	
 	glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_FALSE);
 
-	/*if (cam == nullptr) {
-		static std::unique_ptr<ST::Camera> cam_ = std::make_unique<ST::Camera>();
-		cam = cam_.get();
-	}*/
-
-	//cam->update();
-
-
+	// Buscamos si hay una camara como Main camera,
+	//si no la hay, buscamos la primera que encontremos y la ponemos como Main.
 	auto camVector = gm.getComponentVector<ST::CameraComponent>();
 	if (gm.mainCameraID() == -1) {
 		for (int i = 0; i < camVector->size(); i++) {
@@ -326,16 +297,85 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 		}
 	}
 
+	// ----------- Renderizamos ------------
 	if (gm.mainCameraID() != -1) {
-		if (t[gm.mainCameraID()].has_value()) {
+		if (transform[gm.mainCameraID()].has_value()) {
+			//MyCamera cam;
+			//cam.transform_ = &t[gm.mainCameraID()].value();
+			//if (camVector->at(gm.mainCameraID()).has_value()) {
+			//	cam.cam_ = &camVector->at(gm.mainCameraID()).value();
+			//	//setUpRender(/*r, t,*/gm, cam);
+			//}
+
 			MyCamera cam;
-			cam.transform_ = &t[gm.mainCameraID()].value();
-			if (camVector->at(gm.mainCameraID()).has_value()) {
-				cam.cam_ = &camVector->at(gm.mainCameraID()).value();
-				setUpRender(r, t, cam);
+			cam.cam_ = &camVector->at(gm.mainCameraID()).value();
+			cam.transform_ = &transform[gm.mainCameraID()].value();
+
+			std::vector<MyObjToRender> objs_opaque;
+			std::vector<MyObjToRender> objs_translucent;
+
+			// ----- Opacos -----
+			for (int i = 0; i < render.size(); i++) {
+
+				if (render[i].has_value() && transform[i].has_value()) {
+					if (render[i]->visible_) {
+						MyObjToRender thisObj;
+						thisObj.render_ = &render[i].value();
+						thisObj.transform_ = &transform[i].value();
+
+						if (!thisObj.render_->material.translucent) {
+							objs_opaque.push_back(thisObj);
+						}
+						else {
+							objs_translucent.push_back(thisObj);
+						}
+					}
+				}
 			}
+
+			glDisable(GL_BLEND);
+			doRender(objs_opaque, cam, gm);
+
+			// ----- Translucidos -----
+			bool sortTranslucents = false; // <---------- Temporal
+
+			if (sortTranslucents) {
+				std::map<float, int> sorted;
+				for (int i = 0; i < objs_translucent.size(); i++) {
+					glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+					glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+					float distance = glm::length(cam.transform_->getPosition() - worldPos);
+					sorted[distance] = i;
+				}
+
+				std::vector<MyObjToRender> objs_translucent_sorted;
+
+				for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+					objs_translucent_sorted.push_back(objs_translucent[it->second]);
+				}
+
+				// Por defecto de momento.
+				glEnable(GL_BLEND);
+				glBlendEquation(GL_FUNC_ADD);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				doRender(objs_translucent_sorted, cam, gm);
+
+				objs_translucent_sorted.clear();
+			}
+			else {
+				// Por defecto de momento.
+				glEnable(GL_BLEND);
+				glBlendEquation(GL_FUNC_ADD);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				doRender(objs_translucent, cam, gm);
+			}
+
+			objs_opaque.clear();
+			objs_translucent.clear();
+
 		}
 	}
+	
 
 	//glUseProgram(0);
 }

@@ -33,10 +33,19 @@ out vec3 modelPosition;
 out vec2 texCoords;
 out float shininess;
 
+// Test Shadow Mapping
+out vec4 FragPosLightSpace;
+uniform mat4 lightSpaceMatrix;
+
 void main(){
+
+	// ----- Basic Info -----
 	color = instance_Color;
 	shininess = instance_MatShininess;
+	modelPosition = (instance_Matrix * vec4(a_position,1)).xyz;
+	normals = normalize((instance_Matrix * vec4(a_normal,0.0)).xyz);
 
+	// ----- UV's and Atlas ------
 	float row = instance_TexIndex.y % rows;
 	float column = instance_TexIndex.x % cols;
 
@@ -50,29 +59,20 @@ void main(){
 
 	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width);
 
-//	if(tempUVx < 0.5){
-//		tempUVx = offset_width;
-//	}else{
-//		tempUVx = 1 - offset_width;
-//	}
-
-//	if(tempUVy < 0.5){
-//		tempUVy = atlas_height;
-//	}else{
-//		tempUVy = 1 - atlas_height;
-//	}
-
 	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	texCoords = tempUV;
+	// ----------------------
 
-	//texCoords = a_uv;
 
-	modelPosition = (instance_Matrix * vec4(a_position,1)).xyz;
-	normals = normalize((instance_Matrix * vec4(a_normal,0.0)).xyz);
+	// ---- Shadow Mapping -----
+	FragPosLightSpace = lightSpaceMatrix * vec4(modelPosition, 1.0);
 
+
+	// --- Final Position ---
 	gl_Position = u_vp_matrix * vec4(modelPosition,1.0);
-
 	
+
+
 	// ------ Fog ------
 	vec4 worldPosition = instance_Matrix * vec4(a_position, 1.0);
 	vec4 positionRelativeCam = u_view_matrix * worldPosition;

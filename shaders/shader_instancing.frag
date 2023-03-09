@@ -70,6 +70,10 @@ in vec4 color;
 in vec3 normals;
 in vec2 texCoords;
 
+// Shadow Mapping
+in vec4 FragPosLightSpace;
+uniform sampler2D shadowMap;
+
 // Fog In
 in float visibility;
 
@@ -96,6 +100,21 @@ void main(){
 
 	vec3 camera_dir = normalize(modelPosition - u_view_pos);
 
+	// Shadow Mapping
+	float shadow = 0.0;
+	vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+	if(lightCoords.z <= 1.0){
+		lightCoords = (lightCoords + 1.0) / 2.0;
+		
+		float closesDepth = texture(shadowMap, lightCoords.xy).r;
+		float currentDepth = lightCoords.z;
+
+		if(currentDepth > closesDepth){
+			shadow = 1.0;
+		}
+	}
+
+	// -------- Calculo del Color/Luz --------
 	vec4 result = vec4(0.0);
 
 	// Directional Lights
@@ -130,7 +149,7 @@ void main(){
 
 	//fragColor = mix(u_FogColor, vec4(result, 1.0), visibility);
 	
-	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result, visibility);
+	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result * (1.0 - shadow), visibility);
 }
 
 // -------------------------------------------------------------------------------------

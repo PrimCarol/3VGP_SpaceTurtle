@@ -1,8 +1,5 @@
 #version 330
 
-// Camera
-uniform vec3 u_view_pos;
-
 // Texture
 uniform bool u_haveAlbedo;
 uniform sampler2D u_tex_Albedo;
@@ -27,14 +24,6 @@ void main(){
 	
 	vec4 TextureColor = color;
 	if(u_haveAlbedo){ TextureColor = texture(u_tex_Albedo, texCoords) * color;}
-
-	vec3 normal_ = normalize(normals);
-//	if(u_haveNormal){
-//		normal_ = texture(u_tex_Normal, texCoords).xyz; 
-//		normal_ = normalize(normal_ * 2.0 - 1.0); 
-//	}
-
-	vec3 camera_dir = normalize(modelPosition - u_view_pos);
 
 	vec4 result = TextureColor;
 

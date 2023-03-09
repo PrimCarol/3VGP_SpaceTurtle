@@ -116,6 +116,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->attach(vertexShadowMapping);
 	shadowMapping->attach(fragmentShadowMapping);
 	shadowMapping->link();
+
+	shadowMap.setUp(800, 800, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
@@ -141,7 +143,7 @@ int ST::GameObj_Manager::mainCameraID() const{
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){
-
+	printf("Copia GameObj_Manager -> No deberia de estar haciendo esto.");
 }
 
 ST::GameObj_Manager::~GameObj_Manager(){

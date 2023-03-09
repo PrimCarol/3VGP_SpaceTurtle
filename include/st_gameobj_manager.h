@@ -9,15 +9,19 @@
 #include <optional>
 
 #include <st_gameobj.h>
+#include <st_rendertarget.h>
 #include <components/st_name.h>
 #include <components/st_hierarchy.h>
 //#include <st_camera.h>
 
+#include <mat4x4.hpp>
+
 #define MAX_OBJECTS 100000
 
 namespace ST {
-	class GameObj;
+	
 	class CameraComponent;
+
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 
@@ -74,6 +78,10 @@ namespace ST {
 		std::shared_ptr<ST::Program> shadowMapping;
 		//std::shared_ptr<ST::Program> frameProgram;
 
+		// Shadow Mapping Test
+		ST::RenderTarget shadowMap;
+		glm::mat4 shadowMappingMatTest;
+
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);
 		int mainCameraID() const;
@@ -96,6 +104,10 @@ namespace ST {
 		ST::GameObj root = createGameObj();
 	};
 }
+
+// ------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
 template<typename... Cs>
 ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {

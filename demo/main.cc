@@ -68,12 +68,22 @@ int main() {
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.0f,5.0f,0.0f);
-	//DirLight.getComponent<ST::TransformComponent>()->setRotateX(-1.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	//DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+
+
+	ST::GameObj ShadowMap = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	ShadowMap.getComponent<ST::NameComponent>()->setName("ShadowMap");
+	ShadowMap.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
+	ShadowMap.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,5.0f,10.0f });
+	ShadowMap.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+	ShadowMap.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&gm.shadowMap.textureToRender_);
+	ShadowMap.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+
 
 	// --------------------------
 	// **************** TEST *****************
