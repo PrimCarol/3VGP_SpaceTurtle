@@ -36,6 +36,9 @@ ST::Window::Window(){
 
     srand(time(NULL));
 
+    deltaTime = clock() - lastTime;
+    lastTime = clock();
+
     // Imgui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -79,6 +82,9 @@ ST::Window::Window(int width, int height) {
     window_Height_ = height;
 
     srand(time(NULL));
+
+    deltaTime = clock() - lastTime;
+    lastTime = clock();
 
     // Imgui
     IMGUI_CHECKVERSION();
