@@ -112,10 +112,28 @@ void main(){
 			float closesDepth = texture(shadowMap, lightCoords.xy).r;
 			float currentDepth = lightCoords.z;
 
-			if(currentDepth > closesDepth){
+			float bias = 0.0025;
+
+			if(currentDepth > closesDepth + bias){
 				shadow = 1.0;
 			}
 		}
+
+//		vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+//		vec2 UVCoords;
+//		UVCoords.x = 0.5 * lightCoords.x + 0.5;
+//		UVCoords.y = 0.5 * lightCoords.y + 0.5;
+//		float z = 0.5 * lightCoords.z + 0.5;
+//		float depth = texture(shadowMap, UVCoords).x;
+//
+//		float bias = 0.0025;
+//
+//		if(depth + bias < z){
+//			shadow = 1.0;
+//		}else{
+//			shadow = 0.5;
+//		}
+
 	}
 
 	// -------- Calculo del Color/Luz --------

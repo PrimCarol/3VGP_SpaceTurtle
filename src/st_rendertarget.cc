@@ -90,6 +90,7 @@ void ST::RenderTarget::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 	if (renderType_ == RT_Depth) {
+		glViewport(0, 0, width_, height_);
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}else {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

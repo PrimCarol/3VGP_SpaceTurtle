@@ -133,6 +133,7 @@ void ST::Window::Render(){
     int display_w, display_h;
     glfwGetFramebufferSize(glWindow, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
+
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -165,6 +166,11 @@ void ST::Window::Render(){
 
 void ST::Window::Clear() const{
     glClearColor(color[0], color[1], color[2], color[3]);
+
+    //int display_w, display_h;
+    //glfwGetFramebufferSize(glWindow, &display_w, &display_h);
+    //glViewport(0, 0, display_w, display_h);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // ImGui

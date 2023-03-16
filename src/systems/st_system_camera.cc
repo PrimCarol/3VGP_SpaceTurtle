@@ -117,12 +117,7 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 			}
 
 			if (camComp->type == ST::kCam_Perspective) {
-				cameraSpeed += w.mouseWheelY();
-				//printf("CamSpeed %f \n", cameraSpeed);
-				if (cameraSpeed <= 0) {
-					cameraSpeed = 0;
-				}
-
+				
 				if (firtsMouse) {
 					lastX = mousePos.x;
 					lastY = mousePos.y;
@@ -133,6 +128,12 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 				lastX = mousePos.x;
 				lastY = mousePos.y;
 				if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
+
+					cameraSpeed += w.mouseWheelY();
+					if (cameraSpeed <= 0) {
+						cameraSpeed = 0;
+					}
+
 					transComp->setRotateX(transComp->getRotation().x + -xoffset * RotateSpeed * w.DeltaTime());
 					transComp->setRotateY(transComp->getRotation().y + yoffset * RotateSpeed * w.DeltaTime());
 				}

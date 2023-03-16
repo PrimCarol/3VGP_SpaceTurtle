@@ -171,21 +171,6 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 
 void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
-	//static ST::RenderTarget renderTarget;
-	//static bool firtsTime = true;
-	//if (firtsTime) {
-	//	//renderTarget.setUp(800,800, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
-	//	static ST::Quad q;
-	//	ST::GameObj tempGo = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
-	//	tempGo.getComponent<ST::RenderComponent>()->setMesh(&q);
-	//	tempGo.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	tempGo.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTarget.textureToRender_);
-	//	tempGo.getComponent<ST::TransformComponent>()->setScale(10.0f, 10.0f, 1.0f);
-	//	tempGo.getComponent<ST::TransformComponent>()->setPosition(0.0f, -4.63f, 0.0f);
-	//	tempGo.getComponent<ST::TransformComponent>()->setRotateX(1.58f);
-	//	firtsTime = false;
-	//}
-
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
@@ -210,7 +195,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				ST::CameraComponent cam;
 				
 				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 
 				//cam.lookAt(thisTrans.getPosition(), -thisTrans.getUp(), glm::vec3(0.0f, 1.0f, 0.0f));
 				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
