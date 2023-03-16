@@ -196,7 +196,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 	int countSpotLights = 0;
 
 	GLint idUniform = -1;
-
+	gm.haveShadowMap_ = false;
 
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
@@ -230,6 +230,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				//Render Scene.
 				setUpRender(gm);
 				gm.shadowMap.end();
+
+				gm.haveShadowMap_ = true;
 			}
 
 		}

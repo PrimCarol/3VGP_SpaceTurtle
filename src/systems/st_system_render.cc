@@ -139,7 +139,9 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
-			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+			gm.drawcalls_++;
+
+				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
 			objs[lastIndice].render_->mesh->render();
 			instancing.clear();
@@ -149,7 +151,9 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 
 		if (objs[i].render_->material.haveAlbedo) {
 			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
-				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+				gm.drawcalls_++;
+
+					setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 				objs[lastIndice].render_->mesh->setInstanceData(instancing);
 				objs[lastIndice].render_->mesh->render();
 				instancing.clear();
@@ -169,6 +173,8 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 
 	// Para pintar los ultimos objetos iguales.
 	if (instancing.size() > 0) {
+		gm.drawcalls_++;
+
 		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 		objs[lastIndice].render_->mesh->setInstanceData(instancing);
 		objs[lastIndice].render_->mesh->render();
@@ -265,6 +271,8 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		}
 
 		// Shadow Mapping
+		glUniform1i(p->getUniform("u_haveShadowMap"), gm.haveShadowMap_);
+		
 		glUniform1i(p->getUniform("shadowMap"), 3);
 		glActiveTexture(GL_TEXTURE0 + 3);
 		glBindTexture(GL_TEXTURE_2D, gm.shadowMap.textureID());
@@ -278,6 +286,8 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 }
 
 void ST::SystemRender::Render(ST::GameObj_Manager& gm){
+
+	gm.drawcalls_ = 0;
 
 	auto& render = *gm.getComponentVector<ST::RenderComponent>();
 	auto& transform = *gm.getComponentVector<ST::TransformComponent>();

@@ -11,7 +11,6 @@ int main() {
 
 	ST::GameObj_Manager gm;
 
-	//ST::Camera myCam;
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 01");
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 10.0f, 0.0f);
@@ -130,12 +129,6 @@ int main() {
 			gm.deleteGameObj(gm.objectSelected);
 			gm.objectSelected = -1;
 		}
-		if (w.inputPressed('1')) {
-			gm.setMainCamera(camera);
-		}else if (w.inputPressed('2')) {
-			gm.setMainCamera(camera2);
-		}
-
 
 		ST::SystemHUD::NavBar(gm);
 		ST::SystemHUD::Hierarchy(gm);

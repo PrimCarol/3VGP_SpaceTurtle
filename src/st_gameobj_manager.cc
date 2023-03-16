@@ -117,6 +117,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->attach(fragmentShadowMapping);
 	shadowMapping->link();
 
+	haveShadowMap_ = false;
 	shadowMap.setUp(800, 800, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 }
 

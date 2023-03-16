@@ -477,6 +477,11 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::DragFloat("Near", &camera->nearPlane_);
 				ImGui::DragFloat("Far", &camera->farPlane_);
 
+				if (ImGui::Button("Set Main")) {
+					ST::GameObj thisCameraObj(objSeletected, gm);
+					gm.setMainCamera(thisCameraObj);
+				}
+
 				ImGui::TreePop();
 			}
 		}
@@ -543,6 +548,7 @@ void ST::SystemHUD::Stats(const ST::Window& w, const ST::GameObj_Manager& gm){
 	ImGui::PopStyleColor();
 	
 	ImGui::Text("GameObjects: %d", gm.size());
+	ImGui::Text("Drawcalls: %d", gm.drawcalls_);
 
 	ImGui::End();
 }

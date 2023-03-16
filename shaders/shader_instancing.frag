@@ -71,6 +71,7 @@ in vec3 normals;
 in vec2 texCoords;
 
 // Shadow Mapping
+uniform bool u_haveShadowMap;
 in vec4 FragPosLightSpace;
 uniform sampler2D shadowMap;
 
@@ -102,15 +103,18 @@ void main(){
 
 	// Shadow Mapping
 	float shadow = 0.0;
-	vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
-	if(lightCoords.z <= 1.0){
-		lightCoords = (lightCoords + 1.0) / 2.0;
-		
-		float closesDepth = texture(shadowMap, lightCoords.xy).r;
-		float currentDepth = lightCoords.z;
 
-		if(currentDepth > closesDepth){
-			shadow = 1.0;
+	if(u_haveShadowMap){
+		vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+		if(lightCoords.z <= 1.0){
+			lightCoords = (lightCoords + 1.0) / 2.0;
+		
+			float closesDepth = texture(shadowMap, lightCoords.xy).r;
+			float currentDepth = lightCoords.z;
+
+			if(currentDepth > closesDepth){
+				shadow = 1.0;
+			}
 		}
 	}
 
