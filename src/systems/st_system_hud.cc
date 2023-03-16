@@ -277,6 +277,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
 
 				ImGui::Checkbox("Visible", &render->visible_);
+				ImGui::Checkbox("CastShadow", &render->castShadow_);
 				ImGui::Checkbox("Translucent", &render->material.translucent);
 				ImGui::Spacing();
 				ImGui::Text("- Color -");

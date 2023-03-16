@@ -4,6 +4,7 @@ ST::RenderComponent::RenderComponent(){
 	mesh = nullptr;
 
 	visible_ = true;
+	castShadow_ = true;
 
 	//material = nullptr;
 	//// esto no me deja hacerlo por el optional.
