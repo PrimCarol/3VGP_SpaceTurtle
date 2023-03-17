@@ -130,6 +130,9 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
     case ST::Texture::Wrap::W_CLAMP_TO_EDGE:
         aux = GL_CLAMP_TO_EDGE;
         break;
+    case ST::Texture::Wrap::W_CLAMP_TO_BORDER:
+        aux = GL_CLAMP_TO_BORDER;
+        break;
     case ST::Texture::Wrap::W_MIRRORED_REPEAT:
         aux = GL_MIRRORED_REPEAT;
         break;
@@ -157,6 +160,11 @@ ST::Texture::Texture(){
     type_ = T_2D;
     dataType_ = DT_U_BYTE;
     format_ = F_RGBA;
+
+    borderColor[0] = 1.0;
+    borderColor[1] = 1.0;
+    borderColor[2] = 1.0;
+    borderColor[3] = 1.0;
 
     generateMipmap = false;
     forceNoMipmap = false;
@@ -277,6 +285,8 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
+
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
         glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 

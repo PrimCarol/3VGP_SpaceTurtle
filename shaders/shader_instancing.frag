@@ -84,6 +84,7 @@ out vec4 fragColor;
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
+float CalcShadow(float dotLightNormal);
 
 void main(){
 	
@@ -100,41 +101,6 @@ void main(){
 //	}
 
 	vec3 camera_dir = normalize(modelPosition - u_view_pos);
-
-	// Shadow Mapping
-	float shadow = 0.0;
-
-	if(u_haveShadowMap){
-		vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
-		if(lightCoords.z <= 1.0){
-			lightCoords = (lightCoords + 1.0) / 2.0;
-		
-			float closesDepth = texture(shadowMap, lightCoords.xy).r;
-			float currentDepth = lightCoords.z;
-
-			float bias = 0.0025;
-
-			if(currentDepth > closesDepth + bias){
-				shadow = 1.0;
-			}
-		}
-
-//		vec3 lightCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
-//		vec2 UVCoords;
-//		UVCoords.x = 0.5 * lightCoords.x + 0.5;
-//		UVCoords.y = 0.5 * lightCoords.y + 0.5;
-//		float z = 0.5 * lightCoords.z + 0.5;
-//		float depth = texture(shadowMap, UVCoords).x;
-//
-//		float bias = 0.0025;
-//
-//		if(depth + bias < z){
-//			shadow = 1.0;
-//		}else{
-//			shadow = 0.5;
-//		}
-
-	}
 
 	// -------- Calculo del Color/Luz --------
 	vec4 result = vec4(0.0);
@@ -155,6 +121,13 @@ void main(){
 		}
 	}
 
+	// Shadow Mapping ------ TEMPORAL --------
+	float shadow = 0.0;
+	if(u_haveShadowMap){
+		float dotLightTemp = dot(u_DirectLight[0].direction, normal_);
+		shadow = CalcShadow(dotLightTemp);
+	}
+
 	// Point Lights
 	int CountPointLights = u_numPointLights;
 	if(CountPointLights >= MAX_POINT_LIGHTS){ CountPointLights = MAX_POINT_LIGHTS; }
@@ -171,7 +144,8 @@ void main(){
 
 	//fragColor = mix(u_FogColor, vec4(result, 1.0), visibility);
 	
-	fragColor = mix(vec4(0.5,0.5,0.5,1.0), result * (1.0 - shadow), visibility);
+	//fragColor = mix(vec4(0.5,0.5,0.5,1.0), result * shadow, visibility);
+	fragColor = result * shadow;
 }
 
 // -------------------------------------------------------------------------------------
@@ -257,4 +231,27 @@ vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, ve
     specular *= attenuation * intensity;
 
     return (ambient + diffuse + specular);
+}
+
+float CalcShadow(float dotLightNormal){
+	
+	vec3 pos = FragPosLightSpace.xyz * 0.5 + 0.5;
+	if(pos.z > 1.0){ pos.z = 1.0; }
+
+	float bias = max(0.05 * (1.0 - dotLightNormal), 0.005);
+
+	float returnShadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+//	for(int x = -1; x <= 1; ++x){
+//		for(int y = -1; y <= 1; ++y){
+//			float depth = texture(shadowMap, pos.xy + vec2(x,y) * texelSize).r;
+//			returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+//			
+//		}
+//	}
+
+	float depth = texture(shadowMap, pos.xy).r;
+	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+	
+	return returnShadow;
 }

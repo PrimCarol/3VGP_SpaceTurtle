@@ -40,6 +40,8 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	}
 
 	textureToRender_.init(width_, height_, t, dt, f);
+	textureToRender_.set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	textureToRender_.bind();
 
 	if (f == ST::Texture::F_DEPTH) {

@@ -213,7 +213,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				gm.shadowMap.start();
 				//Render Scene.
+				glCullFace(GL_FRONT);
 				setUpRender(gm);
+				glCullFace(GL_BACK);
 				gm.shadowMap.end();
 
 				gm.haveShadowMap_ = true;
@@ -222,9 +224,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		}
 	}
 
-	//ImGui::Begin("ViewDepth");
-	//ImGui::Image((void*)(intptr_t)renderTarget.textureID(), ImVec2(192,120));
-	//ImGui::End();
+	ImGui::Begin("ViewDepth");
+	ImGui::Image((void*)(intptr_t)gm.shadowMap.textureID(), ImVec2(192,120));
+	ImGui::End();
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){

@@ -12,20 +12,16 @@ int main() {
 	ST::GameObj_Manager gm;
 
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
-	camera.getComponent<ST::NameComponent>()->setName("Camera 01");
-	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 10.0f, 0.0f);
-	camera.getComponent<ST::TransformComponent>()->setRotateX(-1.58f);
-
-	ST::GameObj camera2 = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
-	camera2.getComponent<ST::NameComponent>()->setName("Camera 02");
-	camera2.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
+	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/840.0f, 0.01f, 100000.0f);
 
 	// --------------
 	ST::Texture textureTest;
-	//textureTest.generateMipmap = true;
+	textureTest.generateMipmap = true;
 	//textureTest.set_mag_filter(ST::Texture::F_NEAREST);
 	//textureTest.set_min_filter(ST::Texture::F_LINEAR);
-	textureTest.loadSource("../others/icon.png");
+	textureTest.loadSource("../others/checker_texture.jpg");
 	//textureTest.setCols(71);
 	//textureTest.setRows(19);
 
@@ -66,22 +62,21 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.0f,5.0f,0.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.00001f,5.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	//DirLight.getComponent<ST::TransformComponent>()->setRotateZ(0.5f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 
-	ST::GameObj ShadowMap = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	ShadowMap.getComponent<ST::NameComponent>()->setName("ShadowMap");
-	ShadowMap.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
-	ShadowMap.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,5.0f,10.0f });
-	ShadowMap.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	ShadowMap.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&gm.shadowMap.textureToRender_);
-	ShadowMap.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+	//ST::GameObj ShadowMap = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	//ShadowMap.getComponent<ST::NameComponent>()->setName("ShadowMap");
+	//ShadowMap.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
+	//ShadowMap.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,5.0f,10.0f });
+	//ShadowMap.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+	//ShadowMap.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&gm.shadowMap.textureToRender_);
+	//ShadowMap.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
 
 
 	// --------------------------

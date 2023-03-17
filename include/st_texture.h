@@ -52,7 +52,8 @@ namespace ST {
         enum Wrap {
             W_REPEAT,
             W_MIRRORED_REPEAT,
-            W_CLAMP_TO_EDGE
+            W_CLAMP_TO_EDGE,
+            W_CLAMP_TO_BORDER
         };
 
 		Texture();
@@ -90,6 +91,7 @@ namespace ST {
 
         bool generateMipmap;
         bool forceNoMipmap;
+        float borderColor[4];
 
         void set_data(const void* data/*, unsigned int mipmap_LOD = 0*/);
 
