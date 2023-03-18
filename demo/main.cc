@@ -4,7 +4,7 @@
 #include <st_shader.h>
 
 int main() {
-	ST::Window w(1600, 840);
+	ST::Window w(1600, 900);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
 
 	// ----------------------------------------------------------------
@@ -51,7 +51,7 @@ int main() {
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
-	ground.getComponent<ST::TransformComponent>()->setScale({ 10.0f,0.2f,10.0f });
+	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);

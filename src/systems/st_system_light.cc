@@ -195,16 +195,15 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				ST::CameraComponent cam;
 				
 				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
 
-				//cam.lookAt(thisTrans.getPosition(), -thisTrans.getUp(), glm::vec3(0.0f, 1.0f, 0.0f));
-				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				 
+				// Sacada anteriormente con el profe
 				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // <-- La opcion mas cercana.
-				//cam.lookAt(20.0f * thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				
-				//cam.lookAt(result, glm::vec3(0.0f,0.0f,0.0f), gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value().getPosition());
-				cam.setOrthographic(10.0f, 10.0f, 1.0f, 50.0f);
+			
+				//cam.lookAt(2.0f * thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+				//cam.lookAt(thisTrans.getUp(), -thisTrans.getUp(), glm::vec3(0.0f, -1.0f, 0.0f)); // <--- No es mala esta.
+
+				cam.setOrthographic(10.0f, 10.0f, 1.0f, 30.0f);
 				gm.shadowMappingMatTest = cam.projection * cam.view;
 
 
@@ -213,9 +212,11 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				gm.shadowMap.start();
 				//Render Scene.
-				glCullFace(GL_FRONT);
+				//glCullFace(GL_FRONT); // <--- Test
+				glDisable(GL_CULL_FACE);
 				setUpRender(gm);
-				glCullFace(GL_BACK);
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK); // <--- Test
 				gm.shadowMap.end();
 
 				gm.haveShadowMap_ = true;

@@ -122,7 +122,7 @@ void main(){
 	}
 
 	// Shadow Mapping ------ TEMPORAL --------
-	float shadow = 0.0;
+	float shadow = 1.0;
 	if(u_haveShadowMap){
 		float dotLightTemp = dot(u_DirectLight[0].direction, normal_);
 		shadow = CalcShadow(dotLightTemp);
@@ -242,16 +242,16 @@ float CalcShadow(float dotLightNormal){
 
 	float returnShadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-//	for(int x = -1; x <= 1; ++x){
-//		for(int y = -1; y <= 1; ++y){
-//			float depth = texture(shadowMap, pos.xy + vec2(x,y) * texelSize).r;
-//			returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
-//			
-//		}
-//	}
-
-	float depth = texture(shadowMap, pos.xy).r;
-	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+	for(int x = -1; x <= 1; ++x){
+		for(int y = -1; y <= 1; ++y){
+			float depth = texture(shadowMap, pos.xy + vec2(x,y) * texelSize).r;
+			returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+			
+		}
+	}
+	returnShadow /= 9;
+//	float depth = texture(shadowMap, pos.xy).r;
+//	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
 	
 	return returnShadow;
 }

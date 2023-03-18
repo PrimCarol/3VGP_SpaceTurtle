@@ -40,7 +40,7 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	}
 
 	textureToRender_.init(width_, height_, t, dt, f);
-	textureToRender_.set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
 	textureToRender_.set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	textureToRender_.bind();
 
@@ -58,7 +58,7 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	}
 
 	if (renderType_ == RT_Depth) {
-		float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
+		//float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
 		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
@@ -74,8 +74,6 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	}
 
 	textureToRender_.unbind();
-	//glDrawBuffer(GL_NONE);
-	//glReadBuffer(GL_NONE);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
