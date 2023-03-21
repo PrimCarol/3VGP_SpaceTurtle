@@ -183,6 +183,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 	GLint idUniform = -1;
 	gm.haveShadowMap_ = false;
 
+	static glm::vec2 camShadowSize = glm::vec2(10.0f,10.0f);
+	static glm::vec2 camShadowDistance = glm::vec2(1.0f, 30.0f);
+
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
 			ST::LightComponent thisLight = lightComps.at(n).value();
@@ -203,7 +206,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				//cam.lookAt(2.0f * thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 				//cam.lookAt(thisTrans.getUp(), -thisTrans.getUp(), glm::vec3(0.0f, -1.0f, 0.0f)); // <--- No es mala esta.
 
-				cam.setOrthographic(10.0f, 10.0f, 1.0f, 30.0f);
+				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
 				gm.shadowMappingMatTest = cam.projection * cam.view;
 
 
@@ -227,6 +230,14 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 	ImGui::Begin("ViewDepth");
 	ImGui::Image((void*)(intptr_t)gm.shadowMap.textureID(), ImVec2(192,120));
+	ImGui::SetNextItemWidth(50.0f);
+	ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+	ImGui::SetNextItemWidth(50.0f);
+	ImGui::DragFloat("Vertical", &camShadowSize.y);
+	ImGui::SetNextItemWidth(50.0f);
+	ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+	ImGui::SetNextItemWidth(50.0f);
+	ImGui::DragFloat("Far", &camShadowDistance.y);
 	ImGui::End();
 }
 

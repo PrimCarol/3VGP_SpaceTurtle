@@ -118,7 +118,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->link();
 
 	haveShadowMap_ = false;
-	shadowMap.setUp(800, 800, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+	//shadowMap.setUp(2560, 2560, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+	shadowMap.setUp(16, 16, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
