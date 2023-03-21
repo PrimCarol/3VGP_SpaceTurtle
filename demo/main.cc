@@ -25,6 +25,8 @@ int main() {
 	//textureTest.setCols(71);
 	//textureTest.setRows(19);
 
+	ST::Texture otherTexture;
+	otherTexture.loadSource("../others/icon.png");
 	ST::Cube test_mesh;
 	ST::Quad quad_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
@@ -62,7 +64,7 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.00001f,5.0f,0.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,5.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);

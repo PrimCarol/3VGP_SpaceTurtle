@@ -238,7 +238,10 @@ float CalcShadow(float dotLightNormal){
 	vec3 pos = FragPosLightSpace.xyz * 0.5 + 0.5;
 	if(pos.z > 1.0){ pos.z = 1.0; }
 
-	float bias = max(0.05 * (1.0 - dotLightNormal), 0.005);
+	if(dotLightNormal > 1 ){return 0.0;}
+
+	float bias = max(0.0005 * (1.0 - dotLightNormal), 0.0);
+	//float bias = 0.005;
 
 	float returnShadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -250,8 +253,8 @@ float CalcShadow(float dotLightNormal){
 		}
 	}
 	returnShadow /= 9;
-//	float depth = texture(shadowMap, pos.xy).r;
-//	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+	//float depth = texture(shadowMap, pos.xy).r;
+	//returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
 	
 	return returnShadow;
 }

@@ -7,7 +7,7 @@ ST::Mesh::Mesh(){
 	//gladLoadGL();
 	internalId = 0;
 	instanceBuffer = 0;
-	numInstances = 0;
+	numInstances = 1;
 
 	name_ = nullptr;
 	cullmode_ = ST::kCull_Back;
@@ -62,12 +62,14 @@ void ST::Mesh::setInstanceData(const std::vector<InstanceInfo>& data){}
 
 void ST::Mesh::render(){}
 
-ST::Mesh::Mesh(const Mesh& o){
-	name_ = o.name_;
-	internalId = o.internalId;
-
-	cullmode_ = o.cullmode_;
-}
+//ST::Mesh::Mesh(const Mesh& o){
+//	name_ = o.name_;
+//	internalId = o.internalId;
+//	instanceBuffer = o.instanceBuffer;
+//	numInstances = o.numInstances;
+//
+//	cullmode_ = o.cullmode_;
+//}
 
 // ------ Extra Functions ------
 void SetCullMode(ST::CullMode c) {

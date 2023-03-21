@@ -162,6 +162,33 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 				objs[i].render_->material.getAlbedo()->bind();
 			}
 		}
+		else
+		{
+			if (actualTextureRendering != 0) {
+				actualTextureRendering = 0;
+
+				gm.drawcalls_++;
+
+				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+				objs[lastIndice].render_->mesh->setInstanceData(instancing);
+				objs[lastIndice].render_->mesh->render();
+				instancing.clear();
+			}
+		}
+
+		//if(!objs[i].render_->material.haveAlbedo && objs[i].render_->mesh->getID() != actualMeshRendering)
+		//{
+		//	if (actualTextureRendering != 0) {
+		//		actualTextureRendering = 0;
+
+		//		gm.drawcalls_++;
+
+		//		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+		//		objs[lastIndice].render_->mesh->setInstanceData(instancing);
+		//		objs[lastIndice].render_->mesh->render();
+		//		instancing.clear();
+		//	}
+		//}
 
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),

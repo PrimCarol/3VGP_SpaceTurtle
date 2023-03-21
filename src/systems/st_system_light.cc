@@ -183,7 +183,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 	GLint idUniform = -1;
 	gm.haveShadowMap_ = false;
 
-	static glm::vec2 camShadowSize = glm::vec2(10.0f,10.0f);
+	static glm::vec2 camShadowSize = glm::vec2(50.0f,49.0f);
 	static glm::vec2 camShadowDistance = glm::vec2(1.0f, 30.0f);
 
 	for (int n = 0; n < lightComps.size(); n++) {
@@ -199,6 +199,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				
 				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
+				// que el up apunti cap a laa camara principal.
+				
 
 				// Sacada anteriormente con el profe
 				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // <-- La opcion mas cercana.
