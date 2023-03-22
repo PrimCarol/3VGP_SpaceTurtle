@@ -72,6 +72,7 @@ namespace ST {
 
 		size_t size() const;
 
+		// ------------------------------- TRASH ZONE ---------------------------------
 		// Default Shader Program to render.
 		std::shared_ptr<ST::Program> basicProgram;
 		std::shared_ptr<ST::Program> unliteProgram;
@@ -88,7 +89,10 @@ namespace ST {
 		int mainCameraID() const;
 
 		// ******************* Test *******************
+		glm::vec2 windowSize_;
 		int drawcalls_;
+
+		// ------------------------------- TRASH ZONE ---------------------------------
 
 		~GameObj_Manager();
 	private:

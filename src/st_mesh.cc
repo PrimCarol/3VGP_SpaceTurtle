@@ -7,7 +7,7 @@ ST::Mesh::Mesh(){
 	//gladLoadGL();
 	internalId = 0;
 	instanceBuffer = 0;
-	numInstances = 1;
+	numInstances = 0;
 
 	name_ = nullptr;
 	cullmode_ = ST::kCull_Back;

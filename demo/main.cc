@@ -6,10 +6,11 @@
 int main() {
 	ST::Window w(1600, 900);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
-
+	
 	// ----------------------------------------------------------------
 
 	ST::GameObj_Manager gm;
+	gm.windowSize_ = glm::vec2(w.getWindowsWidth(), w.getWindowsHeight());
 
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
@@ -64,7 +65,7 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,5.0f,0.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
@@ -72,29 +73,10 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 
-	//ST::GameObj ShadowMap = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	//ShadowMap.getComponent<ST::NameComponent>()->setName("ShadowMap");
-	//ShadowMap.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
-	//ShadowMap.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,5.0f,10.0f });
-	//ShadowMap.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//ShadowMap.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&gm.shadowMap.textureToRender_);
-	//ShadowMap.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-
-
 	// --------------------------
 	// **************** TEST *****************
 	//ST::RenderTarget renderTargetTest;
 	//renderTargetTest.setUp(w.getWindowsWidth(), w.getWindowsHeight()/*, ST::Texture::F_DEPTH*/);
-
-	/*ST::GameObj quadTarget = gm.createGameObj(ST::TransformComponent{},ST::RenderComponent{});
-	quadTarget.getComponent<ST::NameComponent>()->setName("Pantalla");
-	quadTarget.getComponent<ST::TransformComponent>()->setScale(10.0f, 10.0f, 1.0f);
-	quadTarget.getComponent<ST::TransformComponent>()->setPosition(0.0f, 5.0f, 10.0f);
-	quadTarget.getComponent<ST::TransformComponent>()->setRotateZ(3.14f);
-	quadTarget.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-	quadTarget.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	quadTarget.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&renderTargetTest.textureToRender_);*/
-
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -106,7 +88,7 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		ST::SystemLight::CompileShadows(gm); // <---- Testing
+		//ST::SystemLight::CompileShadows(gm); // <---- Testing
 		
 		//renderTargetTest.start();
 		//ST::SystemRender::Render(gm);
