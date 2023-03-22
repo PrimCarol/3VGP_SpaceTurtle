@@ -4,7 +4,7 @@
 <p align="center">My personal Engine from scratch with C++ and OpenGl.</p>
 <p align="center">© 2023 Pere Prim Carol</p>
 
-<h2>🔶 Implemented things</h2>
+<h2>🔶 Project features </h2>
 
   - Entity Component System (ECS)<br>
   - Obj Instancing <br>
@@ -12,11 +12,19 @@
   - Load OBJ<br>
   - Translucent<br>
   - Lights<br>
+  - ShadowMapping<br>
   - Camera Movement (FPS style)<br>
   - Load Textures<br>
   - Texture Atlas<br>
   - Material Configuration<br>
   - Picking System<br>
+
+<h2>🔶 Future additions </h2>
+  - PBR Materials<br>
+  - Save/Load Scene<br>
+  - VR Port<br>
+
+<hr>
 
 <h2>🔶 Prerequisites</h2>
 Visual Studio 2019/2022
