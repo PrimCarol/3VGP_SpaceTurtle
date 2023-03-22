@@ -89,7 +89,6 @@ namespace ST {
 		int mainCameraID() const;
 
 		// ******************* Test *******************
-		glm::vec2 windowSize_;
 		int drawcalls_;
 
 		// ------------------------------- TRASH ZONE ---------------------------------

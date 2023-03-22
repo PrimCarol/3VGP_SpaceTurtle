@@ -4,13 +4,12 @@
 #include <st_shader.h>
 
 int main() {
-	ST::Window w(1600, 900);
+	ST::Window w(1600, 400);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
 	
 	// ----------------------------------------------------------------
 
 	ST::GameObj_Manager gm;
-	gm.windowSize_ = glm::vec2(w.getWindowsWidth(), w.getWindowsHeight());
 
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
@@ -88,7 +87,7 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		//ST::SystemLight::CompileShadows(gm); // <---- Testing
+		ST::SystemLight::CompileShadows(gm); // <---- Testing
 		
 		//renderTargetTest.start();
 		//ST::SystemRender::Render(gm);

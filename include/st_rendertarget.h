@@ -35,6 +35,8 @@ namespace ST {
 		int width_;
 		int height_;
 
+		GLint last_viewport[4];
+
 		GLuint internalID;
 		unsigned int rbo;
 

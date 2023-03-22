@@ -120,7 +120,6 @@ ST::GameObj_Manager::GameObj_Manager(){
 	haveShadowMap_ = false;
 	shadowMap.setUp(2560, 2560, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 	//shadowMap.setUp(16, 16, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
-	windowSize_ = glm::vec2(0.0f);
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

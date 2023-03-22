@@ -89,6 +89,8 @@ GLuint ST::RenderTarget::textureID(){
 void ST::RenderTarget::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	glGetIntegerv(GL_VIEWPORT, last_viewport);
+
 	if (renderType_ == RT_Depth) {
 		glViewport(0, 0, width_, height_);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -96,13 +98,6 @@ void ST::RenderTarget::start() {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-
-	//glActiveTexture(GL_TEXTURE0);
-	
-	//glBindTexture(GL_TEXTURE_2D, woodTexture);
-	//renderScene(simpleDepthShader);
-	
-	//Renderizamos la Escena
 }
 
 void ST::RenderTarget::end(){
@@ -114,7 +109,7 @@ void ST::RenderTarget::end(){
 	// Reset viewport
 	//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
 }
 
 ST::RenderTarget::~RenderTarget(){

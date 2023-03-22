@@ -344,8 +344,6 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			//	//setUpRender(/*r, t,*/gm, cam);
 			//}
 
-			glViewport(0, 0, gm.windowSize_.x, gm.windowSize_.y); // <---- Temporal
-
 			MyCamera cam;
 			cam.cam_ = &camVector->at(gm.mainCameraID()).value();
 			cam.transform_ = &transform[gm.mainCameraID()].value();
