@@ -4,7 +4,7 @@
 #include <st_shader.h>
 
 int main() {
-	ST::Window w(1600, 400);
+	ST::Window w(1600, 900);
 	w.ColorBg(0.2f, 0.2f, 0.2f); // Optional
 	
 	// ----------------------------------------------------------------
