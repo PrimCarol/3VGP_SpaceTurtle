@@ -312,6 +312,7 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	return false;
 }
 
+
 void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 
 	gm.drawcalls_ = 0;
@@ -414,5 +415,5 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 	}
 	
 
-	//glUseProgram(0);
+	glUseProgram(0);
 }

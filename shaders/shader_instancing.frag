@@ -84,7 +84,8 @@ out vec4 fragColor;
 vec4 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec4 CalcPointLight(PointLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
 vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, vec4 TexDiff, vec4 TexSpec);
-float CalcShadow(float dotLightNormal);
+//float CalcShadow(float dotLightNormal);
+float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal);
 
 void main(){
 	
@@ -124,8 +125,9 @@ void main(){
 	// Shadow Mapping ------ TEMPORAL --------
 	float shadow = 1.0;
 	if(u_haveShadowMap){
-		float dotLightTemp = dot(u_DirectLight[0].direction, normal_);
-		shadow = CalcShadow(dotLightTemp);
+//		float dotLightTemp = dot(u_DirectLight[0].direction, normal_);
+//		shadow = CalcShadow(dotLightTemp);
+		shadow = CalcShadow(FragPosLightSpace, u_DirectLight[0].direction, normal_);
 	}
 
 	// Point Lights
@@ -233,28 +235,41 @@ vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 modelPos, vec3 viewDir, ve
     return (ambient + diffuse + specular);
 }
 
-float CalcShadow(float dotLightNormal){
+//float CalcShadow(float dotLightNormal){
+//	
+//	vec3 pos = FragPosLightSpace.xyz * 0.5 + 0.5;
+//	if(pos.z > 1.0){ pos.z = 1.0; }
+//
+//	if(dotLightNormal > 1 ){return 0.0;}
+//
+//	//float bias = max(0.0005 * (1.0 - dotLightNormal), 0.0);
+//	float bias = 0.05;
+//
+//	float returnShadow = 0.0;
+////	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+////	for(int x = -1; x <= 1; ++x){
+////		for(int y = -1; y <= 1; ++y){
+////			float depth = texture(shadowMap, pos.xy + vec2(x,y) * texelSize).r;
+////			returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+////			
+////		}
+////	}
+////	returnShadow /= 9;
+//	float depth = texture(shadowMap, pos.xy).r;
+//	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
+//	
+//	return returnShadow;
+//}
+
+float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal){
+	vec3 projCoords = lightPos.xyz / lightPos.w;
+	projCoords = projCoords * 0.5 + 0.5;
+
+	float closestDepth = texture(shadowMap, projCoords.xy).r;
+	float currentDepth = projCoords.z;
 	
-	vec3 pos = FragPosLightSpace.xyz * 0.5 + 0.5;
-	if(pos.z > 1.0){ pos.z = 1.0; }
+	//float bias = 0.005;
+	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005); 
 
-	if(dotLightNormal > 1 ){return 0.0;}
-
-	//float bias = max(0.0005 * (1.0 - dotLightNormal), 0.0);
-	float bias = 0.05;
-
-	float returnShadow = 0.0;
-//	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-//	for(int x = -1; x <= 1; ++x){
-//		for(int y = -1; y <= 1; ++y){
-//			float depth = texture(shadowMap, pos.xy + vec2(x,y) * texelSize).r;
-//			returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
-//			
-//		}
-//	}
-//	returnShadow /= 9;
-	float depth = texture(shadowMap, pos.xy).r;
-	returnShadow += (depth + bias) < pos.z ? 0.0 : 1.0;
-	
-	return returnShadow;
+	return currentDepth - bias < closestDepth  ? 1.0 : 0.0; 
 }

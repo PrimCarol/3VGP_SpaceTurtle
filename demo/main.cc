@@ -56,6 +56,7 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	//ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("testObj");
