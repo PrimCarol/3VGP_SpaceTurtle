@@ -80,9 +80,9 @@ namespace ST {
 		//std::shared_ptr<ST::Program> frameProgram;
 
 		// ***************** Shadow Mapping Test ***************
-		bool haveShadowMap_;
-		ST::RenderTarget shadowMap;
-		glm::mat4 shadowMappingMatTest;
+		//bool haveShadowMap_;
+		//ST::RenderTarget shadowMap;
+		//glm::mat4 shadowMappingMatTest;
 
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);

@@ -24,6 +24,7 @@ GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
 	glGenRenderbuffers(1, &rbo);
+	glGetIntegerv(GL_VIEWPORT, last_viewport);
 	renderType_ = RT_Color;
 	width_ = 0;
 	height_ = 0;
@@ -39,18 +40,19 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_.init(width_, height_, t, dt, f);
-	textureToRender_.set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
-	textureToRender_.set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
-	textureToRender_.bind();
+	textureToRender_ = std::make_shared<ST::Texture>();
+	textureToRender_->init(width_, height_, t, dt, f);
+	textureToRender_->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
+	textureToRender_->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_->bind();
 
 	if (f == ST::Texture::F_DEPTH) {
 		renderType_ = RT_Depth;
 	}
 
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_.getTypeGL(), textureToRender_.getID(), 0);
-	textureToRender_.set_data(0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_->getTypeGL(), textureToRender_->getID(), 0);
+	textureToRender_->set_data(0);
 
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
@@ -73,7 +75,7 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_.unbind();
+	textureToRender_->unbind();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -83,7 +85,7 @@ GLuint ST::RenderTarget::getID(){
 }
 
 GLuint ST::RenderTarget::textureID(){
-	return textureToRender_.getID();
+	return textureToRender_->getID();
 }
 
 void ST::RenderTarget::start() {
@@ -118,5 +120,17 @@ ST::RenderTarget::~RenderTarget(){
 }
 
 ST::RenderTarget::RenderTarget(const RenderTarget& o){
+	height_ = o.height_;
+	width_ = o.width_;
+	renderType_ = o.renderType_;
 
+	last_viewport[0] = o.last_viewport[0];
+	last_viewport[1] = o.last_viewport[1];
+	last_viewport[2] = o.last_viewport[2];
+	last_viewport[3] = o.last_viewport[3];
+
+	textureToRender_ = o.textureToRender_;
+
+	internalID = o.internalID;
+	rbo = o.rbo;
 }

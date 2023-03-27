@@ -96,6 +96,7 @@ namespace ST {
         void set_data(const void* data/*, unsigned int mipmap_LOD = 0*/);
 
 		~Texture();
+		Texture(const Texture& o);
 	private:
 		GLuint internalID;
 
@@ -116,8 +117,6 @@ namespace ST {
 
         int rows;
         int cols;
-
-		Texture(const Texture& o);
 	};
 }
 

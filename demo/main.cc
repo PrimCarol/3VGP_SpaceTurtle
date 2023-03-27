@@ -74,8 +74,7 @@ int main() {
 
 	// --------------------------
 	// **************** TEST *****************
-	//ST::RenderTarget renderTargetTest;
-	//renderTargetTest.setUp(w.getWindowsWidth(), w.getWindowsHeight()/*, ST::Texture::F_DEPTH*/);
+	ST::SystemLight lightSystem;
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -86,19 +85,11 @@ int main() {
 		ST::SystemCamera::UpdateCamera(gm);
 
 		ST::SystemTransform::UpdateTransforms(gm);
-		ST::SystemLight::CompileLights(gm, *gm.basicProgram);
-		ST::SystemLight::CompileShadows(gm); // <---- Testing
-		
-		//renderTargetTest.start();
-		//ST::SystemRender::Render(gm);
-		//renderTargetTest.end();
+
+		lightSystem.CompileShadows(gm);
+		lightSystem.CompileLights(gm, *gm.basicProgram);
 		
 		ST::SystemRender::Render(gm);
-
-
-		//ImGui::Begin("View", 0, ImGuiWindowFlags_NoInputs);
-		//ImGui::Image((void*)(intptr_t)renderTargetTest.textureID(), ImGui::GetWindowSize());
-		//ImGui::End();
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

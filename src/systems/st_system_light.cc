@@ -10,6 +10,10 @@
 
 #include <st_program.h>
 
+ST::SystemLight::SystemLight(){
+
+}
+
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
 
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
@@ -164,27 +168,41 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	idUniform = thisProgram.getUniform("u_numSpotLights");
 	glUniform1i(idUniform, countSpotLights);
 
+	// Shadow Mapping
+	if (shadowMaps_.size() > 0) {
+		glUniform1i(thisProgram.getUniform("u_haveShadowMap"), true);
+
+		glUniform1i(thisProgram.getUniform("shadowMap"), 3);
+		glActiveTexture(GL_TEXTURE0 + 3);
+		glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
+
+		GLuint lighSpaceMatrix = thisProgram.getUniform("lightSpaceMatrix");
+		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &shadowMaps_[0].matrix_[0][0]);
+	}else {
+		glUniform1i(thisProgram.getUniform("u_haveShadowMap"), false);
+	}
+
 	//glUseProgram(0);
 }
-
-#include <imgui.h>
 
 void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 
-	gm.shadowMapping->use();
+	gm.shadowMapping->use(); // El Program, seguramente sacarlo del RenderSystem.
 
 	int countDirectionalLights = 0;
 	int countPointLights = 0;
 	int countSpotLights = 0;
 
 	GLint idUniform = -1;
-	gm.haveShadowMap_ = false;
 
-	static glm::vec2 camShadowSize = glm::vec2(200.0f,200.0f);
+	static glm::vec2 camShadowSize = glm::vec2(100.0f,100.0f);
 	static glm::vec2 camShadowDistance = glm::vec2(1.0f, 30.0f);
+
+	std::vector<Light_ShadowMap> shadowMapsLocal;
+	shadowMaps_.clear();
 
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
@@ -193,54 +211,61 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 			if (thisLight.type_ == ST::Directional) {
 
-				//glm::mat4 lightSpaceMatrix;
-
+				Light_ShadowMap thisLightShadow;
+				ST::RenderTarget thisLightRenderTarget;
+				thisLightRenderTarget.setUp(720, 720, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+				
 				ST::CameraComponent cam;
-				
-				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
-				// que el up apunti cap a laa camara principal.
-				
-
-				// Sacada anteriormente con el profe
-				//cam.lookAt(thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // <-- La opcion mas cercana.
-			
-				//cam.lookAt(2.0f * thisTrans.getRotation(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-				//cam.lookAt(thisTrans.getUp(), -thisTrans.getUp(), glm::vec3(0.0f, -1.0f, 0.0f)); // <--- No es mala esta.
-
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-				gm.shadowMappingMatTest = cam.projection * cam.view;
+				thisLightShadow.matrix_ = cam.projection * cam.view;
 
 
 				idUniform = gm.shadowMapping->getUniform("lightSpaceMatrix");
-				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &gm.shadowMappingMatTest[0][0]);
+				glUniformMatrix4fv(idUniform, 1, GL_FALSE, &thisLightShadow.matrix_[0][0]);
 
-				gm.shadowMap.start();
 				//Render Scene.
+				thisLightRenderTarget.start();
 				//glCullFace(GL_FRONT); // <--- Test
 				glDisable(GL_CULL_FACE);
 				setUpRender(gm);
 				glEnable(GL_CULL_FACE);
 				glCullFace(GL_BACK); // <--- Test
-				gm.shadowMap.end();
+				thisLightRenderTarget.end();
 
-				gm.haveShadowMap_ = true;
+
+				thisLightShadow.renderTarget_.push_back(thisLightRenderTarget);
+				shadowMapsLocal.push_back(thisLightShadow);
+
+
+				/*ImGui::Begin("ViewDepth");
+				ImGui::Image((void*)(intptr_t)thisLightRenderTarget.textureID(), ImVec2(192, 120));
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Vertical", &camShadowSize.y);
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Far", &camShadowDistance.y);
+				ImGui::End();*/
 			}
-
 		}
 	}
-
-	ImGui::Begin("ViewDepth");
-	ImGui::Image((void*)(intptr_t)gm.shadowMap.textureID(), ImVec2(192,120));
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::DragFloat("Vertical", &camShadowSize.y);
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
-	ImGui::SetNextItemWidth(50.0f);
-	ImGui::DragFloat("Far", &camShadowDistance.y);
-	ImGui::End();
+	shadowMaps_ = shadowMapsLocal;
+	if (shadowMaps_.size() > 0) {
+		ImGui::Begin("ViewDepth");
+		ImGui::Image((void*)(intptr_t)shadowMaps_[0].renderTarget_[0].textureID(), ImVec2(192, 120));
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragFloat("Vertical", &camShadowSize.y);
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragFloat("Far", &camShadowDistance.y);
+		ImGui::End();
+	}
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
@@ -302,4 +327,8 @@ void ST::SystemLight::doRender(std::vector<Light_MyObjToRender>& objs){
 		objs[lastIndice].render_->mesh->render();
 		instancing.clear();
 	}
+}
+
+ST::SystemLight::~SystemLight(){
+
 }

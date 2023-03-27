@@ -2,7 +2,7 @@
 #define _SPACE_TURTLE_AUDIO_H_ 1
 
 #include <st_texture.h>
-
+#include <memory>
 
 
 namespace ST {
@@ -29,7 +29,9 @@ namespace ST {
 		void start();
 		void end();
 
-		ST::Texture textureToRender_;
+		std::shared_ptr<ST::Texture> textureToRender_;
+
+		RenderTarget(const RenderTarget& o);
 		~RenderTarget();
 	private:
 		int width_;
@@ -40,7 +42,6 @@ namespace ST {
 		GLuint internalID;
 		unsigned int rbo;
 
-		RenderTarget(const RenderTarget& o);
 	};
 }
 
