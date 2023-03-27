@@ -122,23 +122,34 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 	
 	std::vector<InstanceInfo> instancing;
 
+	GLuint actualProgram = 0;
 	GLuint actualMeshRendering = 0;
+	
+	bool actualhaveTexture = false;
 	GLuint actualTextureRendering = 0;
+
 	int lastIndice = 0;
 	bool firstTime = true;
+
+	bool popInstances = false;
 
 	for (int i = 0; i < objs.size(); i++){
 
 		if (firstTime) {
 			actualMeshRendering = objs[i].render_->mesh->getID();
+			const ST::Program* p = objs[i].render_->material.getProgram();
+			if (p) {
+				actualProgram = p->getID();
+			}
 			if (objs[i].render_->material.haveAlbedo) {
-				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				actualhaveTexture = true;
 				objs[i].render_->material.getAlbedo()->bind();
+				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
 			}
 			firstTime = false;
 		}
 
-		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
+		/*if (objs[i].render_->mesh->getID() != actualMeshRendering) {
 			gm.drawcalls_++;
 
 				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
@@ -153,7 +164,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
 				gm.drawcalls_++;
 
-					setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 				objs[lastIndice].render_->mesh->setInstanceData(instancing);
 				objs[lastIndice].render_->mesh->render();
 				instancing.clear();
@@ -174,7 +185,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 				objs[lastIndice].render_->mesh->render();
 				instancing.clear();
 			}
-		}
+		}*/
 
 		//if(!objs[i].render_->material.haveAlbedo && objs[i].render_->mesh->getID() != actualMeshRendering)
 		//{
@@ -189,6 +200,36 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		//		instancing.clear();
 		//	}
 		//}
+
+		// Si no tienen el mismo program.
+		const ST::Program* p = objs[i].render_->material.getProgram();
+		if (p && p->getID() != actualProgram) {
+			popInstances = true;
+			actualProgram = p->getID();
+		}
+
+		// Si unos tenian textura y este no, o al reves.
+		if (objs[i].render_->material.haveAlbedo != actualhaveTexture) {
+			popInstances = true;
+			actualhaveTexture = objs[i].render_->material.haveAlbedo;
+		}
+
+		// Si tienen una mesh distinta.
+		if (objs[i].render_->mesh->getID() != actualMeshRendering) {
+			popInstances = true;
+			actualMeshRendering = objs[i].render_->mesh->getID();
+		}
+
+		if (popInstances) {
+			gm.drawcalls_++;
+
+			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
+			objs[lastIndice].render_->mesh->setInstanceData(instancing);
+			objs[lastIndice].render_->mesh->render();
+			instancing.clear();
+
+			popInstances = false;
+		}
 
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),
@@ -212,10 +253,6 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* t,
 									 MyCamera& cam, ST::GameObj_Manager& gm){
 	const ST::Program* p = nullptr;
-
-	//static GLuint lastTextureAlbedo = -1;
-	//static GLuint lastTextureNormal = -1;
-	//static GLuint lastTextureSpecular = -1;
 
 	p = mat.getProgram();
 	if (p) {
