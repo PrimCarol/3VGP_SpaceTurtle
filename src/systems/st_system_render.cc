@@ -136,76 +136,29 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 	for (int i = 0; i < objs.size(); i++){
 
 		if (firstTime) {
-			actualMeshRendering = objs[i].render_->mesh->getID();
 			const ST::Program* p = objs[i].render_->material.getProgram();
 			if (p) {
 				actualProgram = p->getID();
+			}else {
+				//printf("Object don't have program.\n");
+				continue;
 			}
+			actualMeshRendering = objs[i].render_->mesh->getID();
 			if (objs[i].render_->material.haveAlbedo) {
 				actualhaveTexture = true;
-				objs[i].render_->material.getAlbedo()->bind();
+				//objs[i].render_->material.getAlbedo()->bind();
 				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
 			}
 			firstTime = false;
 		}
 
-		/*if (objs[i].render_->mesh->getID() != actualMeshRendering) {
-			gm.drawcalls_++;
-
-				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
-			objs[lastIndice].render_->mesh->setInstanceData(instancing);
-			objs[lastIndice].render_->mesh->render();
-			instancing.clear();
-
-			actualMeshRendering = objs[i].render_->mesh->getID();
-		}
-
-		if (objs[i].render_->material.haveAlbedo) {
-			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
-				gm.drawcalls_++;
-
-				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
-				objs[lastIndice].render_->mesh->setInstanceData(instancing);
-				objs[lastIndice].render_->mesh->render();
-				instancing.clear();
-
-				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
-				objs[i].render_->material.getAlbedo()->bind();
-			}
-		}
-		else
-		{
-			if (actualTextureRendering != 0) {
-				actualTextureRendering = 0;
-
-				gm.drawcalls_++;
-
-				setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
-				objs[lastIndice].render_->mesh->setInstanceData(instancing);
-				objs[lastIndice].render_->mesh->render();
-				instancing.clear();
-			}
-		}*/
-
-		//if(!objs[i].render_->material.haveAlbedo && objs[i].render_->mesh->getID() != actualMeshRendering)
-		//{
-		//	if (actualTextureRendering != 0) {
-		//		actualTextureRendering = 0;
-
-		//		gm.drawcalls_++;
-
-		//		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
-		//		objs[lastIndice].render_->mesh->setInstanceData(instancing);
-		//		objs[lastIndice].render_->mesh->render();
-		//		instancing.clear();
-		//	}
-		//}
-
 		// Si no tienen el mismo program.
 		const ST::Program* p = objs[i].render_->material.getProgram();
-		if (p && p->getID() != actualProgram) {
-			popInstances = true;
-			actualProgram = p->getID();
+		if (p) {
+			if (p->getID() != actualProgram) {
+				popInstances = true;
+				actualProgram = p->getID();
+			}
 		}
 
 		// Si unos tenian textura y este no, o al reves.
@@ -255,7 +208,7 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	const ST::Program* p = nullptr;
 
 	p = mat.getProgram();
-	if (p) {
+	//if (p) {
 		p->use();
 
 		// ------ Camara -------
@@ -345,8 +298,8 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &gm.shadowMappingMatTest[0][0]);*/
 
 		return true;
-	}
-	return false;
+	//}
+	//return false;
 }
 
 
