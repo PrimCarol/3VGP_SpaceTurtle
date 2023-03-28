@@ -28,6 +28,7 @@ namespace ST {
 		struct ComponentVector {
 			virtual void grow(size_t new_size) = 0;
 			virtual void deleteOn(int index) = 0;
+			virtual ~ComponentVector() {}
 		};
 		template<typename T>
 		struct ComponentListImpl : ComponentVector {
