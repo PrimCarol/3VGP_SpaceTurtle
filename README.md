@@ -6,23 +6,23 @@
 
 <h2>🔶 Project features </h2>
 
-  - Entity Component System (ECS)<br>
+  - Entity Component System (ECS) <br>
   - Obj Instancing <br>
   - Hierarchy Transformations <br>
-  - Load OBJ<br>
-  - Translucent<br>
-  - Lights<br>
-  - ShadowMapping<br>
-  - Camera Movement (FPS style)<br>
-  - Load Textures<br>
-  - Texture Atlas<br>
-  - Material Configuration<br>
-  - Picking System<br>
+  - Load OBJ <br>
+  - Lights (Directional, Point & Spot)<br>
+  - ShadowMapping <br>
+  - Load Textures <br>
+  - Texture Atlas <br>
+  - Material Configuration <br>
+  - Translucent <br>
+  - Picking System <br>
 
 <h2>🔶 Future additions </h2>
-  - PBR Materials<br>
-  - Save/Load Scene<br>
-  - VR Port<br>
+
+  - PBR Materials <br>
+  - Save/Load Scene <br>
+  - VR Port <br>
 
 <hr>
 
