@@ -146,7 +146,6 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 			actualMeshRendering = objs[i].render_->mesh->getID();
 			if (objs[i].render_->material.haveAlbedo) {
 				actualhaveTexture = true;
-				//objs[i].render_->material.getAlbedo()->bind();
 				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
 			}
 			firstTime = false;
@@ -162,9 +161,21 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		// Si unos tenian textura y este no, o al reves.
-		if (objs[i].render_->material.haveAlbedo != actualhaveTexture) {
-			popInstances = true;
+		if (objs[i].render_->material.haveAlbedo) {
+			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
+				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				popInstances = true;
+			}
+			if (objs[i].render_->material.haveAlbedo != actualhaveTexture) {
+				popInstances = true;
+			}
 			actualhaveTexture = objs[i].render_->material.haveAlbedo;
+		} else {
+			if (actualhaveTexture) {
+				popInstances = true;
+				actualTextureRendering = 0;
+			}
+			actualhaveTexture = false;
 		}
 
 		// Si tienen una mesh distinta.
@@ -405,5 +416,5 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 	}
 	
 
-	glUseProgram(0);
+	//glUseProgram(0);
 }

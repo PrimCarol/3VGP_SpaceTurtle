@@ -55,14 +55,14 @@ int main() {
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
-	//ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-	//ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("testObj");
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&otherTexture);
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
