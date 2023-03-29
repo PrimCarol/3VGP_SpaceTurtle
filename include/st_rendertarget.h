@@ -6,6 +6,9 @@
 
 
 namespace ST {
+
+	class Program;
+
 	class RenderTarget {
 	public:
 
@@ -20,6 +23,9 @@ namespace ST {
 			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
 			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
+
+		void createQuadToRender();
+		void renderOnScreen(ST::Program& Shader);
 
 		GLuint getID();
 		GLuint textureID();
@@ -42,6 +48,7 @@ namespace ST {
 		GLuint internalID;
 		unsigned int rbo;
 
+		GLuint quadID;
 	};
 }
 

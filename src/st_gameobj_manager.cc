@@ -117,9 +117,9 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->attach(fragmentShadowMapping);
 	shadowMapping->link();
 
-	//haveShadowMap_ = false;
-	//shadowMap.setUp(2560, 2560, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
-	//shadowMap.setUp(16, 16, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+	// ------- Create FrameBuffer Program -------
+	frameProgram = std::make_unique<ST::Program>();
+	frameProgram->setUp("../shaders/renderTarget.vert", "../shaders/renderTarget.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

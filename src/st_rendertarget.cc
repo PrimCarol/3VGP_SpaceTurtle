@@ -1,6 +1,8 @@
 #include "st_rendertarget.h"
 #include <stdio.h>
 
+#include <st_program.h>
+
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 	GLenum aux = GL_NONE;
 	switch (rt){
@@ -28,6 +30,8 @@ ST::RenderTarget::RenderTarget(){
 	renderType_ = RT_Color;
 	width_ = 0;
 	height_ = 0;
+
+	quadID = 0;
 }
 
 void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -78,6 +82,49 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 	textureToRender_->unbind();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ST::RenderTarget::createQuadToRender(){
+
+	// El Quad para renderizar.
+	float quadVertices[] = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		 1.0f, -1.0f,  1.0f, 0.0f,
+		 1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	const GLuint quadIndices[] = {
+		0, 2, 1,
+		0, 3, 2
+	};
+
+	GLuint quadVBO;
+	glGenVertexArrays(1, &quadID);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadID);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+}
+
+void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
+	if (quadID != 0) {
+		glUseProgram(Shader.getID());
+		glUniform1i(glGetUniformLocation(Shader.getID(), "screenTexture"), 0);
+
+		glBindVertexArray(quadID);
+		glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 }
 
 GLuint ST::RenderTarget::getID(){

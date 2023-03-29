@@ -76,6 +76,10 @@ int main() {
 	// --------------------------
 	// **************** TEST *****************
 	ST::SystemLight lightSystem;
+
+	ST::RenderTarget myRenderTarget;
+	myRenderTarget.setUp(w.getWindowsWidth(), w.getWindowsHeight());
+	myRenderTarget.createQuadToRender();
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -90,7 +94,11 @@ int main() {
 		lightSystem.CompileShadows(gm);
 		lightSystem.CompileLights(gm, *gm.basicProgram);
 		
+		myRenderTarget.start();
 		ST::SystemRender::Render(gm);
+		myRenderTarget.end();
+
+		myRenderTarget.renderOnScreen(*gm.frameProgram);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);
