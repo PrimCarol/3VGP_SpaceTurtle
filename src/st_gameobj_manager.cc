@@ -66,6 +66,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->setUp("../shaders/shadowMapping.vert", "../shaders/shadowMapping.frag");
 
 	// ------- Create FrameBuffer Program -------
+	framebufferProgram = std::make_unique<ST::Program>();
+	framebufferProgram->setUp("../shaders/frameBuffer.vert", "../shaders/frameBuffer.frag");
+
+	// ------- Create PostProces BLUR Program -------
 	postproces_blur = std::make_unique<ST::Program>();
 	postproces_blur->setUp("../shaders/postproces_blur.vert", "../shaders/postproces_blur.frag");
 }

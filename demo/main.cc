@@ -81,7 +81,7 @@ int main() {
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
-	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.4f);
+	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 
@@ -110,7 +110,7 @@ int main() {
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 
-		myRenderTarget.renderOnScreen(*gm.postproces_blur);
+		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

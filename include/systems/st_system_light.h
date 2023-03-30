@@ -32,6 +32,8 @@ namespace ST {
 		void CompileShadows(ST::GameObj_Manager& gm);
 		void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
 
+		glm::ivec2 textureSize_;
+
 		~SystemLight();
 	private:
 		
