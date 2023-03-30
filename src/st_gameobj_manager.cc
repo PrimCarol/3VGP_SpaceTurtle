@@ -59,7 +59,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Unlite Program -------
 	unliteProgram = std::make_unique<ST::Program>();
-	shaderError = false;
+	unliteProgram->setUp("../shaders/shader_unlite.vert", "../shaders/shader_unlite.frag");
+	/*shaderError = false;
 
 	ST::Shader vertexUnlite(E_VERTEX_SHADER);
 	GLchar* textVertexUnlite = (GLchar*)ST::Engine::readFile("../shaders/shader_unlite.vert");
@@ -85,37 +86,38 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	unliteProgram->attach(vertexUnlite);
 	unliteProgram->attach(fragmentUnlite);
-	unliteProgram->link();
+	unliteProgram->link();*/
 
 	// ------- Create Shadow Mapping Program -------
 	shadowMapping = std::make_unique<ST::Program>();
-	shaderError = false;
+	shadowMapping->setUp("../shaders/shadowMapping.vert", "../shaders/shadowMapping.frag");
+	//shaderError = false;
 
-	ST::Shader vertexShadowMapping(E_VERTEX_SHADER);
-	GLchar* textVertexShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.vert");
-	if (!textVertexShadowMapping) {
-		shaderError = true;
-		printf("Error load Vertex Shader ShadowMapping");
-	}
+	//ST::Shader vertexShadowMapping(E_VERTEX_SHADER);
+	//GLchar* textVertexShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.vert");
+	//if (!textVertexShadowMapping) {
+	//	shaderError = true;
+	//	printf("Error load Vertex Shader ShadowMapping");
+	//}
 
-	ST::Shader fragmentShadowMapping(E_FRAGMENT_SHADER);
-	GLchar* textFragmentShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.frag");
-	if (!textFragmentShadowMapping) {
-		shaderError = true;
-		printf("Error load Fragment Shader ShadowMapping");
-	}
+	//ST::Shader fragmentShadowMapping(E_FRAGMENT_SHADER);
+	//GLchar* textFragmentShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.frag");
+	//if (!textFragmentShadowMapping) {
+	//	shaderError = true;
+	//	printf("Error load Fragment Shader ShadowMapping");
+	//}
 
-	if (shaderError) {
-		textVertexShadowMapping = (GLchar*)ST::basic_vShader_text;
-		textFragmentShadowMapping = (GLchar*)ST::basic_fShader_text;
-	}
+	//if (shaderError) {
+	//	textVertexShadowMapping = (GLchar*)ST::basic_vShader_text;
+	//	textFragmentShadowMapping = (GLchar*)ST::basic_fShader_text;
+	//}
 
-	vertexShadowMapping.loadSource(textVertexShadowMapping);
-	fragmentShadowMapping.loadSource(textFragmentShadowMapping);
+	//vertexShadowMapping.loadSource(textVertexShadowMapping);
+	//fragmentShadowMapping.loadSource(textFragmentShadowMapping);
 
-	shadowMapping->attach(vertexShadowMapping);
-	shadowMapping->attach(fragmentShadowMapping);
-	shadowMapping->link();
+	//shadowMapping->attach(vertexShadowMapping);
+	//shadowMapping->attach(fragmentShadowMapping);
+	//shadowMapping->link();
 
 	// ------- Create FrameBuffer Program -------
 	frameProgram = std::make_unique<ST::Program>();

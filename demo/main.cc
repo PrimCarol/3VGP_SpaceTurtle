@@ -31,25 +31,25 @@ int main() {
 	ST::Quad quad_mesh;
 	//test_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	//int HOWMANY = 50000;
+	int HOWMANY = 10000;
 
-	//std::vector<ST::GameObj> objects;
-	//for (int i = 0; i < HOWMANY; i++){
-	//	objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
-	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-	//	objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
-	//	objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
-	//	objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-	//	objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(-300.0f, 300.0f)));
-	//	objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);
-	//	
-	//}
+	std::vector<ST::GameObj> objects;
+	for (int i = 0; i < HOWMANY; i++){
+		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
+		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
+		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
+		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
+		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-300.0f,300.0f), ST::Engine::getRandom(-300.0f, 300.0f), ST::Engine::getRandom(-300.0f, 300.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);
+		
+	}
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
