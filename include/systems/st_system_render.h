@@ -27,10 +27,10 @@ namespace ST {
 	private:
 		SystemRender();
 
-		static void setUpRender(std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform, MyCamera& cam);
-		static void doRender(std::vector<MyObjToRender>& objs, MyCamera& cam);
-
-		static bool setUpUniforms(ST::Material& mat, ST::TransformComponent* t, MyCamera& cam);
+		//using setupUniformsCallType = bool (ST::Material& mat, ST::TransformComponent* t, MyCamera& cam);
+		//static void setUpRender(ST::GameObj_Manager& gm/*, std::vector<std::optional<ST::RenderComponent>>& render, std::vector<std::optional<ST::TransformComponent>>& transform*/, MyCamera& cam);
+		static void doRender(std::vector<MyObjToRender>& objs, MyCamera& cam, ST::GameObj_Manager& gm);
+		static bool setUpUniforms(ST::Material& mat, ST::TransformComponent* t, MyCamera& cam, ST::GameObj_Manager& gm);
 
 		//~SystemRender();
 		SystemRender(const SystemRender& o);

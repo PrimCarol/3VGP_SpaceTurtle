@@ -1,7 +1,7 @@
 #include "st_buffer.h"
 
 ST::Buffer::Buffer(){
-	gladLoadGL();
+	//gladLoadGL();
 	sizeData = 0;
 	glGenBuffers(1, &internalID);
 }

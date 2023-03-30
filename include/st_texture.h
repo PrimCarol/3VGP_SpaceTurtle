@@ -9,7 +9,7 @@ namespace ST {
 	public:
 
         enum TextType{
-            T_Invalid,
+            //T_Invalid,
             T_1D,
             T_2D,
             T_3D,
@@ -28,6 +28,16 @@ namespace ST {
             F_DEPTH32
         };
 
+        enum DataType {
+            DT_U_BYTE,
+            DT_BYTE,
+            DT_U_SHORT,
+            DT_SHORT,
+            DT_U_INT,
+            DT_INT,
+            DT_FLOAT,
+        };
+
         enum Filter {
             //valid for minification & magnification
             F_NEAREST,
@@ -42,13 +52,20 @@ namespace ST {
         enum Wrap {
             W_REPEAT,
             W_MIRRORED_REPEAT,
-            W_CLAMP_TO_EDGE
+            W_CLAMP_TO_EDGE,
+            W_CLAMP_TO_BORDER
         };
 
 		Texture();
 		
-		bool loadSource(const char* shaderText, TextType t = TextType::T_2D, int mipmaps = 0);
-		
+		bool loadSource(const char* shaderText, TextType t = TextType::T_2D, Format f = F_RGBA/*, int mipmaps = 0*/);
+        void init(int width, int height, TextType t = TextType::T_2D, DataType dt = DT_U_BYTE, Format f = Format::F_RGBA);
+
+        void bind();
+        void unbind();
+
+        void set_Type(TextType t) { type_ = t; }
+        void set_dataType(DataType dt) { dataType_ = dt; }
         void set_min_filter(Filter f) { min_filter_ = f; }
         void set_mag_filter(Filter f) { mag_filter_ = f; }
         void set_wrap_s(Wrap c) { wrap_s_ = c; }
@@ -61,6 +78,11 @@ namespace ST {
         const GLuint getID() const;
 
         const TextType getType() const;
+        const GLenum getTypeGL() const;
+        const Format getFormat() const;
+        const GLenum getFormatGL() const;
+        const DataType getDataType() const;
+        const GLenum getDataTypeGL() const;
         const int width() const;
         const int height() const;
 
@@ -69,10 +91,13 @@ namespace ST {
 
         bool generateMipmap;
         bool forceNoMipmap;
+        float borderColor[4];
+
+        void set_data(const void* data/*, unsigned int mipmap_LOD = 0*/);
 
 		~Texture();
+		Texture(const Texture& o);
 	private:
-        void set_data(const Format f, const void* data, unsigned int mipmap_LOD = 0);
 		GLuint internalID;
 
         Wrap wrap_s_;
@@ -82,15 +107,16 @@ namespace ST {
         Filter min_filter_;
         Filter mag_filter_;
 
+        DataType dataType_;
         TextType type_;
+        Format format_;
+
         int width_;
         int height_;
         int depth_;
 
         int rows;
         int cols;
-
-		Texture(const Texture& o);
 	};
 }
 

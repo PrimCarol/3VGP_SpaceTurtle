@@ -64,8 +64,9 @@ void DrawVec3Control(const std::string& label, glm::vec3& values, float resetVal
 
 	ImGui::PushID(label.c_str());
 
-	float cells_size = 60.0f;
-	float button_size = 20.0f;
+	//float cells_size = 60.0f;
+	const float cells_size = ImGui::GetContentRegionAvail().x / 5;
+	const float button_size = 20.0f;
 	
 	ImGui::PushItemWidth(cells_size); // Tamaño de las casillas
 	
@@ -151,6 +152,26 @@ ST::LightType lightStringToEnum(const char* c) {
 	}
 }
 
+const char* cameraEnumToString(ST::CameraType t) {
+	switch (t) {
+	case ST::kCam_Perspective:
+		return "Perspective";
+		break;
+	case ST::kCam_Orthographic:
+		return "Orthographic";
+		break;
+	}
+}
+
+ST::CameraType cameraStringToEnum(const char* c) {
+	if (c == "Perspective") {
+		return ST::kCam_Perspective;
+	}
+	if (c == "Orthographic") {
+		return ST::kCam_Orthographic;
+	}
+}
+
 #include <imgui_internal.h>
 #include <ImGuizmo.h>
 
@@ -187,9 +208,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 	ImGui::Begin("Inspector");
 	if (objSeletected >= 0 && objSeletected < gm.size() ) {
 		ImGui::Text("Obj ID -> %d ", objSeletected);
-		ImGui::Spacing(); ImGui::Spacing();
 	
 		if (gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			ST::TransformComponent* trans = &gm.getComponentVector<ST::TransformComponent>()->at(objSeletected).value();
 			if (ImGui::TreeNodeEx("Transform")) {
 					
@@ -200,11 +221,14 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				trans->setPosition(pos);
 				// Rotation
 				glm::vec3 rot = trans->getRotation();
+				rot.x *= 180 / 3.1416f;
+				rot.y *= 180 / 3.1416f;
+				rot.z *= 180 / 3.1416f;
 				//ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
 				DrawVec3Control("Rot", rot);
-				trans->setRotateX(rot.x);
-				trans->setRotateY(rot.y);
-				trans->setRotateZ(rot.z);
+				trans->setRotateX(rot.x * (3.1416f / 180));
+				trans->setRotateY(rot.y * (3.1416f / 180));
+				trans->setRotateZ(rot.z * (3.1416f / 180));
 				// Scale
 				glm::vec3 sca = trans->getScale();
 				//ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
@@ -215,7 +239,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 
 			// ---- Guizmos ----
-			if (gm.mainCameraID >= 0) {
+			if (gm.mainCameraID() != -1) {
 				ImGuizmo::BeginFrame();
 				const ImGuiViewport* viewport = ImGui::GetMainViewport();
 				ImGuiIO& io = ImGui::GetIO();
@@ -224,10 +248,13 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				float tempMatrixGuizmo[16];
 				glm::vec3 pos = trans->getPosition();
 				glm::vec3 rot = trans->getRotation();
+				rot.x *= 180 / 3.1416f;
+				rot.y *= 180 / 3.1416f;
+				rot.z *= 180 / 3.1416f;
 				glm::vec3 sca = trans->getScale();
 
-				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value()) {
-					ST::CameraComponent* tempCam = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value()) {
+					ST::CameraComponent* tempCam = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 					if (tempCam) {
 						ImGuizmo::RecomposeMatrixFromComponents(&pos.x, &rot.x, &sca.x, tempMatrixGuizmo);
 						ImGuizmo::Manipulate((const float*)&tempCam->view, (const float*)&tempCam->projection,
@@ -236,22 +263,24 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					}
 				}
 				trans->setPosition(pos);
-				trans->setRotateX(rot.x);
-				trans->setRotateY(rot.y);
-				trans->setRotateZ(rot.z);
+				trans->setRotateX(rot.x * (3.1416f / 180));
+				trans->setRotateY(rot.y * (3.1416f / 180));
+				trans->setRotateZ(rot.z * (3.1416f / 180));
 				trans->setScale(sca);
 			}
 			// --------
 		}
 			
-		ImGui::Spacing(); ImGui::Spacing();
+		
 
 		if (gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Render")) {
 
 				ST::RenderComponent* render = &gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).value();
 
 				ImGui::Checkbox("Visible", &render->visible_);
+				ImGui::Checkbox("CastShadow", &render->castShadow_);
 				ImGui::Checkbox("Translucent", &render->material.translucent);
 				ImGui::Spacing();
 				ImGui::Text("- Color -");
@@ -316,9 +345,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		//	}
 		//}
 
-		ImGui::Spacing(); ImGui::Spacing();
-
 		if (gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Collider")) {
 				ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
 
@@ -333,16 +361,15 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				collider->setMaxPoint(max);
 
 				//collider->draw(); // <<----- ????
+				ImGui::TreePop();
 			}
 		}
-
-
-		ImGui::Spacing(); ImGui::Spacing();
 
 		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};
 		const char* typeLightSelected = NULL;
 
 		if (gm.getComponentVector<ST::LightComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Light")) {
 
 				ST::LightComponent* light = &gm.getComponentVector<ST::LightComponent>()->at(objSeletected).value();
@@ -418,6 +445,52 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			}
 		}
 
+		const char* typeCameraChar[] = { "Perspective", "Orthographic" };
+		const char* typeCameraSelected = NULL;
+
+		if (gm.getComponentVector<ST::CameraComponent>()->at(objSeletected).has_value()) {
+			ImGui::Spacing(); ImGui::Spacing();
+			if (ImGui::TreeNodeEx("Camera")) {
+
+				ST::CameraComponent* camera = &gm.getComponentVector<ST::CameraComponent>()->at(objSeletected).value();
+
+				// ---------- Selector de Typo de Camera ----------
+				typeCameraSelected = cameraEnumToString(camera->type);
+				ImGui::SetNextItemWidth(120);
+				if (ImGui::BeginCombo("##combo", typeCameraSelected)) {
+					for (int n = 0; n < IM_ARRAYSIZE(typeCameraChar); n++) {
+						bool is_selected = (typeCameraSelected == typeCameraChar[n]);
+						if (ImGui::Selectable(typeCameraChar[n], is_selected)) {
+							typeCameraSelected = typeCameraChar[n];
+							camera->type = cameraStringToEnum(typeCameraSelected);
+						}
+						if (is_selected) {
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+				if (camera->type == ST::kCam_Perspective) {
+					ImGui::DragFloat("Fov", &camera->fov_);
+					ImGui::DragFloat("Ratio", &camera->ratio_);
+				}else {
+					ImGui::DragFloat("Horizontal", &camera->horizontal_);
+					ImGui::DragFloat("Vertical", &camera->vertical_);
+				}
+				ImGui::DragFloat("Near", &camera->nearPlane_);
+				ImGui::DragFloat("Far", &camera->farPlane_);
+
+				if (ImGui::Button("Set Main")) {
+					ST::GameObj thisCameraObj(objSeletected, gm);
+					gm.setMainCamera(thisCameraObj);
+				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::Spacing(); ImGui::Spacing();
 		ImGui::BeginChild("Footer Zone");
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
 		if (ImGui::Button("Delete")) {
@@ -436,7 +509,8 @@ void ShowChilds(ST::GameObj_Manager& gm, const ST::HierarchyComponent& parent) {
 	char buffer[50];
 	for (int i = 0; i < parent.childSize(); i++) {
 		if (nameComponents->at(parent.getChildID(i)).has_value()) {
-			snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+			//snprintf(buffer, 50, "%s %d", nameComponents->at(parent.getChildID(i)).value().getName(), parent.getChildID(i));
+			snprintf(buffer, 50, "%s", nameComponents->at(parent.getChildID(i)).value().getName());
 
 			ImGuiTreeNodeFlags node_flags = (gm.objectSelected == parent.getChildID(i) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 			bool opened = ImGui::TreeNodeEx(buffer, node_flags);
@@ -478,6 +552,7 @@ void ST::SystemHUD::Stats(const ST::Window& w, const ST::GameObj_Manager& gm){
 	ImGui::PopStyleColor();
 	
 	ImGui::Text("GameObjects: %d", gm.size());
+	ImGui::Text("Drawcalls: %d", gm.drawcalls_);
 
 	ImGui::End();
 }

@@ -29,9 +29,6 @@ namespace ST {
 		glm::vec3 ambient_;
 		glm::vec3 diffuse_;
 		glm::vec3 specular_;
-		
-		// ---- Direction ----
-		glm::vec3 dirLight_;
 
 		// ---- Spotlight ----
 		float cutOff_;

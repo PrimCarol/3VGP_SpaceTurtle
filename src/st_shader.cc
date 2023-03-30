@@ -14,7 +14,7 @@ GLenum ShaderTypeToEnum(ST::ShaderType t) {
 }
 
 ST::Shader::Shader(ShaderType t){
-	gladLoadGL();
+	//gladLoadGL();
 	type = t;
 	internalID = glCreateShader(ShaderTypeToEnum(t));
 }

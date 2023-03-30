@@ -17,16 +17,16 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 	//	c = cam_.get();
 	//}
 
-	std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
+	//std::vector<std::optional<ST::RenderComponent>>& render = *gm.getComponentVector<ST::RenderComponent>();
 	std::vector<std::optional<ST::TransformComponent>>& transform = *gm.getComponentVector<ST::TransformComponent>();
 	std::vector<std::optional<ST::ColliderComponent>>& collider = *gm.getComponentVector<ST::ColliderComponent>();
 
-	if (gm.mainCameraID >= 0 && (transform[gm.mainCameraID].has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).has_value())) {
-		ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID).value();
+	if (gm.mainCameraID() != -1 && (transform[gm.mainCameraID()].has_value() && gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value())) {
+		ST::CameraComponent* camComp = &gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 
 		for (int i = 0; i < gm.size(); i++) {
 			if (collider[i].has_value() && collider[i]->active_) {
-				if (render[i].has_value() && transform[i].has_value()) {
+				if (transform[i].has_value()) {
 					ST::Raycast ray;
 
 					glm::vec3 maxPos = collider[i]->getMaxPoint();
@@ -40,7 +40,7 @@ int ST::SystemPicking::tryPickObj(const ST::Window& w, const ST::GameObj_Manager
 					float outputDistance = 100000.0f;
 
 					// Donde pulse con el mouse.
-					if (ray.TraceRay(transform[gm.mainCameraID]->getPosition(), ray.ScreenPosToWorldRay(w, *camComp), colliderPoint_min, colliderPoint_max,
+					if (ray.TraceRay(transform[gm.mainCameraID()]->getPosition(), ray.ScreenPosToWorldRay(w, *camComp), colliderPoint_min, colliderPoint_max,
 						tcopia, outputDistance)) {
 
 						if (outputDistance < objClose) {

@@ -48,13 +48,13 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 	//	t->updateDirectionalVectors();
 	//}
 
-	auto* transformVector = gm.getComponentVector<ST::TransformComponent>();
-	auto* hierarchyVector = gm.getComponentVector<ST::HierarchyComponent>();
+	std::vector<std::optional<ST::TransformComponent>>& transformVector = *gm.getComponentVector<ST::TransformComponent>();
+	std::vector<std::optional<ST::HierarchyComponent>>& hierarchyVector = *gm.getComponentVector<ST::HierarchyComponent>();
 
-	if (transformVector) {
-		for (int i = 0; i < transformVector->size(); i++) {
-			if (transformVector->at(i).has_value()) {
-				ST::TransformComponent* t = &transformVector->at(i).value();
+	//if (transformVector) {
+		for (int i = 0; i < transformVector.size(); i++) {
+			if (transformVector.at(i).has_value()) {
+				ST::TransformComponent* t = &transformVector.at(i).value();
 				//printf("[%d] Tiene transform\n", i);
 
 				if (t->dirty) {
@@ -81,13 +81,13 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 					t->m_World_Rotation_ = t->m_Rotation_;
 					t->m_world_transform_ = m;
 
-					if (hierarchyVector->at(i).has_value()) {
-						ST::HierarchyComponent* h = &hierarchyVector->at(i).value();
+					if (hierarchyVector.at(i).has_value()) {
+						ST::HierarchyComponent* h = &hierarchyVector.at(i).value();
 						if (h->getParentID() != -1) {
 
-							if (hierarchyVector->at(h->getParentID()).has_value()) {
-								if (transformVector->at(h->getParentID()).has_value()) {
-									ST::TransformComponent* tparent = &transformVector->at(h->getParentID()).value();
+							if (hierarchyVector.at(h->getParentID()).has_value()) {
+								if (transformVector.at(h->getParentID()).has_value()) {
+									ST::TransformComponent* tparent = &transformVector.at(h->getParentID()).value();
 
 									t->m_transform_ = tparent->m_world_transform_ * m;
 									t->m_world_transform_ = tparent->m_world_transform_ * m;
@@ -116,5 +116,5 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 				}
 			}
 		}
-	}
+	//}
 }

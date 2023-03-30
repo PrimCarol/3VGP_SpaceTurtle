@@ -25,6 +25,7 @@ namespace ST {
 		//RenderComponent(const RenderComponent& o);
 
 		bool visible_;
+		bool castShadow_;
 
 		~RenderComponent();
 	private:

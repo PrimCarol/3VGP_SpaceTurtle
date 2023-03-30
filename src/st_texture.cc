@@ -4,50 +4,6 @@
 #include "stb_image.h"
 #include <memory>
 
-ST::Texture::Texture(){
-	glGenTextures(1, &internalID);
-    rows = 1;
-    cols = 1;
-    width_ = 0;
-    height_ = 0;
-    depth_ = 1; // <---- ???
-    type_ = T_Invalid;
-
-    generateMipmap = false;
-    forceNoMipmap = false;
-
-    set_min_filter(Filter::F_NEAREST);
-    set_mag_filter(Filter::F_NEAREST);
-    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
-}
-
-bool ST::Texture::loadSource(const char* filePath, TextType t, int mipmaps){
-
-    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
-    if (image_data == NULL)
-        return false;
-
-    type_ = t;
-    set_data(F_RGBA, (const void*)image_data, mipmaps);
-
-    stbi_image_free(image_data);
-
-	return true;
-}
-
-void ST::Texture::setRows(int num){
-    if (num > 0) {
-        rows = num;
-    }
-}
-
-void ST::Texture::setCols(int num){
-    if(num > 0){
-        cols = num;
-    }
-}
 
 GLenum formatToGl(const ST::Texture::Format f) {
     GLenum aux = GL_NONE;
@@ -87,12 +43,41 @@ GLenum formatToGl(const ST::Texture::Format f) {
     return aux;
 }
 
+GLenum dataTypeToGl(const ST::Texture::DataType dt) {
+    GLenum aux = GL_NONE;
+    switch (dt) {
+    case ST::Texture::DT_U_BYTE:
+        aux = GL_UNSIGNED_BYTE;
+        break;
+    case ST::Texture::DT_BYTE:
+        aux = GL_BYTE;
+        break;
+    case ST::Texture::DT_U_SHORT:
+        aux = GL_UNSIGNED_SHORT;
+        break;
+    case ST::Texture::DT_SHORT:
+        aux = GL_SHORT;
+        break;
+    case ST::Texture::DT_U_INT:
+        aux = GL_UNSIGNED_INT;
+        break;
+    case ST::Texture::DT_FLOAT:
+        aux = GL_FLOAT;
+        break;
+    default:
+        printf("Data Type >> Invalid Format");
+        break;
+    }
+
+    return aux;
+}
+
 GLenum textureTypeToGl(const ST::Texture::TextType f) {
     GLenum aux = GL_NONE;
     switch (f) {
-    case ST::Texture::T_Invalid:
+    /*case ST::Texture::T_Invalid:
         aux = GL_NONE;
-        break;
+        break;*/
     case ST::Texture::T_1D:
         aux = GL_TEXTURE_1D;
         break;
@@ -145,6 +130,9 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
     case ST::Texture::Wrap::W_CLAMP_TO_EDGE:
         aux = GL_CLAMP_TO_EDGE;
         break;
+    case ST::Texture::Wrap::W_CLAMP_TO_BORDER:
+        aux = GL_CLAMP_TO_BORDER;
+        break;
     case ST::Texture::Wrap::W_MIRRORED_REPEAT:
         aux = GL_MIRRORED_REPEAT;
         break;
@@ -159,7 +147,84 @@ GLint wrapToGl(const ST::Texture::Wrap w) {
     return aux;
 }
 
-void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap_LOD) {
+
+ST::Texture::Texture(){
+    //gladLoadGL();
+    glGenTextures(1, &internalID);
+    
+    rows = 1;
+    cols = 1;
+    width_ = 0;
+    height_ = 0;
+    depth_ = 1; // <---- ???
+    type_ = T_2D;
+    dataType_ = DT_U_BYTE;
+    format_ = F_RGBA;
+
+    borderColor[0] = 1.0;
+    borderColor[1] = 1.0;
+    borderColor[2] = 1.0;
+    borderColor[3] = 1.0;
+
+    generateMipmap = false;
+    forceNoMipmap = false;
+
+    set_min_filter(Filter::F_NEAREST);
+    set_mag_filter(Filter::F_NEAREST);
+    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
+}
+
+bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int mipmaps*/) {
+    //glGenTextures(1, &internalID);
+
+    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
+    if (image_data == NULL)
+        return false;
+    
+    format_ = f;
+    type_ = t;
+    set_data((const void*)image_data);
+
+    stbi_image_free(image_data);
+
+	return true;
+}
+
+void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f) {
+    //glGenTextures(1, &internalID);
+
+    width_ = width;
+    height_ = height;
+    type_ = t;
+    dataType_ = dt;
+    format_ = f;
+}
+
+void ST::Texture::bind(){
+    glBindTexture(getTypeGL(), internalID);
+}
+
+void ST::Texture::unbind(){
+    glBindTexture(getTypeGL(), 0);
+}
+
+void ST::Texture::setRows(int num){
+    if (num > 0) {
+        rows = num;
+    }
+}
+
+void ST::Texture::setCols(int num){
+    if(num > 0){
+        cols = num;
+    }
+}
+
+
+
+void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
     //GLenum data_type;
 
     //glBindTexture(GL_TEXTURE_2D, internalID);
@@ -176,6 +241,13 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
     //glTexImage2D(GL_TEXTURE_2D, mipmap_LOD, GL_RGBA, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     //glBindTexture(GL_TEXTURE_2D, 0); 
 
+    /*
+    
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    
+    */
+
     switch (type_) {
     case TextType::T_1D:
         glBindTexture(GL_TEXTURE_1D, internalID);
@@ -190,13 +262,13 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
 
-        glTexImage1D(GL_TEXTURE_1D, mipmap_LOD, formatToGl(f), width(), 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexImage1D(GL_TEXTURE_1D, 0, formatToGl(format_), width(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_1D);
         }
 
-        glBindTexture(GL_TEXTURE_1D, 0);
+        //glBindTexture(GL_TEXTURE_1D, 0);
 
         break;
     case TextType::T_2D:
@@ -214,13 +286,15 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
 
-        glTexImage2D(GL_TEXTURE_2D, mipmap_LOD, formatToGl(f), width(), height(), 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
 
-        glBindTexture(GL_TEXTURE_2D, 0);
+        //glBindTexture(GL_TEXTURE_2D, 0);
 
         break;
     case TextType::T_3D:
@@ -238,13 +312,13 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
 
-        glTexImage3D(GL_TEXTURE_3D, mipmap_LOD, formatToGl(f), width(), height(), depth_, 0, formatToGl(f), GL_UNSIGNED_BYTE, data);
+        glTexImage3D(GL_TEXTURE_3D, 0, formatToGl(format_), width(), height(), depth_, 0, formatToGl(format_), dataTypeToGl(dataType_), data);
         
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_3D);
         }
         
-        glBindTexture(GL_TEXTURE_3D, 0);
+        //glBindTexture(GL_TEXTURE_3D, 0);
 
         break;
     default:
@@ -252,7 +326,12 @@ void ST::Texture::set_data(const Format f, const void* data, unsigned int mipmap
         break;
     }
 
-    assert(glGetError() == GL_NO_ERROR);
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        printf("OpenGL Error: %d\n", error);
+    }
+
+    //assert(glGetError() == GL_NO_ERROR);
 }
 
 const GLuint ST::Texture::getID() const{
@@ -261,6 +340,26 @@ const GLuint ST::Texture::getID() const{
 
 const ST::Texture::TextType ST::Texture::getType() const{
     return type_;
+}
+
+const GLenum ST::Texture::getTypeGL() const{
+    return textureTypeToGl(type_);
+}
+
+const ST::Texture::Format ST::Texture::getFormat() const{
+    return format_;
+}
+
+const GLenum ST::Texture::getFormatGL() const{
+    return formatToGl(format_);
+}
+
+const ST::Texture::DataType ST::Texture::getDataType() const{
+    return dataType_;
+}
+
+const GLenum ST::Texture::getDataTypeGL() const{
+    return dataTypeToGl(dataType_);
 }
 
 const int ST::Texture::width() const{
@@ -281,4 +380,26 @@ const int ST::Texture::getCols() const{
 
 ST::Texture::~Texture(){
     glDeleteTextures(1, &internalID);
+}
+
+ST::Texture::Texture(const Texture& o){
+    internalID = o.internalID;
+
+    rows = o.rows;
+    cols = o.cols;
+    width_ = o.width_;
+    height_ = o.height_;
+    depth_ = o.depth_; // <---- ???
+    type_ = o.type_;
+    dataType_ = o.dataType_;
+    format_ = o.format_;
+
+    generateMipmap = o.generateMipmap;
+    forceNoMipmap = o.forceNoMipmap;
+
+    set_min_filter(Filter::F_NEAREST);
+    set_mag_filter(Filter::F_NEAREST);
+    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
+    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
 }

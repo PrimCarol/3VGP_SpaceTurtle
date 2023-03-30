@@ -18,6 +18,7 @@ namespace ST {
 		ST_INPUT_JUMP,
 		ST_INPUT_SHIFT,
 		ST_INPUT_ESCAPE,
+		ST_INPUT_DELETE,
 	};
 
 	class Window{

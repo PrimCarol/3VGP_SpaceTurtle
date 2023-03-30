@@ -7,6 +7,7 @@
 
 #include <st_window.h>
 #include <st_gameobj_manager.h>
+#include <st_rendertarget.h>
 
 #include <components/st_transform.h>
 #include <components/st_hierarchy.h>

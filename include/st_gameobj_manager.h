@@ -9,19 +9,26 @@
 #include <optional>
 
 #include <st_gameobj.h>
+#include <st_rendertarget.h>
+#include <components/st_name.h>
+#include <components/st_hierarchy.h>
 //#include <st_camera.h>
+
+#include <mat4x4.hpp>
 
 #define MAX_OBJECTS 100000
 
 namespace ST {
-	class GameObj;
+	
 	class CameraComponent;
+
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
 
 		struct ComponentVector {
 			virtual void grow(size_t new_size) = 0;
 			virtual void deleteOn(int index) = 0;
+			virtual ~ComponentVector() {}
 		};
 		template<typename T>
 		struct ComponentListImpl : ComponentVector {
@@ -66,10 +73,26 @@ namespace ST {
 
 		size_t size() const;
 
-		std::shared_ptr<ST::Program> basicProgram; // Default Shader Program to render.
+		// ------------------------------- TRASH ZONE ---------------------------------
+		// Default Shader Program to render.
+		std::shared_ptr<ST::Program> basicProgram;
+		std::shared_ptr<ST::Program> unliteProgram;
+		std::shared_ptr<ST::Program> shadowMapping;
+		std::shared_ptr<ST::Program> frameProgram;
 
-		//ST::Camera* mainCamera;
-		int mainCameraID;
+		// ***************** Shadow Mapping Test ***************
+		//bool haveShadowMap_;
+		//ST::RenderTarget shadowMap;
+		//glm::mat4 shadowMappingMatTest;
+
+		// ----- Camera -----
+		void setMainCamera(const ST::GameObj& cam);
+		int mainCameraID() const;
+
+		// ******************* Test *******************
+		int drawcalls_;
+
+		// ------------------------------- TRASH ZONE ---------------------------------
 
 		~GameObj_Manager();
 	private:
@@ -81,12 +104,18 @@ namespace ST {
 
 		GameObj_Manager(const GameObj_Manager& o);
 		
+		int mainCameraID_;
 		bool rootCreated = false;
+
 	public:
 		size_t objectSelected;
 		ST::GameObj root = createGameObj();
 	};
 }
+
+// ------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
 template<typename... Cs>
 ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {

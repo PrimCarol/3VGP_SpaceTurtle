@@ -24,12 +24,13 @@ ST::GameObj_Manager::GameObj_Manager(){
 	objectSelected = ST::GameObj::null_id;
 	root.addComponent<ST::HierarchyComponent>();
 
-	mainCameraID = -1;
+	mainCameraID_ = -1;
+
 
 	// ------- Create Basic Program -------
 	basicProgram = std::make_unique<ST::Program>();
-
 	bool shaderError = false;
+
 	ST::Shader vertex(E_VERTEX_SHADER);
 	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
 	if (!textVertex) {
@@ -38,7 +39,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 	}
 
 	ST::Shader fragment(E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader01.frag");
+	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.frag");
 	if (!textFragment) {
 		shaderError = true;
 		printf("Error load Fragment Shader");
@@ -55,6 +56,72 @@ ST::GameObj_Manager::GameObj_Manager(){
 	basicProgram->attach(vertex);
 	basicProgram->attach(fragment);
 	basicProgram->link();
+
+	// ------- Create Unlite Program -------
+	unliteProgram = std::make_unique<ST::Program>();
+	unliteProgram->setUp("../shaders/shader_unlite.vert", "../shaders/shader_unlite.frag");
+	/*shaderError = false;
+
+	ST::Shader vertexUnlite(E_VERTEX_SHADER);
+	GLchar* textVertexUnlite = (GLchar*)ST::Engine::readFile("../shaders/shader_unlite.vert");
+	if (!textVertexUnlite) {
+		shaderError = true;
+		printf("Error load Vertex Shader Unlite");
+	}
+
+	ST::Shader fragmentUnlite(E_FRAGMENT_SHADER);
+	GLchar* textFragmentUnlite = (GLchar*)ST::Engine::readFile("../shaders/shader_unlite.frag");
+	if (!textFragmentUnlite) {
+		shaderError = true;
+		printf("Error load Fragment Shader Unlite");
+	}
+
+	if (shaderError) {
+		textVertexUnlite = (GLchar*)ST::basic_vShader_text;
+		textFragmentUnlite = (GLchar*)ST::basic_fShader_text;
+	}
+
+	vertexUnlite.loadSource(textVertexUnlite);
+	fragmentUnlite.loadSource(textFragmentUnlite);
+
+	unliteProgram->attach(vertexUnlite);
+	unliteProgram->attach(fragmentUnlite);
+	unliteProgram->link();*/
+
+	// ------- Create Shadow Mapping Program -------
+	shadowMapping = std::make_unique<ST::Program>();
+	shadowMapping->setUp("../shaders/shadowMapping.vert", "../shaders/shadowMapping.frag");
+	//shaderError = false;
+
+	//ST::Shader vertexShadowMapping(E_VERTEX_SHADER);
+	//GLchar* textVertexShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.vert");
+	//if (!textVertexShadowMapping) {
+	//	shaderError = true;
+	//	printf("Error load Vertex Shader ShadowMapping");
+	//}
+
+	//ST::Shader fragmentShadowMapping(E_FRAGMENT_SHADER);
+	//GLchar* textFragmentShadowMapping = (GLchar*)ST::Engine::readFile("../shaders/shadowMapping.frag");
+	//if (!textFragmentShadowMapping) {
+	//	shaderError = true;
+	//	printf("Error load Fragment Shader ShadowMapping");
+	//}
+
+	//if (shaderError) {
+	//	textVertexShadowMapping = (GLchar*)ST::basic_vShader_text;
+	//	textFragmentShadowMapping = (GLchar*)ST::basic_fShader_text;
+	//}
+
+	//vertexShadowMapping.loadSource(textVertexShadowMapping);
+	//fragmentShadowMapping.loadSource(textFragmentShadowMapping);
+
+	//shadowMapping->attach(vertexShadowMapping);
+	//shadowMapping->attach(fragmentShadowMapping);
+	//shadowMapping->link();
+
+	// ------- Create FrameBuffer Program -------
+	frameProgram = std::make_unique<ST::Program>();
+	frameProgram->setUp("../shaders/renderTarget.vert", "../shaders/renderTarget.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
@@ -67,8 +134,20 @@ size_t ST::GameObj_Manager::size() const{
 	return last_gameObj_;
 }
 
-ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){
+void ST::GameObj_Manager::setMainCamera(const ST::GameObj& cam){
+	if (cam.getComponent<ST::CameraComponent>()) {
+		mainCameraID_ = cam.getID();
+	}else {
+		mainCameraID_ = -1;
+	}
+}
 
+int ST::GameObj_Manager::mainCameraID() const{
+	return mainCameraID_;
+}
+
+ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){
+	printf("Copia GameObj_Manager -> No deberia de estar haciendo esto.");
 }
 
 ST::GameObj_Manager::~GameObj_Manager(){

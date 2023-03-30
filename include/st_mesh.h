@@ -53,7 +53,7 @@ namespace ST {
 		bool operator==(const Mesh& rhs);
 
 		~Mesh();
-		Mesh(const Mesh& o);
+		//Mesh(const Mesh& o);
 	protected:
 		const char* name_;
 		GLuint internalId;
