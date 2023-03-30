@@ -57,7 +57,7 @@ void main(){
 	float tempUVx = a_uv.x;
 	float tempUVy = a_uv.y;
 
-	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width);
+	if(cols > 1){	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width); }
 
 	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	texCoords = tempUV;
