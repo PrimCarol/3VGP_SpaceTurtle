@@ -37,7 +37,7 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	//int HOWMANY = 600;
+	//int HOWMANY = 200;
 
 	//std::vector<ST::GameObj> objects;
 	//for (int i = 0; i < HOWMANY; i++){
@@ -64,20 +64,16 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-	//ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("testObj");
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
+	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-
-	ST::GameObj testObj2 = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	testObj2.getComponent<ST::NameComponent>()->setName("testObj");
-	testObj2.getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
-	testObj2.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-	testObj2.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
@@ -114,7 +110,7 @@ int main() {
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 
-		myRenderTarget.renderOnScreen(*gm.frameProgram);
+		myRenderTarget.renderOnScreen(*gm.postproces_blur);
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

@@ -66,8 +66,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 	shadowMapping->setUp("../shaders/shadowMapping.vert", "../shaders/shadowMapping.frag");
 
 	// ------- Create FrameBuffer Program -------
-	frameProgram = std::make_unique<ST::Program>();
-	frameProgram->setUp("../shaders/renderTarget.vert", "../shaders/renderTarget.frag");
+	postproces_blur = std::make_unique<ST::Program>();
+	postproces_blur->setUp("../shaders/postproces_blur.vert", "../shaders/postproces_blur.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

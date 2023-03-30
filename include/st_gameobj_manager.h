@@ -79,6 +79,7 @@ namespace ST {
 		std::shared_ptr<ST::Program> unliteProgram;
 		std::shared_ptr<ST::Program> shadowMapping;
 		std::shared_ptr<ST::Program> frameProgram;
+		std::shared_ptr<ST::Program> postproces_blur;
 
 		// ***************** Shadow Mapping Test ***************
 		//bool haveShadowMap_;
