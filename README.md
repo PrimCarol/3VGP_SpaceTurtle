@@ -21,6 +21,7 @@
 <h2>🔶 Future additions </h2>
 
   - PBR Materials <br>
+  - Deferred Pipeline <br>
   - Save/Load Scene <br>
   - VR Port <br>
 

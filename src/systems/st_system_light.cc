@@ -11,7 +11,7 @@
 #include <st_program.h>
 
 ST::SystemLight::SystemLight(){
-
+	textureSize_ = glm::ivec2(1024);
 }
 
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
@@ -213,7 +213,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				Light_ShadowMap thisLightShadow;
 				ST::RenderTarget thisLightRenderTarget;
-				thisLightRenderTarget.setUp(1024, 1024, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 				
 				ST::CameraComponent cam;
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
@@ -264,6 +264,10 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
 		ImGui::SetNextItemWidth(50.0f);
 		ImGui::DragFloat("Far", &camShadowDistance.y);
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragInt("Texture Witdh", &textureSize_.x); ImGui::SameLine();
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::DragInt("Texture Height", &textureSize_.y);
 		ImGui::End();
 	}
 }
