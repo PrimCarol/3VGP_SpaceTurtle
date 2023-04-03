@@ -28,6 +28,7 @@
 <hr>
 
 <h2>🔶 Prerequisites</h2>
+
 Visual Studio 2019/2022
 
 <h2>🔶 Generate Visual Solution</h2>
@@ -37,13 +38,18 @@ Thanks to the use of Premake you only have to do the following
 - Then open the visual solution that has been created in -> ./build/3VGP_SpaceTurtlevs[version].sln <br>
 
 <h2>🔶 Build</h2>
+
 <p>Inside the solution, press 'F5' to build and run.</p>
 
+<hr>
+
 <h2>🔶 Screenshots</h2>
+
 <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/lights.jpg">
 <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/shadows.jpg">
 
 <h2>🔶 Examples</h2>
+
 <h4>Render Window</h4>
 
 ```cpp
