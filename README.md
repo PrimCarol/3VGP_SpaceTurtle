@@ -39,7 +39,7 @@ Thanks to the use of Premake you only have to do the following
 <h2>🔶 Build</h2>
 <p>Inside the solution, press 'F5' to build and run.</p>
 <img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/lights.jpg">
-<img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/shadows.png">
+<img src="https://github.com/PrimCarol/3VGP_SpaceTurtle/blob/main/others/screenshots/shadows.jpg">
 
 <h2>🔶 Examples</h2>
 <h4>Render Window</h4>
