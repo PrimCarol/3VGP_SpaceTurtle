@@ -75,14 +75,14 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 
-	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
-	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
-	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
-	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	//DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
+	//DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
+	//DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
+	//DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	//DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
+	//DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
+	//DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 
 	// --------------------------
@@ -92,6 +92,50 @@ int main() {
 	ST::RenderTarget myRenderTarget;
 	myRenderTarget.setUp(w.getWindowsWidth(), w.getWindowsHeight());
 	myRenderTarget.createQuadToRender();
+	
+
+	// configure g-buffer framebuffer
+	// ------------------------------
+	//unsigned int gBuffer;
+	//glGenFramebuffers(1, &gBuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+	//unsigned int gPosition, gNormal, gAlbedoSpec;
+	//// position color buffer
+	//glGenTextures(1, &gPosition);
+	//glBindTexture(GL_TEXTURE_2D, gPosition);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w.getWindowsWidth(), w.getWindowsHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gPosition, 0);
+	//// normal color buffer
+	//glGenTextures(1, &gNormal);
+	//glBindTexture(GL_TEXTURE_2D, gNormal);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, w.getWindowsWidth(), w.getWindowsHeight(), 0, GL_RGBA, GL_FLOAT, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+	//// color + specular color buffer
+	//glGenTextures(1, &gAlbedoSpec);
+	//glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w.getWindowsWidth(), w.getWindowsHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedoSpec, 0);
+	//// tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
+	//unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	//glDrawBuffers(3, attachments);
+	//// create and attach depth buffer (renderbuffer)
+	//unsigned int rboDepth;
+	//glGenRenderbuffers(1, &rboDepth);
+	//glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w.getWindowsWidth(), w.getWindowsHeight());
+	//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	//// finally check if framebuffer is complete
+	//if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	//	std::cout << "Framebuffer not complete!" << std::endl;
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -103,14 +147,47 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 
-		lightSystem.CompileShadows(gm);
-		lightSystem.CompileLights(gm, *gm.basicProgram);
+		//lightSystem.CompileShadows(gm);
+		//lightSystem.CompileLights(gm, *gm.basicProgram);
 		
+
+
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
+		
+		myRenderTarget.renderOnScreen(*gm.postproces_blur);
 
-		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
+
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//ST::SystemRender::Render(gm);
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

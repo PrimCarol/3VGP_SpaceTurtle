@@ -72,6 +72,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create PostProces BLUR Program -------
 	postproces_blur = std::make_unique<ST::Program>();
 	postproces_blur->setUp("../shaders/postproces_blur.vert", "../shaders/postproces_blur.frag");
+
+	// ------- Create G-Buffer Program -------
+	g_buffer = std::make_unique<ST::Program>();
+	g_buffer->setUp("../shaders/g_buffers.vert", "../shaders/g_buffers.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
