@@ -34,9 +34,10 @@ ST::RenderTarget::RenderTarget(){
 	quadID = 0;
 }
 
-void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
+void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
 	width_ = w;
 	height_ = h;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 
 	GLenum error = glGetError();
@@ -44,20 +45,28 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_ = std::make_shared<ST::Texture>();
-	textureToRender_->init(width_, height_, t, dt, f);
-	textureToRender_->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
-	textureToRender_->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
-	textureToRender_->bind();
+	textureToRender_.push_back(std::make_shared<ST::Texture>());
+	textureToRender_.back()->init(width_, height_, t, dt, f);
+	textureToRender_.back()->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.back()->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.back()->bind();
 
 	if (f == ST::Texture::F_DEPTH) {
 		renderType_ = RT_Depth;
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		textureToRender_.back()->set_data(0);
+
+		texturesTypeRender_.push_back(RenderTypeToGL(renderType_));
 	}
 
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_->getTypeGL(), textureToRender_->getID(), 0);
-	textureToRender_->set_data(0);
-
+	if (renderType_ == ST::RenderTarget::RT_Color) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		textureToRender_.back()->set_data(0);
+		
+		texturesTypeRender_.push_back(RenderTypeToGL(renderType_) + textureCount());
+	}
+	
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
 		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
@@ -68,21 +77,77 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
-	}else {
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	}
-	
+	else {
+		//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
+		//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		glDrawBuffers(textureCount(), &texturesTypeRender_.front());
+	}
+
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
 		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_->unbind();
+	textureToRender_.back()->unbind();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+int ST::RenderTarget::textureCount(){
+	return textureToRender_.size();
+}
+
+//void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
+//	width_ = w;
+//	height_ = h;
+//	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+//
+//	GLenum error = glGetError();
+//	if (error != GL_NO_ERROR) {
+//		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
+//	}
+//
+//	textureToRender_ = std::make_shared<ST::Texture>();
+//	textureToRender_->init(width_, height_, t, dt, f);
+//	textureToRender_->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
+//	textureToRender_->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
+//	textureToRender_->bind();
+//
+//	if (f == ST::Texture::F_DEPTH) {
+//		renderType_ = RT_Depth;
+//	}
+//
+//	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
+//	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_->getTypeGL(), textureToRender_->getID(), 0);
+//	textureToRender_->set_data(0);
+//
+//	error = glGetError();
+//	if (error != GL_NO_ERROR) {
+//		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
+//	}
+//
+//	if (renderType_ == RT_Depth) {
+//		//float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
+//		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
+//		glDrawBuffer(GL_NONE);
+//		glReadBuffer(GL_NONE);
+//	}else {
+//		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
+//		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+//	}
+//	
+//	error = glGetError();
+//	if (error != GL_NO_ERROR) {
+//		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
+//	}
+//
+//	textureToRender_->unbind();
+//	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//}
 
 void ST::RenderTarget::createQuadToRender(){
 
@@ -114,15 +179,27 @@ void ST::RenderTarget::createQuadToRender(){
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
+
+	// ----
+	//unsigned int attachments[textureCount()] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	//glDrawBuffers(textureCount(), &texturesTypeRender_.front());
 }
 
 void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
 		glUniform1i(glGetUniformLocation(Shader.getID(), "screenTexture"), 0);
 
 		glBindVertexArray(quadID);
-		glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
+
+		for (int i = 0; i < textureCount(); i++){
+			glActiveTexture(GL_TEXTURE0+i);
+			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+		}
+
+		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 }
@@ -131,8 +208,9 @@ GLuint ST::RenderTarget::getID(){
 	return internalID;
 }
 
-GLuint ST::RenderTarget::textureID(){
-	return textureToRender_->getID();
+GLuint ST::RenderTarget::textureID(int index){
+	if (index < 0 || index > textureCount()) { index = 0; }
+	return textureToRender_.at(index)->getID();
 }
 
 void ST::RenderTarget::start() {

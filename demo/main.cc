@@ -90,7 +90,9 @@ int main() {
 	ST::SystemLight lightSystem;
 
 	ST::RenderTarget myRenderTarget;
-	myRenderTarget.setUp(w.getWindowsWidth(), w.getWindowsHeight());
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Position
+	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Normal
+	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
 	myRenderTarget.createQuadToRender();
 	
 
@@ -148,7 +150,7 @@ int main() {
 		ST::SystemTransform::UpdateTransforms(gm);
 
 		//lightSystem.CompileShadows(gm);
-		//lightSystem.CompileLights(gm, *gm.basicProgram);
+		lightSystem.CompileLights(gm, *gm.basicProgram);
 		
 
 
@@ -156,7 +158,7 @@ int main() {
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 		
-		myRenderTarget.renderOnScreen(*gm.postproces_blur);
+		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
 
 
 

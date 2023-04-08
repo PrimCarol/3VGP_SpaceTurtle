@@ -172,9 +172,9 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	if (shadowMaps_.size() > 0) {
 		glUniform1i(thisProgram.getUniform("u_haveShadowMap"), true);
 
-		glUniform1i(thisProgram.getUniform("shadowMap"), 3);
-		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
+		//glUniform1i(thisProgram.getUniform("shadowMap"), 3);
+		//glActiveTexture(GL_TEXTURE0 + 3);
+		//glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
 
 		GLuint lighSpaceMatrix = thisProgram.getUniform("lightSpaceMatrix");
 		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &shadowMaps_[0].matrix_[0][0]);
@@ -213,7 +213,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				Light_ShadowMap thisLightShadow;
 				ST::RenderTarget thisLightRenderTarget;
-				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+				thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 				
 				ST::CameraComponent cam;
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
@@ -253,7 +253,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		}
 	}
 	shadowMaps_ = shadowMapsLocal;
-	if (shadowMaps_.size() > 0) {
+	/*if (shadowMaps_.size() > 0) {
 		ImGui::Begin("ViewDepth");
 		ImGui::Image((void*)(intptr_t)shadowMaps_[0].renderTarget_[0].textureID(), ImVec2(192, 120));
 		ImGui::SetNextItemWidth(50.0f);
@@ -269,7 +269,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		ImGui::SetNextItemWidth(50.0f);
 		ImGui::DragInt("Texture Height", &textureSize_.y);
 		ImGui::End();
-	}
+	}*/
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){

@@ -2,6 +2,7 @@
 #define _SPACE_TURTLE_AUDIO_H_ 1
 
 #include <st_texture.h>
+#include <vector>
 #include <memory>
 
 
@@ -19,23 +20,29 @@ namespace ST {
 		};
 
 		RenderTarget();
-		void setUp(int w, int h,
+		
+		void addTexture(int w, int h,
 			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
 			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
+		int textureCount();
+
+		/*void setUp(int w, int h,
+			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
+			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
+			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
+			*/
 
 		void createQuadToRender();
 		void renderOnScreen(ST::Program& Shader);
 
 		GLuint getID();
-		GLuint textureID();
+		GLuint textureID(int index);
 
 		RenderType renderType_;
 
 		void start();
 		void end();
-
-		std::shared_ptr<ST::Texture> textureToRender_;
 
 		RenderTarget(const RenderTarget& o);
 		~RenderTarget();
@@ -44,6 +51,9 @@ namespace ST {
 		int height_;
 
 		GLint last_viewport[4];
+
+		std::vector<std::shared_ptr<ST::Texture>> textureToRender_;
+		std::vector<unsigned int> texturesTypeRender_;
 
 		GLuint internalID;
 		unsigned int rbo;
