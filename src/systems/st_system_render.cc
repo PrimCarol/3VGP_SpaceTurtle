@@ -321,7 +321,7 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 	auto& render = *gm.getComponentVector<ST::RenderComponent>();
 	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
 	
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_FALSE);
 
 	// Buscamos si hay una camara como Main camera,
@@ -352,6 +352,9 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 
 			std::vector<MyObjToRender> objs_opaque;
 			std::vector<MyObjToRender> objs_translucent;
+
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {

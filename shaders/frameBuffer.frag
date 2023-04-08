@@ -13,5 +13,5 @@ void main(){
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     vec3 Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
 
-    FragColor = vec4(FragPos, 1.0);
+    FragColor = vec4(Diffuse, 1.0);
 }

@@ -190,10 +190,13 @@ void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
-		glUniform1i(glGetUniformLocation(Shader.getID(), "screenTexture"), 0);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 0);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 1);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 2);
 
 		glBindVertexArray(quadID);
 
+		//glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
 		for (int i = 0; i < textureCount(); i++){
 			glActiveTexture(GL_TEXTURE0+i);
 			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
@@ -216,6 +219,8 @@ GLuint ST::RenderTarget::textureID(int index){
 void ST::RenderTarget::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
 	if (renderType_ == RT_Depth) {
@@ -230,12 +235,7 @@ void ST::RenderTarget::start() {
 void ST::RenderTarget::end(){
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// Vigilar si hay problemas con esto, se comenta
-	// porque ya se hace solo en la camara.
-	
 	// Reset viewport
-	//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
 }
 

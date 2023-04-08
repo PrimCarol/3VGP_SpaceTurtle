@@ -63,7 +63,7 @@ int main() {
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
-	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
@@ -72,7 +72,7 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 
 	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
@@ -91,8 +91,8 @@ int main() {
 
 	ST::RenderTarget myRenderTarget;
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Position
-	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Normal
-	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Normal
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
 	myRenderTarget.createQuadToRender();
 	
 

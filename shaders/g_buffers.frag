@@ -23,6 +23,7 @@ void main(){
 
     // and the diffuse per-fragment color
     vec4 TextureColor = color;
+    gAlbedoSpec = color;
 	if(u_haveAlbedo){ gAlbedoSpec.rgb = (texture(u_tex_Albedo, TexCoords) * color).rgb;}
 
     // store specular intensity in gAlbedoSpec's alpha component

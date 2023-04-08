@@ -30,7 +30,7 @@ void ST::Engine::createTriangle(ST::GameObj_Manager& gm){
 	static ST::Triangle mesh_Triangle_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Triangle_);
-	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	gm.objectSelected = temp.getID();
@@ -40,7 +40,7 @@ void ST::Engine::createQuad(ST::GameObj_Manager& gm) {
 	static ST::Quad mesh_Quad_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
-	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	gm.objectSelected = temp.getID();
@@ -50,7 +50,7 @@ void ST::Engine::createCircle(ST::GameObj_Manager& gm) {
 	static ST::Circle mesh_Circle_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Circle_);
-	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	gm.objectSelected = temp.getID();
@@ -60,7 +60,7 @@ void ST::Engine::createCube(ST::GameObj_Manager& gm) {
 	static ST::Cube mesh_Cube_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Cube_);
-	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	gm.objectSelected = temp.getID();
