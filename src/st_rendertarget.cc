@@ -32,6 +32,8 @@ ST::RenderTarget::RenderTarget(){
 	height_ = 0;
 
 	quadID = 0;
+
+	visualMode = 0;
 }
 
 void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -95,6 +97,13 @@ int ST::RenderTarget::textureCount(){
 	return textureToRender_.size();
 }
 
+void ST::RenderTarget::nextVisualMode(){
+	visualMode++;
+	if (visualMode >= textureCount()) {
+		visualMode = 0;
+	}
+}
+
 void ST::RenderTarget::createQuadToRender(){
 
 	// El Quad para renderizar.
@@ -138,10 +147,12 @@ void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 0);
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 1);
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 2);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 0);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 1);
+		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 2);
 		//glUniform1i(glGetUniformLocation(Shader.getID(), "gDepth"), 3);
+
+		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
 
 		glBindVertexArray(quadID);
 
@@ -207,6 +218,7 @@ ST::RenderTarget::RenderTarget(const RenderTarget& o){
 	height_ = o.height_;
 	width_ = o.width_;
 	//renderType_ = o.renderType_;
+	visualMode = o.visualMode;
 
 	last_viewport[0] = o.last_viewport[0];
 	last_viewport[1] = o.last_viewport[1];

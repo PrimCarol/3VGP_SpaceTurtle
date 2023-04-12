@@ -33,6 +33,8 @@ namespace ST {
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
 			*/
 
+		void nextVisualMode();
+
 		void createQuadToRender();
 		void renderOnScreen(ST::Program& Shader);
 
@@ -49,6 +51,8 @@ namespace ST {
 	private:
 		int width_;
 		int height_;
+
+		int visualMode;
 
 		GLint last_viewport[4];
 

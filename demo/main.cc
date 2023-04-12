@@ -90,12 +90,13 @@ int main() {
 	ST::SystemLight lightSystem;
 
 	ST::RenderTarget myRenderTarget;
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Position
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Normal
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
 	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), ST::Texture::F_DEPTH); // Depth
 	myRenderTarget.createQuadToRender();
 	
+	bool changeMode = false;
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -109,7 +110,6 @@ int main() {
 
 		//lightSystem.CompileShadows(gm);
 		//lightSystem.CompileLights(gm, *gm.basicProgram);
-		
 
 
 		myRenderTarget.start();
@@ -119,29 +119,13 @@ int main() {
 		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
 
 
-
-		//glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//ST::SystemRender::Render(gm);
-
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {
+			myRenderTarget.nextVisualMode();
+			changeMode = true;
+		}
+		if (w.inputReleased(ST::ST_INPUT_JUMP)) {
+			changeMode = false;
+		}
 
 
 
