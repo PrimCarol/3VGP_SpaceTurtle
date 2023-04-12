@@ -90,10 +90,10 @@ int main() {
 	ST::SystemLight lightSystem;
 
 	ST::RenderTarget myRenderTarget;
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Albedo
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Position
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight()); // Normal
-	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), ST::Texture::F_DEPTH); // Depth
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec"); // Albedo
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition"); // Position
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal"); // Normal
+	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH); // Depth
 	myRenderTarget.createQuadToRender();
 	
 	bool changeMode = false;

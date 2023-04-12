@@ -17,7 +17,6 @@ void main(){
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     //float Depth = texture(gDepth, TexCoords).r;
 
-
     if(visualMode == 0){
         FragColor = vec4(Diffuse,1.0);
     }else if(visualMode == 1){

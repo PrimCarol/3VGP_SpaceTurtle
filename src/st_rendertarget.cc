@@ -36,7 +36,7 @@ ST::RenderTarget::RenderTarget(){
 	visualMode = 0;
 }
 
-void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
+void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
 	width_ = w;
 	height_ = h;
 
@@ -59,13 +59,14 @@ void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Textu
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Depth), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
 
-		texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));		
+		texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));
 	}else {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Color) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
 
 		texturesTypeRender_.push_back(RenderTypeToGL(RT_Color) + textureCount());
 	}
+	texturesUniformName_.push_back(name);
 	
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
@@ -147,9 +148,12 @@ void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 0);
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 1);
-		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 2);
+		for (int i = 0; i < texturesUniformName_.size(); i++){
+			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+		}
+//		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 0);
+//		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 1);
+//		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 2);
 		//glUniform1i(glGetUniformLocation(Shader.getID(), "gDepth"), 3);
 
 		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
