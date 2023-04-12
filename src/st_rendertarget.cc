@@ -27,7 +27,7 @@ ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
 	glGenRenderbuffers(1, &rbo);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
-	renderType_ = RT_Color;
+	//renderType_ = RT_Color;
 	width_ = 0;
 	height_ = 0;
 
@@ -52,19 +52,17 @@ void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Textu
 	textureToRender_.back()->bind();
 
 	if (f == ST::Texture::F_DEPTH) {
-		renderType_ = RT_Depth;
+		//renderType_ = RT_Depth;
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Depth), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
 
-		texturesTypeRender_.push_back(RenderTypeToGL(renderType_));
-	}
-
-	if (renderType_ == ST::RenderTarget::RT_Color) {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));		
+	}else {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Color) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
-		
-		texturesTypeRender_.push_back(RenderTypeToGL(renderType_) + textureCount());
+
+		texturesTypeRender_.push_back(RenderTypeToGL(RT_Color) + textureCount());
 	}
 	
 	error = glGetError();
@@ -72,9 +70,7 @@ void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Textu
 		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
 	}
 
-	if (renderType_ == RT_Depth) {
-		//float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
-		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
+	if (f == ST::Texture::F_DEPTH) {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 	}
@@ -98,56 +94,6 @@ void ST::RenderTarget::addTexture(int w, int h, ST::Texture::Format f, ST::Textu
 int ST::RenderTarget::textureCount(){
 	return textureToRender_.size();
 }
-
-//void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
-//	width_ = w;
-//	height_ = h;
-//	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
-//
-//	GLenum error = glGetError();
-//	if (error != GL_NO_ERROR) {
-//		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
-//	}
-//
-//	textureToRender_ = std::make_shared<ST::Texture>();
-//	textureToRender_->init(width_, height_, t, dt, f);
-//	textureToRender_->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
-//	textureToRender_->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
-//	textureToRender_->bind();
-//
-//	if (f == ST::Texture::F_DEPTH) {
-//		renderType_ = RT_Depth;
-//	}
-//
-//	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-//	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_->getTypeGL(), textureToRender_->getID(), 0);
-//	textureToRender_->set_data(0);
-//
-//	error = glGetError();
-//	if (error != GL_NO_ERROR) {
-//		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
-//	}
-//
-//	if (renderType_ == RT_Depth) {
-//		//float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
-//		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
-//		glDrawBuffer(GL_NONE);
-//		glReadBuffer(GL_NONE);
-//	}else {
-//		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
-//		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-//	}
-//	
-//	error = glGetError();
-//	if (error != GL_NO_ERROR) {
-//		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
-//	}
-//
-//	textureToRender_->unbind();
-//	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-//}
 
 void ST::RenderTarget::createQuadToRender(){
 
@@ -179,20 +125,23 @@ void ST::RenderTarget::createQuadToRender(){
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-
-	// ----
-	//unsigned int attachments[textureCount()] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-	//glDrawBuffers(textureCount(), &texturesTypeRender_.front());
+	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	unsigned int rboDepth;
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width_, height_);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 }
 
 void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
 		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 0);
 		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 1);
 		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 2);
+		//glUniform1i(glGetUniformLocation(Shader.getID(), "gDepth"), 3);
 
 		glBindVertexArray(quadID);
 
@@ -205,6 +154,14 @@ void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
 		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+	// blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+	// the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
+	// depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+	glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 GLuint ST::RenderTarget::getID(){
@@ -223,13 +180,15 @@ void ST::RenderTarget::start() {
 
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
-	if (renderType_ == RT_Depth) {
+	/*if (renderType_ == RT_Depth) {
 		glViewport(0, 0, width_, height_);
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}else {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
+	}*/
+	glViewport(0, 0, width_, height_);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void ST::RenderTarget::end(){
@@ -247,7 +206,7 @@ ST::RenderTarget::~RenderTarget(){
 ST::RenderTarget::RenderTarget(const RenderTarget& o){
 	height_ = o.height_;
 	width_ = o.width_;
-	renderType_ = o.renderType_;
+	//renderType_ = o.renderType_;
 
 	last_viewport[0] = o.last_viewport[0];
 	last_viewport[1] = o.last_viewport[1];

@@ -39,7 +39,7 @@ namespace ST {
 		GLuint getID();
 		GLuint textureID(int index);
 
-		RenderType renderType_;
+		//RenderType renderType_;
 
 		void start();
 		void end();
