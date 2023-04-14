@@ -8,6 +8,7 @@
 
 namespace ST {
 
+	class GameObj_Manager;
 	class Program;
 
 	class RenderTarget {
@@ -36,7 +37,7 @@ namespace ST {
 		void nextVisualMode();
 
 		void createQuadToRender();
-		void renderOnScreen(ST::Program& Shader);
+		void renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader);
 
 		GLuint getID();
 		GLuint textureID(int index);

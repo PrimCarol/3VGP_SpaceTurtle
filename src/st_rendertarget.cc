@@ -1,6 +1,9 @@
 #include "st_rendertarget.h"
 #include <stdio.h>
 
+#include <st_gameobj_manager.h>
+#include <st_transform.h>
+#include <st_camera.h>
 #include <st_program.h>
 
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
@@ -143,20 +146,29 @@ void ST::RenderTarget::createQuadToRender(){
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 }
 
-void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
+void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader){
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	auto camVector = gm.getComponentVector<ST::CameraComponent>();
+	if (gm.mainCameraID() == -1) {
+		for (int i = 0; i < camVector->size(); i++) {
+			if (camVector->at(i).has_value()) {
+				ST::GameObj tempObj(i, gm);
+				gm.setMainCamera(tempObj);
+			}
+		}
+	}
 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
 		for (int i = 0; i < texturesUniformName_.size(); i++){
 			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
 		}
-//		glUniform1i(glGetUniformLocation(Shader.getID(), "gAlbedoSpec"), 0);
-//		glUniform1i(glGetUniformLocation(Shader.getID(), "gPosition"), 1);
-//		glUniform1i(glGetUniformLocation(Shader.getID(), "gNormal"), 2);
-		//glUniform1i(glGetUniformLocation(Shader.getID(), "gDepth"), 3);
 
+		// Temporal <--------------------------------
+		glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
 		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
+		glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
 
 		glBindVertexArray(quadID);
 

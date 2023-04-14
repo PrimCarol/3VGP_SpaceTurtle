@@ -27,6 +27,8 @@ int main() {
 
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
+	ST::Texture textureCatSpecular;
+	textureCatSpecular.loadSource("../others/Cat_specular.png");
 
 	ST::Texture otherTexture;
 	otherTexture.loadSource("../others/icon.png");
@@ -74,15 +76,16 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
-	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	//DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	//DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
-	//DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	//DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	//DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
-	//DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
-	//DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
+	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
+	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
+	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
+	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 
 	// --------------------------
@@ -94,7 +97,7 @@ int main() {
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition"); // Position
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal"); // Normal
 	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH); // Depth
-	myRenderTarget.createQuadToRender();
+	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	bool changeMode = false;
 	// **************** TEST *****************
@@ -109,14 +112,14 @@ int main() {
 		ST::SystemTransform::UpdateTransforms(gm);
 
 		//lightSystem.CompileShadows(gm);
-		//lightSystem.CompileLights(gm, *gm.basicProgram);
+		lightSystem.CompileLights(gm, *gm.framebufferProgram);
 
 
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 		
-		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
+		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram);
 
 
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {
