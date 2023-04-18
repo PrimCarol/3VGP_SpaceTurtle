@@ -39,7 +39,7 @@ ST::RenderTarget::RenderTarget(){
 	visualMode = 0;
 }
 
-void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
+void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
 	width_ = w;
 	height_ = h;
 
@@ -51,7 +51,7 @@ void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::F
 	}
 
 	textureToRender_.push_back(std::make_shared<ST::Texture>());
-	textureToRender_.back()->init(width_, height_, t, dt, f);
+	textureToRender_.back()->init(width_, height_, t, dt, f, internalf);
 	textureToRender_.back()->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
 	textureToRender_.back()->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	textureToRender_.back()->bind();

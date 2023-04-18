@@ -21,9 +21,10 @@ namespace ST {
             F_R,
             F_RG,
             F_RGB,
+            F_RGBA,
+            F_RGBA16,
             F_BGR,
             F_BGRA,
-            F_RGBA,
             F_DEPTH,
             F_DEPTH32
         };
@@ -59,7 +60,11 @@ namespace ST {
 		Texture();
 		
 		bool loadSource(const char* shaderText, TextType t = TextType::T_2D, Format f = F_RGBA/*, int mipmaps = 0*/);
-        void init(int width, int height, TextType t = TextType::T_2D, DataType dt = DT_U_BYTE, Format f = Format::F_RGBA);
+        void init(int width, int height,
+            TextType t = TextType::T_2D,
+            DataType dt = DT_U_BYTE,
+            Format f = Format::F_RGBA,
+            Format internalf = Format::F_RGBA);
 
         void bind();
         void unbind();
@@ -110,6 +115,7 @@ namespace ST {
         DataType dataType_;
         TextType type_;
         Format format_;
+        Format format_internal_;
 
         int width_;
         int height_;

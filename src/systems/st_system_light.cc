@@ -213,7 +213,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				Light_ShadowMap thisLightShadow;
 				ST::RenderTarget thisLightRenderTarget;
-				thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 				
 				ST::CameraComponent cam;
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.

@@ -93,10 +93,10 @@ int main() {
 	ST::SystemLight lightSystem;
 
 	ST::RenderTarget myRenderTarget;
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec"); // Albedo
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition"); // Position
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal"); // Normal
-	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec", ST::Texture::F_RGBA, ST::Texture::F_RGBA, ST::Texture::DT_U_BYTE); // Albedo
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Position
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Normal
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
 	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	bool changeMode = false;

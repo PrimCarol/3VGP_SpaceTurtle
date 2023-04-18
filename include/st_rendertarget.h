@@ -24,6 +24,7 @@ namespace ST {
 		
 		void addTexture(int w, int h, const char* name,
 			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
+			ST::Texture::Format internalf = ST::Texture::Format::F_RGBA,
 			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
 		int textureCount();
