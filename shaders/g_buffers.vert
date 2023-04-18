@@ -19,7 +19,7 @@ uniform mat4 u_vp_matrix;
 
 void main(){
     vec4 worldPos = instance_Matrix * vec4(a_position, 1.0);
-    FragPos = worldPos.xyz; 
+    FragPos = worldPos.xyz;
     TexCoords = a_uv;
     
     color = instance_Color;

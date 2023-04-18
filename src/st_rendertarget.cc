@@ -77,13 +77,14 @@ void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::F
 	}
 
 	if (f == ST::Texture::F_DEPTH) {
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
+		//glDrawBuffer(GL_NONE);
+		//glReadBuffer(GL_NONE);
 	}
 	else {
 		//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 		//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
 		//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		//glDrawBuffers(textureCount(), &texturesTypeRender_.front());
 		glDrawBuffers(textureCount(), &texturesTypeRender_.front());
 	}
 
@@ -138,16 +139,15 @@ void ST::RenderTarget::createQuadToRender(){
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
-	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	/*glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 	unsigned int rboDepth;
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width_, height_);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);*/
 }
 
 void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader){
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	auto camVector = gm.getComponentVector<ST::CameraComponent>();
 	if (gm.mainCameraID() == -1) {

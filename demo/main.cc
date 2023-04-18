@@ -76,7 +76,7 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
@@ -96,7 +96,7 @@ int main() {
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec"); // Albedo
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition"); // Position
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal"); // Normal
-	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
 	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	bool changeMode = false;

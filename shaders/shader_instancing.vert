@@ -43,6 +43,7 @@ void main(){
 	color = instance_Color;
 	shininess = instance_MatShininess;
 	modelPosition = (instance_Matrix * vec4(a_position,1)).xyz;
+	//modelPosition = (instance_Matrix * vec4(0.0,0.0,0.0,1)).xyz;
 	normals = normalize((instance_Matrix * vec4(a_normal,0.0)).xyz);
 
 	// ----- UV's and Atlas ------
