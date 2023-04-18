@@ -96,7 +96,7 @@ int main() {
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec"); // Albedo
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition"); // Position
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal"); // Normal
-	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH); // Depth
+	//myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
 	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	bool changeMode = false;

@@ -62,7 +62,7 @@ void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::F
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Depth), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
 
-		texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));
+		//texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));
 	}else {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Color) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
