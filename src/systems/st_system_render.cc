@@ -353,6 +353,9 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			std::vector<MyObjToRender> objs_opaque;
 			std::vector<MyObjToRender> objs_translucent;
 
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
+
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {
 

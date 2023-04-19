@@ -14,7 +14,7 @@ int main() {
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
-	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/840.0f, 0.01f, 100000.0f);
+	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 1.0f, 1000.0f);
 
 	// --------------
 	ST::Texture textureTest;
@@ -27,6 +27,8 @@ int main() {
 
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
+	ST::Texture textureCatSpecular;
+	textureCatSpecular.loadSource("../others/Cat_specular.png");
 
 	ST::Texture otherTexture;
 	otherTexture.loadSource("../others/icon.png");
@@ -63,7 +65,7 @@ int main() {
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
-	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
@@ -72,8 +74,9 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
+	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
@@ -90,8 +93,13 @@ int main() {
 	ST::SystemLight lightSystem;
 
 	ST::RenderTarget myRenderTarget;
-	myRenderTarget.setUp(w.getWindowsWidth(), w.getWindowsHeight());
-	myRenderTarget.createQuadToRender();
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gAlbedoSpec", ST::Texture::F_RGBA, ST::Texture::F_RGBA, ST::Texture::DT_U_BYTE); // Albedo
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Position
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Normal
+	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
+	myRenderTarget.createQuadToRender(); // que lo haga solo?
+	
+	bool changeMode = false;
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -104,13 +112,28 @@ int main() {
 		ST::SystemTransform::UpdateTransforms(gm);
 
 		lightSystem.CompileShadows(gm);
-		lightSystem.CompileLights(gm, *gm.basicProgram);
-		
+		lightSystem.CompileLights(gm, *gm.framebufferProgram);
+
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
+		
+		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram/*, light*/);
 
-		myRenderTarget.renderOnScreen(*gm.framebufferProgram);
+
+		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {
+			myRenderTarget.nextVisualMode();
+			changeMode = true;
+		}
+		if (w.inputReleased(ST::ST_INPUT_JUMP)) {
+			changeMode = false;
+		}
+
+
+
+
+
+
 
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);

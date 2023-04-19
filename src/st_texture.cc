@@ -29,6 +29,9 @@ GLenum formatToGl(const ST::Texture::Format f) {
     case ST::Texture::F_RGBA:
         aux = GL_RGBA;
         break;
+    case ST::Texture::F_RGBA16:
+        aux = GL_RGBA16F;
+        break;
     case ST::Texture::F_DEPTH:
         aux = GL_DEPTH_COMPONENT;
         break;
@@ -160,6 +163,7 @@ ST::Texture::Texture(){
     type_ = T_2D;
     dataType_ = DT_U_BYTE;
     format_ = F_RGBA;
+    format_internal_ = F_RGBA;
 
     borderColor[0] = 1.0;
     borderColor[1] = 1.0;
@@ -192,7 +196,7 @@ bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int m
 	return true;
 }
 
-void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f) {
+void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f, Format internalF) {
     //glGenTextures(1, &internalID);
 
     width_ = width;
@@ -200,6 +204,7 @@ void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f)
     type_ = t;
     dataType_ = dt;
     format_ = f;
+    format_internal_ = internalF;
 }
 
 void ST::Texture::bind(){
@@ -221,8 +226,6 @@ void ST::Texture::setCols(int num){
         cols = num;
     }
 }
-
-
 
 void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
     //GLenum data_type;
@@ -262,7 +265,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
 
-        glTexImage1D(GL_TEXTURE_1D, 0, formatToGl(format_), width(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
+        glTexImage1D(GL_TEXTURE_1D, 0, formatToGl(format_internal_), width(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_1D);
@@ -288,7 +291,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
 
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
+        glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_2D);
@@ -312,7 +315,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
 
-        glTexImage3D(GL_TEXTURE_3D, 0, formatToGl(format_), width(), height(), depth_, 0, formatToGl(format_), dataTypeToGl(dataType_), data);
+        glTexImage3D(GL_TEXTURE_3D, 0, formatToGl(format_internal_), width(), height(), depth_, 0, formatToGl(format_), dataTypeToGl(dataType_), data);
         
         if (generateMipmap) {
             glGenerateMipmap(GL_TEXTURE_3D);

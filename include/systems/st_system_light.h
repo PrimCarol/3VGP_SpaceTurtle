@@ -4,6 +4,7 @@
 #include <vector>
 #include <components/st_render.h>
 #include <components/st_transform.h>
+#include <st_shadowmapping.h>
 
 #include <imgui.h>
 
@@ -11,7 +12,6 @@ namespace ST {
 
 	class GameObj_Manager;
 	class Program;
-	class RenderTarget;
 
 	// ******* Temporal *********
 	struct Light_MyObjToRender {
@@ -21,7 +21,7 @@ namespace ST {
 	// ******* Temporal *********
 
 	struct Light_ShadowMap {
-		std::vector<RenderTarget> renderTarget_;
+		std::vector<ST::ShadowMapping> renderTarget_;
 		glm::mat4 matrix_;
 	};
 

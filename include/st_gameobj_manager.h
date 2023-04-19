@@ -80,6 +80,7 @@ namespace ST {
 		std::shared_ptr<ST::Program> shadowMapping;
 		std::shared_ptr<ST::Program> framebufferProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
+		std::shared_ptr<ST::Program> g_buffer;
 
 		// ***************** Shadow Mapping Test ***************
 		//bool haveShadowMap_;

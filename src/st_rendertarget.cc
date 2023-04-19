@@ -1,6 +1,9 @@
 #include "st_rendertarget.h"
 #include <stdio.h>
 
+#include <st_gameobj_manager.h>
+#include <st_transform.h>
+#include <st_camera.h>
 #include <st_program.h>
 
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
@@ -27,16 +30,19 @@ ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
 	glGenRenderbuffers(1, &rbo);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
-	renderType_ = RT_Color;
+	//renderType_ = RT_Color;
 	width_ = 0;
 	height_ = 0;
 
 	quadID = 0;
+
+	visualMode = 0;
 }
 
-void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::DataType dt, ST::Texture::TextType t){
+void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
 	width_ = w;
 	height_ = h;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 
 	GLenum error = glGetError();
@@ -44,44 +50,51 @@ void ST::RenderTarget::setUp(int w, int h, ST::Texture::Format f, ST::Texture::D
 		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_ = std::make_shared<ST::Texture>();
-	textureToRender_->init(width_, height_, t, dt, f);
-	textureToRender_->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER); // <-------- Revisar.
-	textureToRender_->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
-	textureToRender_->bind();
+	textureToRender_.push_back(std::make_shared<ST::Texture>());
+	textureToRender_.back()->init(width_, height_, t, dt, f, internalf);
+	textureToRender_.back()->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.back()->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
+	textureToRender_.back()->bind();
 
 	if (f == ST::Texture::F_DEPTH) {
-		renderType_ = RT_Depth;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Depth), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		textureToRender_.back()->set_data(0);
+	}else {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Color) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
+		textureToRender_.back()->set_data(0);
+
+		texturesTypeRender_.push_back(RenderTypeToGL(RT_Color) + textureCount());
 	}
-
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureToRender_.getDataTypeGL(), textureToRender_.getID(), 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(renderType_), textureToRender_->getTypeGL(), textureToRender_->getID(), 0);
-	textureToRender_->set_data(0);
-
+	texturesUniformName_.push_back(name);
+	
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
 		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
 	}
 
-	if (renderType_ == RT_Depth) {
-		//float clampColor[] = {1.0f,1.0f,1.0f,1.0f};
-		//glTextureParameterfv(textureToRender_.getTypeGL(), GL_TEXTURE_BORDER_COLOR, clampColor);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-	}else {
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	if (f != ST::Texture::F_DEPTH) {
+		glDrawBuffers(textureCount(), &texturesTypeRender_.front());
 	}
-	
+
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
 		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
 	}
 
-	textureToRender_->unbind();
+	textureToRender_.back()->unbind();
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+int ST::RenderTarget::textureCount(){
+	return textureToRender_.size();
+}
+
+void ST::RenderTarget::nextVisualMode(){
+	visualMode++;
+	if (visualMode >= textureCount()) {
+		visualMode = 0;
+	}
 }
 
 void ST::RenderTarget::createQuadToRender(){
@@ -114,50 +127,90 @@ void ST::RenderTarget::createQuadToRender(){
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
+	/*glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	unsigned int rboDepth;
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width_, height_);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);*/
 }
 
-void ST::RenderTarget::renderOnScreen(ST::Program& Shader){
+void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader){
+
+	auto camVector = gm.getComponentVector<ST::CameraComponent>();
+	if (gm.mainCameraID() == -1) {
+		for (int i = 0; i < camVector->size(); i++) {
+			if (camVector->at(i).has_value()) {
+				ST::GameObj tempObj(i, gm);
+				gm.setMainCamera(tempObj);
+			}
+		}
+	}
+	// aditiu de la informacio 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
-		glUniform1i(glGetUniformLocation(Shader.getID(), "screenTexture"), 0);
+		for (int i = 0; i < texturesUniformName_.size(); i++){
+			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+		}
+
+		// Temporal <--------------------------------
+		glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
+		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
+		glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
 
 		glBindVertexArray(quadID);
-		glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
+
+		//glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
+		for (int i = 0; i < textureCount(); i++){
+			glActiveTexture(GL_TEXTURE0+i);
+			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+		}
+
+		// Blucle aqui de llums. <-------------------
+		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
+	// blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+	// the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
+	// depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+	glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 GLuint ST::RenderTarget::getID(){
 	return internalID;
 }
 
-GLuint ST::RenderTarget::textureID(){
-	return textureToRender_->getID();
+GLuint ST::RenderTarget::textureID(int index){
+	if (index < 0 || index > textureCount()) { index = 0; }
+	return textureToRender_.at(index)->getID();
 }
 
 void ST::RenderTarget::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
-	if (renderType_ == RT_Depth) {
+	/*if (renderType_ == RT_Depth) {
 		glViewport(0, 0, width_, height_);
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}else {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
+	}*/
+	glViewport(0, 0, width_, height_);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void ST::RenderTarget::end(){
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// Vigilar si hay problemas con esto, se comenta
-	// porque ya se hace solo en la camara.
-	
 	// Reset viewport
-	//glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
 }
 
@@ -169,7 +222,8 @@ ST::RenderTarget::~RenderTarget(){
 ST::RenderTarget::RenderTarget(const RenderTarget& o){
 	height_ = o.height_;
 	width_ = o.width_;
-	renderType_ = o.renderType_;
+	//renderType_ = o.renderType_;
+	visualMode = o.visualMode;
 
 	last_viewport[0] = o.last_viewport[0];
 	last_viewport[1] = o.last_viewport[1];
