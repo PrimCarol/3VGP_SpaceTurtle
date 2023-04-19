@@ -76,7 +76,7 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
