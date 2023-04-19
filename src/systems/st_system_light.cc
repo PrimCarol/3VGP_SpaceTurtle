@@ -6,7 +6,6 @@
 #include <components/st_transform.h>
 
 #include <components/st_camera.h>
-#include <st_rendertarget.h>
 
 #include <st_program.h>
 
@@ -169,18 +168,18 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisPr
 	glUniform1i(idUniform, countSpotLights);
 
 	// Shadow Mapping
-	if (shadowMaps_.size() > 0) {
-		glUniform1i(thisProgram.getUniform("u_haveShadowMap"), true);
+	//if (shadowMaps_.size() > 0) {
+	//	glUniform1i(thisProgram.getUniform("u_haveShadowMap"), true);
 
-		//glUniform1i(thisProgram.getUniform("shadowMap"), 3);
-		//glActiveTexture(GL_TEXTURE0 + 3);
-		//glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
+	//	glUniform1i(thisProgram.getUniform("shadowMap"), 3);
+	//	glActiveTexture(GL_TEXTURE0 + 3);
+	//	glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
 
-		GLuint lighSpaceMatrix = thisProgram.getUniform("lightSpaceMatrix");
-		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &shadowMaps_[0].matrix_[0][0]);
-	}else {
-		glUniform1i(thisProgram.getUniform("u_haveShadowMap"), false);
-	}
+	//	GLuint lighSpaceMatrix = thisProgram.getUniform("lightSpaceMatrix");
+	//	glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &shadowMaps_[0].matrix_[0][0]);
+	//}else {
+	//	glUniform1i(thisProgram.getUniform("u_haveShadowMap"), false);
+	//}
 
 	//glUseProgram(0);
 }
@@ -212,13 +211,17 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 			if (thisLight.type_ == ST::Directional) {
 
 				Light_ShadowMap thisLightShadow;
-				ST::RenderTarget thisLightRenderTarget;
+				ST::ShadowMapping thisLightRenderTarget;
+				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y);
 				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 				
 				ST::CameraComponent cam;
-				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
+				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
+				// Jugar de alguna forma con la posicion de la camara principal y la directional, para que nos siga,
+				// luego con que la direccion sea su direccion habitual, no el look at.
+				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-				thisLightShadow.matrix_ = cam.projection * cam.view;
+				thisLightShadow.matrix_ = cam.projection * thisTrans.m_Rotation_;
 
 
 				idUniform = gm.shadowMapping->getUniform("lightSpaceMatrix");
@@ -252,10 +255,14 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 			}
 		}
 	}
+	static int indexView = 0;
+	
 	shadowMaps_ = shadowMapsLocal;
-	/*if (shadowMaps_.size() > 0) {
+	if (shadowMaps_.size() > 0) {
 		ImGui::Begin("ViewDepth");
-		ImGui::Image((void*)(intptr_t)shadowMaps_[0].renderTarget_[0].textureID(), ImVec2(192, 120));
+		ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size()-1);
+		if (indexView >= shadowMapsLocal.size()) { indexView = shadowMapsLocal.size() - 1; }
+		ImGui::Image((void*)(intptr_t)shadowMaps_[indexView].renderTarget_[0].textureID(), ImVec2(192, 120));
 		ImGui::SetNextItemWidth(50.0f);
 		ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
 		ImGui::SetNextItemWidth(50.0f);
@@ -269,7 +276,7 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 		ImGui::SetNextItemWidth(50.0f);
 		ImGui::DragInt("Texture Height", &textureSize_.y);
 		ImGui::End();
-	}*/
+	}
 }
 
 void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){

@@ -31,6 +31,8 @@ namespace ST {
 
 		GLuint internalID;
 		std::shared_ptr<ST::Texture> shadowMap;
+
+		GLint last_viewport[4];
 		//unsigned int rbo;
 	};
 }

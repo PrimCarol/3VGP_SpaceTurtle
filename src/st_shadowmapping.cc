@@ -3,7 +3,7 @@
 ST::ShadowMapping::ShadowMapping(){
 	glGenFramebuffers(1, &internalID);
 	//glGenRenderbuffers(1, &rbo);
-	//glGetIntegerv(GL_VIEWPORT, last_viewport);
+	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
 	width_ = 0;
 	height_ = 0;
@@ -17,7 +17,7 @@ void ST::ShadowMapping::setUp(int w, int h){
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		printf("RenderTarget 01 -> OpenGL Error: %d\n", error);
+		printf("ShadowMap 01 -> OpenGL Error: %d\n", error);
 	}
 
 	shadowMap = std::make_shared<ST::Texture>();
@@ -25,13 +25,15 @@ void ST::ShadowMapping::setUp(int w, int h){
 	shadowMap->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->bind();
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, shadowMap->getID(), 0);
+	
+	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap->getID(), 0);
 	shadowMap->set_data(0);
 	
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
-		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
+		printf("ShadowMap 02 -> OpenGL Error: %d\n", error);
 	}
 
 	glDrawBuffer(GL_NONE);
@@ -39,11 +41,11 @@ void ST::ShadowMapping::setUp(int w, int h){
 	
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
-		printf("RenderTarget 03 -> OpenGL Error: %d\n", error);
+		printf("ShadowMap 03 -> OpenGL Error: %d\n", error);
 	}
 
 	shadowMap->unbind();
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -60,7 +62,7 @@ void ST::ShadowMapping::start() {
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glGetIntegerv(GL_VIEWPORT, last_viewport);
+	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
 	/*if (renderType_ == RT_Depth) {
 		glViewport(0, 0, width_, height_);
@@ -77,7 +79,7 @@ void ST::ShadowMapping::end(){
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// Reset viewport
-	//glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
+	glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
 }
 
 ST::ShadowMapping::~ShadowMapping(){

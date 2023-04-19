@@ -111,9 +111,8 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 
-		//lightSystem.CompileShadows(gm);
+		lightSystem.CompileShadows(gm);
 		lightSystem.CompileLights(gm, *gm.framebufferProgram);
-
 
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm);

@@ -57,12 +57,8 @@ void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::F
 	textureToRender_.back()->bind();
 
 	if (f == ST::Texture::F_DEPTH) {
-		//renderType_ = RT_Depth;
-
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Depth), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
-
-		//texturesTypeRender_.push_back(RenderTypeToGL(RT_Depth));
 	}else {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, RenderTypeToGL(RT_Color) + textureCount(), textureToRender_.back()->getTypeGL(), textureToRender_.back()->getID(), 0);
 		textureToRender_.back()->set_data(0);
@@ -76,15 +72,7 @@ void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::F
 		printf("RenderTarget 02 -> OpenGL Error: %d\n", error);
 	}
 
-	if (f == ST::Texture::F_DEPTH) {
-		//glDrawBuffer(GL_NONE);
-		//glReadBuffer(GL_NONE);
-	}
-	else {
-		//glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
-		//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		//glDrawBuffers(textureCount(), &texturesTypeRender_.front());
+	if (f != ST::Texture::F_DEPTH) {
 		glDrawBuffers(textureCount(), &texturesTypeRender_.front());
 	}
 
