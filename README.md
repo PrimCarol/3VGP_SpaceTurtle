@@ -17,11 +17,11 @@
   - Material Configuration <br>
   - Translucent <br>
   - Picking System <br>
+  - Deferred Pipeline <br>
 
 <h2>🔶 Future additions </h2>
 
   - PBR Materials <br>
-  - Deferred Pipeline <br>
   - Save/Load Scene <br>
   - VR Port <br>
 
