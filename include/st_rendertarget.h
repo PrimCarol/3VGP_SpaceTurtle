@@ -1,5 +1,5 @@
-#ifndef _SPACE_TURTLE_AUDIO_H_
-#define _SPACE_TURTLE_AUDIO_H_ 1
+#ifndef _SPACE_TURTLE_RENDERTARGET_H_
+#define _SPACE_TURTLE_RENDERTARGET_H_ 1
 
 #include <st_texture.h>
 #include <vector>
