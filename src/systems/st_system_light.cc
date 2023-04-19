@@ -197,8 +197,8 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 	GLint idUniform = -1;
 
-	static glm::vec2 camShadowSize = glm::vec2(100.0f,100.0f);
-	static glm::vec2 camShadowDistance = glm::vec2(1.0f, 30.0f);
+	static glm::vec2 camShadowSize = glm::vec2(20.0f,20.0f);
+	static glm::vec2 camShadowDistance = glm::vec2(-30.0f, 30.0f);
 
 	std::vector<Light_ShadowMap> shadowMapsLocal;
 	shadowMaps_.clear();
@@ -221,7 +221,9 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 				// luego con que la direccion sea su direccion habitual, no el look at.
 				cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-				thisLightShadow.matrix_ = cam.projection * thisTrans.m_Rotation_;
+				glm::mat4 tempMat = thisTrans.m_Rotation_;
+				//tempMat *= glm::rotate(90.0f, glm::vec3(0.0f,0.0f,1.0f));
+				thisLightShadow.matrix_ = cam.projection * tempMat;
 
 
 				idUniform = gm.shadowMapping->getUniform("lightSpaceMatrix");
@@ -239,19 +241,6 @@ void ST::SystemLight::CompileShadows(ST::GameObj_Manager& gm){
 
 				thisLightShadow.renderTarget_.push_back(thisLightRenderTarget);
 				shadowMapsLocal.push_back(thisLightShadow);
-
-
-				/*ImGui::Begin("ViewDepth");
-				ImGui::Image((void*)(intptr_t)thisLightRenderTarget.textureID(), ImVec2(192, 120));
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Vertical", &camShadowSize.y);
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Far", &camShadowDistance.y);
-				ImGui::End();*/
 			}
 		}
 	}

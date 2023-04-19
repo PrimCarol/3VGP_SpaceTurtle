@@ -146,7 +146,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 	}
-
+	// aditiu de la informacio 
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
 		for (int i = 0; i < texturesUniformName_.size(); i++){
@@ -166,6 +166,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 		}
 
+		// Blucle aqui de llums. <-------------------
 		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

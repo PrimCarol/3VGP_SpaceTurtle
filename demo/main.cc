@@ -14,7 +14,7 @@ int main() {
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
-	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 0.01f, 1000.0f);
+	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 1.0f, 1000.0f);
 
 	// --------------
 	ST::Texture textureTest;
@@ -76,7 +76,7 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
@@ -118,7 +118,7 @@ int main() {
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 		
-		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram);
+		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram/*, light*/);
 
 
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {
