@@ -125,6 +125,20 @@ void main(){
         //FragColor = vec4(color,1.0);
         FragColor = vec4(vec3(Depth),1.0);
     }
+
+//    if(gl_FragCoord.x < 800){
+//        if(gl_FragCoord.y < 450){
+//            FragColor = vec4(vec3(Depth),1.0);
+//        }else{
+//            FragColor = vec4(vec3(Specular),1.0);
+//        }
+//    }else{
+//        if(gl_FragCoord.y < 450){
+//            FragColor = vec4(Normal,1.0);
+//        }else{
+//            FragColor = vec4(Diffuse,1.0);
+//        }
+//    }
 }
 
 // -------------------------------------------------------------------------------------

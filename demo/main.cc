@@ -39,27 +39,27 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	//int HOWMANY = 200;
+	int HOWMANY = 200;
 
-	//std::vector<ST::GameObj> objects;
-	//for (int i = 0; i < HOWMANY; i++){
-	//	objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
-	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
-	//	objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
-	//	objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
-	//	//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
-	//	objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.basicProgram);
-	//	objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
-	//	objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
-	//	objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
-	//	objects.back().getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
-	//	objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
-	//}
+	std::vector<ST::GameObj> objects;
+	for (int i = 0; i < HOWMANY; i++){
+		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
+		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
+		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
+		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
+		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
+		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
+		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
+		objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
+		objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
+		objects.back().getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
+		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
+	}
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
@@ -111,14 +111,16 @@ int main() {
 
 		ST::SystemTransform::UpdateTransforms(gm);
 
-		lightSystem.CompileShadows(gm);
-		lightSystem.CompileLights(gm, *gm.framebufferProgram);
+		//lightSystem.CompileShadows(gm);
+		//lightSystem.CompileLights(gm, *gm.framebufferProgram);
+		lightSystem.CompileLights(gm);
 
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 		
-		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram/*, light*/);
+		//myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram);
+		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 
 
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {

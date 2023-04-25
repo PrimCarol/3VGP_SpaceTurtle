@@ -5,6 +5,7 @@
 #include <st_transform.h>
 #include <st_camera.h>
 #include <st_program.h>
+#include <st_system_light.h>
 
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 	GLenum aux = GL_NONE;
@@ -135,7 +136,7 @@ void ST::RenderTarget::createQuadToRender(){
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);*/
 }
 
-void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader){
+void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader, std::vector<ST::LightsStruct>* lights){
 
 	auto camVector = gm.getComponentVector<ST::CameraComponent>();
 	if (gm.mainCameraID() == -1) {
@@ -146,7 +147,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 	}
-	// aditiu de la informacio 
+	
 	if (quadID != 0) {
 		glUseProgram(Shader.getID());
 		for (int i = 0; i < texturesUniformName_.size(); i++){
@@ -166,9 +167,22 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 		}
 
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_ONE, GL_ONE);
+
+		if (lights) {
+			for (int i = 0; i < lights->size(); i++){
+				//Uniforms
+				
+				//glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
+		}
 		// Blucle aqui de llums. <-------------------
+		// aditiu de la informacio 
 		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDisable(GL_BLEND);
 	}
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
