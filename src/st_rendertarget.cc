@@ -171,9 +171,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 
 		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
 		
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		if (lights) {
 			for (int i = 0; i < lights->size(); i++){
@@ -217,8 +218,8 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 
-		glDisable(GL_BLEND);
 	}
+	glDisable(GL_BLEND);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer

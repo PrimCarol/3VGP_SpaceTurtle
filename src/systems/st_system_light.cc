@@ -189,7 +189,11 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 	
+	static glm::vec2 camShadowSize = glm::vec2(20.0f, 20.0f);
+	static glm::vec2 camShadowDistance = glm::vec2(-30.0f, 30.0f); // Temporal <-------------------
+
 	lights_.clear();
+	gm.shadowMapping->use(); // ????????????????????
 
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
@@ -199,6 +203,64 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			tempLightData.light_->direction_ = -transformComps.at(n).value().getUp();
 			tempLightData.matrix_ = transformComps.at(n).value().m_transform_;
 			
+			if (tempLightData.light_->type_ == ST::Directional) {
+				ST::ShadowMapping thisLightRenderTarget;
+				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y);
+				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
+
+				ST::CameraComponent cam;
+				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
+				// Jugar de alguna forma con la posicion de la camara principal y la directional, para que nos siga,
+				// luego con que la direccion sea su direccion habitual, no el look at.
+				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
+
+				glm::mat4 tempMat(1.0); // la view que sacaria con el LookAt.
+
+				// La rotacion no da un efecto correcto.
+				if (transformComps[gm.mainCameraID()].has_value()) {
+					tempMat = transformComps.at(n)->m_Rotation_ * transformComps[gm.mainCameraID()].value().m_Position_;
+				}
+				else {
+					tempMat = transformComps.at(n)->m_Rotation_;
+				}
+
+				//tempMat *= glm::rotate(90.0f, glm::vec3(0.0f,0.0f,1.0f));
+				tempLightData.matrix_ = cam.projection * tempMat;
+
+				glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
+
+				//Render Scene.
+				thisLightRenderTarget.start();
+				//glCullFace(GL_FRONT); // <--- Test
+				glDisable(GL_CULL_FACE);
+				setUpRender(gm);
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK); // <--- Test
+				thisLightRenderTarget.end();
+
+				tempLightData.renderTarget_.push_back(thisLightRenderTarget);
+				//shadowMapsLocal.push_back(thisLightShadow);
+
+				ImGui::Begin("ViewDepth");
+				//ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size() - 1);
+				//if (indexView >= shadowMapsLocal.size()) { indexView = shadowMapsLocal.size() - 1; }
+				ImGui::Image((void*)(intptr_t)tempLightData.renderTarget_[0].textureID(), ImVec2(192, 120));
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Vertical", &camShadowSize.y);
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragFloat("Far", &camShadowDistance.y);
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragInt("Texture Witdh", &textureSize_.x); ImGui::SameLine();
+				ImGui::SetNextItemWidth(50.0f);
+				ImGui::DragInt("Texture Height", &textureSize_.y);
+				ImGui::End();
+			}
+
 			lights_.push_back(tempLightData);
 		}
 	}
