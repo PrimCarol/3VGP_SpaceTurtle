@@ -9,11 +9,11 @@ uniform sampler2D gNormal;
 uniform sampler2D gDepth;
 //uniform sampler2D shadowMapping;
 
-// Extra
-uniform int visualMode;
-
 // Necesario
 uniform vec3 viewPos;
+
+// Extra
+uniform int visualMode;
 
 // Light Dir
 struct DirLight{
@@ -24,9 +24,10 @@ struct DirLight{
 	vec3 diffuse;
 	vec3 specular;
 };
-#define MAX_DIRECT_LIGHTS 3
-uniform int u_numDirectLights;
-uniform DirLight u_DirectLight[MAX_DIRECT_LIGHTS];
+//#define MAX_DIRECT_LIGHTS 3
+//uniform int u_numDirectLights;
+uniform DirLight u_DirectLight;
+//uniform DirLight u_DirectLight[MAX_DIRECT_LIGHTS];
 
 // Pointlight
 struct PointLight{
@@ -40,9 +41,10 @@ struct PointLight{
 	vec3 diffuse;
 	vec3 specular;
 };
-#define MAX_POINT_LIGHTS 10
-uniform int u_numPointLights;
-uniform PointLight u_PointLight[MAX_POINT_LIGHTS];
+//#define MAX_POINT_LIGHTS 10
+//uniform int u_numPointLights;
+uniform PointLight u_PointLight;
+//uniform PointLight u_PointLight[MAX_POINT_LIGHTS];
 
 struct SpotLight {
     vec3 position;
@@ -59,14 +61,26 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;       
 };
-#define MAX_SPOT_LIGHTS 4
-uniform int u_numSpotLights;
-uniform SpotLight u_SpotLight[MAX_SPOT_LIGHTS];
+//#define MAX_SPOT_LIGHTS 4
+//uniform int u_numSpotLights;
+uniform SpotLight u_SpotLight;
+//uniform SpotLight u_SpotLight[MAX_SPOT_LIGHTS];
 
-//Cabeceras
+// 0 -> Directional
+// 1 -> Point
+// 2 -> Spot
+uniform int u_lightType; 
+
+// Shadows
+//uniform bool u_haveShadowMap;
+//uniform sampler2D shadowMappingDirectLight;
+
+// Cabeceras
 vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular);
 vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
 vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
+
+//float CalcShadow(vec4 lightPos, vec3 normal, vec3 objPosition, sampler2D shadowMap);
 
 void main(){ 
 
@@ -81,37 +95,43 @@ void main(){
 
     // Render
     if(visualMode == 0){
+        //vec4 result = vec4(vec3(Diffuse), 1.0);
         vec4 result = vec4(0.0);
       
+        float shadow = 1.0;
+
         // Directional Lights
-        if(u_numDirectLights == 0 ){
-        	DirLight noDirectional;
-        	noDirectional.direction = vec3(0.0);
-        	noDirectional.ambient = vec3(0.1);
-        	noDirectional.diffuse = vec3(0.0);
-        	noDirectional.specular = vec3(0.0);
-        	result += CalcDirLight(noDirectional, Normal, viewDir, Diffuse, Specular);
-        }else{
-        	int CountDirectLights = u_numDirectLights;
-        	if(CountDirectLights >= MAX_DIRECT_LIGHTS){ CountDirectLights = MAX_DIRECT_LIGHTS; }
-        	for(int i = 0; i < CountDirectLights; i++){
-        		result += CalcDirLight(u_DirectLight[i], Normal, viewDir, Diffuse, Specular);
-        	}
+        if(u_lightType == 0 ){
+            result = CalcDirLight(u_DirectLight, Normal, viewDir, Diffuse, Specular);
+
+            //if(u_haveShadowMap){
+                //shadow = CalcShadow(FragPosLightSpace, u_DirectLight[0].direction, normal_);
+            //}
+        }
+
+        // Point
+        if(u_lightType == 1 ){
+            result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
+        }
+
+        // Spot
+        if(u_lightType == 2 ){
+            result = CalcSpotLight(u_SpotLight, Normal, FragPos, viewDir, Diffuse, Specular);
         }
 
         // Point Lights
-    	int CountPointLights = u_numPointLights;
-    	if(CountPointLights >= MAX_POINT_LIGHTS){ CountPointLights = MAX_POINT_LIGHTS; }
-    	for	(int i = 0; i < CountPointLights; i++){
-    		result += CalcPointLight(u_PointLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
-    	}
-
-        // Spot Lights
-        int CountSpotLights = u_numSpotLights;
-        if(CountSpotLights >= MAX_SPOT_LIGHTS){ CountSpotLights = MAX_SPOT_LIGHTS; }
-        for	(int i = 0; i < CountSpotLights; i++){
-        	result += CalcSpotLight(u_SpotLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
-        }
+//    	int CountPointLights = u_numPointLights;
+//    	if(CountPointLights >= MAX_POINT_LIGHTS){ CountPointLights = MAX_POINT_LIGHTS; }
+//    	for	(int i = 0; i < CountPointLights; i++){
+//    		result += CalcPointLight(u_PointLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
+//    	}
+//
+//        // Spot Lights
+//        int CountSpotLights = u_numSpotLights;
+//        if(CountSpotLights >= MAX_SPOT_LIGHTS){ CountSpotLights = MAX_SPOT_LIGHTS; }
+//        for	(int i = 0; i < CountSpotLights; i++){
+//        	result += CalcSpotLight(u_SpotLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
+//        }
 
         FragColor = result;
 
@@ -209,3 +229,37 @@ vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir
 
     return (ambient + diffuse + specular);
 }
+
+// Shadows
+//float CalcShadow(vec4 lightPos, vec3 normal, vec3 objPosition, sampler2D shadowMap){
+//    vec3 lightDir = normalize(lightPos.xyz - objPosition);
+//	vec3 projCoords = lightPos.xyz / lightPos.w;
+//	projCoords = projCoords * 0.5 + 0.5;
+//
+//	if(projCoords.z >= 1.0){  return 1.0; }
+//
+//	float closestDepth = texture(shadowMap, projCoords.xy).r;
+//	float currentDepth = projCoords.z;
+//	
+//	//float bias = 0.005;
+//	float angle = dot(normal, lightDir);
+//	if(angle >= 0){
+//		return 0.0;
+//	}
+//
+//	float bias = max(0.005 * (1.0 - angle), 0.005); 
+//
+//	float shadow = 0.0;
+//    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+//    for(int x = -1; x <= 1; ++x)
+//    {
+//        for(int y = -1; y <= 1; ++y)
+//        {
+//            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+//            shadow += currentDepth - bias >= pcfDepth  ? 0.0 : 1.0;        
+//        }    
+//    }
+//    shadow /= 9.0;
+//
+//	return shadow;
+//}

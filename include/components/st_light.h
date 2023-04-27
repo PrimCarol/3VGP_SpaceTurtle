@@ -20,6 +20,10 @@ namespace ST {
 
 		LightType type_;
 
+		// Directional - Spot
+		glm::vec3 position_;
+		glm::vec3 direction_;
+
 		// ---- Light Intensity ----
 		float constant_;
 		float linear_;

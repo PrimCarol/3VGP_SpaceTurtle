@@ -149,7 +149,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 	}
 	
 	if (quadID != 0) {
-		glUseProgram(Shader.getID());
+
+		//glUseProgram(Shader.getID());
+		Shader.use();
+
 		for (int i = 0; i < texturesUniformName_.size(); i++){
 			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
 		}
@@ -167,22 +170,59 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 		}
 
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_ONE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		if (lights) {
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
-				
-				//glDrawArrays(GL_TRIANGLES, 0, 6);
+				ST::LightComponent* tempLight = lights->at(i).light_;
+
+				// Directional
+				if (tempLight->type_ == ST::Directional) {
+					glUniform3f(Shader.getUniform("u_DirectLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.ambient"), tempLight->ambient_.x, tempLight->ambient_.y, tempLight->ambient_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
+				}
+				// Point
+				if (tempLight->type_ == ST::Point) {
+					glUniform3f(Shader.getUniform("u_PointLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(Shader.getUniform("u_PointLight.constant"), tempLight->constant_);
+					glUniform1f(Shader.getUniform("u_PointLight.linear"), tempLight->linear_);
+					glUniform1f(Shader.getUniform("u_PointLight.quadratic"), tempLight->quadratic_);
+				}
+				// Spot
+				if (tempLight->type_ == ST::Spot) {
+					glUniform3f(Shader.getUniform("u_SpotLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(Shader.getUniform("u_SpotLight.constant"), tempLight->constant_);
+					glUniform1f(Shader.getUniform("u_SpotLight.linear"), tempLight->linear_);
+					glUniform1f(Shader.getUniform("u_SpotLight.quadratic"), tempLight->quadratic_);
+					glUniform3f(Shader.getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform1f(Shader.getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
+					glUniform1f(Shader.getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
+				}
+
+				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_);
+
+				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 		}
+
 		// Blucle aqui de llums. <-------------------
 		// aditiu de la informacio 
-		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
+
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glDisable(GL_BLEND);
+
+		glDisable(GL_BLEND);
 	}
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);

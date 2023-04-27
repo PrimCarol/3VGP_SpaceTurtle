@@ -195,6 +195,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
 			LightsStruct tempLightData;
 			tempLightData.light_ = &lightComps.at(n).value();
+			tempLightData.light_->position_ = transformComps.at(n).value().getPosition();
+			tempLightData.light_->direction_ = -transformComps.at(n).value().getUp();
 			tempLightData.matrix_ = transformComps.at(n).value().m_transform_;
 			
 			lights_.push_back(tempLightData);
