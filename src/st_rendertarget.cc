@@ -217,11 +217,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 
-		// Blucle aqui de llums. <-------------------
-		// aditiu de la informacio 
-
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-
 		glDisable(GL_BLEND);
 	}
 
