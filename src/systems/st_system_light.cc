@@ -197,15 +197,18 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
+
+			ST::TransformComponent tempTransform = transformComps.at(n).value();
+
 			LightsStruct tempLightData;
 			tempLightData.light_ = &lightComps.at(n).value();
-			tempLightData.light_->position_ = transformComps.at(n).value().getPosition();
-			tempLightData.light_->direction_ = -transformComps.at(n).value().getUp();
-			tempLightData.matrix_ = transformComps.at(n).value().m_transform_;
+			tempLightData.light_->position_ = tempTransform.getPosition();
+			tempLightData.light_->direction_ = -tempTransform.getUp();
+			tempLightData.matrix_ = tempTransform.m_transform_;
 			
 			if (tempLightData.light_->type_ == ST::Directional) {
 				ST::ShadowMapping thisLightRenderTarget;
-				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y);
+				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y); // Da error.
 				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 
 				ST::CameraComponent cam;
@@ -219,10 +222,16 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 				// La rotacion no da un efecto correcto.
 				if (transformComps[gm.mainCameraID()].has_value()) {
-					tempMat = transformComps.at(n)->m_Rotation_ * transformComps[gm.mainCameraID()].value().m_Position_;
+					//tempTransform.RotateY(-3.1415f);
+					//tempTransform.RotateX(3.1415f);
+					//tempTransform.m_Rotation_ = glm::mat4(1.0f);
+					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().x, { 1.0f,0.0f,0.0f });
+					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().y, { 0.0f,1.0f,0.0f });
+					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().z, { 0.0f,0.0f,1.0f });
+					tempMat = tempTransform.m_Rotation_ * transformComps[gm.mainCameraID()].value().m_Position_;
 				}
 				else {
-					tempMat = transformComps.at(n)->m_Rotation_;
+					tempMat = tempTransform.m_Rotation_;
 				}
 
 				//tempMat *= glm::rotate(90.0f, glm::vec3(0.0f,0.0f,1.0f));
