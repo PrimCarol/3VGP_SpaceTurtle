@@ -181,7 +181,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				//Uniforms
 				ST::LightComponent* tempLight = lights->at(i).light_;
 
-				//glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &lights->at(i).matrix_[0][0]);
+				glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix"), 1, GL_FALSE, &lights->at(i).matrix_[0][0]);
 
 				// Directional
 				if (tempLight->type_ == ST::Directional) {
@@ -190,9 +190,9 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
 					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
 
-					//glUniform1i(gm.shadowMapping->getUniform("shadowMappingDirectLight"), 4);
-					//glActiveTexture(GL_TEXTURE0 + 4);
-					//glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
+					glUniform1i(Shader.getUniform("shadowMappingDirectLight"), 4);
+					glActiveTexture(GL_TEXTURE0 + 4);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
 				}
 				// Point
 				if (tempLight->type_ == ST::Point) {

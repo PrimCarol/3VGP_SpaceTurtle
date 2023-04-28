@@ -82,7 +82,7 @@ vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float
 vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
 vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
 
-float CalcShadow(vec4 lightPos, vec3 normal, vec3 objPosition, sampler2D shadowMap);
+float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap);
 
 void main(){ 
 
@@ -102,7 +102,7 @@ void main(){
       
         float shadow = 1.0;
 
-        vec4 PosLightSpace = lightSpaceMatrix * vec4(viewPos, 1.0);
+        vec4 PosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
         //shadow = CalcShadow(PosLightSpace, Normal, FragPos, shadowMappingDirectLight);
         //if(shadow > 0.0){ //Si no esta en sombra, calculamos las luces, si hay sombra total, no lo hacemos, pequeño ahorro? }
 
@@ -110,9 +110,7 @@ void main(){
         if(u_lightType == 0 ){
             result = CalcDirLight(u_DirectLight, Normal, viewDir, Diffuse, Specular);
 
-            //if(u_haveShadowMap){
-                //shadow = CalcShadow(FragPosLightSpace, u_DirectLight[0].direction, normal_);
-            //}
+            shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMappingDirectLight);
         }
 
         // Point
@@ -139,7 +137,7 @@ void main(){
 //        	result += CalcSpotLight(u_SpotLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
 //        }
 
-        FragColor = result;
+        FragColor = result * shadow;
 
     }else if(visualMode == 1){
         FragColor = vec4(FragPos,1.0);
@@ -237,8 +235,8 @@ vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir
 }
 
 // Shadows
-float CalcShadow(vec4 lightPos, vec3 normal, vec3 objPosition, sampler2D shadowMap){
-    vec3 lightDir = normalize(lightPos.xyz - objPosition);
+float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap){
+    //vec3 lightDir = normalize(objPosition - lightPos.xyz);
 	vec3 projCoords = lightPos.xyz / lightPos.w;
 	projCoords = projCoords * 0.5 + 0.5;
 

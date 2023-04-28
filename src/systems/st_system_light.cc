@@ -189,7 +189,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 	
-	static glm::vec2 camShadowSize = glm::vec2(20.0f, 20.0f);
+	static glm::vec2 camShadowSize = glm::vec2(100.0f, 100.0f);
 	static glm::vec2 camShadowDistance = glm::vec2(-30.0f, 30.0f); // Temporal <-------------------
 
 	lights_.clear();
@@ -215,27 +215,28 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
 				// Jugar de alguna forma con la posicion de la camara principal y la directional, para que nos siga,
 				// luego con que la direccion sea su direccion habitual, no el look at.
-				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				cam.lookAt(tempTransform.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
 
 				glm::mat4 tempMat(1.0); // la view que sacaria con el LookAt.
 
 				// La rotacion no da un efecto correcto.
-				if (transformComps[gm.mainCameraID()].has_value()) {
-					//tempTransform.RotateY(-3.1415f);
-					//tempTransform.RotateX(3.1415f);
-					//tempTransform.m_Rotation_ = glm::mat4(1.0f);
-					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().x, { 1.0f,0.0f,0.0f });
-					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().y, { 0.0f,1.0f,0.0f });
-					//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().z, { 0.0f,0.0f,1.0f });
-					tempMat = tempTransform.m_Rotation_ * transformComps[gm.mainCameraID()].value().m_Position_;
-				}
-				else {
-					tempMat = tempTransform.m_Rotation_;
-				}
+				//if (transformComps[gm.mainCameraID()].has_value()) {
+				//	//tempTransform.RotateY(-3.1415f);
+				//	//tempTransform.RotateX(3.1415f);
+				//	//tempTransform.m_Rotation_ = glm::mat4(1.0f);
+				//	//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().x, { 1.0f,0.0f,0.0f });
+				//	//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().y, { 0.0f,1.0f,0.0f });
+				//	//tempTransform.m_Rotation_ = glm::rotate(tempTransform.m_Rotation_, tempTransform.getRotation().z, { 0.0f,0.0f,1.0f });
+				//	tempMat = tempTransform.m_Rotation_ * transformComps[gm.mainCameraID()].value().m_Position_;
+				//}
+				//else {
+				//	tempMat = tempTransform.m_Rotation_;
+				//}
 
 				//tempMat *= glm::rotate(90.0f, glm::vec3(0.0f,0.0f,1.0f));
-				tempLightData.matrix_ = cam.projection * tempMat;
+				//tempLightData.matrix_ = cam.projection * tempMat;
+				tempLightData.matrix_ = cam.projection * cam.view;
 
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
 
