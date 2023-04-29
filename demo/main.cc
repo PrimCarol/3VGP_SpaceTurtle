@@ -39,7 +39,7 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	int HOWMANY = 200;
+	int HOWMANY = 500;
 
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});

@@ -74,7 +74,7 @@ uniform int u_lightType;
 // Shadows
 //uniform bool u_haveShadowMap;
 uniform mat4 lightSpaceMatrix;
-uniform sampler2D shadowMappingDirectLight;
+uniform sampler2D shadowMap[6];
 //uniform sampler2D shadowMappingPointLight[6];
 
 // Cabeceras
@@ -110,7 +110,7 @@ void main(){
         if(u_lightType == 0 ){
             result = CalcDirLight(u_DirectLight, Normal, viewDir, Diffuse, Specular);
 
-            shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMappingDirectLight);
+            shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
         }
 
         // Point

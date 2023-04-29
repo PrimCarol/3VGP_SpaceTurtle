@@ -174,7 +174,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
 		
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDepthMask(GL_FALSE);
+		glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		if (lights) {
 			for (int i = 0; i < lights->size(); i++){
@@ -190,9 +193,12 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
 					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
 
-					glUniform1i(Shader.getUniform("shadowMappingDirectLight"), 4);
+					glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
 					glActiveTexture(GL_TEXTURE0 + 4);
 					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
+					//glUniform1i(Shader.getUniform("shadowMap[1]"), 5);
+					//glActiveTexture(GL_TEXTURE0 + 5);
+					//glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[1].textureID());
 				}
 				// Point
 				if (tempLight->type_ == ST::Point) {
@@ -223,14 +229,14 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 		}
-
 	}
+
+	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
 
-	glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

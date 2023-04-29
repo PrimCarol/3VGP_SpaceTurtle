@@ -207,8 +207,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			tempLightData.matrix_ = tempTransform.m_transform_;
 			
 			if (tempLightData.light_->type_ == ST::Directional) {
-				ST::ShadowMapping thisLightRenderTarget;
-				thisLightRenderTarget.setUp(textureSize_.x, textureSize_.y); // Da error.
+				ST::ShadowMapping thisLightRenderTargetHigh;
+				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
 				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 
 				ST::CameraComponent cam;
@@ -241,34 +241,34 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
 
 				//Render Scene.
-				thisLightRenderTarget.start();
+				thisLightRenderTargetHigh.start();
 				//glCullFace(GL_FRONT); // <--- Test
 				glDisable(GL_CULL_FACE);
 				setUpRender(gm);
 				glEnable(GL_CULL_FACE);
 				glCullFace(GL_BACK); // <--- Test
-				thisLightRenderTarget.end();
+				thisLightRenderTargetHigh.end();
 
-				tempLightData.renderTarget_.push_back(thisLightRenderTarget);
+				tempLightData.renderTarget_.push_back(thisLightRenderTargetHigh);
 				//shadowMapsLocal.push_back(thisLightShadow);
 
-				ImGui::Begin("ViewDepth");
-				//ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size() - 1);
-				//if (indexView >= shadowMapsLocal.size()) { indexView = shadowMapsLocal.size() - 1; }
-				ImGui::Image((void*)(intptr_t)tempLightData.renderTarget_[0].textureID(), ImVec2(192, 120));
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Vertical", &camShadowSize.y);
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragFloat("Far", &camShadowDistance.y);
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragInt("Texture Witdh", &textureSize_.x); ImGui::SameLine();
-				ImGui::SetNextItemWidth(50.0f);
-				ImGui::DragInt("Texture Height", &textureSize_.y);
-				ImGui::End();
+				//ImGui::Begin("ViewDepth");
+				////ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size() - 1);
+				////if (indexView >= shadowMapsLocal.size()) { indexView = shadowMapsLocal.size() - 1; }
+				//ImGui::Image((void*)(intptr_t)tempLightData.renderTarget_[0].textureID(), ImVec2(192, 120));
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Vertical", &camShadowSize.y);
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Far", &camShadowDistance.y);
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragInt("Texture Witdh", &textureSize_.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragInt("Texture Height", &textureSize_.y);
+				//ImGui::End();
 			}
 
 			lights_.push_back(tempLightData);
