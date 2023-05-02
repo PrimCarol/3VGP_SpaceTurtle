@@ -39,9 +39,6 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 	
-	int HOWMANY = 500;
-
-
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
@@ -59,14 +56,18 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
-	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
+	DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+
+	int HOWMANY = 0;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){

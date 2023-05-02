@@ -211,14 +211,21 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
 				//thisLightRenderTarget.addTexture(textureSize_.x, textureSize_.y, "ShadowMap", ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT);
 
+				// Coger posicion camara + forward de la camara -> transformComps[gm.mainCameraID()] esto seria el "target" de la view
+				// lookAt ("target" - forwad de la luz, el "target", el up de la camara)
 				ST::CameraComponent cam;
+
+				/*glm::vec3 target = transformComps[gm.mainCameraID()]->getPosition() + transformComps[gm.mainCameraID()]->getForward();
+				cam.lookAt(target - tempTransform.getForward(), target, tempTransform.getUp());*/
+
+				//glm::vec3 target = transformComps[gm.mainCameraID()]->getPosition() + transformComps[gm.mainCameraID()]->getForward() * 10.0f;
+				//cam.lookAt(target - tempTransform.getForward(), target, transformComps[gm.mainCameraID()]->getUp());
+
 				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
 				// Jugar de alguna forma con la posicion de la camara principal y la directional, para que nos siga,
 				// luego con que la direccion sea su direccion habitual, no el look at.
 				cam.lookAt(tempTransform.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-
-				glm::mat4 tempMat(1.0); // la view que sacaria con el LookAt.
 
 				// La rotacion no da un efecto correcto.
 				//if (transformComps[gm.mainCameraID()].has_value()) {
@@ -251,6 +258,56 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 				tempLightData.renderTarget_.push_back(thisLightRenderTargetHigh);
 				//shadowMapsLocal.push_back(thisLightShadow);
+
+				//ImGui::Begin("ViewDepth");
+				////ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size() - 1);
+				////if (indexView >= shadowMapsLocal.size()) { indexView = shadowMapsLocal.size() - 1; }
+				//ImGui::Image((void*)(intptr_t)tempLightData.renderTarget_[0].textureID(), ImVec2(192, 120));
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Horizontal", &camShadowSize.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Vertical", &camShadowSize.y);
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Near", &camShadowDistance.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragFloat("Far", &camShadowDistance.y);
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragInt("Texture Witdh", &textureSize_.x); ImGui::SameLine();
+				//ImGui::SetNextItemWidth(50.0f);
+				//ImGui::DragInt("Texture Height", &textureSize_.y);
+				//ImGui::End();
+			}
+			else if (tempLightData.light_->type_ == ST::Point) {
+				/*for (unsigned int i = 0; i < 6; i++){
+
+					GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
+
+					ST::ShadowMapping thisLightRenderTargetHigh;
+					thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y, face);
+				}*/
+			}
+			else if (tempLightData.light_->type_ == ST::Spot) {
+				ST::ShadowMapping spotLightShadow;
+				spotLightShadow.setUp(textureSize_.x, textureSize_.y);
+
+				ST::CameraComponent cam;
+				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
+				cam.setPerspective(90.0f, 1.0f, camShadowDistance.x, camShadowDistance.y);
+
+				tempLightData.matrix_ = cam.projection * cam.view;
+
+				glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
+
+				//Render Scene.
+				spotLightShadow.start();
+				//glCullFace(GL_FRONT); // <--- Test
+				glDisable(GL_CULL_FACE);
+				setUpRender(gm);
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK); // <--- Test
+				spotLightShadow.end();
+
+				tempLightData.renderTarget_.push_back(spotLightShadow);
 
 				//ImGui::Begin("ViewDepth");
 				////ImGui::DragInt("View", &indexView, 1.0f, 0, shadowMaps_.size() - 1);

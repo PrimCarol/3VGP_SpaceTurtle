@@ -121,6 +121,8 @@ void main(){
         // Spot
         if(u_lightType == 2 ){
             result = CalcSpotLight(u_SpotLight, Normal, FragPos, viewDir, Diffuse, Specular);
+
+            shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
         }
 
         // Point Lights

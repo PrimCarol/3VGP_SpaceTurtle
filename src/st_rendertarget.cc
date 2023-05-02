@@ -177,9 +177,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glDepthMask(GL_FALSE);
 		glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		if (lights) {
+			if(lights->size() == 0){ glDrawArrays(GL_TRIANGLES, 0, 6); }
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
 				ST::LightComponent* tempLight = lights->at(i).light_;
@@ -222,6 +223,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
 					glUniform1f(Shader.getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
 					glUniform1f(Shader.getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
+
+					glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
+					glActiveTexture(GL_TEXTURE0 + 4);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
 				}
 
 				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_);
@@ -229,6 +234,8 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 		}
+	}else {
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 
 	glDepthMask(GL_TRUE);
