@@ -148,7 +148,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 	}
 	
-	if (quadID != 0) {
+	if (quadID != 0 && gm.mainCameraID() >= 0) {
 
 		//glUseProgram(Shader.getID());
 		Shader.use();

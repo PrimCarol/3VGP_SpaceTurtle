@@ -111,7 +111,7 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 						}
 					}
 
-					t->updateDirectionalVectors();
+					//t->updateDirectionalVectors();
 					t->dirty = false;
 				}
 			}

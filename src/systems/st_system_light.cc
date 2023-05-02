@@ -224,7 +224,10 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				//cam.lookAt(thisTrans.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // <-- Temporalmente este en uso.
 				// Jugar de alguna forma con la posicion de la camara principal y la directional, para que nos siga,
 				// luego con que la direccion sea su direccion habitual, no el look at.
-				cam.lookAt(tempTransform.getPosition(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				
+				//(tempTransform.m_Rotation_ * vetorZ) // <--- la rotacio que vull com origen ARNAU
+				
+				cam.lookAt((tempTransform.m_Rotation_ * glm::vec4(0.0f,1.0f,0.0f, 1.0f)), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
 
 				// La rotacion no da un efecto correcto.
@@ -291,7 +294,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				spotLightShadow.setUp(textureSize_.x, textureSize_.y);
 
 				ST::CameraComponent cam;
-				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), glm::vec3(0.0f, 1.0f, 0.0f));
+				
+				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getUp(), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setPerspective(90.0f, 1.0f, camShadowDistance.x, camShadowDistance.y);
 
 				tempLightData.matrix_ = cam.projection * cam.view;

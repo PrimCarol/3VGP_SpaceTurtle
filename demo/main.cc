@@ -59,7 +59,9 @@ int main() {
 	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 	DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
 	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
@@ -67,11 +69,16 @@ int main() {
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
-	int HOWMANY = 0;
+	int HOWMANY = 500;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
+		
+		//Light
+		//objects.back().getComponent<ST::LightComponent>()->type_ = ST::LightType::Point;
+		//objects.back().getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
+		
 		objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
@@ -82,6 +89,7 @@ int main() {
 		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
 		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+		//objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));

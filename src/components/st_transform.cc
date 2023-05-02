@@ -137,13 +137,32 @@ const glm::vec3 ST::TransformComponent::getRotation() const {
 }
 
 const glm::vec3 ST::TransformComponent::getForward() const {
-	return vectorForward_;
+	glm::vec3 tempForward;
+	tempForward.x = m_transform_[0][2];
+	tempForward.y = m_transform_[1][2];
+	tempForward.z = m_transform_[2][2];
+	
+	return glm::normalize(tempForward);
+
+	//return vectorForward_;
 }
 const glm::vec3 ST::TransformComponent::getUp() const {
-	return vectorUp_;
+	glm::vec3 tempUp;
+	tempUp.x = m_transform_[0][1];
+	tempUp.y = m_transform_[1][1];
+	tempUp.z = m_transform_[2][1];
+
+	return glm::normalize(tempUp);
+	//return vectorUp_;
 }
 const glm::vec3 ST::TransformComponent::getRight() const {
-	return vectorRight_;
+	glm::vec3 tempRight;
+	tempRight.x = m_transform_[0][0];
+	tempRight.y = m_transform_[1][0];
+	tempRight.z = m_transform_[2][0];
+
+	return glm::normalize(tempRight);
+	//return vectorRight_;
 }
 
 ST::TransformComponent::~TransformComponent(){
