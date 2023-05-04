@@ -16,6 +16,9 @@ ST::TransformComponent::TransformComponent(){
 
 	setPosition(position_);
 	setScale(scale_);
+	setRotateX(rotation_.x);
+	setRotateY(rotation_.y);
+	setRotateZ(rotation_.z);
 }
 
 //void ST::TransformComponent::updateTransformMatrix(){

@@ -56,18 +56,20 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
-	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{}, ST::RenderComponent{});
+	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-	DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-	DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.0f);
+	//DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	//DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	//DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	//DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
+	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.000001f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+
+	//ST::Engine::createSpotLight(gm);
 
 	int HOWMANY = 500;
 
