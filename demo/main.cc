@@ -64,7 +64,7 @@ int main() {
 	//DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.000001f);
 	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
 	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
 	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);

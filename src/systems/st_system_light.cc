@@ -210,21 +210,28 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				ST::ShadowMapping thisLightRenderTargetHigh;
 				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
 
-				ST::CameraComponent cam;				
-				cam.lookAt((tempTransform.m_Rotation_ * glm::vec4(0.0f,1.0f,0.0f, 1.0f)), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				//gm.getComponent<ST::TransformComponent>(gm.mainCameraID())->getPosition()
+
+				ST::CameraComponent cam;
+				
+				cam.lookAt( + glm::vec3((tempTransform.m_Rotation_ * glm::vec4(0.0f,1.0f,0.0f, 0.0f))), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
 
 				tempLightData.matrix_ = cam.projection * cam.view;
+
+				//glm::mat4 ortho = glm::ortho(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
+
+				//auto cameraTransform = gm.getComponent<ST::TransformComponent>(gm.mainCameraID());
+				//glm::vec3 target = cameraTransform->getPosition() + cameraTransform->getForward() * 10.0f;
+				//glm::mat4 view = glm::lookAt(target - tempTransform.getForward(), target, cameraTransform->getUp());
+
+				//tempLightData.matrix_ = ortho * view;
 
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
 
 				//Render Scene.
 				thisLightRenderTargetHigh.start();
-				//glCullFace(GL_FRONT); // <--- Test
-				glDisable(GL_CULL_FACE);
 				setUpRender(gm);
-				glEnable(GL_CULL_FACE);
-				glCullFace(GL_BACK); // <--- Test
 				thisLightRenderTargetHigh.end();
 
 				tempLightData.renderTarget_.push_back(thisLightRenderTargetHigh);
@@ -248,9 +255,9 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				//ImGui::End();
 			}
 			else if (tempLightData.light_->type_ == ST::Point) {
-				ST::ShadowMapping pointLightShadow;
-				pointLightShadow.setUp(textureSize_.x, textureSize_.y, ST::Texture::T_CUBEMAP);
-				
+				//ST::ShadowMapping pointLightShadow;
+				//pointLightShadow.setUp(textureSize_.x, textureSize_.y, ST::Texture::T_CUBEMAP);
+				//
 				//glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, camShadowDistance.x, camShadowDistance.y);
 
 				//std::vector<glm::mat4> shadowTransforms;
@@ -263,15 +270,14 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 				//char buffer[50];
 
-				//pointLightShadow.start();
-				//glDisable(GL_CULL_FACE);
 				//for (unsigned int i = 0; i < 6; ++i) {
 				//	snprintf(buffer, 50, "lightSpaceMatrix[%d]", i);
 				//	glUniformMatrix4fv(gm.shadowMapping->getUniform(buffer), 1, GL_FALSE, &shadowTransforms[i][0][0]);
 				//	//glUniformMatrix4fv(gm.shadowMapping->getUniform("lightSpaceMatrix[" + std::to_string(i) + "]"), 1, GL_FALSE, &shadowTransforms[i][0][0]);
 				//}
+
+				//pointLightShadow.start();
 				//setUpRender(gm);
-				//glEnable(GL_CULL_FACE);
 				//pointLightShadow.end();
 
 				//tempLightData.renderTarget_.push_back(pointLightShadow);

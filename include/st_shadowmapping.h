@@ -15,7 +15,7 @@ namespace ST {
 
 		ShadowMapping();
 		
-		void setUp(int w, int h, GLenum textureType = GL_TEXTURE_2D);
+		void setUp(int w, int h, ST::Texture::TextType textureType = ST::Texture::TextType::T_2D);
 
 		GLuint getID();
 		GLuint textureID();

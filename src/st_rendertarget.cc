@@ -229,7 +229,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
 				}
 
-				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_);
+				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_+1);
 
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}

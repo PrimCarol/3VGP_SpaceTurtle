@@ -9,7 +9,7 @@ ST::ShadowMapping::ShadowMapping(){
 	height_ = 0;
 }
 
-void ST::ShadowMapping::setUp(int w, int h, GLenum textureType){
+void ST::ShadowMapping::setUp(int w, int h, ST::Texture::TextType textureType){
 	width_ = w;
 	height_ = h;
 
@@ -21,14 +21,14 @@ void ST::ShadowMapping::setUp(int w, int h, GLenum textureType){
 	}
 
 	shadowMap = std::make_shared<ST::Texture>();
-	shadowMap->init(width_, height_, ST::Texture::T_2D, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH, ST::Texture::F_DEPTH);
+	shadowMap->init(width_, height_, textureType, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH, ST::Texture::F_DEPTH);
 	shadowMap->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->bind();
 	
 	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureType, shadowMap->getID(), 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap->getID(), 0);
 	shadowMap->set_data(0);
 	
 	error = glGetError();

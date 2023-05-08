@@ -107,19 +107,19 @@ void main(){
         //if(shadow > 0.0){ //Si no esta en sombra, calculamos las luces, si hay sombra total, no lo hacemos, pequeño ahorro? }
 
         // Directional Lights
-        if(u_lightType == 0 ){
+        if(u_lightType == 1 ){
             result = CalcDirLight(u_DirectLight, Normal, viewDir, Diffuse, Specular);
 
             shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
         }
 
         // Point
-        if(u_lightType == 1 ){
+        if(u_lightType == 2 ){
             result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
         }
 
         // Spot
-        if(u_lightType == 2 ){
+        if(u_lightType == 3 ){
             result = CalcSpotLight(u_SpotLight, Normal, FragPos, viewDir, Diffuse, Specular);
 
             shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
