@@ -378,42 +378,42 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			glDisable(GL_BLEND);
 			doRender(objs_opaque, cam, gm);
 
-			// ----- Translucidos -----
-			bool sortTranslucents = false; // <---------- Temporal
+			//// ----- Translucidos -----
+			//bool sortTranslucents = false; // <---------- Temporal
 
-			if (sortTranslucents) {
-				std::map<float, int> sorted;
-				for (int i = 0; i < objs_translucent.size(); i++) {
-					glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
-					glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
-					float distance = glm::length(cam.transform_->getPosition() - worldPos);
-					sorted[distance] = i;
-				}
+			//if (sortTranslucents) {
+			//	std::map<float, int> sorted;
+			//	for (int i = 0; i < objs_translucent.size(); i++) {
+			//		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+			//		glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+			//		float distance = glm::length(cam.transform_->getPosition() - worldPos);
+			//		sorted[distance] = i;
+			//	}
 
-				std::vector<MyObjToRender> objs_translucent_sorted;
+			//	std::vector<MyObjToRender> objs_translucent_sorted;
 
-				for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
-					objs_translucent_sorted.push_back(objs_translucent[it->second]);
-				}
+			//	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+			//		objs_translucent_sorted.push_back(objs_translucent[it->second]);
+			//	}
 
-				// Por defecto de momento.
-				glEnable(GL_BLEND);
-				glBlendEquation(GL_FUNC_ADD);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				doRender(objs_translucent_sorted, cam, gm);
+			//	// Por defecto de momento.
+			//	glEnable(GL_BLEND);
+			//	glBlendEquation(GL_FUNC_ADD);
+			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//	doRender(objs_translucent_sorted, cam, gm);
 
-				objs_translucent_sorted.clear();
-			}
-			else {
-				// Por defecto de momento.
-				glEnable(GL_BLEND);
-				glBlendEquation(GL_FUNC_ADD);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				doRender(objs_translucent, cam, gm);
-			}
+			//	objs_translucent_sorted.clear();
+			//}
+			//else {
+			//	// Por defecto de momento.
+			//	glEnable(GL_BLEND);
+			//	glBlendEquation(GL_FUNC_ADD);
+			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//	doRender(objs_translucent, cam, gm);
+			//}
 
 			objs_opaque.clear();
-			objs_translucent.clear();
+			//objs_translucent.clear();
 
 		}
 	}

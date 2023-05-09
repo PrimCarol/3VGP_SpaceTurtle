@@ -81,6 +81,7 @@ namespace ST {
 		std::shared_ptr<ST::Program> framebufferProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
 		std::shared_ptr<ST::Program> g_buffer;
+		std::shared_ptr<ST::Program> skybox;
 
 		// ***************** Shadow Mapping Test ***************
 		//bool haveShadowMap_;

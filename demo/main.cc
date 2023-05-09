@@ -16,6 +16,16 @@ int main() {
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 1.0f, 1000.0f);
 
+	ST::Texture textureSkybox;
+	textureSkybox.loadCubemap("negx.jpg", ST::Texture::F_RGB, 0);
+	textureSkybox.loadCubemap("negy.jpg", ST::Texture::F_RGB, 1);
+	textureSkybox.loadCubemap("negz.jpg", ST::Texture::F_RGB, 2);
+	textureSkybox.loadCubemap("posx.jpg", ST::Texture::F_RGB, 3);
+	textureSkybox.loadCubemap("posy.jpg", ST::Texture::F_RGB, 4);
+	textureSkybox.loadCubemap("posz.jpg", ST::Texture::F_RGB, 5);
+
+
+
 	// --------------
 	ST::Texture textureTest;
 	textureTest.generateMipmap = true;
@@ -39,6 +49,14 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 	
+	// --- SKYBOX ----
+	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
+	skybox.getComponent<ST::NameComponent>()->setName("Skybox");
+	skybox.getComponent<ST::TransformComponent>()->setScale({ 100.0f,100.0f,100.0f });
+	skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureSkybox);
+	skybox.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
@@ -130,6 +148,8 @@ int main() {
 		ST::SystemRender::Render(gm);
 		myRenderTarget.end();
 		
+		//ST::SystemRender::Render(gm);
+
 		//myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram);
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 

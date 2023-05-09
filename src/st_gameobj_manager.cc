@@ -76,6 +76,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create G-Buffer Program -------
 	g_buffer = std::make_unique<ST::Program>();
 	g_buffer->setUp("../shaders/g_buffers.vert", "../shaders/g_buffers.frag");
+
+	// ------- Create Skybox Program -------
+	skybox = std::make_unique<ST::Program>();
+	skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

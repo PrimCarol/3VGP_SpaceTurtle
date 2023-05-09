@@ -196,6 +196,38 @@ bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int m
 	return true;
 }
 
+bool ST::Texture::loadCubemap(const char* filePath, Format f, unsigned int face) {
+    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
+    if (image_data == NULL)
+        return false;
+
+    format_ = f;
+    type_ = TextType::T_CUBEMAP;
+
+    glBindTexture(GL_TEXTURE_3D, internalID);
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
+
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
+
+    
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), image_data);
+    
+
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    //glTexImage2D(
+    //    GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+    //    0, GL_RGB, width_, height_, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data);
+
+    stbi_image_free(image_data);
+
+    return true;
+}
+
 void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f, Format internalF) {
     //glGenTextures(1, &internalID);
 
@@ -303,7 +335,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         break;
     case TextType::T_CUBEMAP:
         printf("CubeMap!");
-        glBindTexture(GL_TEXTURE_3D, internalID);
+        /*glBindTexture(GL_TEXTURE_3D, internalID);
 
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
@@ -316,7 +348,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
         }
 
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);*/
         break;
     default:
         printf("Set Data to Texture >> Invalid Type");
