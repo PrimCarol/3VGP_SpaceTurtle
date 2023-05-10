@@ -62,7 +62,6 @@ int main() {
 	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureSkybox);
 	skybox.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 	skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
-	//skybox.getComponent<ST::RenderComponent>()->thisdepthmode_ = ST::kDepth_Greater;
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
@@ -79,7 +78,7 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	ST::GameObj sponzaObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sponzaObj.getComponent<ST::NameComponent>()->setName("Sponza");
@@ -129,7 +128,7 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
 	}
 
-	ST::Texture halo_Light;
+	/*ST::Texture halo_Light;
 	halo_Light.loadSource("../others/halo_light.png");
 	for (int i = 0; i < 20; i++){
 		ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
@@ -142,7 +141,7 @@ int main() {
 		a.getComponent<ST::RenderComponent>()->castShadow_ = false;
 		a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
 		a.getComponent<ST::LightComponent>()->type_ = ST::Point;
-	}
+	}*/
 
 	// --------------------------
 	// **************** TEST *****************
