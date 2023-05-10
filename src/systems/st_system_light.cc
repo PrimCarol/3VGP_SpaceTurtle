@@ -295,7 +295,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 				ST::CameraComponent cam;
 				
-				cam.setPerspective(90.0f, 1.0f, 0.5f, 200.0f);
+				cam.setPerspective(90.0f, 1.0f, 1.0f, 25.0f);
 				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ - tempTransform.getUp(), tempTransform.getForward());
 
 				tempLightData.matrix_.push_back(cam.projection * cam.view);

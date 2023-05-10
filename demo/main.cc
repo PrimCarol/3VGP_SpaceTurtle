@@ -21,12 +21,12 @@ int main() {
 	textureSkybox.init(0,0,ST::Texture::T_CUBEMAP, ST::Texture::DataType::DT_U_BYTE, ST::Texture::F_RGB, ST::Texture::F_RGB);
 	textureSkybox.set_mag_filter(ST::Texture::F_LINEAR);
 	textureSkybox.set_min_filter(ST::Texture::F_LINEAR);
-	textureSkybox.loadCubemap("../others/skybox/right.jpg", ST::Texture::F_RGBA, 0);
-	textureSkybox.loadCubemap("../others/skybox/left.jpg", ST::Texture::F_RGBA, 1);
-	textureSkybox.loadCubemap("../others/skybox/top.jpg", ST::Texture::F_RGBA, 2);
-	textureSkybox.loadCubemap("../others/skybox/bottom.jpg", ST::Texture::F_RGBA, 3);
-	textureSkybox.loadCubemap("../others/skybox/front.jpg", ST::Texture::F_RGBA, 4);
-	textureSkybox.loadCubemap("../others/skybox/back.jpg", ST::Texture::F_RGBA, 5);
+	textureSkybox.loadCubemap("../others/skybox/snow/right.jpg", ST::Texture::F_RGBA, 0);
+	textureSkybox.loadCubemap("../others/skybox/snow/left.jpg", ST::Texture::F_RGBA, 1);
+	textureSkybox.loadCubemap("../others/skybox/snow/top.jpg", ST::Texture::F_RGBA, 2);
+	textureSkybox.loadCubemap("../others/skybox/snow/bottom.jpg", ST::Texture::F_RGBA, 3);
+	textureSkybox.loadCubemap("../others/skybox/snow/front.jpg", ST::Texture::F_RGBA, 4);
+	textureSkybox.loadCubemap("../others/skybox/snow/back.jpg", ST::Texture::F_RGBA, 5);
 
 	// --------------
 	ST::Texture textureTest;
@@ -50,6 +50,9 @@ int main() {
 
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
+
+	ST::Geometry sponza_mesh;
+	sponza_mesh.loadFromFile("../others/sponza.obj");
 	
 	// --- SKYBOX ----
 	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
@@ -78,6 +81,14 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
+	ST::GameObj sponzaObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sponzaObj.getComponent<ST::NameComponent>()->setName("Sponza");
+	sponzaObj.getComponent<ST::RenderComponent>()->setMesh(&sponza_mesh);
+	sponzaObj.getComponent<ST::ColliderComponent>()->setMaxPoint(sponzaObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+	sponzaObj.getComponent<ST::ColliderComponent>()->setMinPoint(sponzaObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+	sponzaObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	sponzaObj.getComponent<ST::TransformComponent>()->setScale(0.05f, 0.05f, 0.05f);
+
 	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	//DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
 	////DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
@@ -99,11 +110,12 @@ int main() {
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
+		//objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
-		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);

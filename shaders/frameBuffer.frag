@@ -261,9 +261,9 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
 	
     //float bias = 0.005;
 	float angle = dot(normal, lightDir);
-//	if(angle >= 0){
-//		return 0.0;
-//	}
+	if(angle >= 0){
+		return 0.0;
+	}
 
 	float bias = max(0.025 * (1.0 - angle), 0.0005); 
 
