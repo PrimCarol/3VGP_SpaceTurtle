@@ -35,7 +35,7 @@ namespace ST {
 	public:
 		SystemLight();
 
-		void CompileShadows(ST::GameObj_Manager& gm);
+		//void CompileShadows(ST::GameObj_Manager& gm);
 		//void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
 		void CompileLights(ST::GameObj_Manager& gm);
 

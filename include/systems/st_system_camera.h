@@ -9,7 +9,7 @@ namespace ST {
 	class SystemCamera {
 	public:
 		static void UpdateCamera(ST::GameObj_Manager& gm);
-		static void Movemment(ST::GameObj_Manager& gm, ST::Window& w, float MoveSpeed = 30.0f, float RotateSpeed = 0.5f);
+		static void Movemment(ST::GameObj_Manager& gm, ST::Window& w, float MoveSpeed = 30.0f, float RotateSpeed = 50.0f);
 	private:
 		SystemCamera();
 		~SystemCamera();

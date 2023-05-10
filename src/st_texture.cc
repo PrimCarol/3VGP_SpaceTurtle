@@ -90,6 +90,9 @@ GLenum textureTypeToGl(const ST::Texture::TextType f) {
     case ST::Texture::T_3D:
         aux = GL_TEXTURE_3D;
         break;
+    case ST::Texture::T_CUBEMAP:
+        aux = GL_TEXTURE_CUBE_MAP;
+        break;
     default:
         printf("Texture Type >> Invalid Format");
         break;
@@ -204,19 +207,18 @@ bool ST::Texture::loadCubemap(const char* filePath, Format f, unsigned int face)
     format_ = f;
     type_ = TextType::T_CUBEMAP;
 
-    glBindTexture(GL_TEXTURE_3D, internalID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, internalID);
 
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
 
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
-    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
 
     
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), image_data);
     
-
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
     //glTexImage2D(

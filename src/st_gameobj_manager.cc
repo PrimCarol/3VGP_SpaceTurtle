@@ -79,7 +79,9 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Skybox Program -------
 	skybox = std::make_unique<ST::Program>();
-	skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag");
+	if (!skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag")) {
+		printf("Program Error");
+	}
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){

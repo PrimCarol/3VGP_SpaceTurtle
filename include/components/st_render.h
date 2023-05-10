@@ -22,6 +22,8 @@ namespace ST {
 		ST::Material material;
 		ST::Mesh* mesh;
 
+		CullMode thiscullmode_;
+		DepthMode thisdepthmode_;
 		//RenderComponent(const RenderComponent& o);
 
 		bool visible_;

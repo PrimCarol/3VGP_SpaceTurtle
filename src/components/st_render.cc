@@ -6,6 +6,8 @@ ST::RenderComponent::RenderComponent(){
 	visible_ = true;
 	castShadow_ = true;
 
+	thiscullmode_ = ST::kCull_Back;
+	thisdepthmode_ = ST::kDepth_LessEqual;
 	//material = nullptr;
 	//// esto no me deja hacerlo por el optional.
 	//material = std::make_unique<ST::Material>();

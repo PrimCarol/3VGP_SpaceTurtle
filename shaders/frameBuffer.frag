@@ -240,20 +240,20 @@ vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap){
     //vec3 lightDir = normalize(objPosition - lightPos.xyz);
 	vec3 projCoords = lightPos.xyz / lightPos.w;
-	projCoords = projCoords * 0.5 + 0.5;
-
-	if(projCoords.z >= 1.0){  return 1.0; }
+	if(projCoords.z > 1.0){  return 1.0; }
+	
+    projCoords = (projCoords + 1.0) / 2.0;
 
 	float closestDepth = texture(shadowMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
 	
-	//float bias = 0.005;
+    //float bias = 0.005;
 	float angle = dot(normal, lightDir);
-	if(angle >= 0){
-		return 0.0;
-	}
+//	if(angle >= 0){
+//		return 0.0;
+//	}
 
-	float bias = max(0.005 * (1.0 - angle), 0.005); 
+	float bias = max(0.025 * (1.0 - angle), 0.0005); 
 
 	float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -262,10 +262,10 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
         for(int y = -1; y <= 1; ++y)
         {
             float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
-            shadow += currentDepth - bias >= pcfDepth  ? 0.0 : 1.0;        
+            shadow += currentDepth - bias > pcfDepth ? 0.0 : 1.0;        
         }    
     }
     shadow /= 9.0;
 
-	return shadow;
+	return clamp(shadow, 0.0, 1.0);
 }

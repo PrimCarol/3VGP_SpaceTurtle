@@ -10,7 +10,8 @@ ST::Mesh::Mesh(){
 	numInstances = 0;
 
 	name_ = nullptr;
-	cullmode_ = ST::kCull_Back;
+	cullmode_ = ST::kCull_Disable;
+	depthmode_ = ST::kDepth_Disable;
 }
 
 const GLuint ST::Mesh::getID(){
@@ -93,6 +94,46 @@ void SetCullMode(ST::CullMode c) {
 	}
 }
 
+void SetDepthTest(ST::DepthMode d) {
+	
+	if (d != ST::kDepth_Nothing) {
+		glEnable(GL_DEPTH_TEST);
+
+		switch (d) {
+		case ST::kDepth_Disable:
+			glDisable(GL_DEPTH_TEST);
+			break;
+		case ST::kDepth_Always:
+			glDepthFunc(GL_ALWAYS);
+			break;
+		case ST::kDepth_Never:
+			glDepthFunc(GL_NEVER);
+			break;
+		case ST::kDepth_Less:
+			glDepthFunc(GL_LESS);
+			break;
+		case ST::kDepth_Equal:
+			glDepthFunc(GL_EQUAL);
+			break;
+		case ST::kDepth_LessEqual:
+			glDepthFunc(GL_LEQUAL);
+			break;
+		case ST::kDepth_Greater:
+			glDepthFunc(GL_GREATER);
+			break;
+		case ST::kDepth_NoEqual:
+			glDepthFunc(GL_NOTEQUAL);
+			break;
+		case ST::kDepth_GreaterEqual:
+			glDepthFunc(GL_GEQUAL);
+			break;
+		default:
+			glDepthFunc(GL_GREATER);
+			break;
+		}
+	}
+}
+
 
 // ----------------- Triangle ------------------
 ST::Triangle::Triangle() : Mesh() {
@@ -155,7 +196,8 @@ void ST::Triangle::render(){
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -266,7 +308,8 @@ void ST::Quad::render() {
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -339,7 +382,8 @@ void ST::Circle::render() {
 	//glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -584,7 +628,8 @@ void ST::Cube::render() {
 
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -755,7 +800,8 @@ void ST::Geometry::render(){
 
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 

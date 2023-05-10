@@ -221,14 +221,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				trans->setPosition(pos);
 				// Rotation
 				glm::vec3 rot = trans->getRotation();
-				/*rot.x *= 180 / 3.1416f;
-				rot.y *= 180 / 3.1416f;
-				rot.z *= 180 / 3.1416f;*/
-				//ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
 				DrawVec3Control("Rot", rot);
-				//trans->setRotateX(rot.x * (3.1416f / 180));
-				//trans->setRotateY(rot.y * (3.1416f / 180));
-				//trans->setRotateZ(rot.z * (3.1416f / 180));
 				trans->setRotateX(rot.x);
 				trans->setRotateY(rot.y);
 				trans->setRotateZ(rot.z);
@@ -251,9 +244,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				float tempMatrixGuizmo[16];
 				glm::vec3 pos = trans->getPosition();
 				glm::vec3 rot = trans->getRotation();
-				rot.x *= 180 / 3.1416f;
-				rot.y *= 180 / 3.1416f;
-				rot.z *= 180 / 3.1416f;
 				glm::vec3 sca = trans->getScale();
 
 				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value()) {
@@ -266,9 +256,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					}
 				}
 				trans->setPosition(pos);
-				trans->setRotateX(rot.x * (3.1416f / 180));
-				trans->setRotateY(rot.y * (3.1416f / 180));
-				trans->setRotateZ(rot.z * (3.1416f / 180));
+				trans->setRotateX(rot.x);
+				trans->setRotateY(rot.y);
+				trans->setRotateZ(rot.z);
 				trans->setScale(sca);
 			}
 			// --------

@@ -16,15 +16,17 @@ int main() {
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 1.0f, 1000.0f);
 
+
 	ST::Texture textureSkybox;
-	textureSkybox.loadCubemap("negx.jpg", ST::Texture::F_RGB, 0);
-	textureSkybox.loadCubemap("negy.jpg", ST::Texture::F_RGB, 1);
-	textureSkybox.loadCubemap("negz.jpg", ST::Texture::F_RGB, 2);
-	textureSkybox.loadCubemap("posx.jpg", ST::Texture::F_RGB, 3);
-	textureSkybox.loadCubemap("posy.jpg", ST::Texture::F_RGB, 4);
-	textureSkybox.loadCubemap("posz.jpg", ST::Texture::F_RGB, 5);
-
-
+	textureSkybox.init(0,0,ST::Texture::T_CUBEMAP, ST::Texture::DataType::DT_U_BYTE, ST::Texture::F_RGB, ST::Texture::F_RGB);
+	textureSkybox.set_mag_filter(ST::Texture::F_LINEAR);
+	textureSkybox.set_min_filter(ST::Texture::F_LINEAR);
+	textureSkybox.loadCubemap("../others/skybox/right.jpg", ST::Texture::F_RGBA, 0);
+	textureSkybox.loadCubemap("../others/skybox/left.jpg", ST::Texture::F_RGBA, 1);
+	textureSkybox.loadCubemap("../others/skybox/top.jpg", ST::Texture::F_RGBA, 2);
+	textureSkybox.loadCubemap("../others/skybox/bottom.jpg", ST::Texture::F_RGBA, 3);
+	textureSkybox.loadCubemap("../others/skybox/front.jpg", ST::Texture::F_RGBA, 4);
+	textureSkybox.loadCubemap("../others/skybox/back.jpg", ST::Texture::F_RGBA, 5);
 
 	// --------------
 	ST::Texture textureTest;
@@ -52,10 +54,12 @@ int main() {
 	// --- SKYBOX ----
 	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
 	skybox.getComponent<ST::NameComponent>()->setName("Skybox");
-	skybox.getComponent<ST::TransformComponent>()->setScale({ 100.0f,100.0f,100.0f });
-	skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
+	skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.skybox);
 	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureSkybox);
 	skybox.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
+	//skybox.getComponent<ST::RenderComponent>()->thisdepthmode_ = ST::kDepth_Greater;
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
@@ -74,18 +78,18 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
-	ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	//DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-	//DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-	//DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	//DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.000001f);
-	DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
-	DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
-	DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
+	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	//DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
+	////DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	////DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	////DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	////DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
+	//DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.000001f);
+	////DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
+	//DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	//DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
+	//DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
+	//DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
 
 	//ST::Engine::createSpotLight(gm);
 
@@ -94,11 +98,7 @@ int main() {
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
-		
-		//Light
-		//objects.back().getComponent<ST::LightComponent>()->type_ = ST::LightType::Point;
-		//objects.back().getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
-		
+
 		objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
@@ -117,6 +117,21 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
 	}
 
+	//ST::Texture halo_Light;
+	//halo_Light.loadSource("../others/halo_light.png");
+	//for (int i = 0; i < 20; i++){
+	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
+
+	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 10.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
+	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+	//	a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
+	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
+	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
+	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
+	//}
+
 	// --------------------------
 	// **************** TEST *****************
 	ST::SystemLight lightSystem;
@@ -134,24 +149,30 @@ int main() {
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
 
+
+
+		// ---- Update ----
+		skybox.getComponent<ST::TransformComponent>()->setPosition(camera.getComponent<ST::TransformComponent>()->getPosition());
+
+
+
+
+
 		// ---- Camera ----
 		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
 
 		ST::SystemTransform::UpdateTransforms(gm);
 
-		//lightSystem.CompileShadows(gm);
-		//lightSystem.CompileLights(gm, *gm.framebufferProgram);
 		lightSystem.CompileLights(gm);
 
 		myRenderTarget.start();
-		ST::SystemRender::Render(gm);
+		ST::SystemRender::Render(gm, *gm.g_buffer);
 		myRenderTarget.end();
-		
-		//ST::SystemRender::Render(gm);
-
-		//myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram);
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
+		
+		//ST::SystemRender::Render(gm, *gm.skybox);
+		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {

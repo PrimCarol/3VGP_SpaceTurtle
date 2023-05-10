@@ -23,7 +23,7 @@ namespace ST {
 
 	class SystemRender {
 	public:
-		static void Render(ST::GameObj_Manager& gm);
+		static void Render(ST::GameObj_Manager& gm, const ST::Program& p);
 	private:
 		SystemRender();
 

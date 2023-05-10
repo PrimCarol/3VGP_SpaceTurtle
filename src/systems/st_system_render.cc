@@ -187,6 +187,11 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		if (popInstances) {
 			gm.drawcalls_++;
 
+			//glEnable(GL_CULL_FACE);
+			//glCullFace(GL_BACK);
+			objs[lastIndice].render_->mesh->cullmode_ = objs[lastIndice].render_->thiscullmode_;
+			objs[lastIndice].render_->mesh->depthmode_ = objs[lastIndice].render_->thisdepthmode_;
+
 			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
 			objs[lastIndice].render_->mesh->render();
@@ -206,6 +211,9 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 	// Para pintar los ultimos objetos iguales.
 	if (instancing.size() > 0) {
 		gm.drawcalls_++;
+
+		objs[lastIndice].render_->mesh->cullmode_ = objs[lastIndice].render_->thiscullmode_;
+		objs[lastIndice].render_->mesh->depthmode_ = objs[lastIndice].render_->thisdepthmode_;
 
 		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 		objs[lastIndice].render_->mesh->setInstanceData(instancing);
@@ -264,7 +272,7 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 				glUniform1i(p->getUniform("u_tex_Albedo"), 0);
 				glActiveTexture(GL_TEXTURE0 + 0);
-				glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
+				glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
 			//}
 		}
 		if (mat.haveNormal) {
@@ -314,14 +322,14 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 }
 
 
-void ST::SystemRender::Render(ST::GameObj_Manager& gm){
+void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 
 	gm.drawcalls_ = 0;
 
 	auto& render = *gm.getComponentVector<ST::RenderComponent>();
 	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
-	
-	glEnable(GL_DEPTH_TEST);
+
+	//glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_FALSE);
 
 	// Buscamos si hay una camara como Main camera,
@@ -353,23 +361,25 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			std::vector<MyObjToRender> objs_opaque;
 			std::vector<MyObjToRender> objs_translucent;
 
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
+			//glEnable(GL_CULL_FACE);
+			//glCullFace(GL_BACK);
 
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {
 
 				if (render[i].has_value() && transform[i].has_value()) {
 					if (render[i]->visible_) {
-						MyObjToRender thisObj;
-						thisObj.render_ = &render[i].value();
-						thisObj.transform_ = &transform[i].value();
+						if (render[i]->material.getProgram() && render[i]->material.getProgram()->getID() == p.getID()) {
+							MyObjToRender thisObj;
+							thisObj.render_ = &render[i].value();
+							thisObj.transform_ = &transform[i].value();
 
-						if (!thisObj.render_->material.translucent) {
-							objs_opaque.push_back(thisObj);
-						}
-						else {
-							objs_translucent.push_back(thisObj);
+							if (!thisObj.render_->material.translucent) {
+								objs_opaque.push_back(thisObj);
+							}
+							else {
+								objs_translucent.push_back(thisObj);
+							}
 						}
 					}
 				}
@@ -378,7 +388,7 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			glDisable(GL_BLEND);
 			doRender(objs_opaque, cam, gm);
 
-			//// ----- Translucidos -----
+			// ----- Translucidos -----
 			//bool sortTranslucents = false; // <---------- Temporal
 
 			//if (sortTranslucents) {
@@ -412,12 +422,16 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			//	doRender(objs_translucent, cam, gm);
 			//}
 
+			glEnable(GL_BLEND);
+			glBlendEquation(GL_FUNC_ADD);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			doRender(objs_translucent, cam, gm);
+
 			objs_opaque.clear();
-			//objs_translucent.clear();
+			objs_translucent.clear();
 
 		}
 	}
-	
 
 	//glUseProgram(0);
 }

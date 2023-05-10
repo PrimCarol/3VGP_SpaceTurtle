@@ -89,6 +89,7 @@ void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
 	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
 	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
+	temp.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
 	gm.objectSelected = temp.getID();
 }
@@ -106,6 +107,7 @@ void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
 	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
 	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
+	temp.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
 
 	gm.objectSelected = temp.getID();

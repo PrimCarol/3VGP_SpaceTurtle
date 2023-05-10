@@ -141,30 +141,32 @@ const glm::vec3 ST::TransformComponent::getRotation() const {
 
 const glm::vec3 ST::TransformComponent::getForward() const {
 	glm::vec3 tempForward;
-	tempForward.x = m_transform_[0][2];
-	tempForward.y = m_transform_[1][2];
-	tempForward.z = m_transform_[2][2];
+	tempForward.x = m_Rotation_[0][2];
+	tempForward.y = m_Rotation_[1][2];
+	tempForward.z = m_Rotation_[2][2];
 	
 	return glm::normalize(tempForward);
-
+	//return glm::normalize(m_Rotation_ * glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 	//return vectorForward_;
 }
 const glm::vec3 ST::TransformComponent::getUp() const {
 	glm::vec3 tempUp;
-	tempUp.x = m_transform_[0][1];
-	tempUp.y = m_transform_[1][1];
-	tempUp.z = m_transform_[2][1];
+	tempUp.x = m_Rotation_[0][1];
+	tempUp.y = m_Rotation_[1][1];
+	tempUp.z = m_Rotation_[2][1];
 
 	return glm::normalize(tempUp);
+	//return glm::normalize(m_Rotation_ * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	//return vectorUp_;
 }
 const glm::vec3 ST::TransformComponent::getRight() const {
 	glm::vec3 tempRight;
-	tempRight.x = m_transform_[0][0];
-	tempRight.y = m_transform_[1][0];
-	tempRight.z = m_transform_[2][0];
+	tempRight.x = m_Rotation_[0][0];
+	tempRight.y = m_Rotation_[1][0];
+	tempRight.z = m_Rotation_[2][0];
 
 	return glm::normalize(tempRight);
+	//return glm::normalize(m_Rotation_ * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 	//return vectorRight_;
 }
 
