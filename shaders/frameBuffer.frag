@@ -73,7 +73,7 @@ uniform int u_lightType;
 
 // Shadows
 //uniform bool u_haveShadowMap;
-uniform mat4 lightSpaceMatrix;
+uniform mat4 lightSpaceMatrix[2];
 uniform sampler2D shadowMap[6];
 //uniform sampler2D shadowMappingPointLight[6];
 
@@ -102,27 +102,38 @@ void main(){
       
         float shadow = 1.0;
 
-        vec4 PosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+        
         //shadow = CalcShadow(PosLightSpace, Normal, FragPos, shadowMappingDirectLight);
         //if(shadow > 0.0){ //Si no esta en sombra, calculamos las luces, si hay sombra total, no lo hacemos, pequeño ahorro? }
 
         // Directional Lights
         if(u_lightType == 1 ){
+            
             result = CalcDirLight(u_DirectLight, Normal, viewDir, Diffuse, Specular);
 
-            shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
+            // Simple Cascade Shadow
+            for(int i = 0; i < 2; i++){
+                vec4 PosLightSpace = lightSpaceMatrix[i] * vec4(FragPos, 1.0);
+                shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[i]);
+                result *= shadow;
+            }
         }
 
         // Point
         if(u_lightType == 2 ){
             result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
+            result *= shadow;
         }
 
         // Spot
         if(u_lightType == 3 ){
+            vec4 PosLightSpace = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
+
             result = CalcSpotLight(u_SpotLight, Normal, FragPos, viewDir, Diffuse, Specular);
 
             shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
+            
+            result *= shadow;
         }
 
         // Point Lights
@@ -139,7 +150,8 @@ void main(){
 //        	result += CalcSpotLight(u_SpotLight[i], Normal, FragPos, viewDir, Diffuse, Specular);
 //        }
 
-        FragColor = result * shadow;
+        //FragColor = result * shadow;
+        FragColor = result;
 
     }else if(visualMode == 1){
         FragColor = vec4(FragPos,1.0);

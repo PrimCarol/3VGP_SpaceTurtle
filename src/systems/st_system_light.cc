@@ -190,8 +190,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 	auto& renderComps = *gm.getComponentVector<ST::RenderComponent>();
 	
-	static glm::vec2 camShadowSize = glm::vec2(100.0f, 100.0f);
-	static glm::vec2 camShadowDistance = glm::vec2(-20.0f, 100.0f); // Temporal <-------------------
+	//static glm::vec2 camShadowSize = glm::vec2(100.0f, 100.0f);
+	//static glm::vec2 camShadowDistance = glm::vec2(-20.0f, 100.0f); // Temporal <-------------------
 
 	lights_.clear();
 	gm.shadowMapping->use();
@@ -205,31 +205,47 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			tempLightData.light_ = &lightComps.at(n).value();
 			tempLightData.light_->position_ = tempTransform.getPosition();
 			tempLightData.light_->direction_ = -tempTransform.getUp();
-			tempLightData.matrix_ = tempTransform.m_transform_;
+			//tempLightData.matrix_ = tempTransform.m_transform_;
 			
 			if (tempLightData.light_->type_ == ST::Directional) {
 				ST::ShadowMapping thisLightRenderTargetHigh;
 				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
+				ST::ShadowMapping thisLightRenderTargetMid;
+				thisLightRenderTargetMid.setUp(textureSize_.x, textureSize_.y);
 
 				auto cameraTransform = gm.getComponent<ST::TransformComponent>(gm.mainCameraID());
 
-				ST::CameraComponent cam;
+				//ST::CameraComponent cam;
+				//cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
+				//cam.lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				//tempLightData.matrix_ = cam.projection * cam.view;
+
+				//glm::ortho(-(horizontal_ / 2.0f), horizontal_ / 2.0f, -(vertical_ / 2.0f), vertical_ / 2.0f, nearPlane_, farPlane_);
 				
-				//cam.lookAt(glm::vec3((tempTransform.m_Rotation_ * glm::vec4(0.0f, 1.0f, 0.0f, 1.0f))), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				cam.lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-
-				tempLightData.matrix_ = cam.projection * cam.view;
-
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
 				glUniform1i(gm.shadowMapping->getUniform("u_lightType"), tempLightData.light_->type_);
 
+				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				// ----- Hight Res Shadow -----
+				glm::mat4 orthoHigh = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -10.0f, 40.0f);
+				tempLightData.matrix_.push_back(orthoHigh * view);
+				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0][0]);
 				//Render Scene.
 				thisLightRenderTargetHigh.start();
 				setUpRender(gm);
 				thisLightRenderTargetHigh.end();
-
 				tempLightData.renderTarget_.push_back(thisLightRenderTargetHigh);
+
+				// ----- Mid Res Shadow -----
+				glm::mat4 orthoMid = glm::ortho(-200.0f, 200.0f, -200.0f, 200.0f, -30.0f, 170.0f);
+				tempLightData.matrix_.push_back(orthoMid * view);
+				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[1][0][0]);
+				//Render Scene.
+				thisLightRenderTargetMid.start();
+				setUpRender(gm);
+				thisLightRenderTargetMid.end();
+				tempLightData.renderTarget_.push_back(thisLightRenderTargetMid);
+
 			}
 			else if (tempLightData.light_->type_ == ST::Point) {
 
@@ -282,9 +298,9 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				cam.setPerspective(90.0f, 1.0f, 0.5f, 200.0f);
 				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ - tempTransform.getUp(), tempTransform.getForward());
 
-				tempLightData.matrix_ = cam.projection * cam.view;
+				tempLightData.matrix_.push_back(cam.projection * cam.view);
 
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0]);
+				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0][0]);
 
 				//Render Scene.
 				spotLightShadow.start();
