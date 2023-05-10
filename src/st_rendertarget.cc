@@ -174,8 +174,8 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
 		
-		glDepthMask(GL_FALSE);
-		glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		//glDepthMask(GL_FALSE);
+		//glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -244,15 +244,15 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 
-	glDepthMask(GL_TRUE);
+	//glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
 
+	glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	//glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 }
 
 GLuint ST::RenderTarget::getID(){

@@ -117,20 +117,20 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
 	}
 
-	//ST::Texture halo_Light;
-	//halo_Light.loadSource("../others/halo_light.png");
-	//for (int i = 0; i < 20; i++){
-	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
+	ST::Texture halo_Light;
+	halo_Light.loadSource("../others/halo_light.png");
+	for (int i = 0; i < 20; i++){
+		ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
-	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 10.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
-	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
-	//	a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
-	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
-	//}
+		a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 10.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
+		a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+		a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+		a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+		a.getComponent<ST::RenderComponent>()->material.translucent = true;
+		a.getComponent<ST::RenderComponent>()->castShadow_ = false;
+		a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
+		a.getComponent<ST::LightComponent>()->type_ = ST::Point;
+	}
 
 	// --------------------------
 	// **************** TEST *****************
@@ -171,7 +171,7 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		//ST::SystemRender::Render(gm, *gm.skybox);
+		ST::SystemRender::Render(gm, *gm.skybox);
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 

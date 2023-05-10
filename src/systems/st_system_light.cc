@@ -227,7 +227,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 				// ----- Hight Res Shadow -----
-				glm::mat4 orthoHigh = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -10.0f, 40.0f);
+				glm::mat4 orthoHigh = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -50.0f, 50.0f);
 				tempLightData.matrix_.push_back(orthoHigh * view);
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0][0]);
 				//Render Scene.
@@ -237,7 +237,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				tempLightData.renderTarget_.push_back(thisLightRenderTargetHigh);
 
 				// ----- Mid Res Shadow -----
-				glm::mat4 orthoMid = glm::ortho(-200.0f, 200.0f, -200.0f, 200.0f, -30.0f, 170.0f);
+				glm::mat4 orthoMid = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, -30.0f, 170.0f);
 				tempLightData.matrix_.push_back(orthoMid * view);
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[1][0][0]);
 				//Render Scene.
