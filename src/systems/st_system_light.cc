@@ -10,7 +10,7 @@
 #include <st_program.h>
 
 ST::SystemLight::SystemLight(){
-	textureSize_ = glm::ivec2(1024);
+	textureSize_ = glm::ivec2(2048);
 }
 
 //void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
@@ -227,7 +227,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 				// ----- Hight Res Shadow -----
-				glm::mat4 orthoHigh = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, -50.0f, 50.0f);
+				glm::mat4 orthoHigh = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, -35.0f, 35.0f);
 				tempLightData.matrix_.push_back(orthoHigh * view);
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[0][0][0]);
 				//Render Scene.

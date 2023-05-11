@@ -321,7 +321,6 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	//return false;
 }
 
-
 void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 
 	gm.drawcalls_ = 0;
@@ -379,6 +378,31 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 							}
 							else {
 								objs_translucent.push_back(thisObj);
+							}
+
+							// ------ Dibujamos sus normales. -------
+							if (i == gm.objectSelected) {
+								ST::Program& normalProgram = *gm.normalsProgram;
+								normalProgram.use();
+								// ------ Camara -------
+								GLuint camPos = normalProgram.getUniform("u_view_pos");
+								glm::vec3 camTransPos = cam.transform_->getPosition();
+								glUniform3fv(camPos, 1, &camTransPos.x);
+								GLuint camView = normalProgram.getUniform("u_view_matrix");
+								glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.cam_->view[0][0]);
+								GLuint camProjection = normalProgram.getUniform("u_projection_matrix");
+								glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.cam_->projection[0][0]);
+								GLuint camVP = normalProgram.getUniform("u_vp_matrix");
+								glm::mat4 cam_m_vp = cam.cam_->projection * cam.cam_->view;
+								glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
+								// ------ Camara -------
+								std::vector<InstanceInfo> instancing;
+								instancing.push_back({ thisObj.transform_->m_transform_,
+													   thisObj.render_->material.getColor(),
+													   thisObj.render_->material.getTexIndex(),
+													   thisObj.render_->material.shininess });
+								thisObj.render_->mesh->setInstanceData(instancing);
+								thisObj.render_->mesh->render();
 							}
 						}
 					}

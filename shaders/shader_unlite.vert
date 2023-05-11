@@ -50,18 +50,6 @@ void main(){
 
 	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width);
 
-//	if(tempUVx < 0.5){
-//		tempUVx = offset_width;
-//	}else{
-//		tempUVx = 1 - offset_width;
-//	}
-
-//	if(tempUVy < 0.5){
-//		tempUVy = atlas_height;
-//	}else{
-//		tempUVy = 1 - atlas_height;
-//	}
-
 	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	texCoords = tempUV;
 

@@ -11,9 +11,8 @@ ST::LightComponent::LightComponent(){
 	diffuse_ = { 0.4f,0.4f,0.4f };
 	specular_ = { 0.4f,0.4f,0.4f };
 
-	constant_ = 1.0f;
-	linear_ = 0.5f;
-	quadratic_ = 0.002f;
+	linear_ = 0.7f;
+	quadratic_ = 1.8f;
 
 	cutOff_ = 0.9f;
 	outerCutOff_ = 0.7f;

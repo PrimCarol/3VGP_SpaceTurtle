@@ -28,38 +28,41 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 
 	// ------- Create Basic Program -------
+	//basicProgram = std::make_unique<ST::Program>();
+	//bool shaderError = false;
+
+	//ST::Shader vertex(E_VERTEX_SHADER);
+	//GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
+	//if (!textVertex) {
+	//	shaderError = true;
+	//	printf("Error load Vertex Shader");
+	//}
+
+	//ST::Shader fragment(E_FRAGMENT_SHADER);
+	//GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.frag");
+	//if (!textFragment) {
+	//	shaderError = true;
+	//	printf("Error load Fragment Shader");
+	//}
+
+	//vertex.loadSource(textVertex);
+	//fragment.loadSource(textFragment);
+
+	//basicProgram->attach(vertex);
+	//basicProgram->attach(fragment);
+	//basicProgram->link();
+
+	// ------- Create Base Program -------
 	basicProgram = std::make_unique<ST::Program>();
-	bool shaderError = false;
-
-	ST::Shader vertex(E_VERTEX_SHADER);
-	GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
-	if (!textVertex) {
-		shaderError = true;
-		printf("Error load Vertex Shader");
-	}
-
-	ST::Shader fragment(E_FRAGMENT_SHADER);
-	GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.frag");
-	if (!textFragment) {
-		shaderError = true;
-		printf("Error load Fragment Shader");
-	}
-
-	if (shaderError) {
-		textVertex = (GLchar*)ST::basic_vShader_text;
-		textFragment = (GLchar*)ST::basic_fShader_text;
-	}
-
-	vertex.loadSource(textVertex);
-	fragment.loadSource(textFragment);
-
-	basicProgram->attach(vertex);
-	basicProgram->attach(fragment);
-	basicProgram->link();
+	basicProgram->setUp("../shaders/shader_instancing.vert", "../shaders/shader_instancing.frag");
 
 	// ------- Create Unlite Program -------
 	unliteProgram = std::make_unique<ST::Program>();
 	unliteProgram->setUp("../shaders/shader_unlite.vert", "../shaders/shader_unlite.frag");
+
+	// ------- Create Normals Program -------
+	normalsProgram = std::make_unique<ST::Program>();
+	normalsProgram->setUp("../shaders/normals.vert", "../shaders/normals.frag", "../shaders/normals.geom");
 
 	// ------- Create Shadow Mapping Program -------
 	shadowMapping = std::make_unique<ST::Program>();

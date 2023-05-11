@@ -211,9 +211,12 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
 					glUniform3f(Shader.getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
 					glUniform3f(Shader.getUniform("u_PointLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform1f(Shader.getUniform("u_PointLight.constant"), tempLight->constant_);
 					glUniform1f(Shader.getUniform("u_PointLight.linear"), tempLight->linear_);
 					glUniform1f(Shader.getUniform("u_PointLight.quadratic"), tempLight->quadratic_);
+					const float maxBrightness = std::fmaxf(std::fmaxf(tempLight->color_.r, tempLight->color_.g), tempLight->color_.b);
+					float radius = (-tempLight->linear_ + std::sqrt(tempLight->linear_ * tempLight->linear_ - 4 * tempLight->quadratic_ * (1.0 - (256.0f / 5.0f) * maxBrightness))) / (2.0f * tempLight->quadratic_);
+					glUniform1f(Shader.getUniform("u_PointLight.radius"), radius);
+					//glUniform1f(Shader.getUniform("u_PointLight.radius"), 5.0f);
 				}
 				// Spot
 				if (tempLight->type_ == ST::Spot) {
@@ -221,7 +224,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_SpotLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
 					glUniform3f(Shader.getUniform("u_SpotLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
 					glUniform3f(Shader.getUniform("u_SpotLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform1f(Shader.getUniform("u_SpotLight.constant"), tempLight->constant_);
 					glUniform1f(Shader.getUniform("u_SpotLight.linear"), tempLight->linear_);
 					glUniform1f(Shader.getUniform("u_SpotLight.quadratic"), tempLight->quadratic_);
 					glUniform3f(Shader.getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);

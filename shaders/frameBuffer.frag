@@ -33,9 +33,9 @@ uniform DirLight u_DirectLight;
 struct PointLight{
 	vec3 position;
 
-	float constant;
 	float linear;
 	float quadratic;
+    float radius;
 
 	vec3 ambient;
 	vec3 diffuse;
@@ -52,8 +52,7 @@ struct SpotLight {
 
     float cutOff;
     float outerCutOff;
-  
-    float constant;
+
     float linear;
     float quadratic;
   
@@ -120,13 +119,14 @@ void main(){
         }
 
         // Point
-        if(u_lightType == 2 ){
+        else if(u_lightType == 2 ){
+
             result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
             result *= shadow;
         }
 
         // Spot
-        if(u_lightType == 3 ){
+        else if(u_lightType == 3 ){
             vec4 PosLightSpace = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
 
             result = CalcSpotLight(u_SpotLight, Normal, FragPos, viewDir, Diffuse, Specular);
@@ -200,26 +200,30 @@ vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float
 
 vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
 	
-	vec3 lightDir = normalize(light.position - objPosition);
-	float diff = max(dot(normals, lightDir), 0.0);
-
-	vec3 reflectDir = reflect(-lightDir, normals);
-	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-
 	float distance = length(light.position - objPosition);
-	float attenuation = 1.0 / (light.constant + light.linear * distance +
-							   light.quadratic * (distance * distance));
+
+    if(distance < light.radius){
+	    vec3 lightDir = normalize(light.position - objPosition);
+	    float diff = max(dot(normals, lightDir), 0.0);
+
+	    vec3 reflectDir = reflect(-lightDir, normals);
+	    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
+
+	    float attenuation = 1.0 / (1.0 + light.linear * distance +
+							       light.quadratic * (distance * distance));
 
 	
-    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
+        vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
+        vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
+        vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
 
-	ambient *= attenuation;
-	diffuse *= attenuation;
-	specular *= attenuation;
+	    ambient *= attenuation;
+	    diffuse *= attenuation;
+	    specular *= attenuation;
 
-	return (ambient + diffuse + specular);
+	    return (ambient + diffuse + specular);
+    }
+    discard;   
 }
 
 vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
@@ -230,7 +234,7 @@ vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir
 	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
 
 	float distance = length(light.position - objPosition);
-	float attenuation = 1.0 / (light.constant + light.linear * distance +
+	float attenuation = 1.0 / (1.0 + light.linear * distance +
 							   light.quadratic * (distance * distance));
 
     float theta = dot(lightDir, normalize(-light.direction)); 
