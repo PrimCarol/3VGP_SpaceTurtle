@@ -157,6 +157,8 @@ int main() {
 	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	bool changeMode = false;
+	bool hideHud = false;
+	bool hideHudPress = false;
 	// **************** TEST *****************
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
@@ -175,10 +177,13 @@ int main() {
 		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
 
+		// ---- Update Transforms ----
 		ST::SystemTransform::UpdateTransforms(gm);
 
+		// ---- Lights ----
 		lightSystem.CompileLights(gm);
 
+		// ---- Render ----
 		myRenderTarget.start();
 		ST::SystemRender::Render(gm, *gm.g_buffer);
 		myRenderTarget.end();
@@ -187,7 +192,7 @@ int main() {
 		ST::SystemRender::Render(gm, *gm.skybox);
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
-
+		// ---------------- Change Deffered Mode ----------------
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {
 			myRenderTarget.nextVisualMode();
 			changeMode = true;
@@ -196,12 +201,18 @@ int main() {
 			changeMode = false;
 		}
 
+		// ---------------- Hide HUD ----------------
+		if (w.inputPressed('P') && !hideHudPress) {
+			hideHud = hideHud != true ? true : false;
+			hideHudPress = true;
+		}
+		if (w.inputReleased('P')) {
+			hideHudPress = false;
+		}
 
 
 
-
-
-
+		// ---------------- Picking ----------------
 		if (w.inputPressed(ST::ST_INPUT_FIRE)) {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);
 		}
@@ -210,10 +221,13 @@ int main() {
 			gm.objectSelected = -1;
 		}
 
-		ST::SystemHUD::NavBar(gm);
-		ST::SystemHUD::Hierarchy(gm);
-		ST::SystemHUD::Inspector(gm);
-		ST::SystemHUD::Stats(w, gm);
+		// ---------------- HUD ----------------
+		if (!hideHud) {
+			ST::SystemHUD::NavBar(gm);
+			ST::SystemHUD::Hierarchy(gm);
+			ST::SystemHUD::Inspector(gm);
+			ST::SystemHUD::Stats(w, gm);
+		}
 
 		// ----------------------------
 
