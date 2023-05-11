@@ -3,6 +3,8 @@
 #include <map>
 #include <st_gameobj_manager.h>
 
+#include <components/st_collider.h>
+
 //void drawCollision(glm::vec3 min, glm::vec3 max){
 //	glBegin(GL_LINES);
 //
@@ -385,10 +387,8 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 								ST::Program& normalProgram = *gm.normalsProgram;
 								normalProgram.use();
 								// ------ Camara -------
-								GLuint camView = normalProgram.getUniform("u_view_matrix");
-								glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.cam_->view[0][0]);
-								GLuint camProjection = normalProgram.getUniform("u_projection_matrix");
-								glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.cam_->projection[0][0]);
+								glUniformMatrix4fv(normalProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
+								glUniformMatrix4fv(normalProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
 								// ------ Camara -------
 								std::vector<InstanceInfo> instancing;
 								instancing.push_back({ thisObj.transform_->m_transform_,
@@ -397,6 +397,22 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 													   thisObj.render_->material.shininess });
 								thisObj.render_->mesh->setInstanceData(instancing);
 								thisObj.render_->mesh->render();
+
+								//ST::ColliderComponent* collierComp = gm.getComponent<ST::ColliderComponent>(i);
+								//if (collierComp) {
+								//	ST::Program& colliderProgram = *gm.colliderProgram;
+								//	colliderProgram.use();
+								//	// ------ Camara -------
+								//	glUniformMatrix4fv(colliderProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
+								//	glUniformMatrix4fv(colliderProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
+
+								//	glm::vec3 min = collierComp->getMinPoint();
+								//	glm::vec3 max = collierComp->getMaxPoint();
+								//	glUniform3fv(colliderProgram.getUniform("u_minColliderPos"), 1, &min.x);
+								//	glUniform3fv(colliderProgram.getUniform("u_maxColliderPos"), 1, &max.x);
+	
+								//	thisObj.render_->mesh->render();
+								//}
 							}
 						}
 					}

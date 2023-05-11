@@ -357,26 +357,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				//collider->draw(); // <<----- ????
 				ImGui::TreePop();
 			}
-
-			ST::Program& normalProgram = *gm.normalsProgram;
-			normalProgram.use();
-			// ------ Camara -------
-			ST::CameraComponent& cam_ = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
-			GLuint camView = normalProgram.getUniform("u_view_matrix");
-			glUniformMatrix4fv(camView, 1, GL_FALSE, &cam_.view[0][0]);
-			GLuint camProjection = normalProgram.getUniform("u_projection_matrix");
-			glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam_.projection[0][0]);
-			glUniform3fv(normalProgram.getUniform("minColliderPos"), 1, &min.x);
-			glUniform3fv(normalProgram.getUniform("maxColliderPos"), 1, &max.x);
-			// ------ Camara -------
-			/*std::vector<InstanceInfo> instancing;
-			instancing.push_back({ thisObj.transform_->m_transform_,
-								   thisObj.render_->material.getColor(),
-								   thisObj.render_->material.getTexIndex(),
-								   thisObj.render_->material.shininess });
-			thisObj.render_->mesh->setInstanceData(instancing);
-			thisObj.render_->mesh->render();*/
-
 		}
 
 		const char* typeLightsChar[] = { "Directional", "Point", "Spot"};

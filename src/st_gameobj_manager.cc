@@ -26,32 +26,6 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	mainCameraID_ = -1;
 
-
-	// ------- Create Basic Program -------
-	//basicProgram = std::make_unique<ST::Program>();
-	//bool shaderError = false;
-
-	//ST::Shader vertex(E_VERTEX_SHADER);
-	//GLchar* textVertex = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.vert");
-	//if (!textVertex) {
-	//	shaderError = true;
-	//	printf("Error load Vertex Shader");
-	//}
-
-	//ST::Shader fragment(E_FRAGMENT_SHADER);
-	//GLchar* textFragment = (GLchar*)ST::Engine::readFile("../shaders/shader_instancing.frag");
-	//if (!textFragment) {
-	//	shaderError = true;
-	//	printf("Error load Fragment Shader");
-	//}
-
-	//vertex.loadSource(textVertex);
-	//fragment.loadSource(textFragment);
-
-	//basicProgram->attach(vertex);
-	//basicProgram->attach(fragment);
-	//basicProgram->link();
-
 	// ------- Create Base Program -------
 	basicProgram = std::make_unique<ST::Program>();
 	basicProgram->setUp("../shaders/shader_instancing.vert", "../shaders/shader_instancing.frag");
@@ -63,6 +37,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create Normals Program -------
 	normalsProgram = std::make_unique<ST::Program>();
 	normalsProgram->setUp("../shaders/normals.vert", "../shaders/normals.frag", "../shaders/normals.geom");
+
+	// ------- Create Collider Program -------
+	colliderProgram = std::make_unique<ST::Program>();
+	colliderProgram->setUp("../shaders/collider.vert", "../shaders/collider.frag", "../shaders/collider.geom");
 
 	// ------- Create Shadow Mapping Program -------
 	shadowMapping = std::make_unique<ST::Program>();
@@ -82,9 +60,7 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	// ------- Create Skybox Program -------
 	skybox = std::make_unique<ST::Program>();
-	if (!skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag")) {
-		printf("Program Error");
-	}
+	skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag");
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
