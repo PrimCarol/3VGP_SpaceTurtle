@@ -15,11 +15,6 @@ void ST::ShadowMapping::setUp(int w, int h, ST::Texture::TextType textureType){
 
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("ShadowMap 01 -> OpenGL Error: %d\n", error);
-	}
-
 	shadowMap = std::make_shared<ST::Texture>();
 	shadowMap->init(width_, height_, textureType, ST::Texture::DT_FLOAT, ST::Texture::F_DEPTH, ST::Texture::F_DEPTH);
 	shadowMap->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
@@ -30,19 +25,9 @@ void ST::ShadowMapping::setUp(int w, int h, ST::Texture::TextType textureType){
 	
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap->getID(), 0);
 	shadowMap->set_data(0);
-	
-	error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("ShadowMap 02 -> OpenGL Error: %d\n", error);
-	}
 
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
-	
-	error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("ShadowMap 03 -> OpenGL Error: %d\n", error);
-	}
 
 	shadowMap->unbind();
 	//glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -60,19 +45,16 @@ GLuint ST::ShadowMapping::textureID(){
 void ST::ShadowMapping::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
-	/*if (renderType_ == RT_Depth) {
-		glViewport(0, 0, width_, height_);
-		glClear(GL_DEPTH_BUFFER_BIT);
-	}else {
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}*/
 	glViewport(0, 0, width_, height_);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("ShadowMapping Start -> OpenGL Error: %d\n", error);
+	}
 }
 
 void ST::ShadowMapping::end(){
@@ -80,6 +62,11 @@ void ST::ShadowMapping::end(){
 
 	// Reset viewport
 	glViewport(last_viewport[0], last_viewport[1], last_viewport[2], last_viewport[3]);
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("ShadowMapping End -> OpenGL Error: %d\n", error);
+	}
 }
 
 ST::ShadowMapping::~ShadowMapping(){

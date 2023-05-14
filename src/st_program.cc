@@ -75,9 +75,29 @@ void ST::Program::attach(Shader &s){
 }
 
 bool ST::Program::link(){
-	glLinkProgram(internalID);
+	/*glLinkProgram(internalID);
 	assert(glGetError() == GL_NO_ERROR);
 	if (glGetError() != GL_NO_ERROR) { return false; }
+	return true;*/
+	GLint compile_me = -1;
+	GLint max_length = 0;
+	std::string output_log;
+
+	glLinkProgram(internalID);
+	glGetProgramiv(internalID, GL_LINK_STATUS, &compile_me);
+
+	glGetProgramiv(internalID, GL_INFO_LOG_LENGTH, &max_length);
+	glGetProgramInfoLog(internalID, static_cast<GLsizei>(output_log.capacity()), &max_length, output_log.data());
+
+	if (max_length > 0) {
+		printf("Error in Program Link Function:\n%s\n", output_log.c_str());
+	}
+
+	if (compile_me != GL_TRUE) {
+		glDeleteProgram(internalID);
+		return false;
+	}
+
 	return true;
 }
 

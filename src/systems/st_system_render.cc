@@ -325,7 +325,7 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 
-	gm.drawcalls_ = 0;
+	//gm.drawcalls_ = 0;
 
 	auto& render = *gm.getComponentVector<ST::RenderComponent>();
 	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
@@ -384,19 +384,19 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 
 							// ------ Dibujamos sus normales. -------
 							if (i == gm.objectSelected) {
-								ST::Program& normalProgram = *gm.normalsProgram;
-								normalProgram.use();
-								// ------ Camara -------
-								glUniformMatrix4fv(normalProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
-								glUniformMatrix4fv(normalProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
-								// ------ Camara -------
-								std::vector<InstanceInfo> instancing;
-								instancing.push_back({ thisObj.transform_->m_transform_,
-													   thisObj.render_->material.getColor(),
-													   thisObj.render_->material.getTexIndex(),
-													   thisObj.render_->material.shininess });
-								thisObj.render_->mesh->setInstanceData(instancing);
-								thisObj.render_->mesh->render();
+								//ST::Program& normalProgram = *gm.normalsProgram;
+								//normalProgram.use();
+								//// ------ Camara -------
+								//glUniformMatrix4fv(normalProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
+								//glUniformMatrix4fv(normalProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
+								//// ------ Camara -------
+								//std::vector<InstanceInfo> instancing;
+								//instancing.push_back({ thisObj.transform_->m_transform_,
+								//					   thisObj.render_->material.getColor(),
+								//					   thisObj.render_->material.getTexIndex(),
+								//					   thisObj.render_->material.shininess });
+								//thisObj.render_->mesh->setInstanceData(instancing);
+								//thisObj.render_->mesh->render();
 
 								//ST::ColliderComponent* collierComp = gm.getComponent<ST::ColliderComponent>(i);
 								//if (collierComp) {

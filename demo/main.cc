@@ -78,7 +78,7 @@ int main() {
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
 
 	//ST::GameObj sponzaObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	//sponzaObj.getComponent<ST::NameComponent>()->setName("Sponza");
@@ -119,7 +119,7 @@ int main() {
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
 		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
-		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 		//objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
@@ -128,22 +128,23 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
 	}
 
-	//ST::Texture halo_Light;
-	//halo_Light.loadSource("../others/halo_light.png");
-	//for (int i = 0; i < 500; i++){
-	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
+	/*ST::Texture halo_Light;
+	halo_Light.loadSource("../others/halo_light.png");
+	for (int i = 0; i < 500; i++){
+		ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
-	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
-	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
-	//	a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
-	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
-	//	a.getComponent<ST::LightComponent>()->linear_ = 0.7f;
-	//	a.getComponent<ST::LightComponent>()->quadratic_ = 1.8f;
-	//}
+		a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
+		a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
+		a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+		a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+		a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
+		a.getComponent<ST::RenderComponent>()->material.translucent = true;
+		a.getComponent<ST::RenderComponent>()->castShadow_ = false;
+		a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
+		a.getComponent<ST::LightComponent>()->type_ = ST::Point;
+		a.getComponent<ST::LightComponent>()->linear_ = 0.7f;
+		a.getComponent<ST::LightComponent>()->quadratic_ = 0.1f;
+	}*/
 
 	// --------------------------
 	// **************** TEST *****************
@@ -163,14 +164,14 @@ int main() {
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
-
+		gm.drawcalls_ = 0;
 
 
 		// ---- Update ----
 		skybox.getComponent<ST::TransformComponent>()->setPosition(camera.getComponent<ST::TransformComponent>()->getPosition());
 
 
-
+		
 
 
 		// ---- Camera ----
@@ -189,8 +190,8 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		ST::SystemRender::Render(gm, *gm.skybox);
-		ST::SystemRender::Render(gm, *gm.unliteProgram);
+		//ST::SystemRender::Render(gm, *gm.skybox);
+		//ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {

@@ -27,8 +27,8 @@ ST::GameObj_Manager::GameObj_Manager(){
 	mainCameraID_ = -1;
 
 	// ------- Create Base Program -------
-	basicProgram = std::make_unique<ST::Program>();
-	basicProgram->setUp("../shaders/shader_instancing.vert", "../shaders/shader_instancing.frag");
+	//basicProgram = std::make_unique<ST::Program>();
+	//basicProgram->setUp("../shaders/shader_instancing.vert", "../shaders/shader_instancing.frag");
 
 	// ------- Create Unlite Program -------
 	unliteProgram = std::make_unique<ST::Program>();
@@ -39,12 +39,16 @@ ST::GameObj_Manager::GameObj_Manager(){
 	normalsProgram->setUp("../shaders/normals.vert", "../shaders/normals.frag", "../shaders/normals.geom");
 
 	// ------- Create Collider Program -------
-	colliderProgram = std::make_unique<ST::Program>();
-	colliderProgram->setUp("../shaders/collider.vert", "../shaders/collider.frag", "../shaders/collider.geom");
+	//colliderProgram = std::make_unique<ST::Program>();
+	//colliderProgram->setUp("../shaders/collider.vert", "../shaders/collider.frag", "../shaders/collider.geom");
 
 	// ------- Create Shadow Mapping Program -------
 	shadowMapping = std::make_unique<ST::Program>();
 	shadowMapping->setUp("../shaders/shadowMapping.vert", "../shaders/shadowMapping.frag");
+
+	// ------- Create Shadow Mapping Program PointLight -------
+	shadowMappingPoint = std::make_unique<ST::Program>();
+	shadowMappingPoint->setUp("../shaders/shadowMappingPoint.vert", "../shaders/shadowMappingPoint.frag", "../shaders/shadowMappingPoint.geom");
 
 	// ------- Create FrameBuffer Program -------
 	framebufferProgram = std::make_unique<ST::Program>();

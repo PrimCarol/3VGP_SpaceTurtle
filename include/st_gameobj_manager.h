@@ -75,11 +75,12 @@ namespace ST {
 
 		// ------------------------------- TRASH ZONE ---------------------------------
 		// Default Shader Program to render.
-		std::shared_ptr<ST::Program> basicProgram;
+		//std::shared_ptr<ST::Program> basicProgram;
 		std::shared_ptr<ST::Program> unliteProgram;
 		std::shared_ptr<ST::Program> normalsProgram;
-		std::shared_ptr<ST::Program> colliderProgram;
+		//std::shared_ptr<ST::Program> colliderProgram;
 		std::shared_ptr<ST::Program> shadowMapping;
+		std::shared_ptr<ST::Program> shadowMappingPoint;
 		std::shared_ptr<ST::Program> framebufferProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
 		std::shared_ptr<ST::Program> g_buffer;

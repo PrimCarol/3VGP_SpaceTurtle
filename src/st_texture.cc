@@ -336,21 +336,21 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
 
         break;
     case TextType::T_CUBEMAP:
-        printf("CubeMap!");
-        /*glBindTexture(GL_TEXTURE_3D, internalID);
+        //printf("CubeMap!");
+        glBindTexture(GL_TEXTURE_CUBE_MAP, internalID);
 
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
 
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
-        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrapToGl(wrap_r_));
 
         for (unsigned int i = 0; i < 6; ++i) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
         }
 
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);*/
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
         break;
     default:
         printf("Set Data to Texture >> Invalid Type");

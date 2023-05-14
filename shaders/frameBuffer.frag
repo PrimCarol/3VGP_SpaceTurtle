@@ -41,6 +41,7 @@ struct PointLight{
 	vec3 diffuse;
 	vec3 specular;
 };
+uniform float far_plane;
 //#define MAX_POINT_LIGHTS 10
 //uniform int u_numPointLights;
 uniform PointLight u_PointLight;
@@ -73,8 +74,8 @@ uniform int u_lightType;
 // Shadows
 //uniform bool u_haveShadowMap;
 uniform mat4 lightSpaceMatrix[2];
-uniform sampler2D shadowMap[6];
-//uniform sampler2D shadowMappingPointLight[6];
+uniform sampler2D shadowMap[2];
+uniform samplerCube shadowMapPointLight;
 
 // Cabeceras
 vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular);
@@ -82,6 +83,7 @@ vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewD
 vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
 
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap);
+float CalcShadow(vec3 lightPos, vec3 objPosition, samplerCube shadowMap);
 
 void main(){ 
 
@@ -122,6 +124,7 @@ void main(){
         else if(u_lightType == 2 ){
 
             result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
+            shadow = CalcShadow(u_PointLight.position, FragPos, shadowMapPointLight);
             result *= shadow;
         }
 
@@ -282,6 +285,22 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
         }    
     }
     shadow /= 9.0;
+
+	return clamp(shadow, 0.0, 1.0);
+}
+
+// Shadows PointLight
+float CalcShadow(vec3 lightPos, vec3 objPosition, samplerCube shadowMap){
+
+	vec3 projCoords = objPosition - lightPos;
+	
+	float closestDepth = texture(shadowMap, projCoords).r;
+	closestDepth *= far_plane;
+	
+    float currentDepth = length(projCoords);
+
+    float bias = 0.05;
+    float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0;
 
 	return clamp(shadow, 0.0, 1.0);
 }

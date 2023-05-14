@@ -173,7 +173,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
-		
+
 		//glDepthMask(GL_FALSE);
 		//glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
@@ -207,6 +207,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				}
 				// Point
 				if (tempLight->type_ == ST::Point) {
+
 					glUniform3f(Shader.getUniform("u_PointLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
 					glUniform3f(Shader.getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
 					glUniform3f(Shader.getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
@@ -217,6 +218,12 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					float radius = (-tempLight->linear_ + std::sqrt(tempLight->linear_ * tempLight->linear_ - 4 * tempLight->quadratic_ * (1.0 - (256.0f / 5.0f) * maxBrightness))) / (2.0f * tempLight->quadratic_);
 					glUniform1f(Shader.getUniform("u_PointLight.radius"), radius);
 					//glUniform1f(Shader.getUniform("u_PointLight.radius"), 5.0f);
+
+					// ShadowMapping
+					glUniform1f(Shader.getUniform("far_plane"), 25.0f);
+					glUniform1i(Shader.getUniform("shadowMapPointLight"), 6);
+					glActiveTexture(GL_TEXTURE0 + 6);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, lights->at(i).renderTarget_[0].textureID());
 				}
 				// Spot
 				if (tempLight->type_ == ST::Spot) {

@@ -408,9 +408,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 					ImGui::Spacing();
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 10.00f, "%.3f");
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 0.7f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.00001f, 1.8f, "%.5f");
 
 					ImGui::Spacing();
 
