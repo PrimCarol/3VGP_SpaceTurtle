@@ -206,27 +206,19 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			LightsStruct tempLightData;
 			tempLightData.light_ = &lightComps.at(n).value();
 			tempLightData.light_->position_ = tempTransform.getPosition();
-			tempLightData.light_->direction_ = -tempTransform.getUp();
-			//tempLightData.matrix_ = tempTransform.m_transform_;
+			//tempLightData.light_->direction_ = -tempTransform.getUp();
+			tempLightData.light_->direction_ = tempTransform.getForward();
 			
+			auto cameraTransform = gm.getComponent<ST::TransformComponent>(gm.mainCameraID());
+
 			if (tempLightData.light_->type_ == ST::Directional) {
 				ST::ShadowMapping thisLightRenderTargetHigh;
 				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
 				ST::ShadowMapping thisLightRenderTargetMid;
-				thisLightRenderTargetMid.setUp(textureSize_.x, textureSize_.y);
+				thisLightRenderTargetMid.setUp(textureSize_.x, textureSize_.y);		
 
-				auto cameraTransform = gm.getComponent<ST::TransformComponent>(gm.mainCameraID());
-
-				//ST::CameraComponent cam;
-				//cam.setOrthographic(camShadowSize.x, camShadowSize.y, camShadowDistance.x, camShadowDistance.y);
-				//cam.lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				//tempLightData.matrix_ = cam.projection * cam.view;
-
-				//glm::ortho(-(horizontal_ / 2.0f), horizontal_ / 2.0f, -(vertical_ / 2.0f), vertical_ / 2.0f, nearPlane_, farPlane_);
-				
-				//glUniform1i(gm.shadowMapping->getUniform("u_lightType"), tempLightData.light_->type_);
-
-				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				//glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), cameraTransform->getUp());
 
 				// ----- Hight Res Shadow -----
 				glm::mat4 orthoHigh = glm::ortho(-35.0f, 35.0f, -35.0f, 35.0f, -35.0f, 35.0f);
@@ -275,13 +267,12 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				gm.shadowMappingPoint->use();
 
 				char buffer[50];
-
 				for (unsigned int i = 0; i < 6; ++i) {
 					tempLightData.matrix_.push_back(shadowTransforms[i]);
 					snprintf(buffer, 50, "lightSpaceMatrix[%d]", i);
 					glUniformMatrix4fv(gm.shadowMapping->getUniform(buffer), 1, GL_FALSE, &shadowTransforms[i][0][0]);
 				}
-				glUniform1f(gm.shadowMapping->getUniform("far_plane"), 2.0f);
+				glUniform1f(gm.shadowMapping->getUniform("far_plane"), 25.0f);
 				glm::vec3 lightPos = tempTransform.getPosition();
 				glUniform3fv(gm.shadowMapping->getUniform("lightPos"), 1, &lightPos.x);
 
@@ -304,7 +295,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				ST::CameraComponent cam;
 				
 				cam.setPerspective(90.0f, 1.0f, 1.0f, 25.0f);
-				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ - tempTransform.getUp(), tempTransform.getForward());
+				//cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ - tempTransform.getUp(), tempTransform.getForward());
+				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), tempTransform.getUp());
 
 				tempLightData.matrix_.push_back(cam.projection * cam.view);
 
@@ -342,17 +334,14 @@ void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
 			}
 		}
 	}
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("Pre DoRender-> OpenGL Error: %d\n", error);
-	}
+	
 	glDisable(GL_BLEND);
 	doRender(objs_opaque);
 
-	error = glGetError();
+	/*GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
 		printf("Post DoRender-> OpenGL Error: %d\n", error);
-	}
+	}*/
 
 	objs_opaque.clear();
 }

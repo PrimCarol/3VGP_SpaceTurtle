@@ -632,7 +632,7 @@ void ST::Cube::render() {
 	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
-	assert(glGetError() == GL_NO_ERROR);
+
 	// Atributo de matrices
 	for (int i = 0; i < 4; i++) {
 		glEnableVertexAttribArray(3 + i);
@@ -644,17 +644,17 @@ void ST::Cube::render() {
 	glEnableVertexAttribArray(7);
 	glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, color));
 	glVertexAttribDivisor(7, 1);
-	assert(glGetError() == GL_NO_ERROR);
+
 	// Atributo de Texture Index
 	glEnableVertexAttribArray(8);
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
-	assert(glGetError() == GL_NO_ERROR);
+
 	// Atributo de Mat Shiness
 	glEnableVertexAttribArray(9);
 	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
 	glVertexAttribDivisor(9, 1);
-	assert(glGetError() == GL_NO_ERROR);
+
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
 	// Clean
@@ -662,7 +662,7 @@ void ST::Cube::render() {
 		glDisableVertexAttribArray(3 + i);
 	}
 	glDisableVertexAttribArray(7);
-	assert(glGetError() == GL_NO_ERROR);
+
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

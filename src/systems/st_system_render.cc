@@ -362,8 +362,10 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 			std::vector<MyObjToRender> objs_opaque;
 			std::vector<MyObjToRender> objs_translucent;
 
-			//glEnable(GL_CULL_FACE);
-			//glCullFace(GL_BACK);
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render Start-> OpenGL Error: %d\n", error);
+			}
 
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {
@@ -422,6 +424,11 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 			glDisable(GL_BLEND);
 			doRender(objs_opaque, cam, gm);
 
+			error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render Opaques End -> OpenGL Error: %d\n", error);
+			}
+
 			// ----- Translucidos -----
 			//bool sortTranslucents = false; // <---------- Temporal
 
@@ -465,6 +472,11 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 			objs_translucent.clear();
 
 		}
+	}
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("Render Exit-> OpenGL Error: %d\n", error);
 	}
 
 	//glUseProgram(0);

@@ -20,9 +20,7 @@ void ST::ShadowMapping::setUp(int w, int h, ST::Texture::TextType textureType){
 	shadowMap->set_wrap_s(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->set_wrap_t(ST::Texture::W_CLAMP_TO_BORDER);
 	shadowMap->bind();
-	
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-	
+
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowMap->getID(), 0);
 	shadowMap->set_data(0);
 

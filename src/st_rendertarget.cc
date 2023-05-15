@@ -179,6 +179,11 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			printf("Render FrameBuffer-> OpenGL Error: %d\n", error);
+		}
+
 		if (lights) {
 			if(lights->size() == 0){ glDrawArrays(GL_TRIANGLES, 0, 6); }
 			for (int i = 0; i < lights->size(); i++){
@@ -251,6 +256,11 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 	}else {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("End Render FrameBuffer-> OpenGL Error: %d\n", error);
 	}
 
 	//glDepthMask(GL_TRUE);

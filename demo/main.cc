@@ -190,8 +190,8 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		//ST::SystemRender::Render(gm, *gm.skybox);
-		//ST::SystemRender::Render(gm, *gm.unliteProgram);
+		//ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error.
+		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------
 		if (w.inputPressed(ST::ST_INPUT_JUMP) && !changeMode) {

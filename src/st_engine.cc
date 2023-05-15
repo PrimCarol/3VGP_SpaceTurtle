@@ -71,7 +71,7 @@ void ST::Engine::createDirectLight(ST::GameObj_Manager& gm){
 
 	temp.getComponent<ST::NameComponent>()->setName("Directional Light");
 	//temp.getComponent<ST::TransformComponent>()->setRotateY(-0.5f);
-	temp.getComponent<ST::TransformComponent>()->setRotateX(0.0005f);
+	temp.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	temp.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.3f, 0.3f, 0.3f);
 	gm.objectSelected = temp.getID();
