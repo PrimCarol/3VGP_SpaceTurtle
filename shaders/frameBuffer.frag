@@ -73,9 +73,9 @@ uniform int u_lightType;
 
 // Shadows
 //uniform bool u_haveShadowMap;
-uniform mat4 lightSpaceMatrix[2];
-uniform sampler2D shadowMap[2];
-uniform samplerCube shadowMapPointLight;
+uniform mat4 lightSpaceMatrix[6];
+uniform sampler2D shadowMap[6];
+//uniform samplerCube shadowMapPointLight;
 
 // Cabeceras
 vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular);
@@ -124,8 +124,13 @@ void main(){
         else if(u_lightType == 2 ){
 
             result = CalcPointLight(u_PointLight, Normal, FragPos, viewDir, Diffuse, Specular);
-            shadow = CalcShadow(u_PointLight.position, FragPos, shadowMapPointLight);
-            result *= shadow;
+            //shadow = CalcShadow(u_PointLight.position, FragPos, shadowMapPointLight);
+            for(int i = 0; i < 6; i++){
+                vec4 PosLightSpace = lightSpaceMatrix[i] * vec4(FragPos, 1.0);
+                shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[i]);
+                result *= shadow;
+            }
+            //result *= shadow;
         }
 
         // Spot

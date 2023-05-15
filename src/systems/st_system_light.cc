@@ -199,7 +199,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 	for (int n = 0; n < lightComps.size(); n++) {
 		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
 
-			gm.shadowMapping->use();
+			gm.shadowMapping->use(); // Active Program
 
 			ST::TransformComponent& tempTransform = transformComps.at(n).value();
 
@@ -251,7 +251,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 					renderComps.at(n).value().material.setColor(tempLightData.light_->color_.x, tempLightData.light_->color_.y, tempLightData.light_->color_.z);
 				}
 
-				ST::ShadowMapping pointLightShadow;
+				/*ST::ShadowMapping pointLightShadow;
 				pointLightShadow.setUp(textureSize_.x, textureSize_.y, ST::Texture::T_CUBEMAP);
 				
 				glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 1.0f, 25.0f);
@@ -280,7 +280,42 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				setUpRender(gm);
 				pointLightShadow.end();
 
-				tempLightData.renderTarget_.push_back(pointLightShadow);
+				tempLightData.renderTarget_.push_back(pointLightShadow);*/
+			
+
+				ST::ShadowMapping pointShadowForward;
+				pointShadowForward.setUp(textureSize_.x, textureSize_.y);
+				tempLightData.renderTarget_.push_back(pointShadowForward);
+
+				ST::ShadowMapping pointShadowBackward;
+				pointShadowBackward.setUp(textureSize_.x, textureSize_.y);
+				tempLightData.renderTarget_.push_back(pointShadowBackward);
+
+				ST::ShadowMapping pointShadowBottom;
+				pointShadowBottom.setUp(textureSize_.x, textureSize_.y);
+				tempLightData.renderTarget_.push_back(pointShadowBottom);
+
+				ST::ShadowMapping pointShadowUp;
+				pointShadowUp.setUp(textureSize_.x, textureSize_.y);
+				tempLightData.renderTarget_.push_back(pointShadowUp);
+
+				glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 1.0f, 25.0f);
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(1, 0, 0), glm::vec3(0, -1, 0)));
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0)));
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)));
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, -1, 0), glm::vec3(0, 0, -1)));
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 0, 1), glm::vec3(0, -1, 0)));
+				tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0)));
+
+				for (unsigned int i = 0; i < tempLightData.renderTarget_.size(); ++i) {
+					glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[i][0][0]);
+
+					//Render Scene.
+					tempLightData.renderTarget_[i].start();
+					setUpRender(gm);
+					tempLightData.renderTarget_[i].end();
+				}
+
 			}
 			else if (tempLightData.light_->type_ == ST::Spot) {
 				
@@ -294,8 +329,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 				ST::CameraComponent cam;
 				
-				cam.setPerspective(90.0f, 1.0f, 1.0f, 25.0f);
-				//cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ - tempTransform.getUp(), tempTransform.getForward());
+				cam.setPerspective(120.0f, 1.0f, 1.0f, 100.0f);
 				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), tempTransform.getUp());
 
 				tempLightData.matrix_.push_back(cam.projection * cam.view);
