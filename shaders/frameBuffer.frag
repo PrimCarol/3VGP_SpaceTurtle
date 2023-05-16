@@ -8,7 +8,6 @@ uniform sampler2D gMetalRough;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gDepth;
-//uniform sampler2D shadowMapping;
 
 // Necesario
 uniform vec3 viewPos;
@@ -67,9 +66,26 @@ struct SpotLight {
 uniform SpotLight u_SpotLight;
 //uniform SpotLight u_SpotLight[MAX_SPOT_LIGHTS];
 
-// 0 -> Directional
-// 1 -> Point
-// 2 -> Spot
+struct LightInfo {
+    vec3 position;
+    vec3 direction;
+
+    float radius;
+    float cutOff;
+    float outerCutOff;
+
+    float linear;
+    float quadratic;
+  
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;       
+};
+LightInfo u_Light;
+// 0 -> None
+// 1 -> Directional
+// 2 -> Point
+// 3 -> Spot
 uniform int u_lightType; 
 
 // Shadows
@@ -79,9 +95,12 @@ uniform sampler2D shadowMap[6];
 //uniform samplerCube shadowMapPointLight;
 
 // Cabeceras
-vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular);
-vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
-vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
+//vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular);
+//vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
+//vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular);
+
+vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
+vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
 
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap);
 float CalcShadow(vec3 lightPos, vec3 objPosition, samplerCube shadowMap);
@@ -102,53 +121,34 @@ void main(){
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
     vec3 Normal = texture(gNormal, TexCoords).rgb;
     float Depth = texture(gDepth, TexCoords).r;
-
-    vec3 viewDir = normalize(FragPos - viewPos);
     
+    float shadow = 1.0;
+
     // -----------------
-    vec3 N = normalize(Normal);
-    vec3 V = normalize(viewPos - FragPos);
+    vec3 normals = normalize(Normal);
+    vec3 viewDir = normalize(viewPos - FragPos);
 
     vec3 baseReflectivity = mix(vec3(0.04), Diffuse, Metallic);
 
     vec3 Lo = vec3(0.0);
-    
-    vec3 lightPos = vec3(0.0); // <--- Temporal
-    vec3 lightColor = vec3(1.0,0.0,0.0); // <--- Temporal
 
-    for(int i = 0; i < 4; i++){
-        vec3 L = normalize(lightPos - FragPos);
-        vec3 H = normalize(V + L);
-
-        float distance = length(lightPos - FragPos);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = lightColor * attenuation;
-
-        float NdotV = max(dot(N,V), 0.0000001);
-        float NdotL = max(dot(N,L), 0.0000001);
-        float HdotV = max(dot(H,V), 0.0);
-        float NdotH = max(dot(N,H), 0.0);
-
-        float D = distributionGGX(NdotH, Roughness);
-        float G = geometrySmith(NdotV, NdotL, Roughness);
-        vec3 F = fresnelSchlick(NdotV, baseReflectivity);
-
-        vec3 specular = D * G * F;
-        specular /= 4.0 * NdotV * NdotL;
-
-        vec3 KD = vec3(1.0) - F;
-        KD *= 1.0 - Metallic;
-
-        Lo += (KD * Diffuse / PI + specular) * radiance * NdotL;
+    if(u_lightType == 1){ // DirLight
+        Lo = CalcLight(u_DirectLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+        
+        vec4 PosLightSpace = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
+        shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
     }
-    
-    vec3 ambient = vec3(0.03) * Diffuse;
-    
+    else if(u_lightType == 2){ // PointLight
+        Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+    }
+  
+
+    vec3 ambient = vec3(0.0) * Diffuse; 
     vec3 color = ambient + Lo;
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(color * shadow, 1.0);
 
     /*
     // Render
@@ -269,76 +269,129 @@ float geometrySmith(float NdotV, float NdotL, float roughtness){
 vec3 fresnelSchlick(float HdotV, vec3 baseReflectivity){
     return baseReflectivity + (1.0 - baseReflectivity) * pow(1.0 - HdotV, 5.0);
 }
+
+vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
+    vec3 LightDirToObj = normalize(light.position - Pos);
+    vec3 H = normalize(V + LightDirToObj);
+
+    float distance = length(light.position - Pos);
+    float attenuation = 1.0 / (1.0 + light.linear * distance +
+							    light.quadratic * (distance * distance));
+    vec3 radiance = light.ambient * attenuation;
+
+    float NdotV = max(dot(N,V), 0.0000001);
+    float NdotL = max(dot(N,LightDirToObj), 0.0000001);
+    float HdotV = max(dot(H,V), 0.0);
+    float NdotH = max(dot(N,H), 0.0);
+
+    float D = distributionGGX(NdotH, Roughness);
+    float G = geometrySmith(NdotV, NdotL, Roughness);
+    vec3 F = fresnelSchlick(NdotV, baseReflectivity);
+
+    vec3 specular = D * G * F;
+    specular /= 1.0 * NdotV * NdotL;
+
+    vec3 KD = vec3(1.0) - F;
+    KD *= 1.0 - Metallic;
+
+    return (KD * Albedo / PI + specular) * radiance * NdotL;
+}
+
+vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
+    //vec3 LightDirToObj = normalize(light.position - Pos);
+    vec3 LightDirToObj = normalize(-light.direction);
+    vec3 H = normalize(V + LightDirToObj);
+
+    vec3 radiance = light.ambient;
+
+    float NdotV = max(dot(N,V), 0.0000001);
+    float NdotL = max(dot(N,LightDirToObj), 0.0000001);
+    float HdotV = max(dot(H,V), 0.0);
+    float NdotH = max(dot(N,H), 0.0);
+
+    float D = distributionGGX(NdotH, Roughness);
+    float G = geometrySmith(NdotV, NdotL, Roughness);
+    vec3 F = fresnelSchlick(NdotV, baseReflectivity);
+
+    vec3 specular = D * G * F;
+    specular /= 1.0 * NdotV * NdotL;
+
+    vec3 KD = vec3(1.0) - F;
+    KD *= 1.0 - Metallic;
+
+    return (KD * Albedo / PI + specular) * radiance * NdotL;
+}
+
 // ---------------------------------------
 
-vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular){
-    vec3 lightDir = normalize(light.direction);
-    
-    float diff = max(dot(-lightDir, normals), 0.0);
-    
-    vec3 reflectDir = reflect(lightDir, normals);
-    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-
-    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-    
-    return (ambient + diffuse + specular);
-}
-
-vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
-	
-	float distance = length(light.position - objPosition);
-
-    if(distance < light.radius){
-	    vec3 lightDir = normalize(light.position - objPosition);
-	    float diff = max(dot(normals, lightDir), 0.0);
-
-	    vec3 reflectDir = reflect(-lightDir, normals);
-	    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-
-	    float attenuation = 1.0 / (1.0 + light.linear * distance +
-							       light.quadratic * (distance * distance));
-
-	
-        vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-        vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-        vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-
-	    ambient *= attenuation;
-	    diffuse *= attenuation;
-	    specular *= attenuation;
-
-	    return (ambient + diffuse + specular);
-    }
-    discard;   
-}
-
-vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
-    vec3 lightDir = normalize(light.position - objPosition);
-	float diff = max(dot(normals, lightDir), 0.0);
-
-	vec3 reflectDir = reflect(-lightDir, normals);
-	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-
-	float distance = length(light.position - objPosition);
-	float attenuation = 1.0 / (1.0 + light.linear * distance +
-							   light.quadratic * (distance * distance));
-
-    float theta = dot(lightDir, normalize(-light.direction)); 
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-
-    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-
-    ambient *= attenuation * intensity;
-    diffuse *= attenuation * intensity;
-    specular *= attenuation * intensity;
-
-    return (ambient + diffuse + specular);
-}
+//vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular){
+//    vec3 lightDir = normalize(light.direction);
+//    
+//    float diff = max(dot(-lightDir, normals), 0.0);
+//    
+//    vec3 reflectDir = reflect(lightDir, normals);
+//    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
+//
+//    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
+//    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
+//    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
+//    
+//    return (ambient + diffuse + specular);
+//}
+//
+//vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
+//	
+//	float distance = length(light.position - objPosition);
+//
+//    if(distance < light.radius){
+//	    vec3 lightDir = normalize(light.position - objPosition);
+//	    float diff = max(dot(normals, lightDir), 0.0);
+//
+//	    vec3 reflectDir = reflect(-lightDir, normals);
+//	    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
+//
+//	    float attenuation = 1.0 / (1.0 + light.linear * distance +
+//							       light.quadratic * (distance * distance));
+//
+//	
+//        vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
+//        vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
+//        vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
+//
+//	    ambient *= attenuation;
+//	    diffuse *= attenuation;
+//	    specular *= attenuation;
+//
+//	    return (ambient + diffuse + specular);
+//    }
+//    discard;   
+//}
+//
+//vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
+//    vec3 lightDir = normalize(light.position - objPosition);
+//	float diff = max(dot(normals, lightDir), 0.0);
+//
+//	vec3 reflectDir = reflect(-lightDir, normals);
+//	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
+//
+//	float distance = length(light.position - objPosition);
+//	float attenuation = 1.0 / (1.0 + light.linear * distance +
+//							   light.quadratic * (distance * distance));
+//
+//    float theta = dot(lightDir, normalize(-light.direction)); 
+//    float epsilon = light.cutOff - light.outerCutOff;
+//    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+//
+//    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
+//    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
+//    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
+//
+//    ambient *= attenuation * intensity;
+//    diffuse *= attenuation * intensity;
+//    specular *= attenuation * intensity;
+//
+//    return (ambient + diffuse + specular);
+//}
 
 // Shadows
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap){
@@ -357,7 +410,8 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
 		return 0.0;
 	}
 
-	float bias = max(0.025 * (1.0 - angle), 0.0005); 
+    // 0.025 - 0.0005
+	float bias = max(0.008 * (1.0 - angle), 0.000005); 
 
 	float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);

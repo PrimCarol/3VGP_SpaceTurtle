@@ -87,7 +87,7 @@ void ST::ShadowMapping::end(){
 ST::ShadowMapping::~ShadowMapping(){
 	//glDeleteRenderbuffers(1, &rbo);
 	if (destroy) {
-		//glDeleteFramebuffers(1, &internalID);
+		glDeleteFramebuffers(1, &internalID);
 	}
 }
 

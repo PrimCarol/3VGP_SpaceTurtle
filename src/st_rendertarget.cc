@@ -185,7 +185,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 
 		if (lights) {
-			if(lights->size() == 0){ glDrawArrays(GL_TRIANGLES, 0, 6); }
+			//if(lights->size() == 0){ glDrawArrays(GL_TRIANGLES, 0, 6); }
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
 				ST::LightComponent* tempLight = lights->at(i).light_;
@@ -286,9 +286,9 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 		}
-	}else {
+	}/*else {
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
+	}*/
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
