@@ -2,11 +2,12 @@
 
 ST::ShadowMapping::ShadowMapping(){
 	glGenFramebuffers(1, &internalID);
-	//glGenRenderbuffers(1, &rbo);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
 	width_ = 0;
 	height_ = 0;
+
+	destroy = true;
 }
 
 void ST::ShadowMapping::setUp(int w, int h, ST::Texture::TextType textureType){
@@ -43,15 +44,31 @@ GLuint ST::ShadowMapping::textureID(){
 void ST::ShadowMapping::start() {
 	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
+	
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("ShadowMapping Start 1-> OpenGL Error: %d\n", error);
+	}
+
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("ShadowMapping Start 2-> OpenGL Error: %d\n", error);
+	}
 
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
+	error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("ShadowMapping Start 3-> OpenGL Error: %d\n", error);
+	}
+
 	glViewport(0, 0, width_, height_);
 
-	GLenum error = glGetError();
+	error = glGetError();
 	if (error != GL_NO_ERROR) {
-		printf("ShadowMapping Start -> OpenGL Error: %d\n", error);
+		printf("ShadowMapping Start 4-> OpenGL Error: %d\n", error);
 	}
 }
 
@@ -69,20 +86,54 @@ void ST::ShadowMapping::end(){
 
 ST::ShadowMapping::~ShadowMapping(){
 	//glDeleteRenderbuffers(1, &rbo);
-	glDeleteFramebuffers(1, &internalID);
+	if (destroy) {
+		//glDeleteFramebuffers(1, &internalID);
+	}
 }
 
 ST::ShadowMapping::ShadowMapping(const ShadowMapping& o){
 	height_ = o.height_;
 	width_ = o.width_;
-	
-	//last_viewport[0] = o.last_viewport[0];
-	//last_viewport[1] = o.last_viewport[1];
-	//last_viewport[2] = o.last_viewport[2];
-	//last_viewport[3] = o.last_viewport[3];
 
 	shadowMap = o.shadowMap;
 
+	last_viewport[0] = o.last_viewport[0];
+	last_viewport[1] = o.last_viewport[1];
+	last_viewport[2] = o.last_viewport[2];
+	last_viewport[3] = o.last_viewport[3];
+
 	internalID = o.internalID;
-	//rbo = o.rbo;
 }
+
+//ST::ShadowMapping::ShadowMapping(ShadowMapping&& o) noexcept {
+//	internalID = o.internalID;
+//
+//	height_ = o.height_;
+//	width_ = o.width_;
+//
+//	shadowMap = o.shadowMap;
+//
+//	//last_viewport[0] = o.last_viewport[0];
+//	//last_viewport[1] = o.last_viewport[1];
+//	//last_viewport[2] = o.last_viewport[2];
+//	//last_viewport[3] = o.last_viewport[3];
+//
+//	o.destroy = false;
+//}
+//
+//ST::ShadowMapping& ST::ShadowMapping::operator=(ShadowMapping&& o) noexcept{
+//	internalID = o.internalID;
+//
+//	height_ = o.height_;
+//	width_ = o.width_;
+//
+//	shadowMap = o.shadowMap;
+//
+//	//last_viewport[0] = o.last_viewport[0];
+//	//last_viewport[1] = o.last_viewport[1];
+//	//last_viewport[2] = o.last_viewport[2];
+//	//last_viewport[3] = o.last_viewport[3];
+//
+//	o.destroy = false;
+//	return *this;
+//}

@@ -1,7 +1,8 @@
 #version 330 core
 layout (location = 0) out vec4 gAlbedoSpec;
-layout (location = 1) out vec3 gPosition;
-layout (location = 2) out vec3 gNormal;
+layout (location = 1) out vec2 gMetalRough;
+layout (location = 2) out vec3 gPosition;
+layout (location = 3) out vec3 gNormal;
 
 in vec2 TexCoords;
 in vec3 FragPos;
@@ -29,4 +30,7 @@ void main(){
     // store specular intensity in gAlbedoSpec's alpha component
 	vec4 TextureSpecular = vec4(1.0,1.0,1.0,1.0);
 	if(u_haveSpecular){	gAlbedoSpec.a = texture(u_tex_Specular, TexCoords).r;}
+
+    gMetalRough.r = 1.0; // Metalic
+    gMetalRough.g = 1.0; // Roughtness
 }

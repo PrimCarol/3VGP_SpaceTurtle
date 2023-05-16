@@ -231,10 +231,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glBindTexture(GL_TEXTURE_CUBE_MAP, lights->at(i).renderTarget_[0].textureID());*/
 
 					// ShadowMapping
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &lights->at(i).matrix_[1][0][0]);
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &lights->at(i).matrix_[2][0][0]);
-					glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &lights->at(i).matrix_[1][0][0]);
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &lights->at(i).matrix_[2][0][0]);
+					/*glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
 					glActiveTexture(GL_TEXTURE0 + 4);
 					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
 					glUniform1i(Shader.getUniform("shadowMap[1]"), 5);
@@ -243,7 +243,24 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform1i(Shader.getUniform("shadowMap[2]"), 6);
 					glActiveTexture(GL_TEXTURE0 + 6);
 					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[2].textureID());
-
+					glUniform1i(Shader.getUniform("shadowMap[3]"), 7);
+					glActiveTexture(GL_TEXTURE0 + 7);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[3].textureID());*/
+					char buffer[50];
+					for (unsigned int a = 0; a < lights->at(i).renderTarget_.size(); ++a) {
+						snprintf(buffer, 50, "lightSpaceMatrix[%d]", a);
+						glUniformMatrix4fv(Shader.getUniform(buffer), 1, GL_FALSE, &lights->at(i).matrix_[a][0][0]);
+						
+						snprintf(buffer, 50, "shadowMap[%d]", a);
+						glUniform1i(Shader.getUniform(buffer), a);
+						glActiveTexture(GL_TEXTURE0 + a);
+						glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[a].textureID());
+					}
+					
+					error = glGetError();
+					if (error != GL_NO_ERROR) {
+						printf("PointLight-> OpenGL Error: %d\n", error);
+					}
 				}
 				// Spot
 				if (tempLight->type_ == ST::Spot) {
