@@ -101,6 +101,7 @@ uniform sampler2D shadowMap[6];
 
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
 vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
+vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
 
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap);
 float CalcShadow(vec3 lightPos, vec3 objPosition, samplerCube shadowMap);
@@ -140,6 +141,12 @@ void main(){
     }
     else if(u_lightType == 2){ // PointLight
         Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+    }
+    else if(u_lightType == 3){ // SpotLight
+        Lo = CalcLight(u_SpotLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+
+        vec4 PosLightSpace = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
+        shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
     }
   
 
@@ -270,6 +277,30 @@ vec3 fresnelSchlick(float HdotV, vec3 baseReflectivity){
     return baseReflectivity + (1.0 - baseReflectivity) * pow(1.0 - HdotV, 5.0);
 }
 
+vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
+    vec3 LightDirToObj = normalize(-light.direction);
+    vec3 H = normalize(V + LightDirToObj);
+
+    vec3 radiance = light.ambient;
+
+    float NdotV = max(dot(N,V), 0.0000001);
+    float NdotL = max(dot(N,LightDirToObj), 0.0000001);
+    float HdotV = max(dot(H,V), 0.0);
+    float NdotH = max(dot(N,H), 0.0);
+
+    float D = distributionGGX(NdotH, Roughness);
+    float G = geometrySmith(NdotV, NdotL, Roughness);
+    vec3 F = fresnelSchlick(NdotV, baseReflectivity);
+
+    vec3 specular = D * G * F;
+    specular /= 1.0 * NdotV * NdotL;
+
+    vec3 KD = vec3(1.0) - F;
+    KD *= 1.0 - Metallic;
+
+    return (KD * Albedo / PI + specular) * radiance * NdotL;
+}
+
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
     vec3 LightDirToObj = normalize(light.position - Pos);
     vec3 H = normalize(V + LightDirToObj);
@@ -297,15 +328,23 @@ vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Ro
     return (KD * Albedo / PI + specular) * radiance * NdotL;
 }
 
-vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
-    //vec3 LightDirToObj = normalize(light.position - Pos);
-    vec3 LightDirToObj = normalize(-light.direction);
-    vec3 H = normalize(V + LightDirToObj);
+vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
+    vec3 LightDirToObj = normalize(light.position - Pos);
+    vec3 LightDir = normalize(-light.direction);
+    vec3 H = normalize(V + LightDir);
 
-    vec3 radiance = light.ambient;
+    float distance = length(light.position - Pos);
+    float attenuation = 1.0 / (1.0 + light.linear * distance +
+							    light.quadratic * (distance * distance));
+
+    float theta = dot(LightDirToObj, LightDir); 
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
+    vec3 radiance = light.ambient * attenuation * intensity;
 
     float NdotV = max(dot(N,V), 0.0000001);
-    float NdotL = max(dot(N,LightDirToObj), 0.0000001);
+    float NdotL = max(dot(N,LightDir), 0.0000001);
     float HdotV = max(dot(H,V), 0.0);
     float NdotH = max(dot(N,H), 0.0);
 

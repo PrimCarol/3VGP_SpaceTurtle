@@ -426,7 +426,8 @@ void ST::SystemLight::doRender(std::vector<Light_MyObjToRender>& objs){
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),
 							   objs[i].render_->material.getTexIndex(),
-							   objs[i].render_->material.shininess });
+							   objs[i].render_->material.roughness_,
+							   objs[i].render_->material.metallic_ });
 		lastIndice = i;
 
 	}// End For

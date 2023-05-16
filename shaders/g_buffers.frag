@@ -7,6 +7,9 @@ layout (location = 3) out vec3 gNormal;
 in vec2 TexCoords;
 in vec3 FragPos;
 in vec3 Normal;
+in float Roughness;
+in float Metallic;
+
 in vec4 color;
 
 uniform bool u_haveAlbedo;
@@ -31,6 +34,7 @@ void main(){
 	vec4 TextureSpecular = vec4(1.0,1.0,1.0,1.0);
 	if(u_haveSpecular){	gAlbedoSpec.a = texture(u_tex_Specular, TexCoords).r;}
 
-    gMetalRough.r = 1.0; // Metalic
-    gMetalRough.g = 1.0; // Roughtness
+    gMetalRough.r = Metallic; // Metalic 0.0 a 1.0
+    gMetalRough.g = Roughness; // Roughtness 0.1 a 1.0
+    if(Roughness < 0.1){gMetalRough.g = 0.1;}
 }

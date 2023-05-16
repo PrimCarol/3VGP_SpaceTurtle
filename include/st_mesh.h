@@ -21,7 +21,8 @@ namespace ST {
 		glm::mat4 matrix;
 		glm::vec4 color;
 		glm::ivec2 textureIndex;
-		float shininess;
+		float roughness;
+		float metallic;
 	};
 
 	enum CullMode{

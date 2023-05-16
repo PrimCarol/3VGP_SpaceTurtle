@@ -218,10 +218,15 @@ void ST::Triangle::render(){
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -330,10 +335,15 @@ void ST::Quad::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -404,10 +414,15 @@ void ST::Circle::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -650,10 +665,15 @@ void ST::Cube::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -821,10 +841,15 @@ void ST::Geometry::render(){
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);

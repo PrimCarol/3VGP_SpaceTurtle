@@ -36,6 +36,8 @@ int main() {
 	textureTest.loadSource("../others/checker_texture.jpg");
 	//textureTest.setCols(71);
 	//textureTest.setRows(19);
+	textureTest.setCols(8);
+	textureTest.setRows(8);
 
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
@@ -68,7 +70,8 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	//ground.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	ground.getComponent<ST::RenderComponent>()->material.roughness_ = 0.3f;
+	ground.getComponent<ST::RenderComponent>()->material.metallic_ = 1.0f;
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
@@ -115,10 +118,12 @@ int main() {
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ 9,15 });
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
 		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
 		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
+		objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
+		objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 		//objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
@@ -130,7 +135,7 @@ int main() {
 
 	//ST::Texture halo_Light;
 	//halo_Light.loadSource("../others/halo_light.png");
-	//for (int i = 0; i < 100; i++){
+	//for (int i = 0; i < 50; i++){
 	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
 	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
