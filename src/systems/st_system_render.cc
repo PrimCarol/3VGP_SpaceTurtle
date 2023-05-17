@@ -255,58 +255,48 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		mat_Uniform = p->getUniform("u_haveSpecular");
 		glUniform1i(mat_Uniform, mat.haveSpecular);
 		mat_Uniform = p->getUniform("u_haveNormal");
-		glUniform1i(mat_Uniform, mat.haveAlbedo);
+		glUniform1i(mat_Uniform, mat.haveNormal);
+		mat_Uniform = p->getUniform("u_haveRoughness");
+		glUniform1i(mat_Uniform, mat.haveRoughness);
+		mat_Uniform = p->getUniform("u_haveMetallic");
+		glUniform1i(mat_Uniform, mat.haveMetallic);
 
 		if (mat.haveAlbedo) {
-			//if (lastTextureAlbedo != mat.getAlbedo()->getID()) {
-			//	lastTextureAlbedo = mat.getAlbedo()->getID();
+			mat_Uniform = p->getUniform("rows");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
 
-				mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
+			mat_Uniform = p->getUniform("cols");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
 
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
+			mat_Uniform = p->getUniform("sizeTileX");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
 
-				mat_Uniform = p->getUniform("sizeTileX");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
+			mat_Uniform = p->getUniform("sizeTileY");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
 
-				mat_Uniform = p->getUniform("sizeTileY");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
-
-				glUniform1i(p->getUniform("u_tex_Albedo"), 0);
-				glActiveTexture(GL_TEXTURE0 + 0);
-				glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Albedo"), 0);
+			glActiveTexture(GL_TEXTURE0 + 0);
+			glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
 		}
 		if (mat.haveNormal) {
-			//if (lastTextureNormal != mat.getNormal()->getID()) {
-			//	lastTextureNormal = mat.getNormal()->getID();
-
-				/*mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getNormal()->getRows());
-
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getNormal()->getCols());*/
-
-				glUniform1i(p->getUniform("u_tex_Normal"), 1);
-				glActiveTexture(GL_TEXTURE0 + 1);
-				glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Normal"), 1);
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
 		}
 		if (mat.haveSpecular) {
-			//if (lastTextureSpecular != mat.getSpecular()->getID()) {
-			//	lastTextureSpecular = mat.getSpecular()->getID();
-
-				/*mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getSpecular()->getRows());
-
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getSpecular()->getCols());*/
-
-				glUniform1i(p->getUniform("u_tex_Specular"), 2);
-				glActiveTexture(GL_TEXTURE0 + 2);
-				glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Specular"), 2);
+			glActiveTexture(GL_TEXTURE0 + 2);
+			glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());			
+		}
+		if (mat.haveRoughness) {
+			glUniform1i(p->getUniform("u_tex_Roughness"), 3);
+			glActiveTexture(GL_TEXTURE0 + 3);
+			glBindTexture(GL_TEXTURE_2D, mat.getRoughness()->getID());
+		}
+		if (mat.haveMetallic) {
+			glUniform1i(p->getUniform("u_tex_Metallic"), 4);
+			glActiveTexture(GL_TEXTURE0 + 4);
+			glBindTexture(GL_TEXTURE_2D, mat.getMetallic()->getID());
 		}
 
 		// Shadow Mapping

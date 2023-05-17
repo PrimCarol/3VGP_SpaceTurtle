@@ -36,8 +36,8 @@ int main() {
 	textureTest.loadSource("../others/checker_texture.jpg");
 	//textureTest.setCols(71);
 	//textureTest.setRows(19);
-	textureTest.setCols(8);
-	textureTest.setRows(8);
+	//textureTest.setCols(8);
+	//textureTest.setRows(8);
 
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
@@ -53,8 +53,25 @@ int main() {
 	ST::Geometry cat_mesh;
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 
-	ST::Geometry sponza_mesh;
-	sponza_mesh.loadFromFile("../others/sponza.obj");
+	// Helmet PBR TEST
+	//ST::Geometry helmet_mesh;
+	//helmet_mesh.loadFromFile("../others/pbr/helmet.obj");
+	//ST::Texture helmet_albedo;
+	//helmet_albedo.loadSource("../others/pbr/helmet_basecolor.tga");
+	//ST::Texture helmet_rougness;
+	//helmet_rougness.loadSource("../others/pbr/helmet_roughness.tga");
+
+	ST::Geometry sphere_mesh;
+	sphere_mesh.loadFromFile("../others/sphere.obj");
+	ST::Texture pbr_diffuse;
+	pbr_diffuse.loadSource("../others/pbr/basecolor_02.png");
+	ST::Texture pbr_roughness;
+	pbr_roughness.loadSource("../others/pbr/roughness_02.png");
+	ST::Texture pbr_metallic;
+	pbr_metallic.loadSource("../others/pbr/metallic_02.png");
+
+	//ST::Geometry sponza_mesh;
+	//sponza_mesh.loadFromFile("../others/sponza.obj");
 	
 	// --- SKYBOX ----
 	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
@@ -70,18 +87,19 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	ground.getComponent<ST::RenderComponent>()->material.roughness_ = 0.3f;
-	ground.getComponent<ST::RenderComponent>()->material.metallic_ = 1.0f;
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	testObj.getComponent<ST::NameComponent>()->setName("testObj");
-	testObj.getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
+	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
+	testObj.getComponent<ST::RenderComponent>()->setMesh(&sphere_mesh);
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureCat);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Specular(&textureCatSpecular);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&pbr_diffuse);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(&pbr_roughness);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(&pbr_metallic);
+	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
+	//testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
 	//ST::GameObj sponzaObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	//sponzaObj.getComponent<ST::NameComponent>()->setName("Sponza");
@@ -91,20 +109,8 @@ int main() {
 	//sponzaObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	//sponzaObj.getComponent<ST::TransformComponent>()->setScale(0.05f, 0.05f, 0.05f);
 
-	//ST::GameObj DirLight = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
-	//DirLight.getComponent<ST::NameComponent>()->setName("DirLight");
-	////DirLight.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-	////DirLight.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-	////DirLight.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	////DirLight.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	//DirLight.getComponent<ST::TransformComponent>()->setPosition(0.000001f,10.0f,0.000001f);
-	////DirLight.getComponent<ST::TransformComponent>()->setRotateY(1.63f);
-	//DirLight.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	//DirLight.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.4f);
-	//DirLight.getComponent<ST::LightComponent>()->diffuse_ = glm::vec3(0.7f);
-	//DirLight.getComponent<ST::LightComponent>()->specular_ = glm::vec3(0.4f);
-
 	//ST::Engine::createSpotLight(gm);
+	ST::Engine::createDirectLight(gm);
 
 	int HOWMANY = 500;
 
@@ -196,7 +202,7 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		//ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error.
+		ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error.
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------

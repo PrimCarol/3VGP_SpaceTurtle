@@ -715,56 +715,113 @@ bool ST::Geometry::loadFromFile(const char* path) {
 		return false;
 	}
 
-	std::vector<VertexInfo> vertices;
-	std::vector<uint32_t> indices;
-	std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
+	//std::vector<VertexInfo> vertices;
+	//std::vector<uint32_t> indices;
+	//std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
 
 	//char* name = new char[shapes[0].name.length() + 1];
 	//strcpy(name, shapes[0].name.c_str());
 	setName("Custom");
 
-	for (const auto& shape : shapes){
+	//for (const auto& shape : shapes){
 
-		for (const auto& index : shape.mesh.indices){
-			glm::vec3 position{
-				attributes.vertices[(int)3 * index.vertex_index + 0],
-				attributes.vertices[(int)3 * index.vertex_index + 1],
-				attributes.vertices[(int)3 * index.vertex_index + 2] };
+	//	for (const auto& index : shape.mesh.indices){
+	//		glm::vec3 position{
+	//			attributes.vertices[(int)3 * index.vertex_index + 0],
+	//			attributes.vertices[(int)3 * index.vertex_index + 1],
+	//			attributes.vertices[(int)3 * index.vertex_index + 2] };
 
-			glm::vec3 normals{
-				attributes.normals[(int)3 * index.normal_index + 0],
-				attributes.normals[(int)3 * index.normal_index + 1],
-				attributes.normals[(int)3 * index.normal_index + 2] };
+	//		glm::vec3 normals{
+	//			attributes.normals[(int)3 * index.normal_index + 0],
+	//			attributes.normals[(int)3 * index.normal_index + 1],
+	//			attributes.normals[(int)3 * index.normal_index + 2] };
 
-			glm::vec2 texCoord{
-				attributes.texcoords[(int)2 * index.texcoord_index + 0],
-				1.0f - attributes.texcoords[(int)2 * index.texcoord_index + 1] };
+	//		glm::vec2 texCoord{
+	//			attributes.texcoords[(int)2 * index.texcoord_index + 0],
+	//			1.0f - attributes.texcoords[(int)2 * index.texcoord_index + 1] };
 
-			VertexInfo vertex{ position, normals, texCoord };
+	//		VertexInfo vertex{ position, normals, texCoord };
 
-			if (uniqueVertices.count(vertex) == 0)
-			{
-				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-				vertices.push_back(vertex);
+	//		if (uniqueVertices.count(vertex) == 0){
+	//			uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+	//			vertices.push_back(vertex);
+	//		}
+
+	//		indices_.push_back(uniqueVertices[vertex]);
+	//	}
+	//}
+
+	//for (const auto& vertex : vertices){
+	//	VertexInfo tempVertices;
+
+	//	// Position
+	//	tempVertices.pos = vertex.pos;
+
+	//	//Normales
+	//	tempVertices.normal = vertex.normal;
+
+	//	// UV's
+	//	tempVertices.uv = vertex.uv;
+
+	//	vertices_.push_back(tempVertices);
+	//}
+
+	std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
+
+	unsigned int shapeCounter = 0;
+	for (const auto& shape : shapes) {
+		//diffuseColors_.emplace_back(cvec4(1.0f));
+		// Loop over indices
+		for (size_t offset = 0; offset < shape.mesh.indices.size(); offset++) {
+			// Access to vertex
+			const tinyobj::index_t index{ shape.mesh.indices.at(offset) };
+
+			// Vertex position
+			const int startIndex{ 3 * index.vertex_index };
+			glm::vec3 vertices;
+			vertices.x = { attributes.vertices.at(startIndex + 0) };
+			vertices.y = { attributes.vertices.at(startIndex + 1) };
+			vertices.z = { attributes.vertices.at(startIndex + 2) };
+
+			// Vertex normal
+			glm::vec3 normals;
+			if (index.normal_index >= 0) {
+				//hasNormals = true;
+				const int normalStartIndex{ 3 * index.normal_index };
+				normals.x = attributes.normals.at(normalStartIndex + 0);
+				normals.y = attributes.normals.at(normalStartIndex + 1);
+				normals.z = attributes.normals.at(normalStartIndex + 2);
 			}
 
-			indices_.push_back(uniqueVertices[vertex]);
+			// Vertex texture coordinates
+			glm::vec2 uv;
+			if (index.texcoord_index >= 0) {
+				const int texCoordsStartIndex{ 2 * index.texcoord_index };
+				uv.x = attributes.texcoords.at(texCoordsStartIndex + 0);
+				uv.y = attributes.texcoords.at(texCoordsStartIndex + 1);
+			}
+
+			//float r = 0.f, g = 0.f, b = 0.f;
+			//if (!materials.empty()) {
+			//	r = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[0];
+			//	g = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[1];
+			//	b = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[2];
+			//}
+
+			ST::VertexInfo vertex{ vertices, normals, uv };
+
+			// If hash doesn't contain this vertex
+			if (uniqueVertices.count(vertex) == 0) {
+				// Add this index (size of m_vertices)
+				uniqueVertices[vertex] = static_cast<GLuint>(vertices_.size());
+				// Add this vertex
+				vertices_.emplace_back(vertex);
+				/*if (!materials.empty())
+					Colors_.emplace_back(r, g, b);*/
+			}
+
+			indices_.emplace_back(uniqueVertices[vertex]);
 		}
-	}
-
-	for (const auto& vertex : vertices){
-		VertexInfo tempVertices;
-
-		// Position
-		tempVertices.pos = vertex.pos;
-
-		//Normales
-		tempVertices.normal = vertex.normal;
-
-		// UV's
-		tempVertices.uv = vertex.uv;
-
-		vertices_.push_back(tempVertices);
 	}
 
 	glGenVertexArrays(1, &internalId);

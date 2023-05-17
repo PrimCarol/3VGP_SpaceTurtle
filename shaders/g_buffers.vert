@@ -36,7 +36,7 @@ void main(){
 	float column = instance_TexIndex.x % cols;
 
 	float atlas_width = sizeTileX*cols;
-	float atlas_height= sizeTileY*rows;
+	float atlas_height = sizeTileY*rows;
 	float offset_width = 0.5 / atlas_width;
 	float offset_height = 0.5 / atlas_height;
 	
@@ -47,6 +47,7 @@ void main(){
 
 	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	TexCoords = tempUV;
+    //TexCoords = a_uv;
 	// ----------------------
 
 	Roughness = instance_MatRoughness;
@@ -54,7 +55,6 @@ void main(){
 
     vec4 worldPos = instance_Matrix * vec4(a_position, 1.0);
     FragPos = worldPos.xyz;
-    //TexCoords = a_uv;
     
     color = instance_Color;
 
