@@ -30,22 +30,14 @@ int main() {
 
 	// --------------
 	ST::Texture textureTest;
-	textureTest.generateMipmap = true;
-	//textureTest.set_mag_filter(ST::Texture::F_NEAREST);
-	//textureTest.set_min_filter(ST::Texture::F_LINEAR);
 	textureTest.loadSource("../others/checker_texture.jpg");
-	//textureTest.setCols(71);
-	//textureTest.setRows(19);
-	//textureTest.setCols(8);
-	//textureTest.setRows(8);
+	textureTest.setCols(8);
+	textureTest.setRows(8);
 
 	ST::Texture textureCat;
 	textureCat.loadSource("../others/Cat_diffuse.jpg");
 	ST::Texture textureCatSpecular;
 	textureCatSpecular.loadSource("../others/Cat_specular.png");
-
-	ST::Texture otherTexture;
-	otherTexture.loadSource("../others/icon.png");
 	
 	ST::Cube test_mesh;
 	ST::Quad quad_mesh;
@@ -69,9 +61,6 @@ int main() {
 	pbr_roughness.loadSource("../others/pbr/roughness_02.png");
 	ST::Texture pbr_metallic;
 	pbr_metallic.loadSource("../others/pbr/metallic_02.png");
-
-	//ST::Geometry sponza_mesh;
-	//sponza_mesh.loadFromFile("../others/sponza.obj");
 	
 	// --- SKYBOX ----
 	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
@@ -99,17 +88,7 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(&pbr_roughness);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(&pbr_metallic);
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
-	//testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
-	//ST::GameObj sponzaObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	//sponzaObj.getComponent<ST::NameComponent>()->setName("Sponza");
-	//sponzaObj.getComponent<ST::RenderComponent>()->setMesh(&sponza_mesh);
-	//sponzaObj.getComponent<ST::ColliderComponent>()->setMaxPoint(sponzaObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
-	//sponzaObj.getComponent<ST::ColliderComponent>()->setMinPoint(sponzaObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	//sponzaObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	//sponzaObj.getComponent<ST::TransformComponent>()->setScale(0.05f, 0.05f, 0.05f);
-
-	//ST::Engine::createSpotLight(gm);
 	ST::Engine::createDirectLight(gm);
 
 	int HOWMANY = 500;
@@ -125,13 +104,9 @@ int main() {
 		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
-		//objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ST::Engine::getRandom(0.0f,71.0f),ST::Engine::getRandom(0.0f,19.0f) });
-		//objects.back().getComponent<ST::RenderComponent>()->material.setColor(ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f), 0.5f);
-		//objects.back().getComponent<ST::RenderComponent>()->material.shininess = ST::Engine::getRandom(1.0f, 999.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-		//objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));

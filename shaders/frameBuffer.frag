@@ -97,6 +97,7 @@ void main(){
     vec3 normals = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
 
+    // Aqui iria el skybox? en el primer MIX
     vec3 baseReflectivity = mix(vec3(0.04), Diffuse, Metallic);
 
     vec3 Lo = vec3(0.0);
