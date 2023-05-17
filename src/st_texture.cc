@@ -12,7 +12,7 @@ GLenum formatToGl(const ST::Texture::Format f) {
         aux = GL_NONE;
         break;
     case ST::Texture::F_R:
-        aux = GL_R;
+        aux = GL_RED;
         break;
     case ST::Texture::F_RG:
         aux = GL_RG;
@@ -176,21 +176,36 @@ ST::Texture::Texture(){
     generateMipmap = false;
     forceNoMipmap = false;
 
-    set_min_filter(Filter::F_NEAREST);
-    set_mag_filter(Filter::F_NEAREST);
-    set_wrap_s(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_t(Wrap::W_CLAMP_TO_EDGE);
-    set_wrap_r(Wrap::W_CLAMP_TO_EDGE);
+    set_min_filter(Filter::F_LINEAR);
+    set_mag_filter(Filter::F_LINEAR);
+    set_wrap_s(Wrap::W_REPEAT);
+    set_wrap_t(Wrap::W_REPEAT);
+    set_wrap_r(Wrap::W_REPEAT);
 }
 
 bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int mipmaps*/) {
     //glGenTextures(1, &internalID);
 
-    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
+    stbi_set_flip_vertically_on_load(true);
+    int numChannels = 0;
+    unsigned char* image_data = stbi_load(filePath, &width_, &height_, &numChannels, 0);
     if (image_data == NULL)
         return false;
     
-    format_ = f;
+    if (numChannels == 1) {
+        format_ = F_R;
+        format_internal_ = F_R;
+    }else if (numChannels == 2) {
+        format_ = F_RG;
+        format_internal_ = F_RG;
+    }else if (numChannels == 3) {
+        format_ = F_RGB;
+        format_internal_ = F_RGB;
+    }else if(numChannels == 4) {
+        format_ = F_RGBA;
+        format_internal_ = F_RGBA;
+    }
+    
     type_ = t;
     set_data((const void*)image_data);
 
@@ -262,6 +277,13 @@ void ST::Texture::setCols(int num){
 }
 
 void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
+    
+    GLenum error = glGetError();
+    
+    if (error != GL_NO_ERROR) {
+        printf("Set Data Texture Start: %d\n", error);
+    }
+
     switch (type_) {
     case TextType::T_1D:
         glBindTexture(GL_TEXTURE_1D, internalID);
@@ -282,12 +304,16 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_1D);
         }
 
-        //glBindTexture(GL_TEXTURE_1D, 0);
+        glBindTexture(GL_TEXTURE_1D, 0);
 
         break;
     case TextType::T_2D:
         glBindTexture(GL_TEXTURE_2D, internalID);
 
+       /* error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Set Data Texture 01 Error: %d\n", error);
+        }*/
         
         if (forceNoMipmap) {
             //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
@@ -297,10 +323,25 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterToGl(min_filter_));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterToGl(mag_filter_));
         
+        /*error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Set Data Texture 02 Error: %d\n", error);
+        }*/
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapToGl(wrap_s_));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapToGl(wrap_t_));
 
+        /*error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Set Data Texture 03 Error: %d\n", error);
+        }*/
+
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+        /*error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Set Data Texture 04 Error: %d\n", error);
+        }*/
 
         glTexImage2D(GL_TEXTURE_2D, 0, formatToGl(format_internal_), width(), height(), 0, formatToGl(format_), dataTypeToGl(dataType_), data);
 
@@ -308,7 +349,12 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_2D);
         }
 
-        //glBindTexture(GL_TEXTURE_2D, 0);
+        /*error = glGetError();
+        if (error != GL_NO_ERROR) {
+            printf("Set Data Texture 05 Error: %d\n", error);
+        }*/
+
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         break;
     case TextType::T_3D:
@@ -332,7 +378,7 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
             glGenerateMipmap(GL_TEXTURE_3D);
         }
         
-        //glBindTexture(GL_TEXTURE_3D, 0);
+        glBindTexture(GL_TEXTURE_3D, 0);
 
         break;
     case TextType::T_CUBEMAP:
@@ -357,9 +403,9 @@ void ST::Texture::set_data(const void* data/*, unsigned int mipmap_LOD*/) {
         break;
     }
 
-    GLenum error = glGetError();
+    error = glGetError();
     if (error != GL_NO_ERROR) {
-        printf("OpenGL Error: %d\n", error);
+        printf("Set Data Texture End Error: %d\n", error);
     }
 
     //assert(glGetError() == GL_NO_ERROR);

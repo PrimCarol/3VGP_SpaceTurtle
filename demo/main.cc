@@ -46,12 +46,14 @@ int main() {
 	cat_mesh.loadFromFile("../others/cat_petit.obj");
 
 	// Helmet PBR TEST
-	//ST::Geometry helmet_mesh;
-	//helmet_mesh.loadFromFile("../others/pbr/helmet.obj");
-	//ST::Texture helmet_albedo;
-	//helmet_albedo.loadSource("../others/pbr/helmet_basecolor.tga");
-	//ST::Texture helmet_rougness;
-	//helmet_rougness.loadSource("../others/pbr/helmet_roughness.tga");
+	ST::Geometry helmet_mesh;
+	helmet_mesh.loadFromFile("../others/pbr/helmet/helmet.obj");
+	ST::Texture helmet_albedo;
+	helmet_albedo.loadSource("../others/pbr/helmet/helmet_basecolor.tga");
+	ST::Texture helmet_rougness;
+	helmet_rougness.loadSource("../others/pbr/helmet/helmet_roughness.tga");
+	ST::Texture helmet_metallic;
+	helmet_metallic.loadSource("../others/pbr/helmet/helmet_metalness.tga");
 
 	ST::Geometry sphere_mesh;
 	sphere_mesh.loadFromFile("../others/sphere.obj");
@@ -80,14 +82,15 @@ int main() {
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
-	testObj.getComponent<ST::RenderComponent>()->setMesh(&sphere_mesh);
+	testObj.getComponent<ST::RenderComponent>()->setMesh(&helmet_mesh);
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&pbr_diffuse);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(&pbr_roughness);
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(&pbr_metallic);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&helmet_albedo);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(&helmet_rougness);
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(&helmet_metallic);
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
+	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
 	ST::Engine::createDirectLight(gm);
 
@@ -156,9 +159,7 @@ int main() {
 
 		// ---- Update ----
 		skybox.getComponent<ST::TransformComponent>()->setPosition(camera.getComponent<ST::TransformComponent>()->getPosition());
-
-
-		
+		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
 
 
 		// ---- Camera ----
@@ -177,7 +178,7 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error.
+		//ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error. o no...
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------
