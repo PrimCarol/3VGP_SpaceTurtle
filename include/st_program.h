@@ -13,6 +13,7 @@ namespace ST {
 		GLuint getID() const;
 
 		bool setUp(const char* vertexShaderPath, const char* fragmentShaderPath);
+		bool setUp(const char* vertexShaderPath, const char* fragmentShaderPath, const char* geometryShaderPath);
 
 		void attach(Shader &s);
 		bool link();

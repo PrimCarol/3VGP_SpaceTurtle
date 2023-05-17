@@ -21,7 +21,8 @@ namespace ST {
 		glm::mat4 matrix;
 		glm::vec4 color;
 		glm::ivec2 textureIndex;
-		float shininess;
+		float roughness;
+		float metallic;
 	};
 
 	enum CullMode{
@@ -29,6 +30,18 @@ namespace ST {
 		kCull_Front,
 		kCull_Back,
 		kCull_Both
+	};
+	enum DepthMode {
+		kDepth_Nothing,
+		kDepth_Disable,
+		kDepth_Always,
+		kDepth_Never,
+		kDepth_Less,
+		kDepth_Equal,
+		kDepth_LessEqual,
+		kDepth_Greater,
+		kDepth_NoEqual,
+		kDepth_GreaterEqual
 	};
 
 	// ------------------- BASE -------------------
@@ -52,6 +65,9 @@ namespace ST {
 
 		bool operator==(const Mesh& rhs);
 
+		CullMode cullmode_;
+		DepthMode depthmode_;
+
 		~Mesh();
 		//Mesh(const Mesh& o);
 	protected:
@@ -60,8 +76,6 @@ namespace ST {
 
 		GLuint instanceBuffer;
 		int numInstances;
-
-		CullMode cullmode_;
 	};
 
 	// ------------------- Basics 2D -------------------

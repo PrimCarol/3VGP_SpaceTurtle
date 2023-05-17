@@ -11,15 +11,19 @@ ST::Material::Material(){
 	haveAlbedo = false;
 	haveNormal = false;
 	haveSpecular = false;
+	haveRoughness = false;
+	haveMetallic = false;
 
 	albedo = nullptr;
 	normal = nullptr;
 	specular = nullptr;
+	roughness = nullptr;
+	roughness_ = 1.0f;
+	metallic = nullptr;
+	metallic_ = 0.0f;
 
 	translucent = false;
 	texIndex_ = { 0,0 };
-
-	shininess = 64.0f;
 }
 
 /*void ST::Material::setSettings(Settings* s) {
@@ -86,6 +90,28 @@ void ST::Material::setTexture_Specular(ST::Texture* texSpecular){
 	if (texSpecular) {
 		specular = texSpecular;
 		haveSpecular = true;
+	}
+}
+
+ST::Texture* ST::Material::getRoughness(){
+	return roughness;
+}
+
+void ST::Material::setTexture_Roughness(ST::Texture* texRoughness){
+	if (texRoughness) {
+		roughness = texRoughness;
+		haveRoughness = true;
+	}
+}
+
+ST::Texture* ST::Material::getMetallic(){
+	return metallic;
+}
+
+void ST::Material::setTexture_Metallic(ST::Texture* texMetallic){
+	if (texMetallic) {
+		metallic = texMetallic;
+		haveMetallic = true;
 	}
 }
 

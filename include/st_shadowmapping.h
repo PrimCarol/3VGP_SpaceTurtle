@@ -15,7 +15,7 @@ namespace ST {
 
 		ShadowMapping();
 		
-		void setUp(int w, int h);
+		void setUp(int w, int h, ST::Texture::TextType textureType = ST::Texture::TextType::T_2D);
 
 		GLuint getID();
 		GLuint textureID();
@@ -24,6 +24,11 @@ namespace ST {
 		void end();
 
 		ShadowMapping(const ShadowMapping& o);
+		//ShadowMapping& operator=(const ShadowMapping& o) = delete;
+
+		//ShadowMapping(ShadowMapping&& o) noexcept;
+		//ShadowMapping& operator=(ShadowMapping&& o) noexcept;
+
 		~ShadowMapping();
 	private:
 		int width_;
@@ -34,6 +39,8 @@ namespace ST {
 
 		GLint last_viewport[4];
 		//unsigned int rbo;
+
+		bool destroy;
 	};
 }
 

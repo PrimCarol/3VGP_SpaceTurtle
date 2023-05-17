@@ -7,13 +7,12 @@ ST::LightComponent::LightComponent(){
 	diffuse_ = color_;
 	specular_ = color_;
 
-	ambient_ = { 0.4f,0.4f,0.4f };
-	diffuse_ = { 0.4f,0.4f,0.4f };
-	specular_ = { 0.4f,0.4f,0.4f };
+	ambient_ = { 1.0f,1.0f,1.0f };
+	diffuse_ = { 1.0f,1.0f,1.0f };
+	specular_ = { 1.0f,1.0f,1.0f };
 
-	constant_ = 1.0f;
-	linear_ = 0.5f;
-	quadratic_ = 0.002f;
+	linear_ = 0.1f;
+	quadratic_ = 0.5f;
 
 	cutOff_ = 0.9f;
 	outerCutOff_ = 0.7f;

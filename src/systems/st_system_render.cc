@@ -3,6 +3,8 @@
 #include <map>
 #include <st_gameobj_manager.h>
 
+#include <components/st_collider.h>
+
 //void drawCollision(glm::vec3 min, glm::vec3 max){
 //	glBegin(GL_LINES);
 //
@@ -187,6 +189,11 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		if (popInstances) {
 			gm.drawcalls_++;
 
+			//glEnable(GL_CULL_FACE);
+			//glCullFace(GL_BACK);
+			objs[lastIndice].render_->mesh->cullmode_ = objs[lastIndice].render_->thiscullmode_;
+			objs[lastIndice].render_->mesh->depthmode_ = objs[lastIndice].render_->thisdepthmode_;
+
 			setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 			objs[lastIndice].render_->mesh->setInstanceData(instancing);
 			objs[lastIndice].render_->mesh->render();
@@ -198,7 +205,8 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		instancing.push_back({ objs[i].transform_->m_transform_,
 							   objs[i].render_->material.getColor(),
 							   objs[i].render_->material.getTexIndex(),
-							   objs[i].render_->material.shininess });
+							   objs[i].render_->material.roughness_,
+							   objs[i].render_->material.metallic_ });
 		lastIndice = i;
 
 	}// End For
@@ -206,6 +214,9 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 	// Para pintar los ultimos objetos iguales.
 	if (instancing.size() > 0) {
 		gm.drawcalls_++;
+
+		objs[lastIndice].render_->mesh->cullmode_ = objs[lastIndice].render_->thiscullmode_;
+		objs[lastIndice].render_->mesh->depthmode_ = objs[lastIndice].render_->thisdepthmode_;
 
 		setUpUniforms(objs[lastIndice].render_->material, objs[lastIndice].transform_, cam, gm);
 		objs[lastIndice].render_->mesh->setInstanceData(instancing);
@@ -244,58 +255,48 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 		mat_Uniform = p->getUniform("u_haveSpecular");
 		glUniform1i(mat_Uniform, mat.haveSpecular);
 		mat_Uniform = p->getUniform("u_haveNormal");
-		glUniform1i(mat_Uniform, mat.haveAlbedo);
+		glUniform1i(mat_Uniform, mat.haveNormal);
+		mat_Uniform = p->getUniform("u_haveRoughness");
+		glUniform1i(mat_Uniform, mat.haveRoughness);
+		mat_Uniform = p->getUniform("u_haveMetallic");
+		glUniform1i(mat_Uniform, mat.haveMetallic);
 
 		if (mat.haveAlbedo) {
-			//if (lastTextureAlbedo != mat.getAlbedo()->getID()) {
-			//	lastTextureAlbedo = mat.getAlbedo()->getID();
+			mat_Uniform = p->getUniform("rows");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
 
-				mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
+			mat_Uniform = p->getUniform("cols");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
 
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
+			mat_Uniform = p->getUniform("sizeTileX");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
 
-				mat_Uniform = p->getUniform("sizeTileX");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
+			mat_Uniform = p->getUniform("sizeTileY");
+			glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
 
-				mat_Uniform = p->getUniform("sizeTileY");
-				glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
-
-				glUniform1i(p->getUniform("u_tex_Albedo"), 0);
-				glActiveTexture(GL_TEXTURE0 + 0);
-				glBindTexture(GL_TEXTURE_2D, mat.getAlbedo()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Albedo"), 0);
+			glActiveTexture(GL_TEXTURE0 + 0);
+			glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
 		}
 		if (mat.haveNormal) {
-			//if (lastTextureNormal != mat.getNormal()->getID()) {
-			//	lastTextureNormal = mat.getNormal()->getID();
-
-				/*mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getNormal()->getRows());
-
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getNormal()->getCols());*/
-
-				glUniform1i(p->getUniform("u_tex_Normal"), 1);
-				glActiveTexture(GL_TEXTURE0 + 1);
-				glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Normal"), 1);
+			glActiveTexture(GL_TEXTURE0 + 1);
+			glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
 		}
 		if (mat.haveSpecular) {
-			//if (lastTextureSpecular != mat.getSpecular()->getID()) {
-			//	lastTextureSpecular = mat.getSpecular()->getID();
-
-				/*mat_Uniform = p->getUniform("rows");
-				glUniform1i(mat_Uniform, mat.getSpecular()->getRows());
-
-				mat_Uniform = p->getUniform("cols");
-				glUniform1i(mat_Uniform, mat.getSpecular()->getCols());*/
-
-				glUniform1i(p->getUniform("u_tex_Specular"), 2);
-				glActiveTexture(GL_TEXTURE0 + 2);
-				glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());
-			//}
+			glUniform1i(p->getUniform("u_tex_Specular"), 2);
+			glActiveTexture(GL_TEXTURE0 + 2);
+			glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());			
+		}
+		if (mat.haveRoughness) {
+			glUniform1i(p->getUniform("u_tex_Roughness"), 3);
+			glActiveTexture(GL_TEXTURE0 + 3);
+			glBindTexture(GL_TEXTURE_2D, mat.getRoughness()->getID());
+		}
+		if (mat.haveMetallic) {
+			glUniform1i(p->getUniform("u_tex_Metallic"), 4);
+			glActiveTexture(GL_TEXTURE0 + 4);
+			glBindTexture(GL_TEXTURE_2D, mat.getMetallic()->getID());
 		}
 
 		// Shadow Mapping
@@ -313,15 +314,14 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	//return false;
 }
 
+void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 
-void ST::SystemRender::Render(ST::GameObj_Manager& gm){
-
-	gm.drawcalls_ = 0;
+	//gm.drawcalls_ = 0;
 
 	auto& render = *gm.getComponentVector<ST::RenderComponent>();
 	auto& transform = *gm.getComponentVector<ST::TransformComponent>();
-	
-	glEnable(GL_DEPTH_TEST);
+
+	//glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_FALSE);
 
 	// Buscamos si hay una camara como Main camera,
@@ -353,23 +353,60 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			std::vector<MyObjToRender> objs_opaque;
 			std::vector<MyObjToRender> objs_translucent;
 
-			glEnable(GL_CULL_FACE);
-			glCullFace(GL_BACK);
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render Start-> OpenGL Error: %d\n", error);
+			}
 
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {
 
 				if (render[i].has_value() && transform[i].has_value()) {
 					if (render[i]->visible_) {
-						MyObjToRender thisObj;
-						thisObj.render_ = &render[i].value();
-						thisObj.transform_ = &transform[i].value();
+						if (render[i]->material.getProgram() && render[i]->material.getProgram()->getID() == p.getID()) {
+							MyObjToRender thisObj;
+							thisObj.render_ = &render[i].value();
+							thisObj.transform_ = &transform[i].value();
 
-						if (!thisObj.render_->material.translucent) {
-							objs_opaque.push_back(thisObj);
-						}
-						else {
-							objs_translucent.push_back(thisObj);
+							if (!thisObj.render_->material.translucent) {
+								objs_opaque.push_back(thisObj);
+							}
+							else {
+								objs_translucent.push_back(thisObj);
+							}
+
+							// ------ Dibujamos sus normales. -------
+							if (i == gm.objectSelected) {
+								//ST::Program& normalProgram = *gm.normalsProgram;
+								//normalProgram.use();
+								//// ------ Camara -------
+								//glUniformMatrix4fv(normalProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
+								//glUniformMatrix4fv(normalProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
+								//// ------ Camara -------
+								//std::vector<InstanceInfo> instancing;
+								//instancing.push_back({ thisObj.transform_->m_transform_,
+								//					   thisObj.render_->material.getColor(),
+								//					   thisObj.render_->material.getTexIndex(),
+								//					   thisObj.render_->material.shininess });
+								//thisObj.render_->mesh->setInstanceData(instancing);
+								//thisObj.render_->mesh->render();
+
+								//ST::ColliderComponent* collierComp = gm.getComponent<ST::ColliderComponent>(i);
+								//if (collierComp) {
+								//	ST::Program& colliderProgram = *gm.colliderProgram;
+								//	colliderProgram.use();
+								//	// ------ Camara -------
+								//	glUniformMatrix4fv(colliderProgram.getUniform("u_view_matrix"), 1, GL_FALSE, &cam.cam_->view[0][0]);
+								//	glUniformMatrix4fv(colliderProgram.getUniform("u_projection_matrix"), 1, GL_FALSE, &cam.cam_->projection[0][0]);
+
+								//	glm::vec3 min = collierComp->getMinPoint();
+								//	glm::vec3 max = collierComp->getMaxPoint();
+								//	glUniform3fv(colliderProgram.getUniform("u_minColliderPos"), 1, &min.x);
+								//	glUniform3fv(colliderProgram.getUniform("u_maxColliderPos"), 1, &max.x);
+	
+								//	thisObj.render_->mesh->render();
+								//}
+							}
 						}
 					}
 				}
@@ -378,46 +415,60 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm){
 			glDisable(GL_BLEND);
 			doRender(objs_opaque, cam, gm);
 
+			error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render Opaques End -> OpenGL Error: %d\n", error);
+			}
+
 			// ----- Translucidos -----
-			bool sortTranslucents = false; // <---------- Temporal
+			//bool sortTranslucents = false; // <---------- Temporal
 
-			if (sortTranslucents) {
-				std::map<float, int> sorted;
-				for (int i = 0; i < objs_translucent.size(); i++) {
-					glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
-					glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
-					float distance = glm::length(cam.transform_->getPosition() - worldPos);
-					sorted[distance] = i;
-				}
+			//if (sortTranslucents) {
+			//	std::map<float, int> sorted;
+			//	for (int i = 0; i < objs_translucent.size(); i++) {
+			//		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
+			//		glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+			//		float distance = glm::length(cam.transform_->getPosition() - worldPos);
+			//		sorted[distance] = i;
+			//	}
 
-				std::vector<MyObjToRender> objs_translucent_sorted;
+			//	std::vector<MyObjToRender> objs_translucent_sorted;
 
-				for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
-					objs_translucent_sorted.push_back(objs_translucent[it->second]);
-				}
+			//	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+			//		objs_translucent_sorted.push_back(objs_translucent[it->second]);
+			//	}
 
-				// Por defecto de momento.
-				glEnable(GL_BLEND);
-				glBlendEquation(GL_FUNC_ADD);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				doRender(objs_translucent_sorted, cam, gm);
+			//	// Por defecto de momento.
+			//	glEnable(GL_BLEND);
+			//	glBlendEquation(GL_FUNC_ADD);
+			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//	doRender(objs_translucent_sorted, cam, gm);
 
-				objs_translucent_sorted.clear();
-			}
-			else {
-				// Por defecto de momento.
-				glEnable(GL_BLEND);
-				glBlendEquation(GL_FUNC_ADD);
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				doRender(objs_translucent, cam, gm);
-			}
+			//	objs_translucent_sorted.clear();
+			//}
+			//else {
+			//	// Por defecto de momento.
+			//	glEnable(GL_BLEND);
+			//	glBlendEquation(GL_FUNC_ADD);
+			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//	doRender(objs_translucent, cam, gm);
+			//}
+
+			glEnable(GL_BLEND);
+			glBlendEquation(GL_FUNC_ADD);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			doRender(objs_translucent, cam, gm);
 
 			objs_opaque.clear();
 			objs_translucent.clear();
 
 		}
 	}
-	
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("Render Exit-> OpenGL Error: %d\n", error);
+	}
 
 	//glUseProgram(0);
 }

@@ -10,6 +10,7 @@ namespace ST {
 
 	class GameObj_Manager;
 	class Program;
+	struct LightsStruct;
 
 	class RenderTarget {
 	public:
@@ -38,7 +39,8 @@ namespace ST {
 		void nextVisualMode();
 
 		void createQuadToRender();
-		void renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader);
+		void renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader,
+							std::vector<ST::LightsStruct>* lights);
 
 		GLuint getID();
 		GLuint textureID(int index);
@@ -63,6 +65,7 @@ namespace ST {
 		std::vector<const char*> texturesUniformName_;
 
 		GLuint internalID;
+		unsigned int ssaoFBO;
 		unsigned int rbo;
 
 		GLuint quadID;

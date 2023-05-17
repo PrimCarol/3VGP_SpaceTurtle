@@ -5,6 +5,8 @@
 #include <st_transform.h>
 #include <st_camera.h>
 #include <st_program.h>
+#include <st_system_light.h>
+#include <random>
 
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 	GLenum aux = GL_NONE;
@@ -37,6 +39,21 @@ ST::RenderTarget::RenderTarget(){
 	quadID = 0;
 
 	visualMode = 0;
+
+	// SSAO
+	glGenFramebuffers(1, &ssaoFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+
+	unsigned int ssaoColorBuffer;
+	glGenTextures(1, &ssaoColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1600, 900, 0, GL_RED, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -135,7 +152,7 @@ void ST::RenderTarget::createQuadToRender(){
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);*/
 }
 
-void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader){
+void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader, std::vector<ST::LightsStruct>* lights){
 
 	auto camVector = gm.getComponentVector<ST::CameraComponent>();
 	if (gm.mainCameraID() == -1) {
@@ -146,37 +163,214 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 	}
-	// aditiu de la informacio 
-	if (quadID != 0) {
-		glUseProgram(Shader.getID());
-		for (int i = 0; i < texturesUniformName_.size(); i++){
-			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+	
+	if (quadID != 0 && gm.mainCameraID() >= 0) {
+
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			printf("Render FrameBuffer-> OpenGL Error: %d\n", error);
 		}
 
-		// Temporal <--------------------------------
-		glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
-		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
-		glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_ONE, GL_ONE);
 
 		glBindVertexArray(quadID);
 
-		//glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
-		for (int i = 0; i < textureCount(); i++){
-			glActiveTexture(GL_TEXTURE0+i);
-			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
-		}
+		// ----- SSAO ------
+		//gm.framebufferSSAOProgram->use();
 
-		// Blucle aqui de llums. <-------------------
-		//glBindTexture(GL_TEXTURE_2D, textureToRender_->getID());
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
+		//std::default_random_engine generator;
+		//std::vector<glm::vec3> ssaoKernel;
+		//for (unsigned int i = 0; i < 64; ++i)
+		//{
+		//	glm::vec3 sample(
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator)
+		//	);
+		//	sample = glm::normalize(sample);
+		//	sample *= randomFloats(generator);
+
+		//	float scale = (float)i / 64.0;
+		//	scale = (0.1f + (scale * scale)) * (0.1f - 1.0f);
+		//	sample *= scale;
+		//	ssaoKernel.push_back(sample);
+		//}
+
+		//std::vector<glm::vec3> ssaoNoise;
+		//for (unsigned int i = 0; i < 16; i++) {
+		//	glm::vec3 noise(
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		0.0f);
+		//	ssaoNoise.push_back(noise);
+		//}
+
+		//unsigned int noiseTexture;
+		//glGenTextures(1, &noiseTexture);
+		//glBindTexture(GL_TEXTURE_2D, noiseTexture);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+		////glClear(GL_COLOR_BUFFER_BIT);
+
+		//for (int i = 0; i < textureCount(); i++) {
+		//	glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
+		//	glActiveTexture(GL_TEXTURE0 + i);
+		//	glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+		//}
+
+		//glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), textureCount());
+		//glActiveTexture(GL_TEXTURE0 + textureCount());
+		//glBindTexture(GL_TEXTURE_2D, noiseTexture);
+
+		//auto& cam = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
+		//GLuint camProjection = gm.framebufferSSAOProgram->getUniform("u_projection_matrix");
+		//glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
+		//glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
+
+		//glDrawArrays(GL_TRIANGLES, 0, 6); // Render Quad
+		////glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		if (lights) {
+
+			// ----- Light Pass ------
+			Shader.use();
+
+			for (int i = 0; i < textureCount(); i++) {
+				glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+			}
+
+			// Temporal <--------------------------------
+			glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
+			glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
+			glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
+
+
+			for (int i = 0; i < lights->size(); i++){
+				//Uniforms
+				ST::LightComponent* tempLight = lights->at(i).light_;
+
+				//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix"), 1, GL_FALSE, &lights->at(i).matrix_[0][0]);
+
+				// Directional
+				if (tempLight->type_ == ST::Directional) {
+					
+					glUniform3f(Shader.getUniform("u_DirectLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.ambient"), tempLight->ambient_.x, tempLight->ambient_.y, tempLight->ambient_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
+					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
+
+					// ShadowMapping
+					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
+					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &lights->at(i).matrix_[1][0][0]);
+					glUniform1i(Shader.getUniform("shadowMap[0]"), 5);
+					glActiveTexture(GL_TEXTURE0 + 5);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
+					glUniform1i(Shader.getUniform("shadowMap[1]"), 6);
+					glActiveTexture(GL_TEXTURE0 + 6);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[1].textureID());
+				}
+				// Point
+				if (tempLight->type_ == ST::Point) {
+
+					glUniform3f(Shader.getUniform("u_PointLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_PointLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(Shader.getUniform("u_PointLight.linear"), tempLight->linear_);
+					glUniform1f(Shader.getUniform("u_PointLight.quadratic"), tempLight->quadratic_);
+					const float maxBrightness = std::fmaxf(std::fmaxf(tempLight->color_.r, tempLight->color_.g), tempLight->color_.b);
+					float radius = (-tempLight->linear_ + std::sqrt(tempLight->linear_ * tempLight->linear_ - 4 * tempLight->quadratic_ * (1.0 - (256.0f / 5.0f) * maxBrightness))) / (2.0f * tempLight->quadratic_);
+					glUniform1f(Shader.getUniform("u_PointLight.radius"), radius);
+					//glUniform1f(Shader.getUniform("u_PointLight.radius"), 5.0f);
+
+					// ShadowMapping
+					/*glUniform1f(Shader.getUniform("far_plane"), 25.0f);
+					glUniform1i(Shader.getUniform("shadowMapPointLight"), 6);
+					glActiveTexture(GL_TEXTURE0 + 6);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, lights->at(i).renderTarget_[0].textureID());*/
+
+					// ShadowMapping
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &lights->at(i).matrix_[1][0][0]);
+					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &lights->at(i).matrix_[2][0][0]);
+					/*glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
+					glActiveTexture(GL_TEXTURE0 + 4);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
+					glUniform1i(Shader.getUniform("shadowMap[1]"), 5);
+					glActiveTexture(GL_TEXTURE0 + 5);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[1].textureID());
+					glUniform1i(Shader.getUniform("shadowMap[2]"), 6);
+					glActiveTexture(GL_TEXTURE0 + 6);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[2].textureID());
+					glUniform1i(Shader.getUniform("shadowMap[3]"), 7);
+					glActiveTexture(GL_TEXTURE0 + 7);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[3].textureID());*/
+					char buffer[50];
+					for (unsigned int a = 0; a < lights->at(i).renderTarget_.size(); ++a) {
+						snprintf(buffer, 50, "lightSpaceMatrix[%d]", a);
+						glUniformMatrix4fv(Shader.getUniform(buffer), 1, GL_FALSE, &lights->at(i).matrix_[a][0][0]);
+						
+						snprintf(buffer, 50, "shadowMap[%d]", a);
+						glUniform1i(Shader.getUniform(buffer), a);
+						glActiveTexture(GL_TEXTURE0 + a);
+						glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[a].textureID());
+					}
+					
+					error = glGetError();
+					if (error != GL_NO_ERROR) {
+						printf("PointLight-> OpenGL Error: %d\n", error);
+					}
+				}
+				// Spot
+				if (tempLight->type_ == ST::Spot) {
+					glUniform3f(Shader.getUniform("u_SpotLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(Shader.getUniform("u_SpotLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(Shader.getUniform("u_SpotLight.linear"), tempLight->linear_);
+					glUniform1f(Shader.getUniform("u_SpotLight.quadratic"), tempLight->quadratic_);
+					glUniform3f(Shader.getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform1f(Shader.getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
+					glUniform1f(Shader.getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
+
+					// ShadowMapping
+					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
+					glUniform1i(Shader.getUniform("shadowMap[0]"), 5);
+					glActiveTexture(GL_TEXTURE0 + 5);
+					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
+				}
+
+				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_+1); // si es 0, es que no hay luz.
+
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
+		}
 	}
+
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("End Render FrameBuffer-> OpenGL Error: %d\n", error);
+	}
+
+	//glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
-	// blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
-	// the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the 		
-	// depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+
 	glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

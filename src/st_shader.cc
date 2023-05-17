@@ -9,6 +9,9 @@ GLenum ShaderTypeToEnum(ST::ShaderType t) {
 	case ST::E_FRAGMENT_SHADER:
 		return GL_FRAGMENT_SHADER;
 		break;
+	case ST::E_GEOMETRY_SHADER:
+		return GL_GEOMETRY_SHADER;
+		break;
 	}
 	return GL_FRAGMENT_SHADER;
 }

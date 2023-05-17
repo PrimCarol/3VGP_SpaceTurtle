@@ -83,8 +83,8 @@ ST::Window::Window(int width, int height) {
 
     srand(time(NULL));
 
-    deltaTime = clock() - lastTime;
     lastTime = clock();
+    deltaTime = clock() - lastTime;
 
     // Imgui
     IMGUI_CHECKVERSION();

@@ -18,10 +18,12 @@
   - Translucent <br>
   - Picking System <br>
   - Deferred Pipeline <br>
+  - PBR Materials <br>
 
 <h2>🔶 Future additions </h2>
 
-  - PBR Materials <br>
+  - SSAO <br>
+  - Resourses System <br>
   - Save/Load Scene <br>
   - VR Port <br>
 

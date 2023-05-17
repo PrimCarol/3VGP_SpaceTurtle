@@ -28,6 +28,12 @@ namespace ST {
 		ST::Texture* getSpecular();
 		void setTexture_Specular(ST::Texture* texSpecular);
 
+		ST::Texture* getRoughness();
+		void setTexture_Roughness(ST::Texture* texRoughness);
+
+		ST::Texture* getMetallic();
+		void setTexture_Metallic(ST::Texture* texMetallic);
+
 		const glm::ivec2 getTexIndex() const;
 		void setTexIndex(glm::ivec2 texIndex);
 
@@ -36,14 +42,21 @@ namespace ST {
 		bool haveAlbedo;
 		bool haveNormal;
 		bool haveSpecular;
-		bool translucent;
+		bool haveRoughness;
+		float roughness_;
+		bool haveMetallic;
+		float metallic_;
 
-		float shininess;
+
+
+		bool translucent;
 
 	private:
 		ST::Texture* albedo;
 		ST::Texture* normal;
 		ST::Texture* specular;
+		ST::Texture* roughness;
+		ST::Texture* metallic;
 
 		glm::ivec2 texIndex_;
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <components/st_render.h>
 #include <components/st_transform.h>
+#include <components/st_light.h>
 #include <st_shadowmapping.h>
 
 #include <imgui.h>
@@ -20,24 +21,32 @@ namespace ST {
 	};
 	// ******* Temporal *********
 
-	struct Light_ShadowMap {
+	struct LightsStruct {
+		ST::LightComponent* light_;
 		std::vector<ST::ShadowMapping> renderTarget_;
-		glm::mat4 matrix_;
+		std::vector<glm::mat4> matrix_;
 	};
+	//struct Light_ShadowMap {
+	//	std::vector<ST::ShadowMapping> renderTarget_;
+	//	glm::mat4 matrix_;
+	//};
 
 	class SystemLight {
 	public:
 		SystemLight();
 
-		void CompileShadows(ST::GameObj_Manager& gm);
-		void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
+		//void CompileShadows(ST::GameObj_Manager& gm);
+		//void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
+		void CompileLights(ST::GameObj_Manager& gm);
 
-		glm::ivec2 textureSize_;
+		glm::ivec2 textureSize_; // Temporal, poner en cada luz.
+
+		std::vector<LightsStruct> lights_;
 
 		~SystemLight();
 	private:
-		
-		std::vector<Light_ShadowMap> shadowMaps_;
+
+		//std::vector<Light_ShadowMap> shadowMaps_;
 
 		// ******* Temporal *********
 		void setUpRender(ST::GameObj_Manager& gm);

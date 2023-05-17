@@ -221,14 +221,10 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				trans->setPosition(pos);
 				// Rotation
 				glm::vec3 rot = trans->getRotation();
-				rot.x *= 180 / 3.1416f;
-				rot.y *= 180 / 3.1416f;
-				rot.z *= 180 / 3.1416f;
-				//ImGui::DragFloat3("##Rot", &rot.x, 0.05f);
 				DrawVec3Control("Rot", rot);
-				trans->setRotateX(rot.x * (3.1416f / 180));
-				trans->setRotateY(rot.y * (3.1416f / 180));
-				trans->setRotateZ(rot.z * (3.1416f / 180));
+				trans->setRotateX(rot.x);
+				trans->setRotateY(rot.y);
+				trans->setRotateZ(rot.z);
 				// Scale
 				glm::vec3 sca = trans->getScale();
 				//ImGui::DragFloat3("##Scale", &sca.x, 0.5f);
@@ -248,9 +244,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				float tempMatrixGuizmo[16];
 				glm::vec3 pos = trans->getPosition();
 				glm::vec3 rot = trans->getRotation();
-				rot.x *= 180 / 3.1416f;
-				rot.y *= 180 / 3.1416f;
-				rot.z *= 180 / 3.1416f;
 				glm::vec3 sca = trans->getScale();
 
 				if (gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).has_value()) {
@@ -263,9 +256,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					}
 				}
 				trans->setPosition(pos);
-				trans->setRotateX(rot.x * (3.1416f / 180));
-				trans->setRotateY(rot.y * (3.1416f / 180));
-				trans->setRotateZ(rot.z * (3.1416f / 180));
+				trans->setRotateX(rot.x);
+				trans->setRotateY(rot.y);
+				trans->setRotateZ(rot.z);
 				trans->setScale(sca);
 			}
 			// --------
@@ -292,7 +285,9 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::ColorEdit3("Color", &c.x);
 				}
 				render->material.setColor(c);
-				ImGui::DragFloat("Shiness", &render->material.shininess, 1.0f, 1.0f);
+				//ImGui::DragFloat("Shiness", &render->material.shininess, 1.0f, 1.0f);
+				ImGui::DragFloat("Roughness", &render->material.roughness_, 0.01f, 0.1f, 1.0f);
+				ImGui::DragFloat("Metallic", &render->material.metallic_, 0.01f, 0.0f, 1.0f);
 				ImGui::Text("- Texture -");
 				if (render->material.haveAlbedo) {
 					ImGui::Image((void*)(intptr_t)render->material.getAlbedo()->getID(), ImVec2(144, 144));
@@ -346,17 +341,18 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 		//}
 
 		if (gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).has_value()) {
+			ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
+			glm::vec3 min = collider->getMinPoint();
+			glm::vec3 max = collider->getMaxPoint();
+
 			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Collider")) {
-				ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
 
 				ImGui::Checkbox("Active", &collider->active_);
 
-				glm::vec3 min = collider->getMinPoint();
 				ImGui::InputFloat3("MinPoint", &min.x);
 				collider->setMinPoint(min);
-
-				glm::vec3 max = collider->getMaxPoint();
+		
 				ImGui::InputFloat3("MaxPoint", &max.x);
 				collider->setMaxPoint(max);
 
@@ -405,23 +401,18 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 
 					ImGui::Spacing();
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 0.7f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 10.00f, "%.3f");
-					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.00001f, 1.8f, "%.5f");
 					break;
 				case ST::Spot:
 					ImGui::ColorPicker3("Color", &light->color_.x);
 
 					ImGui::Spacing();
-
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Constant", &light->constant_, 0.01f, 0.001f, 5.00f, "%.3f");
+					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 0.7f, "%.3f");
 					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Linear", &light->linear_, 0.01f, 0.001f, 10.00f, "%.3f");
-					ImGui::SetNextItemWidth(70);
-					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.0001f, 0.01f, "%.4f");
+					ImGui::DragFloat("Quadratic", &light->quadratic_, 0.001f, 0.00001f, 1.8f, "%.5f");
 
 					ImGui::Spacing();
 

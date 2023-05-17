@@ -4,8 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <ctime>
 
-//#include <imgui.h>
-
 namespace ST {
 
 	enum ST_INPUT{
@@ -37,14 +35,10 @@ namespace ST {
 		int getWindowsWidth() const;
 
 		// ------ Inputs ------
-		//bool isDown(ST_INPUT input);
 		bool inputPressed(ST_INPUT input);
 		bool inputReleased(ST_INPUT input);
-		//bool isUp(ST_INPUT input);
-		//bool isDown(const char key);
 		bool inputPressed(const char key);
 		bool inputReleased(const char key);
-		//bool isUp(const char key);
 				
 		// Mouse
 		double mousePosX() const;
@@ -80,8 +74,6 @@ namespace ST {
 		void scroll_callback(double x, double y);
 		
 		void setImGuiTheme();
-		//int lastKeyPressed = -1;
-		//int lastMousePressed = -1;
 	};
 }
 

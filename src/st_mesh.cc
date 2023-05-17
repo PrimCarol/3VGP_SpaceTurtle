@@ -10,7 +10,8 @@ ST::Mesh::Mesh(){
 	numInstances = 0;
 
 	name_ = nullptr;
-	cullmode_ = ST::kCull_Back;
+	cullmode_ = ST::kCull_Disable;
+	depthmode_ = ST::kDepth_Disable;
 }
 
 const GLuint ST::Mesh::getID(){
@@ -93,6 +94,46 @@ void SetCullMode(ST::CullMode c) {
 	}
 }
 
+void SetDepthTest(ST::DepthMode d) {
+	
+	if (d != ST::kDepth_Nothing) {
+		glEnable(GL_DEPTH_TEST);
+
+		switch (d) {
+		case ST::kDepth_Disable:
+			glDisable(GL_DEPTH_TEST);
+			break;
+		case ST::kDepth_Always:
+			glDepthFunc(GL_ALWAYS);
+			break;
+		case ST::kDepth_Never:
+			glDepthFunc(GL_NEVER);
+			break;
+		case ST::kDepth_Less:
+			glDepthFunc(GL_LESS);
+			break;
+		case ST::kDepth_Equal:
+			glDepthFunc(GL_EQUAL);
+			break;
+		case ST::kDepth_LessEqual:
+			glDepthFunc(GL_LEQUAL);
+			break;
+		case ST::kDepth_Greater:
+			glDepthFunc(GL_GREATER);
+			break;
+		case ST::kDepth_NoEqual:
+			glDepthFunc(GL_NOTEQUAL);
+			break;
+		case ST::kDepth_GreaterEqual:
+			glDepthFunc(GL_GEQUAL);
+			break;
+		default:
+			glDepthFunc(GL_GREATER);
+			break;
+		}
+	}
+}
+
 
 // ----------------- Triangle ------------------
 ST::Triangle::Triangle() : Mesh() {
@@ -155,7 +196,8 @@ void ST::Triangle::render(){
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -176,10 +218,15 @@ void ST::Triangle::render(){
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -266,7 +313,8 @@ void ST::Quad::render() {
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, (void*)0);*/
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -287,10 +335,15 @@ void ST::Quad::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -339,7 +392,8 @@ void ST::Circle::render() {
 	//glDrawElements(GL_TRIANGLES, (GLsizei)indices_.size() * sizeof(unsigned int), GL_UNSIGNED_INT, (void*)0);
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -360,10 +414,15 @@ void ST::Circle::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
@@ -584,7 +643,8 @@ void ST::Cube::render() {
 
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -605,14 +665,18 @@ void ST::Cube::render() {
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
-
 	// Clean
 	for (int i = 0; i < 4; i++) {
 		glDisableVertexAttribArray(3 + i);
@@ -651,56 +715,113 @@ bool ST::Geometry::loadFromFile(const char* path) {
 		return false;
 	}
 
-	std::vector<VertexInfo> vertices;
-	std::vector<uint32_t> indices;
-	std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
+	//std::vector<VertexInfo> vertices;
+	//std::vector<uint32_t> indices;
+	//std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
 
 	//char* name = new char[shapes[0].name.length() + 1];
 	//strcpy(name, shapes[0].name.c_str());
 	setName("Custom");
 
-	for (const auto& shape : shapes){
+	//for (const auto& shape : shapes){
 
-		for (const auto& index : shape.mesh.indices){
-			glm::vec3 position{
-				attributes.vertices[(int)3 * index.vertex_index + 0],
-				attributes.vertices[(int)3 * index.vertex_index + 1],
-				attributes.vertices[(int)3 * index.vertex_index + 2] };
+	//	for (const auto& index : shape.mesh.indices){
+	//		glm::vec3 position{
+	//			attributes.vertices[(int)3 * index.vertex_index + 0],
+	//			attributes.vertices[(int)3 * index.vertex_index + 1],
+	//			attributes.vertices[(int)3 * index.vertex_index + 2] };
 
-			glm::vec3 normals{
-				attributes.normals[(int)3 * index.normal_index + 0],
-				attributes.normals[(int)3 * index.normal_index + 1],
-				attributes.normals[(int)3 * index.normal_index + 2] };
+	//		glm::vec3 normals{
+	//			attributes.normals[(int)3 * index.normal_index + 0],
+	//			attributes.normals[(int)3 * index.normal_index + 1],
+	//			attributes.normals[(int)3 * index.normal_index + 2] };
 
-			glm::vec2 texCoord{
-				attributes.texcoords[(int)2 * index.texcoord_index + 0],
-				1.0f - attributes.texcoords[(int)2 * index.texcoord_index + 1] };
+	//		glm::vec2 texCoord{
+	//			attributes.texcoords[(int)2 * index.texcoord_index + 0],
+	//			1.0f - attributes.texcoords[(int)2 * index.texcoord_index + 1] };
 
-			VertexInfo vertex{ position, normals, texCoord };
+	//		VertexInfo vertex{ position, normals, texCoord };
 
-			if (uniqueVertices.count(vertex) == 0)
-			{
-				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-				vertices.push_back(vertex);
+	//		if (uniqueVertices.count(vertex) == 0){
+	//			uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+	//			vertices.push_back(vertex);
+	//		}
+
+	//		indices_.push_back(uniqueVertices[vertex]);
+	//	}
+	//}
+
+	//for (const auto& vertex : vertices){
+	//	VertexInfo tempVertices;
+
+	//	// Position
+	//	tempVertices.pos = vertex.pos;
+
+	//	//Normales
+	//	tempVertices.normal = vertex.normal;
+
+	//	// UV's
+	//	tempVertices.uv = vertex.uv;
+
+	//	vertices_.push_back(tempVertices);
+	//}
+
+	std::unordered_map<VertexInfo, uint32_t> uniqueVertices;
+
+	unsigned int shapeCounter = 0;
+	for (const auto& shape : shapes) {
+		//diffuseColors_.emplace_back(cvec4(1.0f));
+		// Loop over indices
+		for (size_t offset = 0; offset < shape.mesh.indices.size(); offset++) {
+			// Access to vertex
+			const tinyobj::index_t index{ shape.mesh.indices.at(offset) };
+
+			// Vertex position
+			const int startIndex{ 3 * index.vertex_index };
+			glm::vec3 vertices;
+			vertices.x = { attributes.vertices.at(startIndex + 0) };
+			vertices.y = { attributes.vertices.at(startIndex + 1) };
+			vertices.z = { attributes.vertices.at(startIndex + 2) };
+
+			// Vertex normal
+			glm::vec3 normals;
+			if (index.normal_index >= 0) {
+				//hasNormals = true;
+				const int normalStartIndex{ 3 * index.normal_index };
+				normals.x = attributes.normals.at(normalStartIndex + 0);
+				normals.y = attributes.normals.at(normalStartIndex + 1);
+				normals.z = attributes.normals.at(normalStartIndex + 2);
 			}
 
-			indices_.push_back(uniqueVertices[vertex]);
+			// Vertex texture coordinates
+			glm::vec2 uv;
+			if (index.texcoord_index >= 0) {
+				const int texCoordsStartIndex{ 2 * index.texcoord_index };
+				uv.x = attributes.texcoords.at(texCoordsStartIndex + 0);
+				uv.y = attributes.texcoords.at(texCoordsStartIndex + 1);
+			}
+
+			//float r = 0.f, g = 0.f, b = 0.f;
+			//if (!materials.empty()) {
+			//	r = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[0];
+			//	g = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[1];
+			//	b = materials.at(shape.mesh.material_ids.at(offset / 3)).diffuse[2];
+			//}
+
+			ST::VertexInfo vertex{ vertices, normals, uv };
+
+			// If hash doesn't contain this vertex
+			if (uniqueVertices.count(vertex) == 0) {
+				// Add this index (size of m_vertices)
+				uniqueVertices[vertex] = static_cast<GLuint>(vertices_.size());
+				// Add this vertex
+				vertices_.emplace_back(vertex);
+				/*if (!materials.empty())
+					Colors_.emplace_back(r, g, b);*/
+			}
+
+			indices_.emplace_back(uniqueVertices[vertex]);
 		}
-	}
-
-	for (const auto& vertex : vertices){
-		VertexInfo tempVertices;
-
-		// Position
-		tempVertices.pos = vertex.pos;
-
-		//Normales
-		tempVertices.normal = vertex.normal;
-
-		// UV's
-		tempVertices.uv = vertex.uv;
-
-		vertices_.push_back(tempVertices);
 	}
 
 	glGenVertexArrays(1, &internalId);
@@ -755,7 +876,8 @@ void ST::Geometry::render(){
 
 	glBindVertexArray(internalId); // VAO
 
-	//SetCullMode(cullmode_);
+	SetCullMode(cullmode_);
+	SetDepthTest(depthmode_);
 
 	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
 
@@ -776,10 +898,15 @@ void ST::Geometry::render(){
 	glVertexAttribPointer(8, 2, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, textureIndex));
 	glVertexAttribDivisor(8, 1);
 
-	// Atributo de Mat Shiness
+	// Atributo de Mat Roughness
 	glEnableVertexAttribArray(9);
-	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, shininess));
+	glVertexAttribPointer(9, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, roughness));
 	glVertexAttribDivisor(9, 1);
+
+	// Atributo de Mat Metallic
+	glEnableVertexAttribArray(10);
+	glVertexAttribPointer(10, 1, GL_FLOAT, GL_FALSE, sizeof(InstanceInfo), (void*)offsetof(InstanceInfo, metallic));
+	glVertexAttribDivisor(10, 1);
 
 	// Draw
 	glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)indices_.size(), GL_UNSIGNED_INT, 0, numInstances);
