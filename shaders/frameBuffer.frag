@@ -213,30 +213,34 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
 }
 
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
-    vec3 LightDirToObj = normalize(light.position - Pos);
-    vec3 H = normalize(V + LightDirToObj);
-
     float distance = length(light.position - Pos);
-    float attenuation = 1.0 / (1.0 + light.linear * distance +
-							    light.quadratic * (distance * distance));
-    vec3 radiance = light.ambient * attenuation;
 
-    float NdotV = max(dot(N,V), 0.0000001);
-    float NdotL = max(dot(N,LightDirToObj), 0.0000001);
-    float HdotV = max(dot(H,V), 0.0);
-    float NdotH = max(dot(N,H), 0.0);
+    if(distance < light.radius){
+        vec3 LightDirToObj = normalize(light.position - Pos);
+        vec3 H = normalize(V + LightDirToObj);
 
-    float D = distributionGGX(NdotH, Roughness);
-    float G = geometrySmith(NdotV, NdotL, Roughness);
-    vec3 F = fresnelSchlick(NdotV, baseReflectivity);
+        float attenuation = 1.0 / (1.0 + light.linear * distance +
+							        light.quadratic * (distance * distance));
+        vec3 radiance = light.ambient * attenuation;
 
-    vec3 specular = D * G * F;
-    specular /= 1.0 * NdotV * NdotL;
+        float NdotV = max(dot(N,V), 0.0000001);
+        float NdotL = max(dot(N,LightDirToObj), 0.0000001);
+        float HdotV = max(dot(H,V), 0.0);
+        float NdotH = max(dot(N,H), 0.0);
 
-    vec3 KD = vec3(1.0) - F;
-    KD *= 1.0 - Metallic;
+        float D = distributionGGX(NdotH, Roughness);
+        float G = geometrySmith(NdotV, NdotL, Roughness);
+        vec3 F = fresnelSchlick(NdotV, baseReflectivity);
 
-    return (KD * Albedo / PI + specular) * radiance * NdotL;
+        vec3 specular = D * G * F;
+        specular /= 1.0 * NdotV * NdotL;
+
+        vec3 KD = vec3(1.0) - F;
+        KD *= 1.0 - Metallic;
+
+        return (KD * Albedo / PI + specular) * radiance * NdotL;
+    }
+    discard;
 }
 
 vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){

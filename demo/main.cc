@@ -77,7 +77,6 @@ int main() {
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
-	ground.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	ground.getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
@@ -85,37 +84,33 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->setMesh(&helmet_mesh);
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	testObj.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&helmet_albedo);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(&helmet_rougness);
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(&helmet_metallic);
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
-	ST::Engine::createDirectLight(gm);
+	//ST::Engine::createDirectLight(gm);
 
-	int HOWMANY = 500;
+	//int HOWMANY = 5000;
 
-	std::vector<ST::GameObj> objects;
-	for (int i = 0; i < HOWMANY; i++){
-		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
+	//std::vector<ST::GameObj> objects;
+	//for (int i = 0; i < HOWMANY; i++){
+	//	objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 
-		//objects.back().getComponent<ST::RenderComponent>()->setMesh(&cat_mesh);
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
-		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
-		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-		//objects.back().getComponent<ST::RenderComponent>()->material.translucent = true;
-		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
-		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
-		objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
-		objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);
-		objects.back().getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
-		objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
-		objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
-		objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
-		objects.back().getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
-		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
-	}
+	//	objects.back().getComponent<ST::RenderComponent>()->setMesh(&test_mesh);
+	//	objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+	//	objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+	//	objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&textureTest);
+	//	objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
+	//	objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
+	//	objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);
+	//	objects.back().getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
+	//	objects.back().getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
+	//	objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
+	//	objects.back().getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
+	//	objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);		
+	//}
 
 	//ST::Texture halo_Light;
 	//halo_Light.loadSource("../others/halo_light.png");

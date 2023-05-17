@@ -6,6 +6,7 @@
 #include <st_camera.h>
 #include <st_program.h>
 #include <st_system_light.h>
+#include <random>
 
 GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 	GLenum aux = GL_NONE;
@@ -38,6 +39,21 @@ ST::RenderTarget::RenderTarget(){
 	quadID = 0;
 
 	visualMode = 0;
+
+	// SSAO
+	glGenFramebuffers(1, &ssaoFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+
+	unsigned int ssaoColorBuffer;
+	glGenTextures(1, &ssaoColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1600, 900, 0, GL_RED, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -150,42 +166,96 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 	
 	if (quadID != 0 && gm.mainCameraID() >= 0) {
 
-		//glUseProgram(Shader.getID());
-		Shader.use();
-
-		for (int i = 0; i < texturesUniformName_.size(); i++){
-			glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
-		}
-
-		// Temporal <--------------------------------
-		glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
-		glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
-		glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
-
-		glBindVertexArray(quadID);
-
-		//glBindFramebuffer(GL_READ_FRAMEBUFFER, internalID);
-		for (int i = 0; i < textureCount(); i++){
-			glActiveTexture(GL_TEXTURE0+i);
-			glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			printf("Render FrameBuffer-> OpenGL Error: %d\n", error);
 		}
 
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
 
-		//glDepthMask(GL_FALSE);
-		//glBlitFramebuffer(0, 0, last_viewport[2], last_viewport[3], 0, 0, last_viewport[2], last_viewport[3], GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+		glBindVertexArray(quadID);
 
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		// ----- SSAO ------
+		//gm.framebufferSSAOProgram->use();
 
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR) {
-			printf("Render FrameBuffer-> OpenGL Error: %d\n", error);
-		}
+		//std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
+		//std::default_random_engine generator;
+		//std::vector<glm::vec3> ssaoKernel;
+		//for (unsigned int i = 0; i < 64; ++i)
+		//{
+		//	glm::vec3 sample(
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator)
+		//	);
+		//	sample = glm::normalize(sample);
+		//	sample *= randomFloats(generator);
+
+		//	float scale = (float)i / 64.0;
+		//	scale = (0.1f + (scale * scale)) * (0.1f - 1.0f);
+		//	sample *= scale;
+		//	ssaoKernel.push_back(sample);
+		//}
+
+		//std::vector<glm::vec3> ssaoNoise;
+		//for (unsigned int i = 0; i < 16; i++) {
+		//	glm::vec3 noise(
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		randomFloats(generator) * 2.0 - 1.0,
+		//		0.0f);
+		//	ssaoNoise.push_back(noise);
+		//}
+
+		//unsigned int noiseTexture;
+		//glGenTextures(1, &noiseTexture);
+		//glBindTexture(GL_TEXTURE_2D, noiseTexture);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+
+		//glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+		////glClear(GL_COLOR_BUFFER_BIT);
+
+		//for (int i = 0; i < textureCount(); i++) {
+		//	glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
+		//	glActiveTexture(GL_TEXTURE0 + i);
+		//	glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+		//}
+
+		//glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), textureCount());
+		//glActiveTexture(GL_TEXTURE0 + textureCount());
+		//glBindTexture(GL_TEXTURE_2D, noiseTexture);
+
+		//auto& cam = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
+		//GLuint camProjection = gm.framebufferSSAOProgram->getUniform("u_projection_matrix");
+		//glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
+		//glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
+
+		//glDrawArrays(GL_TRIANGLES, 0, 6); // Render Quad
+		////glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		if (lights) {
-			//if(lights->size() == 0){ glDrawArrays(GL_TRIANGLES, 0, 6); }
+
+			// ----- Light Pass ------
+			Shader.use();
+
+			for (int i = 0; i < textureCount(); i++) {
+				glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+			}
+
+			// Temporal <--------------------------------
+			glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
+			glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
+			glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
+
+
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
 				ST::LightComponent* tempLight = lights->at(i).light_;
@@ -286,9 +356,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 		}
-	}/*else {
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}*/
+	}
 
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {

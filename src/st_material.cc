@@ -20,7 +20,7 @@ ST::Material::Material(){
 	roughness = nullptr;
 	roughness_ = 1.0f;
 	metallic = nullptr;
-	metallic_ = 1.0f;
+	metallic_ = 0.0f;
 
 	translucent = false;
 	texIndex_ = { 0,0 };

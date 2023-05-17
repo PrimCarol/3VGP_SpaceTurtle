@@ -26,10 +26,6 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 	mainCameraID_ = -1;
 
-	// ------- Create Base Program -------
-	//basicProgram = std::make_unique<ST::Program>();
-	//basicProgram->setUp("../shaders/shader_instancing.vert", "../shaders/shader_instancing.frag");
-
 	// ------- Create Unlite Program -------
 	unliteProgram = std::make_unique<ST::Program>();
 	unliteProgram->setUp("../shaders/shader_unlite.vert", "../shaders/shader_unlite.frag");
@@ -37,10 +33,6 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create Normals Program -------
 	normalsProgram = std::make_unique<ST::Program>();
 	normalsProgram->setUp("../shaders/normals.vert", "../shaders/normals.frag", "../shaders/normals.geom");
-
-	// ------- Create Collider Program -------
-	//colliderProgram = std::make_unique<ST::Program>();
-	//colliderProgram->setUp("../shaders/collider.vert", "../shaders/collider.frag", "../shaders/collider.geom");
 
 	// ------- Create Shadow Mapping Program -------
 	shadowMapping = std::make_unique<ST::Program>();
@@ -53,6 +45,10 @@ ST::GameObj_Manager::GameObj_Manager(){
 	// ------- Create FrameBuffer Program -------
 	framebufferProgram = std::make_unique<ST::Program>();
 	framebufferProgram->setUp("../shaders/frameBuffer.vert", "../shaders/frameBuffer.frag");
+
+	// ------- Create FrameBuffer SSAO Program -------
+	framebufferSSAOProgram = std::make_unique<ST::Program>();
+	framebufferSSAOProgram->setUp("../shaders/frameBufferSSAO.vert", "../shaders/frameBufferSSAO.frag");
 
 	// ------- Create PostProces BLUR Program -------
 	postproces_blur = std::make_unique<ST::Program>();

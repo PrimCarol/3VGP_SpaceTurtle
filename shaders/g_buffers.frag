@@ -46,4 +46,6 @@ void main(){
     gMetalRough.g = Roughness; // Roughtness 0.1 a 1.0
     if(Roughness < 0.1){gMetalRough.g = 0.1;}
     if(u_haveRoughness){ gMetalRough.g = texture(u_tex_Roughness, TexCoords).r; }
+
+    //
 }

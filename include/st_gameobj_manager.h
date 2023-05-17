@@ -74,22 +74,16 @@ namespace ST {
 		size_t size() const;
 
 		// ------------------------------- TRASH ZONE ---------------------------------
-		// Default Shader Program to render.
-		//std::shared_ptr<ST::Program> basicProgram;
+		// Programs
 		std::shared_ptr<ST::Program> unliteProgram;
 		std::shared_ptr<ST::Program> normalsProgram;
-		//std::shared_ptr<ST::Program> colliderProgram;
 		std::shared_ptr<ST::Program> shadowMapping;
 		std::shared_ptr<ST::Program> shadowMappingPoint;
 		std::shared_ptr<ST::Program> framebufferProgram;
+		std::shared_ptr<ST::Program> framebufferSSAOProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
 		std::shared_ptr<ST::Program> g_buffer;
 		std::shared_ptr<ST::Program> skybox;
-
-		// ***************** Shadow Mapping Test ***************
-		//bool haveShadowMap_;
-		//ST::RenderTarget shadowMap;
-		//glm::mat4 shadowMappingMatTest;
 
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);
@@ -135,6 +129,9 @@ ST::GameObj ST::GameObj_Manager::createGameObj(Cs... components) {
 
 	addComponent<ST::NameComponent>(last_gameObj_ - 1);
 	addComponent<ST::HierarchyComponent>(last_gameObj_ -1);
+
+	ST::RenderComponent* tempRender = ref.getComponent<ST::RenderComponent>();
+	if (tempRender) { tempRender->material.setProgram(g_buffer); }
 
 	//static bool rootCreated = false;
 	if (rootCreated) {

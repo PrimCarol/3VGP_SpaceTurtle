@@ -328,8 +328,11 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			else if (tempLightData.light_->type_ == ST::Spot) {
 				
 				if (gm.mainCameraID() != -1) {
-					transformComps.at(n)->m_transform_ = glm::lookAt(transformComps.at(n)->getPosition(), transformComps.at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f, 1.0f, 0.0f));
-					transformComps.at(n)->m_transform_ = glm::inverse(transformComps.at(n)->m_transform_);
+					tempTransform.m_transform_ = glm::lookAt(tempTransform.getPosition(), transformComps.at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f, 1.0f, 0.0f));
+					tempTransform.m_transform_ = glm::inverse(tempTransform.m_transform_);
+				}
+				if (renderComps.at(n).has_value()) {
+					renderComps.at(n).value().material.setColor(tempLightData.light_->color_.x, tempLightData.light_->color_.y, tempLightData.light_->color_.z);
 				}
 				
 				ST::ShadowMapping spotLightShadow;
