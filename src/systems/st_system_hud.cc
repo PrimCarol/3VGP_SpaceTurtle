@@ -34,6 +34,9 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 				if (ImGui::MenuItem("Cube", NULL, false)) {
 					ST::Engine::createCube(gm);
 				}
+				if (ImGui::MenuItem("Sphere", NULL, false)) {
+					ST::Engine::createSphere(gm);
+				}
 				ImGui::EndMenu();
 			}
 

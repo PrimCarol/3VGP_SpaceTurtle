@@ -1,6 +1,8 @@
 #include "st_system_assets.h"
 
 #include <st_mesh.h>
+#include <imgui.h>
+
 
 ST::SytemAssets::SytemAssets(){
 	std::shared_ptr<ST::Triangle> triangle = std::make_shared<ST::Triangle>();
@@ -69,6 +71,35 @@ void ST::SytemAssets::saveTextureCubeMap(std::string name, std::vector<std::stri
 
 ST::Texture* ST::SytemAssets::getTexture(std::string name){
 	return textures[toLower(name)].get();
+}
+
+GLuint ST::SytemAssets::popUpTextureSelector(){
+	
+	ImGui::Begin("TextureSelector");
+
+	float padding = 10.0f;
+	float thumbnailSize = 64.0f;
+	float cellSize = thumbnailSize + padding;
+	
+	ImVec2 panel_size = ImGui::GetContentRegionAvail();
+	int columnCount = (int)(panel_size.x / cellSize);
+	ImGui::Columns(columnCount, 0, false);
+
+	for (const auto& tex : textures) {
+		ImGui::PushID(tex.first.c_str());
+		if (ImGui::ImageButton((void*)(intptr_t)tex.second->getID(), ImVec2(thumbnailSize, thumbnailSize))) {
+			// UWU
+		}
+		// Añade texto debajo del botón
+		ImGui::Text(tex.first.c_str());
+
+		ImGui::PopID();
+		ImGui::NextColumn();
+	}
+	
+	ImGui::End();
+	
+	return GLuint();
 }
 
 void ST::SytemAssets::saveMesh(std::string path){

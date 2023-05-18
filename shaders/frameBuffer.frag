@@ -100,7 +100,7 @@ void main(){
 
     // Aqui iria el skybox? en el primer MIX
     vec3 reflectDir = reflect(viewDir, normals);
-    vec3 skyboxColor = texture(gSkybox, reflectDir).rgb;
+    vec3 skyboxColor = texture(gSkybox, -reflectDir).rgb;
     vec3 baseReflectivity = mix(skyboxColor, Diffuse, Metallic);
 
     vec3 Lo = vec3(0.0);
@@ -125,29 +125,10 @@ void main(){
     vec3 ambient = vec3(0.0) * Diffuse; 
     vec3 color = ambient + Lo;
     color = color / (color + vec3(1.0));
+    // Gamma Correction
     color = pow(color, vec3(1.0/2.2));
 
     FragColor = vec4(color * shadow, 1.0);
-
-    /*
-    // Render
-    if(visualMode == 0){
-        //vec4 result = vec4(vec3(Diffuse), 1.0);
-        vec4 result = vec4(vec3(Diffuse),1.0);
-
-        FragColor = result;
-
-    }else if(visualMode == 1){
-        //FragColor = vec4(FragPos,1.0);
-        FragColor = vec4(Metallic, Roughness, 0.0 ,1.0);
-        //FragColor = vec4(vec3(Specular),1.0);
-        //FragColor = vec4(vec3(Depth),1.0);
-    }else if(visualMode == 2){
-        FragColor = vec4(Normal,1.0);
-    }else{
-        //FragColor = vec4(color,1.0);
-        FragColor = vec4(vec3(Depth),1.0);
-    }
 
 //    if(gl_FragCoord.x < 800){
 //        if(gl_FragCoord.y < 450){
@@ -162,7 +143,7 @@ void main(){
 //            FragColor = vec4(Diffuse,1.0);
 //        }
 //    }
-    */
+
 }
 
 // -------------------------------------------------------------------------------------
@@ -213,6 +194,15 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
     KD *= 1.0 - Metallic;
 
     return (KD * Albedo / PI + specular) * radiance * NdotL;
+
+    // IBL
+    //vec3 directLighting = (KD * Albedo / PI + specular) * radiance * NdotL;
+    //vec3 R = reflect(-V, N);
+    //vec3 prefilteredColor = textureLod(gSkybox, R, Roughness * 5.0).rgb;
+    //vec3 indirectSpecular = prefilteredColor * F * D * G;
+    //vec3 indirectDiffuse = texture(gSkybox, N).rgb * Albedo / PI;
+    //
+    //return directLighting + indirectDiffuse + indirectSpecular;
 }
 
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity){
@@ -278,77 +268,6 @@ vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Rou
 
     return (KD * Albedo / PI + specular) * radiance * NdotL;
 }
-
-// ---------------------------------------
-
-//vec4 CalcDirLight(DirLight light, vec3 normals, vec3 viewDir, vec3 Albedo, float Specular){
-//    vec3 lightDir = normalize(light.direction);
-//    
-//    float diff = max(dot(-lightDir, normals), 0.0);
-//    
-//    vec3 reflectDir = reflect(lightDir, normals);
-//    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-//
-//    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-//    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-//    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-//    
-//    return (ambient + diffuse + specular);
-//}
-//
-//vec4 CalcPointLight(PointLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
-//	
-//	float distance = length(light.position - objPosition);
-//
-//    if(distance < light.radius){
-//	    vec3 lightDir = normalize(light.position - objPosition);
-//	    float diff = max(dot(normals, lightDir), 0.0);
-//
-//	    vec3 reflectDir = reflect(-lightDir, normals);
-//	    float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-//
-//	    float attenuation = 1.0 / (1.0 + light.linear * distance +
-//							       light.quadratic * (distance * distance));
-//
-//	
-//        vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-//        vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-//        vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-//
-//	    ambient *= attenuation;
-//	    diffuse *= attenuation;
-//	    specular *= attenuation;
-//
-//	    return (ambient + diffuse + specular);
-//    }
-//    discard;   
-//}
-//
-//vec4 CalcSpotLight(SpotLight light, vec3 normals, vec3 objPosition, vec3 viewDir, vec3 Albedo, float Specular){
-//    vec3 lightDir = normalize(light.position - objPosition);
-//	float diff = max(dot(normals, lightDir), 0.0);
-//
-//	vec3 reflectDir = reflect(-lightDir, normals);
-//	float spec = pow(max(dot(-reflectDir, viewDir), 0.0), 64.0); // <-------
-//
-//	float distance = length(light.position - objPosition);
-//	float attenuation = 1.0 / (1.0 + light.linear * distance +
-//							   light.quadratic * (distance * distance));
-//
-//    float theta = dot(lightDir, normalize(-light.direction)); 
-//    float epsilon = light.cutOff - light.outerCutOff;
-//    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-//
-//    vec4 ambient = vec4(light.ambient,1.0) * vec4(Albedo,1.0);
-//    vec4 diffuse = vec4(light.diffuse, 1.0) * diff * vec4(Albedo,1.0);
-//    vec4 specular = vec4(light.specular, 1.0) * spec * Specular;
-//
-//    ambient *= attenuation * intensity;
-//    diffuse *= attenuation * intensity;
-//    specular *= attenuation * intensity;
-//
-//    return (ambient + diffuse + specular);
-//}
 
 // Shadows
 float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sampler2D shadowMap){

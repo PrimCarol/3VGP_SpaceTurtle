@@ -214,8 +214,10 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			if (tempLightData.light_->type_ == ST::Directional) {
 				ST::ShadowMapping thisLightRenderTargetHigh;
 				thisLightRenderTargetHigh.setUp(textureSize_.x, textureSize_.y);
+				//printf("TextureID thisLightRenderTargetHigh %d \n", thisLightRenderTargetHigh.getID());
 				ST::ShadowMapping thisLightRenderTargetMid;
-				thisLightRenderTargetMid.setUp(textureSize_.x, textureSize_.y);		
+				thisLightRenderTargetMid.setUp(textureSize_.x, textureSize_.y);	
+				//printf("TextureID thisLightRenderTargetMid %d \n", thisLightRenderTargetHigh.getID());
 
 				//glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), cameraTransform->getUp());

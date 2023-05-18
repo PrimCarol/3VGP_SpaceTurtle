@@ -83,7 +83,7 @@ int main() {
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("cat_petit"));
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("cube"));
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Cat_diffuse.jpg"));
@@ -140,7 +140,6 @@ int main() {
 		skybox.getComponent<ST::TransformComponent>()->setPosition(camera.getComponent<ST::TransformComponent>()->getPosition());
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
 
-
 		// ---- Camera ----
 		ST::SystemCamera::Movemment(gm, w);
 		ST::SystemCamera::UpdateCamera(gm);
@@ -191,6 +190,7 @@ int main() {
 
 		// ---------------- HUD ----------------
 		if (!hideHud) {
+			assets->popUpTextureSelector();
 			ST::SystemHUD::NavBar(gm);
 			ST::SystemHUD::Hierarchy(gm);
 			ST::SystemHUD::Inspector(gm);

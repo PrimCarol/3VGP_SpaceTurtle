@@ -22,6 +22,8 @@ namespace ST {
 
 		ST::Texture* getTexture(std::string name);
 
+		GLuint popUpTextureSelector();
+
 		// ------ Mesh ------
 		void saveMesh(std::string path);
 		ST::Mesh* getMesh(std::string name);
