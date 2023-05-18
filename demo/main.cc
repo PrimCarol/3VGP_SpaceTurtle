@@ -22,38 +22,31 @@ int main() {
 	skyboxPaths.push_back("../others/skybox/snow/back.jpg");
 	assets.saveTextureCubeMap("Skybox", skyboxPaths);
 
-	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
-	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
-	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
-	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f,1600.0f/900.0f, 1.0f, 1000.0f);
-
 	// --------------
 	assets.saveTexture("../others/checker_texture.jpg");
 	assets.getTexture("checker_texture.jpg")->setCols(8);
 	assets.getTexture("checker_texture.jpg")->setRows(8);
 
-	assets.saveTexture("../others/Cat_diffuse.jpg");
-	assets.saveTexture("../others/Cat_specular.png");
+	assets.saveTexture("../others/Cat_diffuse.jpg", true);
+	assets.saveTexture("../others/Cat_specular.png", true);
 
-	ST::Geometry cat_mesh;
-	cat_mesh.loadFromFile("../others/cat_petit.obj");
+	assets.saveMesh("../others/cat_petit.obj");
 
-	// Helmet PBR TEST
-	ST::Geometry helmet_mesh;
-	helmet_mesh.loadFromFile("../others/pbr/helmet/helmet.obj");
+	assets.saveMesh("../others/pbr/helmet/helmet.obj");
 	assets.saveTexture("../others/pbr/helmet/helmet_basecolor.tga", true);
 	assets.saveTexture("../others/pbr/helmet/helmet_roughness.tga", true);
 	assets.saveTexture("../others/pbr/helmet/helmet_metalness.tga", true);
 
-	//ST::Geometry sphere_mesh;
-	//sphere_mesh.loadFromFile("../others/sphere.obj");
-	//ST::Texture pbr_diffuse;
-	//pbr_diffuse.loadSource("../others/pbr/basecolor_02.png");
-	//ST::Texture pbr_roughness;
-	//pbr_roughness.loadSource("../others/pbr/roughness_02.png");
-	//ST::Texture pbr_metallic;
-	//pbr_metallic.loadSource("../others/pbr/metallic_02.png");
+	assets.saveTexture("../others/pbr/basecolor_02.png");
+	assets.saveTexture("../others/pbr/roughness_02.png");
+	assets.saveTexture("../others/pbr/metallic_02.png");
 	
+	// ----- Camera ------
+	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+	camera.getComponent<ST::NameComponent>()->setName("Camera 02");
+	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
+
 	// --- SKYBOX ----
 	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
 	skybox.getComponent<ST::NameComponent>()->setName("Skybox");
@@ -71,7 +64,7 @@ int main() {
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
-	testObj.getComponent<ST::RenderComponent>()->setMesh(&helmet_mesh);
+	testObj.getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("helmet"));
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("helmet_basecolor.tga"));
@@ -83,16 +76,16 @@ int main() {
 	ST::Engine::createDirectLight(gm);
 	gm.objectSelected = -1;
 
-	int HOWMANY = 10000;
+	int HOWMANY = 1000;
 
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("Cube"));
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("sphere"));
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("checker_texture.jpg"));
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("Cat_diffuse.jpg"));
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
 		objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);
@@ -103,15 +96,14 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);
 	}
 
-	//ST::Texture halo_Light;
-	//halo_Light.loadSource("../others/halo_light.png");
+
 	//for (int i = 0; i < 500; i++){
 	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, /*ST::RenderComponent{},*/ ST::ColliderComponent{}, ST::LightComponent{});
 
 	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 	//	a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
 	//	//a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	//a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+	//	//a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("halo_light.png"));
 	//	//a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
 	//	//a.getComponent<ST::RenderComponent>()->material.translucent = true;
 	//	//a.getComponent<ST::RenderComponent>()->castShadow_ = false;

@@ -3,28 +3,37 @@
 #include <st_mesh.h>
 
 ST::SytemAssets::SytemAssets(){
-	std::shared_ptr<ST::Cube> cube = std::make_shared<ST::Cube>();
-	meshes["Cube"] = cube;
+	std::shared_ptr<ST::Triangle> triangle = std::make_shared<ST::Triangle>();
+	meshes["triangle"] = triangle;
 	std::shared_ptr<ST::Quad> quad = std::make_shared<ST::Quad>();
-	meshes["Quad"] = quad;
+	meshes["quad"] = quad;
+	std::shared_ptr<ST::Circle> circle = std::make_shared<ST::Circle>();
+	meshes["circle"] = circle;
+	std::shared_ptr<ST::Cube> cube = std::make_shared<ST::Cube>();
+	meshes["cube"] = cube;
+	// Sphere
+	saveMesh("../others/sphere.obj");
+	// Light Halo
+	saveTexture("../others/halo_light.png");
 }
 
-std::string getFileName(std::string path, bool type = true) {
+std::string getFileName(std::string path, bool whatType = true) {
 	bool startChecking = false;
 	std::string texName;
-	for (int i = 0; i < path.size(); i++) {
+	bool end = false;
+	for (int i = 0; i < path.size() && end == false; i++) {
 		char l = path.at(i);
 		if (l == '/' && !startChecking) {
 			startChecking = true;
 		}
 		if (startChecking) {
 
-			if (l == '.' && !type) {
-				exit;
+			if (l == '.' && !whatType) {
+				end = true;
 			}
 
 			if (l != '/') {
-				texName.insert(texName.end(), l);
+				if (!end) { texName.insert(texName.end(), tolower(l)); }
 			}
 			else {
 				texName.clear();
@@ -34,6 +43,14 @@ std::string getFileName(std::string path, bool type = true) {
 	}
 	printf("%s\n", texName.data());
 	return texName;
+}
+
+std::string toLower(std::string t) {
+	std::string tempText;
+	for (int i = 0; i < t.size(); i++){
+		tempText.push_back(tolower(t.at(i)));
+	}
+	return tempText;
 }
 
 void ST::SytemAssets::saveTexture(std::string path, bool fliped, ST::Texture::TextType t) {
@@ -53,18 +70,18 @@ void ST::SytemAssets::saveTextureCubeMap(std::string name, std::vector<std::stri
 }
 
 ST::Texture* ST::SytemAssets::getTexture(std::string name){
-	return textures[name].get();
+	return textures[toLower(name)].get();
 }
 
 void ST::SytemAssets::saveMesh(std::string path){
 	std::shared_ptr<ST::Geometry> thisMesh = std::make_shared<ST::Geometry>();
 
 	thisMesh->loadFromFile(path.data());
-	meshes[getFileName(path)] = thisMesh;
+	meshes[getFileName(path, false)] = thisMesh;
 }
 
 ST::Mesh* ST::SytemAssets::getMesh(std::string name){
-	return meshes[name].get();
+	return meshes[toLower(name)].get();
 }
 
 ST::SytemAssets::~SytemAssets(){
