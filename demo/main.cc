@@ -11,35 +11,36 @@ int main() {
 	// ----------------------------------------------------------------
 
 	ST::GameObj_Manager gm;
-	ST::SytemAssets assets;
+	std::shared_ptr<ST::SytemAssets> assets = std::make_shared<ST::SytemAssets>();
+	gm.assets_ = assets;
 
 	std::vector<std::string> skyboxPaths;
-	skyboxPaths.push_back("../others/skybox/snow/right.jpg");
-	skyboxPaths.push_back("../others/skybox/snow/left.jpg");
-	skyboxPaths.push_back("../others/skybox/snow/top.jpg");
-	skyboxPaths.push_back("../others/skybox/snow/bottom.jpg");
-	skyboxPaths.push_back("../others/skybox/snow/front.jpg");
-	skyboxPaths.push_back("../others/skybox/snow/back.jpg");
-	assets.saveTextureCubeMap("Skybox", skyboxPaths);
+	skyboxPaths.push_back("../others/skybox/city/right.jpg");
+	skyboxPaths.push_back("../others/skybox/city/left.jpg");
+	skyboxPaths.push_back("../others/skybox/city/top.jpg");
+	skyboxPaths.push_back("../others/skybox/city/bottom.jpg");
+	skyboxPaths.push_back("../others/skybox/city/front.jpg");
+	skyboxPaths.push_back("../others/skybox/city/back.jpg");
+	assets->saveTextureCubeMap("Skybox", skyboxPaths);
 
 	// --------------
-	assets.saveTexture("../others/checker_texture.jpg");
-	assets.getTexture("checker_texture.jpg")->setCols(8);
-	assets.getTexture("checker_texture.jpg")->setRows(8);
+	assets->saveTexture("../others/checker_texture.jpg");
+	assets->getTexture("checker_texture.jpg")->setCols(8);
+	assets->getTexture("checker_texture.jpg")->setRows(8);
 
-	assets.saveTexture("../others/Cat_diffuse.jpg", true);
-	assets.saveTexture("../others/Cat_specular.png", true);
+	assets->saveTexture("../others/Cat_diffuse.jpg", true);
+	assets->saveTexture("../others/Cat_specular.png", true);
 
-	assets.saveMesh("../others/cat_petit.obj");
+	assets->saveMesh("../others/cat_petit.obj");
 
-	assets.saveMesh("../others/pbr/helmet/helmet.obj");
-	assets.saveTexture("../others/pbr/helmet/helmet_basecolor.tga", true);
-	assets.saveTexture("../others/pbr/helmet/helmet_roughness.tga", true);
-	assets.saveTexture("../others/pbr/helmet/helmet_metalness.tga", true);
+	assets->saveMesh("../others/pbr/helmet/helmet.obj");
+	assets->saveTexture("../others/pbr/helmet/helmet_basecolor.tga", true);
+	assets->saveTexture("../others/pbr/helmet/helmet_roughness.tga", true);
+	assets->saveTexture("../others/pbr/helmet/helmet_metalness.tga", true);
 
-	assets.saveTexture("../others/pbr/basecolor_02.png");
-	assets.saveTexture("../others/pbr/roughness_02.png");
-	assets.saveTexture("../others/pbr/metallic_02.png");
+	assets->saveTexture("../others/pbr/basecolor_02.png");
+	assets->saveTexture("../others/pbr/roughness_02.png");
+	assets->saveTexture("../others/pbr/metallic_02.png");
 	
 	// ----- Camera ------
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
@@ -52,24 +53,24 @@ int main() {
 	skybox.getComponent<ST::NameComponent>()->setName("Skybox");
 	skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
 	skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.skybox);
-	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("Skybox"));
-	skybox.getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("Cube"));
+	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Skybox"));
+	skybox.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
 	skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
-	ground.getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("Cube"));
+	ground.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
-	testObj.getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("helmet"));
+	testObj.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("helmet"));
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("helmet_basecolor.tga"));
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets.getTexture("helmet_roughness.tga"));
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets.getTexture("helmet_metalness.tga"));
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("helmet_basecolor.tga"));
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("helmet_roughness.tga"));
+	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("helmet_metalness.tga"));
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
@@ -82,10 +83,10 @@ int main() {
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
 
-		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets.getMesh("sphere"));
+		objects.back().getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("cat_petit"));
 		objects.back().getComponent<ST::ColliderComponent>()->setMaxPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 		objects.back().getComponent<ST::ColliderComponent>()->setMinPoint(objects.back().getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("Cat_diffuse.jpg"));
+		objects.back().getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Cat_diffuse.jpg"));
 		objects.back().getComponent<ST::RenderComponent>()->material.setTexIndex({ (int)ST::Engine::getRandom(0.0,8.0f),(int)ST::Engine::getRandom(0.0,8.0f) });
 		objects.back().getComponent<ST::RenderComponent>()->material.roughness_ = ST::Engine::getRandom(0.1f, 1.0f);
 		objects.back().getComponent<ST::RenderComponent>()->material.metallic_ = ST::Engine::getRandom(0.0f, 1.0f);

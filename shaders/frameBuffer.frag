@@ -8,6 +8,7 @@ uniform sampler2D gMetalRough;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gDepth;
+uniform samplerCube gSkybox;
 
 // Necesario
 uniform vec3 viewPos;
@@ -98,7 +99,9 @@ void main(){
     vec3 viewDir = normalize(viewPos - FragPos);
 
     // Aqui iria el skybox? en el primer MIX
-    vec3 baseReflectivity = mix(vec3(0.04), Diffuse, Metallic);
+    vec3 reflectDir = reflect(viewDir, normals);
+    vec3 skyboxColor = texture(gSkybox, reflectDir).rgb;
+    vec3 baseReflectivity = mix(skyboxColor, Diffuse, Metallic);
 
     vec3 Lo = vec3(0.0);
 

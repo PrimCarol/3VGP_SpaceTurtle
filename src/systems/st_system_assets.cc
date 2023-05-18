@@ -55,18 +55,16 @@ std::string toLower(std::string t) {
 
 void ST::SytemAssets::saveTexture(std::string path, bool fliped, ST::Texture::TextType t) {
 	std::shared_ptr<ST::Texture> thisTex = std::make_shared<ST::Texture>();
-
 	thisTex->loadSource(path.data(), fliped);
 	textures[getFileName(path)] = thisTex;
 }
 
 void ST::SytemAssets::saveTextureCubeMap(std::string name, std::vector<std::string> paths){
 	std::shared_ptr<ST::Texture> thisTex = std::make_shared<ST::Texture>();
-
 	for (int i = 0; i < paths.size(); i++){
 		thisTex->loadCubemap(paths.at(i).data(), i);
 	}
-	textures[name] = thisTex;
+	textures[toLower(name)] = thisTex;
 }
 
 ST::Texture* ST::SytemAssets::getTexture(std::string name){

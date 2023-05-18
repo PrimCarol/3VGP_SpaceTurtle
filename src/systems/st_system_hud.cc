@@ -264,8 +264,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			// --------
 		}
 			
-		
-
 		if (gm.getComponentVector<ST::RenderComponent>()->at(objSeletected).has_value()) {
 			ImGui::Spacing(); ImGui::Spacing();
 			if (ImGui::TreeNodeEx("Render")) {
@@ -285,29 +283,47 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 					ImGui::ColorEdit3("Color", &c.x);
 				}
 				render->material.setColor(c);
-				//ImGui::DragFloat("Shiness", &render->material.shininess, 1.0f, 1.0f);
 				ImGui::DragFloat("Roughness", &render->material.roughness_, 0.01f, 0.1f, 1.0f);
 				ImGui::DragFloat("Metallic", &render->material.metallic_, 0.01f, 0.0f, 1.0f);
 				ImGui::Text("- Texture -");
+				ImVec2 imageButtonSize(48,48);
 				if (render->material.haveAlbedo) {
-					ImGui::Image((void*)(intptr_t)render->material.getAlbedo()->getID(), ImVec2(144, 144));
+					ImGui::ImageButton((void*)(intptr_t)render->material.getAlbedo()->getID(), imageButtonSize);
+				}else {
+					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
 				}
-				else {
-					ImGui::Text("Albedo: None");
-				}
+				ImGui::SameLine();
+				ImGui::Text("Albedo");
 				if (render->material.haveNormal) {
-					ImGui::Image((void*)(intptr_t)render->material.getNormal()->getID(), ImVec2(144, 144));
+					ImGui::ImageButton((void*)(intptr_t)render->material.getNormal()->getID(), imageButtonSize);
+				}else {
+					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
 				}
-				else {
-					ImGui::Text("Normal: None");
-				}
+				ImGui::SameLine();
+				ImGui::Text("Normal");
 				if (render->material.haveSpecular) {
-					ImGui::Image((void*)(intptr_t)render->material.getSpecular()->getID(), ImVec2(144, 144));
+					ImGui::ImageButton((void*)(intptr_t)render->material.getSpecular()->getID(), imageButtonSize);
+				}else {
+					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
 				}
-				else {
-					ImGui::Text("Specular: None");
+				ImGui::SameLine();
+				ImGui::Text("Specular");
+				if (render->material.haveRoughness) {
+					ImGui::ImageButton((void*)(intptr_t)render->material.getRoughness()->getID(), imageButtonSize);
+				}else {
+					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
 				}
+				ImGui::SameLine();
+				ImGui::Text("Roughness");
+				if (render->material.haveMetallic) {
+					ImGui::ImageButton((void*)(intptr_t)render->material.getMetallic()->getID(), imageButtonSize);
+				}else {
+					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+				}
+				ImGui::SameLine();
+				ImGui::Text("Metallic");
 
+				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				glm::ivec2 textIndex = render->material.getTexIndex();
 				ImGui::SetNextItemWidth(50);
 				ImGui::InputInt2("TextIndex", &textIndex.x);
@@ -318,8 +334,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::SameLine();
 				if (render->mesh) {
 					ImGui::Text(render->mesh->getName());
-				}
-				else {
+				}else {
 					ImGui::Text("None");
 				}
 
@@ -333,12 +348,6 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::TreePop();
 			}
 		}
-		//else {
-		//	if (ImGui::Button("Add Render Component")) {
-		//		gm.addComponent<ST::RenderComponent>(objSeletected);
-		//		//gm.getComponent<ST::RenderComponent>(objSeletected)->material.setProgram(gm.basicProgram);
-		//	}
-		//}
 
 		if (gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).has_value()) {
 			ST::ColliderComponent* collider = &gm.getComponentVector<ST::ColliderComponent>()->at(objSeletected).value();
@@ -547,61 +556,3 @@ void ST::SystemHUD::Stats(const ST::Window& w, const ST::GameObj_Manager& gm){
 
 	ImGui::End();
 }
-
-//#include <imgui_internal.h>
-//#include <ImGuizmo.h>
-
-/*void ST::SystemHUD::EditTransform(const ST::Camera& c, ST::GameObj* objSeletected, bool editTransformDecomposition) {
-
-    //ImGuiIO& io = ImGui::GetIO();
-    //float viewManipulateRight = io.DisplaySize.x;
-    //float viewManipulateTop = 0;
-    //static ImGuiWindowFlags gizmoWindowFlags = 0;
-
-    //if (useWindow)
-    //{
-    //    ImGui::SetNextWindowSize(ImVec2(800, 400), ImGuiCond_Appearing);
-    //    ImGui::SetNextWindowPos(ImVec2(400, 20), ImGuiCond_Appearing);
-    //    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)ImColor(0.35f, 0.3f, 0.3f));
-    //    ImGui::Begin("Gizmo", 0, gizmoWindowFlags);
-    //    ImGuizmo::SetDrawlist();
-    //    float windowWidth = (float)ImGui::GetWindowWidth();
-    //    float windowHeight = (float)ImGui::GetWindowHeight();
-    //    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-    //    viewManipulateRight = ImGui::GetWindowPos().x + windowWidth;
-    //    viewManipulateTop = ImGui::GetWindowPos().y;
-    //    ImGuiWindow* window = ImGui::GetCurrentWindow();
-    //    gizmoWindowFlags = ImGui::IsWindowHovered() && ImGui::IsMouseHoveringRect(window->InnerRect.Min, window->InnerRect.Max) ? ImGuiWindowFlags_NoMove : 0;
-    //}
-    //else
-    //{
-    //    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-    //}
-    //glm::mat4 identityMat(1.0f);
-    ////ImGuizmo::DrawGrid((const float*)&c.view, (const float*)&c.projection, (const float*)&identityMat, 100.f);
-    //if (objSeletected) {
-    //    ImGuizmo::DrawCubes((const float*)&c.view, (const float*)&c.projection, (const float*)&objSeletected->getComponentTransform()->m_transform_[0][0], gizmoCount);
-    //    ImGuizmo::Manipulate((const float*)&c.view, (const float*)&c.projection, mCurrentGizmoOperation, mCurrentGizmoMode, (float*)&objSeletected->getComponentTransform()->m_transform_[0][0], NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-
-    //    ImGuizmo::ViewManipulate((float*)&c.view, camDistance, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
-    //}
-
-    //if (useWindow)
-    //{
-    //    ImGui::End();
-    //    ImGui::PopStyleColor(1);
-    //}
-
-    if (objSeletected) {
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-
-        float windowWidth = (float)ImGui::GetWindowWidth();
-        float windowHeight = (float)ImGui::GetWindowHeight();
-
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-        ImGuizmo::Manipulate((const float*)&c.view, (const float*)&c.projection,
-            ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, (float*)&objSeletected->getComponentTransform()->m_transform_[0][0]);
-    }
-}*/

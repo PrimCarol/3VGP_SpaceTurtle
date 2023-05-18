@@ -12,15 +12,15 @@
 #include <st_rendertarget.h>
 #include <components/st_name.h>
 #include <components/st_hierarchy.h>
-//#include <st_camera.h>
 
 #include <mat4x4.hpp>
 
-#define MAX_OBJECTS 100000
+#define MAX_OBJECTS 1000
 
 namespace ST {
 	
 	class CameraComponent;
+	class SytemAssets;
 
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
@@ -91,6 +91,7 @@ namespace ST {
 
 		// ******************* Test *******************
 		int drawcalls_;
+		std::shared_ptr<ST::SytemAssets> assets_;
 
 		// ------------------------------- TRASH ZONE ---------------------------------
 
@@ -106,6 +107,7 @@ namespace ST {
 		
 		int mainCameraID_;
 		bool rootCreated = false;
+
 
 	public:
 		size_t objectSelected;
