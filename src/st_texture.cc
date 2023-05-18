@@ -183,10 +183,10 @@ ST::Texture::Texture(){
     set_wrap_r(Wrap::W_REPEAT);
 }
 
-bool ST::Texture::loadSource(const char* filePath, TextType t, Format f/*, int mipmaps*/) {
+bool ST::Texture::loadSource(const char* filePath, bool flip, TextType t) {
     //glGenTextures(1, &internalID);
 
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(flip);
     int numChannels = 0;
     unsigned char* image_data = stbi_load(filePath, &width_, &height_, &numChannels, 0);
     if (image_data == NULL)

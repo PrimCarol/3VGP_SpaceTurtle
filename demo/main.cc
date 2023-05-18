@@ -49,11 +49,11 @@ int main() {
 	ST::Geometry helmet_mesh;
 	helmet_mesh.loadFromFile("../others/pbr/helmet/helmet.obj");
 	ST::Texture helmet_albedo;
-	helmet_albedo.loadSource("../others/pbr/helmet/helmet_basecolor.tga");
+	helmet_albedo.loadSource("../others/pbr/helmet/helmet_basecolor.tga", true);
 	ST::Texture helmet_rougness;
-	helmet_rougness.loadSource("../others/pbr/helmet/helmet_roughness.tga");
+	helmet_rougness.loadSource("../others/pbr/helmet/helmet_roughness.tga", true);
 	ST::Texture helmet_metallic;
-	helmet_metallic.loadSource("../others/pbr/helmet/helmet_metalness.tga");
+	helmet_metallic.loadSource("../others/pbr/helmet/helmet_metalness.tga", true);
 
 	ST::Geometry sphere_mesh;
 	sphere_mesh.loadFromFile("../others/sphere.obj");

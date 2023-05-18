@@ -59,7 +59,7 @@ namespace ST {
 
 		Texture();
 		
-        bool loadSource(const char* shaderText, TextType t = TextType::T_2D, Format f = F_RGBA/*, int mipmaps = 0*/);
+        bool loadSource(const char* shaderText, bool flip = false, TextType t = TextType::T_2D);
         bool loadCubemap(const char* shaderText, Format f = F_RGBA, unsigned int face = 0);
         void init(int width, int height,
             TextType t = TextType::T_2D,
