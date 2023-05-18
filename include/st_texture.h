@@ -59,8 +59,8 @@ namespace ST {
 
 		Texture();
 		
-        bool loadSource(const char* shaderText, bool flip = false, TextType t = TextType::T_2D);
-        bool loadCubemap(const char* shaderText, Format f = F_RGBA, unsigned int face = 0);
+        bool loadSource(const char* path, bool flip = false, TextType t = TextType::T_2D);
+        bool loadCubemap(const char* path, unsigned int face = 0);
         void init(int width, int height,
             TextType t = TextType::T_2D,
             DataType dt = DT_U_BYTE,
@@ -99,7 +99,7 @@ namespace ST {
         bool forceNoMipmap;
         float borderColor[4];
 
-        void set_data(const void* data/*, unsigned int mipmap_LOD = 0*/);
+        void set_data(const void* data);
 
 		~Texture();
 		Texture(const Texture& o);
