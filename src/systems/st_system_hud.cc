@@ -291,40 +291,64 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::Text("- Texture -");
 				ImVec2 imageButtonSize(48,48);
 				if (render->material.haveAlbedo) {
-					ImGui::ImageButton((void*)(intptr_t)render->material.getAlbedo()->getID(), imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)render->material.getAlbedo()->getID(), imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Albedo);
+					}
 				}else {
-					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Albedo);
+					}
 				}
 				ImGui::SameLine();
 				ImGui::Text("Albedo");
 				if (render->material.haveNormal) {
-					ImGui::ImageButton((void*)(intptr_t)render->material.getNormal()->getID(), imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)render->material.getNormal()->getID(), imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Normal);
+					}
 				}else {
-					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Normal);
+					}
 				}
 				ImGui::SameLine();
 				ImGui::Text("Normal");
 				if (render->material.haveSpecular) {
-					ImGui::ImageButton((void*)(intptr_t)render->material.getSpecular()->getID(), imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)render->material.getSpecular()->getID(), imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Specular);
+					}
 				}else {
-					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Specular);
+					}
 				}
 				ImGui::SameLine();
 				ImGui::Text("Specular");
 				if (render->material.haveRoughness) {
-					ImGui::ImageButton((void*)(intptr_t)render->material.getRoughness()->getID(), imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)render->material.getRoughness()->getID(), imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Roughness);
+					}
 				}else {
-					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Roughness);
+					}
 				}
 				ImGui::SameLine();
 				ImGui::Text("Roughness");
 				if (render->material.haveMetallic) {
-					ImGui::ImageButton((void*)(intptr_t)render->material.getMetallic()->getID(), imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)render->material.getMetallic()->getID(), imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Metallic);
+					}
 				}else {
-					ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize);
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Metallic);
+					}
 				}
 				ImGui::SameLine();
 				ImGui::Text("Metallic");
+				
+				
+				gm.assets_->popUpTextureSelector();
+
 
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
 				glm::ivec2 textIndex = render->material.getTexIndex();

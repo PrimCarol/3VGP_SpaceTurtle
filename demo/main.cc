@@ -190,7 +190,6 @@ int main() {
 
 		// ---------------- HUD ----------------
 		if (!hideHud) {
-			assets->popUpTextureSelector();
 			ST::SystemHUD::NavBar(gm);
 			ST::SystemHUD::Hierarchy(gm);
 			ST::SystemHUD::Inspector(gm);

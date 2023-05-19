@@ -7,9 +7,19 @@
 
 #include <st_texture.h>
 
+enum class TextureToChange{
+	TTC_None,
+	TTC_Albedo,
+	TTC_Normal,
+	TTC_Specular,
+	TTC_Roughness,
+	TTC_Metallic,
+};
+
 namespace ST {
 
 	class Mesh;
+	class Material;
 
 	class SytemAssets {
 	public:
@@ -22,7 +32,11 @@ namespace ST {
 
 		ST::Texture* getTexture(std::string name);
 
-		GLuint popUpTextureSelector();
+		// ---- Texture Selector ----
+		void openTextureSelector(ST::Material& mat, TextureToChange ttc);
+		void closeTextureSelector();
+		void popUpTextureSelector();
+		
 
 		// ------ Mesh ------
 		void saveMesh(std::string path);
@@ -30,6 +44,11 @@ namespace ST {
 
 		~SytemAssets();
 	private:
+
+		// ---- Texture Selector ----
+		bool itsTextureSelectorOpened;
+		ST::Material* materialToChangeTexture;
+		TextureToChange ttc_;
 
 		std::unordered_map<std::string, std::shared_ptr<ST::Texture>> textures;
 		std::unordered_map<std::string, std::shared_ptr<ST::Mesh>> meshes;
