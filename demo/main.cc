@@ -99,15 +99,15 @@ int main() {
 
 
 	//for (int i = 0; i < 500; i++){
-	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, /*ST::RenderComponent{},*/ ST::ColliderComponent{}, ST::LightComponent{});
+	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
 	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 	//	a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
-	//	//a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	//a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets.getTexture("halo_light.png"));
-	//	//a.getComponent<ST::RenderComponent>()->setMesh(&quad_mesh);
-	//	//a.getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	//a.getComponent<ST::RenderComponent>()->castShadow_ = false;
+	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
+	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("halo_light.png"));
+	//	a.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
+	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
+	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
 	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
 	//	//a.getComponent<ST::LightComponent>()->linear_ = 0.7f;

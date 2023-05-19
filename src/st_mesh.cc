@@ -3,13 +3,25 @@
 #include <cstdio>
 #include <string>
 
+// ---- Geometry optimization ----
+#include "gtx/hash.hpp"
+namespace std {
+
+	template<>
+	struct hash<ST::VertexInfo> {
+		size_t operator() (const ST::VertexInfo& vertex) const {
+			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec2>()(vertex.uv) << 1)) >> 1);
+		}
+	};
+}
+
 ST::Mesh::Mesh(){
 	//gladLoadGL();
 	internalId = 0;
 	instanceBuffer = 0;
 	numInstances = 0;
 
-	name_ = nullptr;
+	name_ = "None";
 	cullmode_ = ST::kCull_Disable;
 	depthmode_ = ST::kDepth_Disable;
 }
@@ -19,8 +31,7 @@ const GLuint ST::Mesh::getID(){
 }
 
 const char* ST::Mesh::getName(){
-	if (!name_) { return "No Name"; }
-	return name_;
+	return name_.c_str();
 }
 
 void ST::Mesh::setName(char* n){
@@ -137,8 +148,6 @@ void SetDepthTest(ST::DepthMode d) {
 
 // ----------------- Triangle ------------------
 ST::Triangle::Triangle() : Mesh() {
-	
-	setName("Triangle");
 
 	vertices_.push_back({ {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.5f, 0.0f} });
 	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
@@ -250,8 +259,6 @@ ST::Triangle::~Triangle() {
 
 // ----------------- Quad ------------------
 ST::Quad::Quad() : Mesh() {
-
-	setName("Quad");
 
 	vertices_.push_back({ {1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
 	vertices_.push_back({ {1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
@@ -367,8 +374,6 @@ ST::Quad::~Quad() {
 
 // ----------------- Circle ------------------
 ST::Circle::Circle() : Mesh() {
-
-	setName("Circle");
 
 	const int rebolutions = 10 + 1;
 	changeRebolutions(rebolutions);
@@ -537,8 +542,6 @@ ST::Circle::~Circle() {
 // ------------------- Cube -------------------
 ST::Cube::Cube() : Mesh() {
 
-	setName("Cube");
-
 	//Front
 	vertices_.push_back({ { 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} });
 	vertices_.push_back({ { 1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} });
@@ -696,7 +699,7 @@ ST::Cube::~Cube() {
 
 // ------------------- OBJ -------------------
 ST::Geometry::Geometry() : Mesh() {
-	setName("Custom");
+	
 }
 
 #include <tiny_obj_loader.h>
@@ -721,7 +724,7 @@ bool ST::Geometry::loadFromFile(const char* path) {
 
 	//char* name = new char[shapes[0].name.length() + 1];
 	//strcpy(name, shapes[0].name.c_str());
-	setName("Custom");
+	
 
 	//for (const auto& shape : shapes){
 

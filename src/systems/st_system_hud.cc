@@ -290,6 +290,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				ImGui::DragFloat("Metallic", &render->material.metallic_, 0.01f, 0.0f, 1.0f);
 				ImGui::Text("- Texture -");
 				ImVec2 imageButtonSize(48,48);
+				ImGui::PushID("TextureAlbedo");
 				if (render->material.haveAlbedo) {
 					if (ImGui::ImageButton((void*)(intptr_t)render->material.getAlbedo()->getID(), imageButtonSize)) {
 						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Albedo);
@@ -301,6 +302,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				}
 				ImGui::SameLine();
 				ImGui::Text("Albedo");
+				ImGui::PopID();
+				ImGui::PushID("TextureNormal");
 				if (render->material.haveNormal) {
 					if (ImGui::ImageButton((void*)(intptr_t)render->material.getNormal()->getID(), imageButtonSize)) {
 						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Normal);
@@ -312,6 +315,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				}
 				ImGui::SameLine();
 				ImGui::Text("Normal");
+				ImGui::PopID();
+				ImGui::PushID("TextureSpecular");
 				if (render->material.haveSpecular) {
 					if (ImGui::ImageButton((void*)(intptr_t)render->material.getSpecular()->getID(), imageButtonSize)) {
 						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Specular);
@@ -323,6 +328,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				}
 				ImGui::SameLine();
 				ImGui::Text("Specular");
+				ImGui::PopID();
+				ImGui::PushID("TextureRoughness");
 				if (render->material.haveRoughness) {
 					if (ImGui::ImageButton((void*)(intptr_t)render->material.getRoughness()->getID(), imageButtonSize)) {
 						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Roughness);
@@ -334,6 +341,8 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				}
 				ImGui::SameLine();
 				ImGui::Text("Roughness");
+				ImGui::PopID();
+				ImGui::PushID("TextureMetallic");
 				if (render->material.haveMetallic) {
 					if (ImGui::ImageButton((void*)(intptr_t)render->material.getMetallic()->getID(), imageButtonSize)) {
 						gm.assets_->openTextureSelector(render->material, TextureToChange::TTC_Metallic);
@@ -345,32 +354,37 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 				}
 				ImGui::SameLine();
 				ImGui::Text("Metallic");
-				
+				ImGui::PopID();
 				
 				gm.assets_->popUpTextureSelector();
 
 
 				ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
-				glm::ivec2 textIndex = render->material.getTexIndex();
-				ImGui::SetNextItemWidth(50);
-				ImGui::InputInt2("TextIndex", &textIndex.x);
-				render->material.setTexIndex(textIndex);
+				//glm::ivec2 textIndex = render->material.getTexIndex();
+				//ImGui::SetNextItemWidth(50);
+				//ImGui::InputInt2("TextIndex", &textIndex.x);
+				//render->material.setTexIndex(textIndex);
 
 				ImGui::Text("---- Mesh ----");
-				ImGui::Text("Mesh: ");
-				ImGui::SameLine();
 				if (render->mesh) {
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openMeshSelector(*render);
+					}
 					ImGui::Text(render->mesh->getName());
-				}else {
+				}else{
+					if (ImGui::ImageButton((void*)(intptr_t)-1, imageButtonSize)) {
+						gm.assets_->openMeshSelector(*render);
+					}
 					ImGui::Text("None");
 				}
+				gm.assets_->popUpMeshSelector();
 
-				// ---------- Remove Button ----------
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
-				if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f))) {
-					gm.removeComponent<ST::RenderComponent>(objSeletected);
-				}
-				ImGui::PopStyleColor();
+				//// ---------- Remove Button ----------
+				//ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 1.0f));
+				//if (ImGui::Button("Remove", ImVec2(60.0f, 0.0f))) {
+				//	gm.removeComponent<ST::RenderComponent>(objSeletected);
+				//}
+				//ImGui::PopStyleColor();
 
 				ImGui::TreePop();
 			}

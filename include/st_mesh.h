@@ -3,6 +3,7 @@
 
 #include <glad.h>
 #include <vector>
+#include <string>
 #include <transform.hpp>
 
 namespace ST {
@@ -71,7 +72,7 @@ namespace ST {
 		~Mesh();
 		//Mesh(const Mesh& o);
 	protected:
-		const char* name_;
+		std::string name_;
 		GLuint internalId;
 
 		GLuint instanceBuffer;
@@ -133,15 +134,3 @@ namespace ST {
 }
 
 #endif
-
-// ---- Geometry optimization ----
-#include "gtx/hash.hpp"
-namespace std {
-
-	template<>
-	struct hash<ST::VertexInfo> {
-		size_t operator() (const ST::VertexInfo& vertex) const {
-			return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec2>()(vertex.uv) << 1)) >> 1);
-		}
-	};
-}

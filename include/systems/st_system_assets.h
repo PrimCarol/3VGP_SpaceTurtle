@@ -2,7 +2,6 @@
 #define _SPACE_TURTLE_SYSTEM_ASSETS_H_ 1
 
 #include <unordered_map>
-#include <string>
 #include <memory>
 
 #include <st_texture.h>
@@ -19,6 +18,7 @@ enum class TextureToChange{
 namespace ST {
 
 	class Mesh;
+	class RenderComponent;
 	class Material;
 
 	class SytemAssets {
@@ -42,6 +42,11 @@ namespace ST {
 		void saveMesh(std::string path);
 		ST::Mesh* getMesh(std::string name);
 
+		// ---- Mesh Selector ----
+		void openMeshSelector(ST::RenderComponent& render);
+		void closeMeshSelector();
+		void popUpMeshSelector();
+
 		~SytemAssets();
 	private:
 
@@ -50,6 +55,11 @@ namespace ST {
 		ST::Material* materialToChangeTexture;
 		TextureToChange ttc_;
 
+		// ---- Mesh Selector ----
+		bool itsMeshSelectorOpened;
+		ST::RenderComponent* renderToChangeMesh;
+
+		// ------ Map data ------
 		std::unordered_map<std::string, std::shared_ptr<ST::Texture>> textures;
 		std::unordered_map<std::string, std::shared_ptr<ST::Mesh>> meshes;
 

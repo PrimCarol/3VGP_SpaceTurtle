@@ -81,11 +81,13 @@ float distributionGGX(float NdotH, float roughtness);
 float geometrySmith(float NdotV, float NdotL, float roughtness);
 vec3 fresnelSchlick(float HdotV, vec3 baseReflectivity);
 
+float Specular;
+
 void main(){ 
 
     // ---- G-Buffer Data ----
     vec3 Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
-    float Specular = texture(gAlbedoSpec, TexCoords).a;
+    Specular = texture(gAlbedoSpec, TexCoords).a;
     float Metallic = texture(gMetalRough, TexCoords).r;
     float Roughness = texture(gMetalRough, TexCoords).g;
     vec3 FragPos = texture(gPosition, TexCoords).rgb;
@@ -187,7 +189,7 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
     float G = geometrySmith(NdotV, NdotL, Roughness);
     vec3 F = fresnelSchlick(NdotV, baseReflectivity);
 
-    vec3 specular = D * G * F;
+    vec3 specular = D * G * F * Specular;
     specular /= 1.0 * NdotV * NdotL;
 
     vec3 KD = vec3(1.0) - F;
@@ -225,7 +227,7 @@ vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Ro
         float G = geometrySmith(NdotV, NdotL, Roughness);
         vec3 F = fresnelSchlick(NdotV, baseReflectivity);
 
-        vec3 specular = D * G * F;
+        vec3 specular = D * G * F * Specular;
         specular /= 1.0 * NdotV * NdotL;
 
         vec3 KD = vec3(1.0) - F;
@@ -260,7 +262,7 @@ vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Rou
     float G = geometrySmith(NdotV, NdotL, Roughness);
     vec3 F = fresnelSchlick(NdotV, baseReflectivity);
 
-    vec3 specular = D * G * F;
+    vec3 specular = D * G * F * Specular;
     specular /= 1.0 * NdotV * NdotL;
 
     vec3 KD = vec3(1.0) - F;

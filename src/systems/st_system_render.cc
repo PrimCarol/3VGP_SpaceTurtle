@@ -361,7 +361,7 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 			// ----- Opacos -----
 			for (int i = 0; i < render.size(); i++) {
 
-				if (render[i].has_value() && transform[i].has_value()) {
+				if (render[i].has_value() && render[i]->mesh && transform[i].has_value()) {
 					if (render[i]->visible_) {
 						if (render[i]->material.getProgram() && render[i]->material.getProgram()->getID() == p.getID()) {
 							MyObjToRender thisObj;

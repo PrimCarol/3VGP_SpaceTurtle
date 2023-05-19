@@ -371,7 +371,7 @@ void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
 
 	for (int i = 0; i < render.size(); i++) {
 
-		if (render[i].has_value() && transform[i].has_value()) {
+		if (render[i].has_value() && render[i]->mesh && transform[i].has_value()) {
 			if (render[i]->visible_ && render[i]->castShadow_) {
 				Light_MyObjToRender thisObj;
 				thisObj.render_ = &render[i].value();
