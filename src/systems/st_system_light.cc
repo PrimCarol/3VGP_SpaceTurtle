@@ -211,6 +211,8 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 			
 			auto cameraTransform = gm.getComponent<ST::TransformComponent>(gm.mainCameraID());
 
+			if (!cameraTransform) { exit; }
+
 			if (tempLightData.light_->type_ == ST::Directional) {
 
 				//glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -343,16 +345,11 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				if (renderComps.at(n).has_value()) {
 					renderComps.at(n).value().material.setColor(tempLightData.light_->color_.x, tempLightData.light_->color_.y, tempLightData.light_->color_.z);
 				}
-				
-				//ST::ShadowMapping spotLightShadow;
-				//spotLightShadow.setUp(textureSize_.x, textureSize_.y);
 
-				ST::CameraComponent cam;
-				
+				ST::CameraComponent cam;				
 				cam.setPerspective(120.0f, 1.0f, 1.0f, 100.0f);
 				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), tempTransform.getUp());
 
-				//tempLightData.matrix_.push_back(cam.projection * cam.view);
 				tempLightData.light_->matrixlighShadowHigh_ = (cam.projection * cam.view);
 				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowHigh_[0][0]);
 

@@ -47,9 +47,25 @@ int main() {
 	assets->saveTexture("../others/pbr/helmet/helmet_roughness.tga", true);
 	assets->saveTexture("../others/pbr/helmet/helmet_metalness.tga", true);
 
+	assets->saveTexture("../others/pbr/basecolor_01.png");
 	assets->saveTexture("../others/pbr/basecolor_02.png");
-	assets->saveTexture("../others/pbr/roughness_02.png");
+	assets->saveTexture("../others/pbr/basecolor_03.png");
+	assets->saveTexture("../others/pbr/basecolor_04.png");
+
+	assets->saveTexture("../others/pbr/metallic_01.png");
 	assets->saveTexture("../others/pbr/metallic_02.png");
+	assets->saveTexture("../others/pbr/metallic_03.png");
+	assets->saveTexture("../others/pbr/metallic_04.png");
+
+	assets->saveTexture("../others/pbr/normal_01.png");
+	assets->saveTexture("../others/pbr/normal_02.png");
+	assets->saveTexture("../others/pbr/normal_03.png");
+	assets->saveTexture("../others/pbr/normal_04.png");
+
+	assets->saveTexture("../others/pbr/roughness_01.png");
+	assets->saveTexture("../others/pbr/roughness_02.png");
+	assets->saveTexture("../others/pbr/roughness_03.png");
+	assets->saveTexture("../others/pbr/roughness_04.png");
 	
 	// ----- Camera ------
 	ST::GameObj camera = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
@@ -57,15 +73,8 @@ int main() {
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
-	//// --- SKYBOX ----
-	gm.setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
-	//ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
-	//skybox.getComponent<ST::NameComponent>()->setName("Skybox");
-	//skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
-	//skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.skybox);
-	//skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getCubeMap("Skybox"));
-	//skybox.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
-	//skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
+	// --- SKYBOX ----
+	gm.setSkyboxTexture(assets->getCubeMap("Skybox City"));
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
@@ -75,20 +84,19 @@ int main() {
 
 	ST::GameObj testObj = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
-	testObj.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("helmet"));
+	testObj.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
 	testObj.getComponent<ST::ColliderComponent>()->setMaxPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
 	testObj.getComponent<ST::ColliderComponent>()->setMinPoint(testObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("helmet_basecolor.tga"));
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("helmet_roughness.tga"));
-	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("helmet_metalness.tga"));
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("helmet_basecolor.tga"));
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("helmet_roughness.tga"));
+	//testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("helmet_metalness.tga"));
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
 	ST::Engine::createDirectLight(gm);
 	gm.objectSelected = -1;
 
-	int HOWMANY = 1000;
-
+	/*int HOWMANY = 1000;
 	std::vector<ST::GameObj> objects;
 	for (int i = 0; i < HOWMANY; i++){
 		objects.push_back(gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}));
@@ -105,7 +113,7 @@ int main() {
 		objects.back().getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
 		objects.back().getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
 		objects.back().getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);
-	}
+	}*/
 
 
 	//for (int i = 0; i < 500; i++){

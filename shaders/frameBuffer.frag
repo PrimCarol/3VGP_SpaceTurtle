@@ -103,44 +103,72 @@ void main(){
     // Aqui iria el skybox? en el primer MIX
     vec3 reflectDir = reflect(viewDir, normals);
     vec3 skyboxColor = texture(gSkybox, -reflectDir).rgb;
-    vec3 baseReflectivity = mix(skyboxColor, Diffuse, Metallic);
+    vec3 baseReflectivity = mix(skyboxColor, Diffuse, 1.0 - Metallic);
 
     vec3 Lo = vec3(0.0);
 
-    if(u_lightType == 1){ // DirLight
-        Lo = CalcLight(u_DirectLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+    if(visualMode == 0){
+        if(u_lightType == 1){ // DirLight
+            Lo = CalcLight(u_DirectLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
         
-        vec4 PosLightSpaceHigh = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
-        shadow = CalcShadow(PosLightSpaceHigh, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
+            vec4 PosLightSpaceHigh = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
+            shadow = CalcShadow(PosLightSpaceHigh, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
 
-//        if(shadow == 1.0){
-//            vec4 PosLightSpaceMedium = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
-//            shadow = CalcShadow(PosLightSpaceMedium, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
-//        }
-//
-//        if(shadow == 1.0){
-//            vec4 PosLightSpaceLow = lightSpaceMatrix[2] * vec4(FragPos, 1.0);
-//            shadow = CalcShadow(PosLightSpaceLow, u_DirectLight.direction, Normal, FragPos, shadowMap[2]);
-//        }
+            /*if(shadow == 1.0){
+                vec4 PosLightSpaceMedium = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
+                shadow = CalcShadow(PosLightSpaceMedium, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
+            }
+
+            if(shadow == 1.0){
+                vec4 PosLightSpaceLow = lightSpaceMatrix[2] * vec4(FragPos, 1.0);
+                shadow = CalcShadow(PosLightSpaceLow, u_DirectLight.direction, Normal, FragPos, shadowMap[2]);
+            }*/
+        }
+        else if(u_lightType == 2){ // PointLight
+            Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+        }
+        else if(u_lightType == 3){ // SpotLight
+            Lo = CalcLight(u_SpotLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
+
+            vec4 PosLightSpace = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
+            shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
+        }
+
+        vec3 ambient = vec3(0.0) * Diffuse; 
+        vec3 color = ambient + Lo;
+        color = color / (color + vec3(1.0));
+        // Gamma Correction
+        color = pow(color, vec3(1.0/2.2));
+
+        FragColor = vec4(color * shadow, 1.0);
+    
+    }else if(visualMode == 1){
+        /*if(gl_FragCoord.x < 400){
+            FragColor = vec4(normals,1.0);
+        }
+        if(gl_FragCoord.x >= 400 && gl_FragCoord.x < 800){
+            FragColor = vec4(vec3(Specular),1.0);
+        }
+        if(gl_FragCoord.x >= 800 && gl_FragCoord.x < 1200){
+            FragColor = vec4(vec3(Metallic),1.0);
+        }
+        if(gl_FragCoord.x >= 1200 && gl_FragCoord.x < 1600){
+            FragColor = vec4(vec3(Roughness),1.0);
+        }*/
+        if(gl_FragCoord.x < 800){
+            if(gl_FragCoord.y < 450){
+                FragColor = vec4(normals,1.0);
+            }else{
+                FragColor = vec4(vec3(Specular),1.0);
+            }
+        }else{
+            if(gl_FragCoord.y < 450){
+                FragColor = vec4(vec3(Metallic),1.0);
+            }else{
+                FragColor = vec4(vec3(Roughness),1.0);
+            }
+        }
     }
-    else if(u_lightType == 2){ // PointLight
-        Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
-    }
-    else if(u_lightType == 3){ // SpotLight
-        Lo = CalcLight(u_SpotLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
-
-        vec4 PosLightSpace = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
-        shadow = CalcShadow(PosLightSpace, u_SpotLight.direction, Normal, FragPos, shadowMap[0]);
-    }
-  
-
-    vec3 ambient = vec3(0.0) * Diffuse; 
-    vec3 color = ambient + Lo;
-    color = color / (color + vec3(1.0));
-    // Gamma Correction
-    color = pow(color, vec3(1.0/2.2));
-
-    FragColor = vec4(color * shadow, 1.0);
 
 //    if(gl_FragCoord.x < 800){
 //        if(gl_FragCoord.y < 450){
