@@ -14,14 +14,23 @@ int main() {
 	std::shared_ptr<ST::SytemAssets> assets = std::make_shared<ST::SytemAssets>();
 	gm.assets_ = assets;
 
-	std::vector<std::string> skyboxPaths;
-	skyboxPaths.push_back("../others/skybox/city/right.jpg");
-	skyboxPaths.push_back("../others/skybox/city/left.jpg");
-	skyboxPaths.push_back("../others/skybox/city/top.jpg");
-	skyboxPaths.push_back("../others/skybox/city/bottom.jpg");
-	skyboxPaths.push_back("../others/skybox/city/front.jpg");
-	skyboxPaths.push_back("../others/skybox/city/back.jpg");
-	assets->saveTextureCubeMap("Skybox", skyboxPaths);
+	std::vector<std::string> skyboxCityPaths;
+	skyboxCityPaths.push_back("../others/skybox/city/right.jpg");
+	skyboxCityPaths.push_back("../others/skybox/city/left.jpg");
+	skyboxCityPaths.push_back("../others/skybox/city/top.jpg");
+	skyboxCityPaths.push_back("../others/skybox/city/bottom.jpg");
+	skyboxCityPaths.push_back("../others/skybox/city/front.jpg");
+	skyboxCityPaths.push_back("../others/skybox/city/back.jpg");
+	assets->saveTextureCubeMap("Skybox City", skyboxCityPaths);
+
+	std::vector<std::string> skyboxSnowPaths;
+	skyboxSnowPaths.push_back("../others/skybox/snow/right.jpg");
+	skyboxSnowPaths.push_back("../others/skybox/snow/left.jpg");
+	skyboxSnowPaths.push_back("../others/skybox/snow/top.jpg");
+	skyboxSnowPaths.push_back("../others/skybox/snow/bottom.jpg");
+	skyboxSnowPaths.push_back("../others/skybox/snow/front.jpg");
+	skyboxSnowPaths.push_back("../others/skybox/snow/back.jpg");
+	assets->saveTextureCubeMap("Skybox Snow", skyboxSnowPaths);
 
 	// --------------
 	assets->saveTexture("../others/checker_texture.jpg");
@@ -49,7 +58,7 @@ int main() {
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
 	//// --- SKYBOX ----
-	gm.setSkyboxTexture(assets->getCubeMap("Skybox"));
+	gm.setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
 	//ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
 	//skybox.getComponent<ST::NameComponent>()->setName("Skybox");
 	//skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
@@ -156,7 +165,7 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		ST::SystemRender::Render(gm, *gm.skyboxProgram); // <<------ Genera un error. o no...
+		ST::SystemRender::Render(gm, *gm.skyboxProgram);
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------

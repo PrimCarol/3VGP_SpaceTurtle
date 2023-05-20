@@ -191,7 +191,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 	static ImGuizmo::OPERATION GuizmoOperation(ImGuizmo::TRANSLATE);
 	static ImGuizmo::MODE GuizmoMode(ImGuizmo::WORLD);
 
-	ImGui::Begin("ControllersTransform");
+	/*ImGui::Begin("ControllersTransform");
 	ImVec2 sizeButton(30, 30);
 	if (ImGui::Button("T", sizeButton)) {
 		GuizmoOperation = ImGuizmo::TRANSLATE;
@@ -210,7 +210,7 @@ void ST::SystemHUD::Inspector(ST::GameObj_Manager& gm){
 			GuizmoMode = ImGuizmo::WORLD;
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 	// ImGuizmo <----------------------------------------
 
 	ImGui::Begin("Inspector");

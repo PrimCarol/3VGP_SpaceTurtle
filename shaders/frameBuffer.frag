@@ -64,8 +64,8 @@ uniform SpotLight u_SpotLight;
 uniform int u_lightType; 
 
 // Shadows
-uniform mat4 lightSpaceMatrix[6];
-uniform sampler2D shadowMap[6];
+uniform mat4 lightSpaceMatrix[3];
+uniform sampler2D shadowMap[3];
 
 // Cabeceras
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
@@ -110,8 +110,18 @@ void main(){
     if(u_lightType == 1){ // DirLight
         Lo = CalcLight(u_DirectLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
         
-        vec4 PosLightSpace = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
-        shadow = CalcShadow(PosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
+        vec4 PosLightSpaceHigh = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
+        shadow = CalcShadow(PosLightSpaceHigh, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
+
+//        if(shadow == 1.0){
+//            vec4 PosLightSpaceMedium = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
+//            shadow = CalcShadow(PosLightSpaceMedium, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
+//        }
+//
+//        if(shadow == 1.0){
+//            vec4 PosLightSpaceLow = lightSpaceMatrix[2] * vec4(FragPos, 1.0);
+//            shadow = CalcShadow(PosLightSpaceLow, u_DirectLight.direction, Normal, FragPos, shadowMap[2]);
+//        }
     }
     else if(u_lightType == 2){ // PointLight
         Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
