@@ -48,14 +48,15 @@ int main() {
 	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
-	// --- SKYBOX ----
-	ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
-	skybox.getComponent<ST::NameComponent>()->setName("Skybox");
-	skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
-	skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.skybox);
-	skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Skybox"));
-	skybox.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
-	skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
+	//// --- SKYBOX ----
+	gm.setSkyboxTexture(assets->getCubeMap("Skybox"));
+	//ST::GameObj skybox = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{});
+	//skybox.getComponent<ST::NameComponent>()->setName("Skybox");
+	//skybox.getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
+	//skybox.getComponent<ST::RenderComponent>()->material.setProgram(gm.skybox);
+	//skybox.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getCubeMap("Skybox"));
+	//skybox.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
+	//skybox.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
@@ -137,7 +138,6 @@ int main() {
 
 
 		// ---- Update ----
-		skybox.getComponent<ST::TransformComponent>()->setPosition(camera.getComponent<ST::TransformComponent>()->getPosition());
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
 
 		// ---- Camera ----
@@ -156,7 +156,7 @@ int main() {
 		myRenderTarget.end();
 		myRenderTarget.renderOnScreen(gm, *gm.framebufferProgram, &lightSystem.lights_);
 		
-		ST::SystemRender::Render(gm, *gm.skybox); // <<------ Genera un error. o no...
+		ST::SystemRender::Render(gm, *gm.skyboxProgram); // <<------ Genera un error. o no...
 		ST::SystemRender::Render(gm, *gm.unliteProgram);
 
 		// ---------------- Change Deffered Mode ----------------
@@ -184,6 +184,9 @@ int main() {
 			gm.objectSelected = ST::SystemPicking::tryPickObj(w, gm);
 		}
 		if (w.inputPressed(ST::ST_INPUT_DELETE) && gm.objectSelected != -1) {
+			if (gm.objectSelected == gm.mainCameraID()) {
+				gm.deleteMainCamera();
+			}
 			gm.deleteGameObj(gm.objectSelected);
 			gm.objectSelected = -1;
 		}

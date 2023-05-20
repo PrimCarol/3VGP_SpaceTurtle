@@ -46,6 +46,7 @@ namespace ST {
 		static void createPointLight(ST::GameObj_Manager& gm);
 		static void createSpotLight(ST::GameObj_Manager& gm);
 
+		static void createCamera(ST::GameObj_Manager& gm);
 	private:
 		Engine();
 		~Engine();

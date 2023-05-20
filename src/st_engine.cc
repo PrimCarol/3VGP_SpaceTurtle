@@ -109,3 +109,11 @@ void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
 
 	gm.objectSelected = temp.getID();
 }
+
+void ST::Engine::createCamera(ST::GameObj_Manager& gm) {
+	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+
+	temp.getComponent<ST::NameComponent>()->setName("Camera");
+
+	gm.objectSelected = temp.getID();
+}

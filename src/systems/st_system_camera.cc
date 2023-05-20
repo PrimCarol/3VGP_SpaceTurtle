@@ -129,7 +129,7 @@ void ST::SystemCamera::Movemment(ST::GameObj_Manager& gm, ST::Window& w, float M
 				lastY = mousePos.y;
 				if (w.inputPressed(ST::ST_INPUT_FIRE_SECOND)) {
 
-					cameraSpeed += w.mouseWheelY();
+					cameraSpeed += w.mouseWheelY() * 0.1f;
 					if (cameraSpeed <= 0) {
 						cameraSpeed = 0;
 					}

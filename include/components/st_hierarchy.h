@@ -12,6 +12,7 @@ namespace ST {
 		HierarchyComponent();
 		/* We pass the object that we want to be its parent */
 		void setParent(const ST::GameObj& g);
+		void removeParent(ST::GameObj& thischild);
 
 		void addChild(const ST::GameObj& g);
 

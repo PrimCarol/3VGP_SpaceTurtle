@@ -197,7 +197,7 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 	gm.shadowMapping->use();
 
 	for (int n = 0; n < lightComps.size(); n++) {
-		if (lightComps.at(n).has_value() && transformComps.at(n).has_value()) {
+		if (lightComps.at(n).has_value() && transformComps.at(n).has_value() && gm.mainCameraID() >= 0) {
 
 			//gm.shadowMapping->use(); // Active Program
 

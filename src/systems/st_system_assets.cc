@@ -79,11 +79,25 @@ void ST::SytemAssets::saveTextureCubeMap(std::string name, std::vector<std::stri
 	for (int i = 0; i < paths.size(); i++){
 		thisTex->loadCubemap(paths.at(i).data(), i);
 	}
-	textures[toLower(name)] = thisTex;
+	cubeMaps[toLower(name)] = thisTex;
 }
 
 ST::Texture* ST::SytemAssets::getTexture(std::string name){
-	return textures[toLower(name)].get();
+	//return textures[toLower(name)].get();
+	auto& iter = textures.find(toLower(name));
+	if (iter != textures.end()) {
+		return iter->second.get();
+	}
+	return nullptr;
+}
+
+ST::Texture* ST::SytemAssets::getCubeMap(std::string name){
+	//return cubeMaps[toLower(name)].get();
+	auto& iter = cubeMaps.find(toLower(name));
+	if (iter != cubeMaps.end()) {
+		return iter->second.get();
+	}
+	return nullptr;
 }
 
 void ST::SytemAssets::openTextureSelector(ST::Material& mat, TextureToChange ttc){
@@ -208,7 +222,12 @@ void ST::SytemAssets::saveMesh(std::string path){
 }
 
 ST::Mesh* ST::SytemAssets::getMesh(std::string name){
-	return meshes[toLower(name)].get();
+	//return meshes[toLower(name)].get();
+	auto& iter = meshes.find(toLower(name));
+	if (iter != meshes.end()) {
+		return iter->second.get();
+	}
+	return nullptr;
 }
 
 void ST::SytemAssets::openMeshSelector(ST::RenderComponent& render) {

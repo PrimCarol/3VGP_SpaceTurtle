@@ -83,11 +83,12 @@ namespace ST {
 		std::shared_ptr<ST::Program> framebufferSSAOProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
 		std::shared_ptr<ST::Program> g_buffer;
-		std::shared_ptr<ST::Program> skybox;
+		std::shared_ptr<ST::Program> skyboxProgram;
 
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);
 		int mainCameraID() const;
+		void deleteMainCamera();
 
 		// ******************* Test *******************
 		int drawcalls_;
@@ -108,10 +109,11 @@ namespace ST {
 		int mainCameraID_;
 		bool rootCreated = false;
 
-
 	public:
 		size_t objectSelected;
 		ST::GameObj root = createGameObj();
+		std::unique_ptr<ST::GameObj> skybox_;
+		void setSkyboxTexture(ST::Texture* tex);
 	};
 }
 

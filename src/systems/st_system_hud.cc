@@ -54,6 +54,11 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 				ImGui::EndMenu();
 			}
 
+			// Camera
+			if (ImGui::MenuItem("Camera")) {
+				ST::Engine::createCamera(gm);
+			}
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();

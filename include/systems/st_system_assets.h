@@ -31,6 +31,7 @@ namespace ST {
 		void saveTextureCubeMap(std::string name, std::vector<std::string> paths);
 
 		ST::Texture* getTexture(std::string name);
+		ST::Texture* getCubeMap(std::string name);
 
 		// ---- Texture Selector ----
 		void openTextureSelector(ST::Material& mat, TextureToChange ttc);
@@ -61,6 +62,7 @@ namespace ST {
 
 		// ------ Map data ------
 		std::unordered_map<std::string, std::shared_ptr<ST::Texture>> textures;
+		std::unordered_map<std::string, std::shared_ptr<ST::Texture>> cubeMaps;
 		std::unordered_map<std::string, std::shared_ptr<ST::Mesh>> meshes;
 
 		SytemAssets(const SytemAssets& o);

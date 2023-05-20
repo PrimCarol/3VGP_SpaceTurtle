@@ -242,6 +242,8 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 
 		if (lights) {
 
+			auto camTrans = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
+
 			// ----- Light Pass ------
 			Shader.use();
 
@@ -251,14 +253,21 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 			}
 
-			if (gm.assets_->getTexture("Skybox")) {
-				glUniform1i(Shader.getUniform("gSkybox"), 5);
-				glActiveTexture(GL_TEXTURE0 + 5);
-				glBindTexture(GL_TEXTURE_CUBE_MAP, gm.assets_->getTexture("Skybox")->getID());
+			if (gm.skybox_) {
+				ST::RenderComponent* skyboxRender = gm.skybox_->getComponent<ST::RenderComponent>();
+				ST::TransformComponent* skyboxTrans = gm.skybox_->getComponent<ST::TransformComponent>();
+				if (skyboxTrans) {
+					skyboxTrans->setPosition(camTrans.getPosition());
+				}
+				if (skyboxRender && skyboxRender->material.haveAlbedo) {
+					glUniform1i(Shader.getUniform("gSkybox"), 5);
+					glActiveTexture(GL_TEXTURE0 + 5);
+					glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxRender->material.getAlbedo()->getID());
+				}
 			}
 
 			// Temporal <--------------------------------
-			glm::vec3 viewPos = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID())->getPosition();
+			glm::vec3 viewPos = camTrans.getPosition();
 			glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
 			glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
 

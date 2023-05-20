@@ -59,8 +59,24 @@ ST::GameObj_Manager::GameObj_Manager(){
 	g_buffer->setUp("../shaders/g_buffers.vert", "../shaders/g_buffers.frag");
 
 	// ------- Create Skybox Program -------
-	skybox = std::make_unique<ST::Program>();
-	skybox->setUp("../shaders/skybox.vert", "../shaders/skybox.frag");
+	skyboxProgram = std::make_unique<ST::Program>();
+	skyboxProgram->setUp("../shaders/skybox.vert", "../shaders/skybox.frag");
+
+	// ------- Test ------
+	skybox_ = std::make_unique<ST::GameObj>(createGameObj( ST::TransformComponent{}, ST::RenderComponent{} ));
+	skybox_->getComponent<ST::HierarchyComponent>()->removeParent(*skybox_.get());
+	skybox_->getComponent<ST::TransformComponent>()->setScale({ 1000.0f,1000.0f,1000.0f });
+	skybox_->getComponent<ST::RenderComponent>()->material.setProgram(skyboxProgram);
+	skybox_->getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Front;
+}
+
+void ST::GameObj_Manager::setSkyboxTexture(ST::Texture* tex) {
+	if (skybox_) {
+		skybox_->getComponent<ST::RenderComponent>()->material.setTexture_Albedo(tex);
+		if (assets_) {
+			skybox_->getComponent<ST::RenderComponent>()->setMesh(assets_->getMesh("Cube"));
+		}
+	}
 }
 
 void ST::GameObj_Manager::deleteGameObj(int ObjID){
@@ -83,6 +99,10 @@ void ST::GameObj_Manager::setMainCamera(const ST::GameObj& cam){
 
 int ST::GameObj_Manager::mainCameraID() const{
 	return mainCameraID_;
+}
+
+void ST::GameObj_Manager::deleteMainCamera() {
+	mainCameraID_ = -1;
 }
 
 ST::GameObj_Manager::GameObj_Manager(const GameObj_Manager& o){
