@@ -19,15 +19,15 @@ ST::LightComponent::LightComponent(){
 
 	type_ = Point;
 
-	shadowHighRadius_ = 100.0f;
+	shadowHighRadius_ = 50.0f;
 	shadowHigh = std::make_shared<ST::ShadowMapping>();
 	shadowHigh->setUp( 4096, 4096);
 
-	shadowMediumRadius_ = 10.0f;
+	shadowMediumRadius_ = 100.0f;
 	shadowMedium = std::make_shared<ST::ShadowMapping>();
 	shadowMedium->setUp(1024, 1024);
 
-	shadowLowRadius_ = 10.0f;
+	shadowLowRadius_ = 200.0f;
 	shadowLow = std::make_shared<ST::ShadowMapping>();
 	shadowLow->setUp(512, 512);
 }

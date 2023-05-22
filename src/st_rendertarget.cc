@@ -243,6 +243,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		if (lights) {
 
 			auto camTrans = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
+			auto camComp = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
 
 			// ----- Light Pass ------
 			Shader.use();
@@ -270,6 +271,8 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			glm::vec3 viewPos = camTrans.getPosition();
 			glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
 			glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
+			//View Matrix
+			glUniformMatrix4fv(Shader.getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
 
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
@@ -284,14 +287,17 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
 
 					// ShadowMapping
+					glUniform1f(Shader.getUniform("cascadeEndShadow[0]"), tempLight->shadowHighRadius_);
 					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
 					glUniform1i(Shader.getUniform("shadowMap[0]"), 6);
 					glActiveTexture(GL_TEXTURE0 + 6);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
+					glUniform1f(Shader.getUniform("cascadeEndShadow[1]"), tempLight->shadowMediumRadius_);
 					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &tempLight->matrixlighShadowMedium_[0][0]);
 					glUniform1i(Shader.getUniform("shadowMap[1]"), 7);
 					glActiveTexture(GL_TEXTURE0 + 7);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowMedium->textureID());
+					glUniform1f(Shader.getUniform("cascadeEndShadow[2]"), tempLight->shadowLowRadius_);
 					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &tempLight->matrixlighShadowLow_[0][0]);
 					glUniform1i(Shader.getUniform("shadowMap[2]"), 8);
 					glActiveTexture(GL_TEXTURE0 + 8);

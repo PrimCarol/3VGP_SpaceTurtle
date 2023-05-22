@@ -12,6 +12,7 @@ uniform samplerCube gSkybox;
 
 // Necesario
 uniform vec3 viewPos;
+uniform mat4 viewMatrix;
 
 // Extra
 uniform int visualMode;
@@ -66,6 +67,7 @@ uniform int u_lightType;
 // Shadows
 uniform mat4 lightSpaceMatrix[3];
 uniform sampler2D shadowMap[3];
+uniform float cascadeEndShadow[3];
 
 // Cabeceras
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 baseReflectivity);
@@ -111,18 +113,27 @@ void main(){
         if(u_lightType == 1){ // DirLight
             Lo = CalcLight(u_DirectLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
         
-            vec4 PosLightSpaceHigh = lightSpaceMatrix[0] * vec4(FragPos, 1.0);
-            shadow = CalcShadow(PosLightSpaceHigh, u_DirectLight.direction, Normal, FragPos, shadowMap[0]);
 
-            /*if(shadow == 1.0){
-                vec4 PosLightSpaceMedium = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
-                shadow = CalcShadow(PosLightSpaceMedium, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
+            // select cascade layer
+            vec4 fragPosViewSpace = viewMatrix * vec4(FragPos, 1.0);
+            float depthValue = abs((fragPosViewSpace.z + 1.0) * 2.0);
+    
+            int layer = -1;
+            for (int i = 0; i < 3; ++i){
+                if (depthValue < cascadeEndShadow[i]){
+                    layer = i;
+                    break;
+                }
             }
+            if (layer == -1){
+                layer = 2;
+            }
+    
+            vec4 fragPosLightSpace = lightSpaceMatrix[layer] * vec4(FragPos, 1.0);
+            shadow = CalcShadow(fragPosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[layer]);
 
-            if(shadow == 1.0){
-                vec4 PosLightSpaceLow = lightSpaceMatrix[2] * vec4(FragPos, 1.0);
-                shadow = CalcShadow(PosLightSpaceLow, u_DirectLight.direction, Normal, FragPos, shadowMap[2]);
-            }*/
+            //vec4 fragPosLightSpace = lightSpaceMatrix[1] * vec4(FragPos, 1.0);
+            //shadow = CalcShadow(fragPosLightSpace, u_DirectLight.direction, Normal, FragPos, shadowMap[1]);
         }
         else if(u_lightType == 2){ // PointLight
             Lo = CalcLight(u_PointLight, viewDir, normals, FragPos, Diffuse, Roughness, Metallic, baseReflectivity);
@@ -316,7 +327,7 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
 	
     projCoords = (projCoords + 1.0) / 2.0;
 
-	float closestDepth = texture(shadowMap, projCoords.xy).r;
+	//float closestDepth = texture(shadowMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
 
 	float angle = dot(normal, lightDir);
@@ -328,13 +339,12 @@ float CalcShadow(vec4 lightPos, vec3 lightDir, vec3 normal, vec3 objPosition, sa
 	float bias = max(0.008 * (1.0 - angle), 0.000005); 
 
 	float shadow = 0.0;
+    //float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    for(int x = -1; x <= 1; ++x)
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
+    for(int x = -1; x <= 1; ++x){
+        for(int y = -1; y <= 1; ++y){
             float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
-            shadow += currentDepth - bias > pcfDepth ? 0.0 : 1.0;        
+            shadow += currentDepth - bias > pcfDepth ? 0.0 : 1.0;    
         }    
     }
     shadow /= 9.0;

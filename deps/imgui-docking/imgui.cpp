@@ -16760,6 +16760,7 @@ ImGuiID ImGui::DockSpaceOverViewport(const ImGuiViewport* viewport, ImGuiDockNod
 
             ImGui::DockBuilderFinish(dockspace_id);
             ImGui::SetWindowFocus(NULL);
+
         }
     }else {
         ImGuiID dockspace_id = GetID("DockSpace");
