@@ -30,7 +30,8 @@ void main(){
     
     // also store the per-fragment normals into the gbuffer
     gNormal = normalize(Normal);
-    if(u_haveNormal){ gNormal = texture(u_tex_Normal, TexCoords).rgb;}
+    //if(u_haveNormal){ gNormal = texture(u_tex_Normal, TexCoords).rgb;}
+    if(u_haveNormal){ gNormal = pow(texture(u_tex_Normal, TexCoords).rgb, vec3(2.2));}
 
     // and the diffuse per-fragment color
     vec4 TextureColor = color;

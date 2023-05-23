@@ -118,32 +118,25 @@ void ST::SytemAssets::popUpTextureSelector() {
 
 		ImGui::OpenPopup("TextureSelectorPopUp");
 
-		// Obtenemos el tamaño de la pantalla
-		ImVec2 center = ImGui::GetIO().DisplaySize;
-		center.x *= 0.5f;
-		center.y *= 0.5f;
-		center.x += 150.0f;
-		center.y += 70.0f;
-
-		// Configuramos el tamaño del popup al 60% del tamaño de la pantalla
-		ImVec2 size = ImGui::GetIO().DisplaySize;
-		size.x *= 0.6f;
-		size.y *= 0.6f;
-
-		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-		ImGui::SetNextWindowSize(size, ImGuiCond_Appearing);
-
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove
 									| ImGuiWindowFlags_NoResize
 									| ImGuiWindowFlags_NoCollapse
 									| ImGuiWindowFlags_NoTitleBar
 									| ImGuiWindowFlags_NoDocking;
 
+		ImVec2 windowSize = { ImGui::GetMainViewport()->Size.x * 0.8f, ImGui::GetMainViewport()->Size.y * 0.8f };
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowSize({ windowSize }, ImGuiCond_Appearing);
+
 		if (ImGui::BeginPopupModal("TextureSelectorPopUp", NULL, window_flags)){
 			
+			ImVec2 getwindowSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y};
+			
+			ImGui::SetWindowPos({ center.x - getwindowSize.x * 0.5f, center.y - getwindowSize.y * 0.5f });
+
 			float padding = 10.0f;
 			float thumbnailSize = 128.0f;
-			float cellSize = thumbnailSize + padding;
+			float cellSize = thumbnailSize + padding * 2.0f;
 
 			ImVec2 panel_size = ImGui::GetContentRegionAvail();
 			int columnCount = (int)(panel_size.x / cellSize);
@@ -246,32 +239,25 @@ void ST::SytemAssets::popUpMeshSelector() {
 
 		ImGui::OpenPopup("MeshSelectorPopUp");
 
-		// Obtenemos el tamaño de la pantalla
-		ImVec2 center = ImGui::GetIO().DisplaySize;
-		center.x *= 0.5f;
-		center.y *= 0.5f;
-		center.x += 150.0f;
-		center.y += 70.0f;
-
-		// Configuramos el tamaño del popup al 60% del tamaño de la pantalla
-		ImVec2 size = ImGui::GetIO().DisplaySize;
-		size.x *= 0.6f;
-		size.y *= 0.6f;
-
-		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-		ImGui::SetNextWindowSize(size, ImGuiCond_Appearing);
-
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove
 									| ImGuiWindowFlags_NoResize
 									| ImGuiWindowFlags_NoCollapse
 									| ImGuiWindowFlags_NoTitleBar
 									| ImGuiWindowFlags_NoDocking;
 
+		ImVec2 windowSize = { ImGui::GetMainViewport()->Size.x * 0.8f, ImGui::GetMainViewport()->Size.y * 0.8f };
+		ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+		ImGui::SetNextWindowSize({ windowSize }, ImGuiCond_Appearing);
+
 		if (ImGui::BeginPopupModal("MeshSelectorPopUp", NULL, window_flags)) {
+
+			ImVec2 getwindowSize = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y };
+
+			ImGui::SetWindowPos({ center.x - getwindowSize.x * 0.5f, center.y - getwindowSize.y * 0.5f });
 
 			float padding = 10.0f;
 			float thumbnailSize = 128.0f;
-			float cellSize = thumbnailSize + padding;
+			float cellSize = thumbnailSize + padding * 2.0f;
 
 			ImVec2 panel_size = ImGui::GetContentRegionAvail();
 			int columnCount = (int)(panel_size.x / cellSize);

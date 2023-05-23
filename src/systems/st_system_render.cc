@@ -248,31 +248,17 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 
 
 		// Material
-		GLuint mat_Uniform = -1;
-
-		mat_Uniform = p->getUniform("u_haveAlbedo");
-		glUniform1i(mat_Uniform, mat.haveAlbedo);
-		mat_Uniform = p->getUniform("u_haveSpecular");
-		glUniform1i(mat_Uniform, mat.haveSpecular);
-		mat_Uniform = p->getUniform("u_haveNormal");
-		glUniform1i(mat_Uniform, mat.haveNormal);
-		mat_Uniform = p->getUniform("u_haveRoughness");
-		glUniform1i(mat_Uniform, mat.haveRoughness);
-		mat_Uniform = p->getUniform("u_haveMetallic");
-		glUniform1i(mat_Uniform, mat.haveMetallic);
+		glUniform1i(p->getUniform("u_haveAlbedo"), mat.haveAlbedo);
+		glUniform1i(p->getUniform("u_haveSpecular"), mat.haveSpecular);
+		glUniform1i(p->getUniform("u_haveNormal"), mat.haveNormal);
+		glUniform1i(p->getUniform("u_haveRoughness"), mat.haveRoughness);
+		glUniform1i(p->getUniform("u_haveMetallic"), mat.haveMetallic);
 
 		if (mat.haveAlbedo) {
-			mat_Uniform = p->getUniform("rows");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->getRows());
-
-			mat_Uniform = p->getUniform("cols");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->getCols());
-
-			mat_Uniform = p->getUniform("sizeTileX");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
-
-			mat_Uniform = p->getUniform("sizeTileY");
-			glUniform1i(mat_Uniform, mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
+			glUniform1i(p->getUniform("rows"), mat.getAlbedo()->getRows());
+			glUniform1i(p->getUniform("cols"), mat.getAlbedo()->getCols());
+			glUniform1i(p->getUniform("sizeTileX"), mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
+			glUniform1i(p->getUniform("sizeTileY"), mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
 
 			glUniform1i(p->getUniform("u_tex_Albedo"), 0);
 			glActiveTexture(GL_TEXTURE0 + 0);
