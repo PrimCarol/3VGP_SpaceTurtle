@@ -74,7 +74,7 @@ int main() {
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
 	// --- SKYBOX ----
-	//gm.setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
+	gm.setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
 
 	ST::GameObj ground = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");

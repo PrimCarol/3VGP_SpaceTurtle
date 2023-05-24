@@ -17,6 +17,7 @@ enum class TextureToChange{
 
 namespace ST {
 
+	class GameObj_Manager;
 	class Mesh;
 	class RenderComponent;
 	class Material;
@@ -38,6 +39,10 @@ namespace ST {
 		void closeTextureSelector();
 		void popUpTextureSelector();
 		
+		// ---- CubeMap Selector ----
+		void openCubeMapSelector();
+		void closeCubeMapSelector();
+		void popUpCubeMapSelector(GameObj_Manager& gm);
 
 		// ------ Mesh ------
 		void saveMesh(std::string path);
@@ -55,6 +60,9 @@ namespace ST {
 		bool itsTextureSelectorOpened;
 		ST::Material* materialToChangeTexture;
 		TextureToChange ttc_;
+
+		// ---- CubeMap Selector ----
+		bool itsCubeMapSelectorOpened;
 
 		// ---- Mesh Selector ----
 		bool itsMeshSelectorOpened;

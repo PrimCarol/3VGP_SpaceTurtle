@@ -72,9 +72,15 @@ ST::GameObj_Manager::GameObj_Manager(){
 
 void ST::GameObj_Manager::setSkyboxTexture(ST::Texture* tex) {
 	if (skybox_) {
-		skybox_->getComponent<ST::RenderComponent>()->material.setTexture_Albedo(tex);
-		if (assets_) {
-			skybox_->getComponent<ST::RenderComponent>()->setMesh(assets_->getMesh("Cube"));
+		if (tex) {
+			skybox_->getComponent<ST::RenderComponent>()->material.setTexture_Albedo(tex);
+			if (assets_) {
+				skybox_->getComponent<ST::RenderComponent>()->setMesh(assets_->getMesh("Cube"));
+			}
+		}
+		else {
+			skybox_->getComponent<ST::RenderComponent>()->material.removeAlbedo();
+			skybox_->getComponent<ST::RenderComponent>()->setMesh(nullptr);
 		}
 	}
 }

@@ -61,9 +61,16 @@ void ST::SystemHUD::NavBar(ST::GameObj_Manager& gm){
 
 			ImGui::EndMenu();
 		}
+
+		// No furula bien
+		if (ImGui::MenuItem("Change Skybox")) {
+			gm.assets_->openCubeMapSelector();
+		}
+
 		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
+	gm.assets_->popUpCubeMapSelector(gm);
 }
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 0.0f){
