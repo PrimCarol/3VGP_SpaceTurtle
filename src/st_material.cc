@@ -71,6 +71,11 @@ void ST::Material::setTexture_Albedo(ST::Texture* texAlbedo){
 	}
 }
 
+void ST::Material::removeAlbedo(){
+	haveAlbedo = false;
+	albedo = nullptr;
+}
+
 ST::Texture* ST::Material::getNormal(){
 	return normal;
 }
@@ -80,6 +85,11 @@ void ST::Material::setTexture_Normal(ST::Texture* texNormal){
 		normal = texNormal;
 		haveNormal = true;
 	}
+}
+
+void ST::Material::removeNormal(){
+	haveNormal = false;
+	normal = nullptr;
 }
 
 ST::Texture* ST::Material::getSpecular(){
@@ -93,6 +103,11 @@ void ST::Material::setTexture_Specular(ST::Texture* texSpecular){
 	}
 }
 
+void ST::Material::removeSpecular(){
+	haveSpecular = false;
+	specular = nullptr;
+}
+
 ST::Texture* ST::Material::getRoughness(){
 	return roughness;
 }
@@ -104,6 +119,11 @@ void ST::Material::setTexture_Roughness(ST::Texture* texRoughness){
 	}
 }
 
+void ST::Material::removeRoughness(){
+	haveRoughness = false;
+	roughness = nullptr;
+}
+
 ST::Texture* ST::Material::getMetallic(){
 	return metallic;
 }
@@ -113,6 +133,11 @@ void ST::Material::setTexture_Metallic(ST::Texture* texMetallic){
 		metallic = texMetallic;
 		haveMetallic = true;
 	}
+}
+
+void ST::Material::removeMetallic(){
+	haveMetallic = false;
+	metallic = false;
 }
 
 const glm::ivec2 ST::Material::getTexIndex() const{

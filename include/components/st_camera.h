@@ -6,6 +6,7 @@
 namespace ST {
 
 	class Window;
+	class Texture;
 
 	enum CameraType {
 		kCam_Perspective,
@@ -26,10 +27,7 @@ namespace ST {
 
 		void lookAt(glm::vec3 myPos, glm::vec3 target, glm::vec3 upCamVector);
 
-		~CameraComponent();
-		//CameraComponent(const CameraComponent& o);
-	
-	//private:
+
 		CameraType type;
 
 		// Perspective
@@ -42,6 +40,8 @@ namespace ST {
 
 		float nearPlane_;
 		float farPlane_;
+
+		~CameraComponent();
 	};
 }
 

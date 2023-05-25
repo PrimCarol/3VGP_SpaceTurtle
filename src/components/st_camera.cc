@@ -1,6 +1,7 @@
 #include <components/st_camera.h>
 
 #include <st_window.h>
+#include <st_texture.h>
 
 ST::CameraComponent::CameraComponent(){
 	
@@ -46,6 +47,4 @@ void ST::CameraComponent::lookAt(glm::vec3 myPos, glm::vec3 target, glm::vec3 up
 
 ST::CameraComponent::~CameraComponent(){
 	//printf("Destroy Component: Collider\n");
-
 }
-

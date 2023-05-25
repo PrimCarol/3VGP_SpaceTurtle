@@ -21,18 +21,23 @@ namespace ST {
 
 		ST::Texture* getAlbedo();
 		void setTexture_Albedo(ST::Texture* texAlbedo);
+		void removeAlbedo();
 		
 		ST::Texture* getNormal();
 		void setTexture_Normal(ST::Texture* texNormal);
+		void removeNormal();
 
 		ST::Texture* getSpecular();
 		void setTexture_Specular(ST::Texture* texSpecular);
+		void removeSpecular();
 
 		ST::Texture* getRoughness();
 		void setTexture_Roughness(ST::Texture* texRoughness);
+		void removeRoughness();
 
 		ST::Texture* getMetallic();
 		void setTexture_Metallic(ST::Texture* texMetallic);
+		void removeMetallic();
 
 		const glm::ivec2 getTexIndex() const;
 		void setTexIndex(glm::ivec2 texIndex);

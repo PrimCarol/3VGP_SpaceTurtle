@@ -184,42 +184,64 @@ ST::Texture::Texture(){
 }
 
 bool ST::Texture::loadSource(const char* filePath, bool flip, TextType t) {
-    //glGenTextures(1, &internalID);
+    if (t != T_CUBEMAP) {
+        stbi_set_flip_vertically_on_load(flip);
+        int numChannels = 0;
+        unsigned char* image_data = stbi_load(filePath, &width_, &height_, &numChannels, 0);
+        if (image_data == NULL)
+            return false;
 
-    stbi_set_flip_vertically_on_load(flip);
+        if (numChannels == 1) {
+            format_ = F_R;
+            format_internal_ = F_R;
+        }
+        else if (numChannels == 2) {
+            format_ = F_RG;
+            format_internal_ = F_RG;
+        }
+        else if (numChannels == 3) {
+            format_ = F_RGB;
+            format_internal_ = F_RGB;
+        }
+        else if (numChannels == 4) {
+            format_ = F_RGBA;
+            format_internal_ = F_RGBA;
+        }
+
+        type_ = t;
+        set_data((const void*)image_data);
+
+        stbi_image_free(image_data);
+
+        return true;
+    }
+    return false;
+}
+
+bool ST::Texture::loadCubemap(const char* filePath, unsigned int face) {
+    
     int numChannels = 0;
     unsigned char* image_data = stbi_load(filePath, &width_, &height_, &numChannels, 0);
     if (image_data == NULL)
         return false;
-    
+
     if (numChannels == 1) {
         format_ = F_R;
         format_internal_ = F_R;
-    }else if (numChannels == 2) {
+    }
+    else if (numChannels == 2) {
         format_ = F_RG;
         format_internal_ = F_RG;
-    }else if (numChannels == 3) {
+    }
+    else if (numChannels == 3) {
         format_ = F_RGB;
         format_internal_ = F_RGB;
-    }else if(numChannels == 4) {
+    }
+    else if (numChannels == 4) {
         format_ = F_RGBA;
         format_internal_ = F_RGBA;
     }
-    
-    type_ = t;
-    set_data((const void*)image_data);
 
-    stbi_image_free(image_data);
-
-	return true;
-}
-
-bool ST::Texture::loadCubemap(const char* filePath, Format f, unsigned int face) {
-    unsigned char* image_data = stbi_load(filePath, &width_, &height_, NULL, 4);
-    if (image_data == NULL)
-        return false;
-
-    format_ = f;
     type_ = TextType::T_CUBEMAP;
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, internalID);
@@ -236,17 +258,12 @@ bool ST::Texture::loadCubemap(const char* filePath, Format f, unsigned int face)
     
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-    //glTexImage2D(
-    //    GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
-    //    0, GL_RGB, width_, height_, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data);
-
     stbi_image_free(image_data);
 
     return true;
 }
 
 void ST::Texture::init(int width, int height, TextType t, DataType dt, Format f, Format internalF) {
-    //glGenTextures(1, &internalID);
 
     width_ = width;
     height_ = height;

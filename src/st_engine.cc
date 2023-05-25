@@ -27,9 +27,8 @@ void ST::Engine::createEmptyObj(ST::GameObj_Manager& gm){
 }
 
 void ST::Engine::createTriangle(ST::GameObj_Manager& gm){
-	static ST::Triangle mesh_Triangle_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Triangle_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Triangle"));
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
@@ -37,9 +36,8 @@ void ST::Engine::createTriangle(ST::GameObj_Manager& gm){
 }
 
 void ST::Engine::createQuad(ST::GameObj_Manager& gm) {
-	static ST::Quad mesh_Quad_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Quad"));
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
@@ -47,9 +45,8 @@ void ST::Engine::createQuad(ST::GameObj_Manager& gm) {
 }
 
 void ST::Engine::createCircle(ST::GameObj_Manager& gm) {
-	static ST::Circle mesh_Circle_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Circle_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Circle"));
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
@@ -57,9 +54,17 @@ void ST::Engine::createCircle(ST::GameObj_Manager& gm) {
 }
 
 void ST::Engine::createCube(ST::GameObj_Manager& gm) {
-	static ST::Cube mesh_Cube_;
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Cube_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Cube"));
+	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
+	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+	gm.objectSelected = temp.getID();
+}
+
+void ST::Engine::createSphere(ST::GameObj_Manager& gm) {
+	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Sphere"));
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.g_buffer);
 	temp.getComponent<ST::ColliderComponent>()->setMinPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
 	temp.getComponent<ST::ColliderComponent>()->setMaxPoint(temp.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
@@ -70,10 +75,8 @@ void ST::Engine::createDirectLight(ST::GameObj_Manager& gm){
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 
 	temp.getComponent<ST::NameComponent>()->setName("Directional Light");
-	temp.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
+	temp.getComponent<ST::TransformComponent>()->setRotateX(-65.0f);
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Directional;
-	//temp.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(0.3f, 0.3f, 0.3f);
-	temp.getComponent<ST::LightComponent>()->ambient_ = glm::vec3(1.0f);
 	gm.objectSelected = temp.getID();
 }
 
@@ -83,14 +86,11 @@ void ST::Engine::createPointLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::NameComponent>()->setName("Point Light");
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Point;
 
-	static ST::Quad mesh_Quad_;
-	static ST::Texture halo_Light;
-	halo_Light.loadSource("../others/halo_light.png");
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(gm.assets_->getTexture("halo_light.png"));
 	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
 	temp.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Quad"));
 	gm.objectSelected = temp.getID();
 }
 
@@ -101,14 +101,19 @@ void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	temp.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
 
-	static ST::Quad mesh_Quad_;
-	static ST::Texture halo_Light;
-	halo_Light.loadSource("../others/halo_light.png");
 	temp.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(&halo_Light);
+	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(gm.assets_->getTexture("halo_light.png"));
 	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
 	temp.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	temp.getComponent<ST::RenderComponent>()->setMesh(&mesh_Quad_);
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Cube"));
+
+	gm.objectSelected = temp.getID();
+}
+
+void ST::Engine::createCamera(ST::GameObj_Manager& gm) {
+	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+
+	temp.getComponent<ST::NameComponent>()->setName("Camera");
 
 	gm.objectSelected = temp.getID();
 }

@@ -19,11 +19,11 @@
   - Picking System <br>
   - Deferred Pipeline <br>
   - PBR Materials <br>
+  - Assets System <br>
 
 <h2>🔶 Future additions </h2>
 
   - SSAO <br>
-  - Resourses System <br>
   - Save/Load Scene <br>
   - VR Port <br>
 

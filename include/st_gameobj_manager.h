@@ -12,15 +12,15 @@
 #include <st_rendertarget.h>
 #include <components/st_name.h>
 #include <components/st_hierarchy.h>
-//#include <st_camera.h>
 
 #include <mat4x4.hpp>
 
-#define MAX_OBJECTS 100000
+#define MAX_OBJECTS 1000
 
 namespace ST {
 	
 	class CameraComponent;
+	class SytemAssets;
 
 	// --------------------------- Manager ----------------------------
 	class GameObj_Manager{
@@ -83,14 +83,16 @@ namespace ST {
 		std::shared_ptr<ST::Program> framebufferSSAOProgram;
 		std::shared_ptr<ST::Program> postproces_blur;
 		std::shared_ptr<ST::Program> g_buffer;
-		std::shared_ptr<ST::Program> skybox;
+		std::shared_ptr<ST::Program> skyboxProgram;
 
 		// ----- Camera -----
 		void setMainCamera(const ST::GameObj& cam);
 		int mainCameraID() const;
+		void deleteMainCamera();
 
 		// ******************* Test *******************
 		int drawcalls_;
+		std::shared_ptr<ST::SytemAssets> assets_;
 
 		// ------------------------------- TRASH ZONE ---------------------------------
 
@@ -110,6 +112,8 @@ namespace ST {
 	public:
 		size_t objectSelected;
 		ST::GameObj root = createGameObj();
+		std::unique_ptr<ST::GameObj> skybox_;
+		void setSkyboxTexture(ST::Texture* tex);
 	};
 }
 

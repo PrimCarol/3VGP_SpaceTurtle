@@ -31,6 +31,9 @@ bool ST::Program::setUp(const char* vertexShader, const char* fragmentShader){
 	attach(vertex);
 	attach(fragment);
 	if (!link()) {
+		//glDetachShader(internalID, vertex.getID());
+		//glDetachShader(internalID, fragment.getID());
+		glDeleteProgram(internalID);
 		return false;
 	}
 	
@@ -63,6 +66,10 @@ bool ST::Program::setUp(const char* vertexShaderPath, const char* fragmentShader
 	attach(fragment);
 	attach(geometry);
 	if (!link()) {
+		glDeleteProgram(internalID);
+		//glDetachShader(internalID, vertex.getID());
+		//glDetachShader(internalID, fragment.getID());
+		//glDetachShader(internalID, geometry.getID());
 		return false;
 	}
 

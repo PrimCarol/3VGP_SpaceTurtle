@@ -23,6 +23,7 @@
 #include <systems/st_system_picking.h>
 #include <systems/st_system_hud.h>
 #include <systems/st_system_camera.h>
+#include <systems/st_system_assets.h>
 
 namespace ST {
 
@@ -39,11 +40,13 @@ namespace ST {
 		static void createQuad(ST::GameObj_Manager& gm);
 		static void createCircle(ST::GameObj_Manager& gm);
 		static void createCube(ST::GameObj_Manager& gm);
+		static void createSphere(ST::GameObj_Manager& gm);
 
 		static void createDirectLight(ST::GameObj_Manager& gm);
 		static void createPointLight(ST::GameObj_Manager& gm);
 		static void createSpotLight(ST::GameObj_Manager& gm);
 
+		static void createCamera(ST::GameObj_Manager& gm);
 	private:
 		Engine();
 		~Engine();

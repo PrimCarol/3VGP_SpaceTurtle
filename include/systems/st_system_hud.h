@@ -15,8 +15,6 @@ namespace ST {
 		static void Hierarchy(ST::GameObj_Manager& gm);
 		static void Stats(const ST::Window& w, const ST::GameObj_Manager& gm);
 		
-		// Work in progress...
-		//static void EditTransform(const ST::Camera& c, ST::GameObj* objSeletected = nullptr, bool editTransformDecomposition = false);
 	private:
 		SystemHUD();
 		~SystemHUD();

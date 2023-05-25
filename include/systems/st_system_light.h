@@ -23,13 +23,7 @@ namespace ST {
 
 	struct LightsStruct {
 		ST::LightComponent* light_;
-		std::vector<ST::ShadowMapping> renderTarget_;
-		std::vector<glm::mat4> matrix_;
 	};
-	//struct Light_ShadowMap {
-	//	std::vector<ST::ShadowMapping> renderTarget_;
-	//	glm::mat4 matrix_;
-	//};
 
 	class SystemLight {
 	public:

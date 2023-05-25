@@ -2,6 +2,10 @@
 #define _SPACE_TURTLE_LIGHT_H_ 1
 
 #include <vec3.hpp>
+#include <vec2.hpp>
+#include <mat4x4.hpp>
+
+#include <st_shadowmapping.h>
 
 namespace ST {
 
@@ -36,6 +40,19 @@ namespace ST {
 		// ---- Spotlight ----
 		float cutOff_;
 		float outerCutOff_;
+
+		// ---- Shadows -----
+		float shadowHighRadius_;
+		std::shared_ptr<ST::ShadowMapping> shadowHigh;
+		glm::mat4 matrixlighShadowHigh_;
+
+		float shadowMediumRadius_;
+		std::shared_ptr<ST::ShadowMapping> shadowMedium;
+		glm::mat4 matrixlighShadowMedium_;
+
+		float shadowLowRadius_;
+		std::shared_ptr<ST::ShadowMapping> shadowLow;
+		glm::mat4 matrixlighShadowLow_;
 
 		glm::vec3 color_;
 
