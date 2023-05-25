@@ -75,7 +75,7 @@ void ST::Engine::createDirectLight(ST::GameObj_Manager& gm){
 	ST::GameObj temp = gm.createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 
 	temp.getComponent<ST::NameComponent>()->setName("Directional Light");
-	temp.getComponent<ST::TransformComponent>()->setRotateX(-75.0f);
+	temp.getComponent<ST::TransformComponent>()->setRotateX(-65.0f);
 	temp.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	gm.objectSelected = temp.getID();
 }
