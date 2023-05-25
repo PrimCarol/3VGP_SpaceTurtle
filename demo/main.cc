@@ -1,8 +1,6 @@
 #include <st_engine.h>
 
 #include <imgui.h>
-#include <st_shader.h>
-#include <st_system_assets.h>
 
 int main() {
 	ST::Window w(1600, 900);
@@ -95,19 +93,13 @@ int main() {
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
 	// --- SKYBOX ----
-	gm.back()->setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
+	gm.back()->setSkyboxTexture(assets->getCubeMap("Skybox City"));
 
 	ST::GameObj ground = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
-
-	ST::GameObj wall01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	wall01.getComponent<ST::NameComponent>()->setName("Wall01");
-	wall01.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
-	wall01.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,0.0f,-20.0f });
-	wall01.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
 
 	ST::GameObj testObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
@@ -262,7 +254,7 @@ int main() {
 	}
 
 	//for (int i = 0; i < 100; i++){
-	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
+	//	ST::GameObj a = gm.at(0)->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
 	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 	//	a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));

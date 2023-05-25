@@ -65,8 +65,6 @@ namespace ST {
 		std::vector<const char*> texturesUniformName_;
 
 		GLuint internalID;
-		unsigned int ssaoFBO;
-		unsigned int rbo;
 
 		GLuint quadID;
 	};

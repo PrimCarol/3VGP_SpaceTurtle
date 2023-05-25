@@ -31,7 +31,6 @@ GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
-	glGenRenderbuffers(1, &rbo);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 	//renderType_ = RT_Color;
 	width_ = 0;
@@ -42,21 +41,6 @@ ST::RenderTarget::RenderTarget(){
 	visualMode = 0;
 
 	createQuadToRender();
-
-	// SSAO
-	glGenFramebuffers(1, &ssaoFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-
-	unsigned int ssaoColorBuffer;
-	glGenTextures(1, &ssaoColorBuffer);
-	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1600, 900, 0, GL_RED, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -176,68 +160,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 
 		glBindVertexArray(quadID);
 
-		// ----- SSAO ------
-		std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
-		std::default_random_engine generator;
-		std::vector<glm::vec3> ssaoKernel;
-		for (unsigned int i = 0; i < 64; ++i)
-		{
-			glm::vec3 sample(
-				randomFloats(generator) * 2.0 - 1.0,
-				randomFloats(generator) * 2.0 - 1.0,
-				randomFloats(generator)
-			);
-			sample = glm::normalize(sample);
-			sample *= randomFloats(generator);
-
-			float scale = (float)i / 64.0;
-			scale = (0.1f + (scale * scale)) * (0.1f - 1.0f);
-			sample *= scale;
-			ssaoKernel.push_back(sample);
-		}
-
-		std::vector<glm::vec3> ssaoNoise;
-		for (unsigned int i = 0; i < 16; i++) {
-			glm::vec3 noise(
-				randomFloats(generator) * 2.0 - 1.0,
-				randomFloats(generator) * 2.0 - 1.0,
-				0.0f);
-			ssaoNoise.push_back(noise);
-		}
-
-		unsigned int noiseTexture;
-		glGenTextures(1, &noiseTexture);
-		glBindTexture(GL_TEXTURE_2D, noiseTexture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		//glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-		////glClear(GL_COLOR_BUFFER_BIT);
-		//
-		//gm.framebufferSSAOProgram->use();
-
-		//for (int i = 0; i < textureCount(); i++) {
-		//	glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
-		//	glActiveTexture(GL_TEXTURE0 + i);
-		//	glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
-		//}
-
-		//glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), textureCount());
-		//glActiveTexture(GL_TEXTURE0 + textureCount());
-		//glBindTexture(GL_TEXTURE_2D, noiseTexture);
-
-		//auto& cam = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
-		//GLuint camProjection = gm.framebufferSSAOProgram->getUniform("u_projection_matrix");
-		//glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.projection[0][0]);
-		//glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
-
-		//glDrawArrays(GL_TRIANGLES, 0, 6); // Render Quad
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
@@ -255,28 +177,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 			}
-
-			// ---- SSAO -----
-			static float radius = 2.0f;
-			static float bias = 0.025f;
-			static int kernelSize = 64;
-			static int intensitySSO = 1;
-			/*ImGui::Begin("SSAO");
-			ImGui::DragFloat("radius", &radius);
-			ImGui::DragInt("kernelSize", &kernelSize);
-			ImGui::DragFloat("bias", &bias);
-			ImGui::DragInt("intensitySSO", &intensitySSO);
-			ImGui::End();*/
-
-			glUniform1f(glGetUniformLocation(Shader.getID(), "radius"), radius);
-			glUniform1f(glGetUniformLocation(Shader.getID(), "bias"), bias);
-			glUniform1i(glGetUniformLocation(Shader.getID(), "kernelSize"), kernelSize);
-			glUniform1i(glGetUniformLocation(Shader.getID(), "intensitySSO"), intensitySSO);
-
-			glUniform1i(Shader.getUniform("ssaoNoise"), 5);
-			glActiveTexture(GL_TEXTURE0 + 5);
-			glBindTexture(GL_TEXTURE_2D, noiseTexture);
-			glUniform3fv(glGetUniformLocation(Shader.getID(), "samples"), 64, &ssaoKernel.front().x);
 
 			if (gm.skybox_) {
 				ST::RenderComponent* skyboxRender = gm.skybox_->getComponent<ST::RenderComponent>();
@@ -340,7 +240,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					const float maxBrightness = std::fmaxf(std::fmaxf(tempLight->color_.r, tempLight->color_.g), tempLight->color_.b);
 					float radius = (-tempLight->linear_ + std::sqrt(tempLight->linear_ * tempLight->linear_ - 4 * tempLight->quadratic_ * (1.0 - (256.0f / 5.0f) * maxBrightness))) / (2.0f * tempLight->quadratic_);
 					glUniform1f(Shader.getUniform("u_PointLight.radius"), radius);
-					//glUniform1f(Shader.getUniform("u_PointLight.radius"), 5.0f);
 
 					// ShadowMapping
 					/*glUniform1f(Shader.getUniform("far_plane"), 25.0f);
@@ -348,33 +247,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					glActiveTexture(GL_TEXTURE0 + 6);
 					glBindTexture(GL_TEXTURE_CUBE_MAP, lights->at(i).renderTarget_[0].textureID());*/
 
-					// ShadowMapping
-					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &lights->at(i).matrix_[0][0][0]);
-					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &lights->at(i).matrix_[1][0][0]);
-					//glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &lights->at(i).matrix_[2][0][0]);
-					/*glUniform1i(Shader.getUniform("shadowMap[0]"), 4);
-					glActiveTexture(GL_TEXTURE0 + 4);
-					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[0].textureID());
-					glUniform1i(Shader.getUniform("shadowMap[1]"), 5);
-					glActiveTexture(GL_TEXTURE0 + 5);
-					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[1].textureID());
-					glUniform1i(Shader.getUniform("shadowMap[2]"), 6);
-					glActiveTexture(GL_TEXTURE0 + 6);
-					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[2].textureID());
-					glUniform1i(Shader.getUniform("shadowMap[3]"), 7);
-					glActiveTexture(GL_TEXTURE0 + 7);
-					glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[3].textureID());*/
-					/*char buffer[50];
-					for (unsigned int a = 0; a < lights->at(i).renderTarget_.size(); ++a) {
-						snprintf(buffer, 50, "lightSpaceMatrix[%d]", a);
-						glUniformMatrix4fv(Shader.getUniform(buffer), 1, GL_FALSE, &lights->at(i).matrix_[a][0][0]);
-						
-						snprintf(buffer, 50, "shadowMap[%d]", a);
-						glUniform1i(Shader.getUniform(buffer), a);
-						glActiveTexture(GL_TEXTURE0 + a);
-						glBindTexture(GL_TEXTURE_2D, lights->at(i).renderTarget_[a].textureID());
-					}*/
-					
 					error = glGetError();
 					if (error != GL_NO_ERROR) {
 						printf("PointLight-> OpenGL Error: %d\n", error);
@@ -432,21 +304,12 @@ GLuint ST::RenderTarget::textureID(int index){
 }
 
 void ST::RenderTarget::start() {
-	//glViewport(0, 0, width_, height_);
 	glBindFramebuffer(GL_FRAMEBUFFER, internalID);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
 
-	/*if (renderType_ == RT_Depth) {
-		glViewport(0, 0, width_, height_);
-		glClear(GL_DEPTH_BUFFER_BIT);
-	}else {
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}*/
 	glViewport(0, 0, width_, height_);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void ST::RenderTarget::end(){
@@ -457,7 +320,6 @@ void ST::RenderTarget::end(){
 }
 
 ST::RenderTarget::~RenderTarget(){
-	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &internalID);
 }
 
@@ -475,5 +337,4 @@ ST::RenderTarget::RenderTarget(const RenderTarget& o){
 	textureToRender_ = o.textureToRender_;
 
 	internalID = o.internalID;
-	rbo = o.rbo;
 }
