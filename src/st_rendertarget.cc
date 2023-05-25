@@ -29,6 +29,10 @@ GLenum RenderTypeToGL(ST::RenderTarget::RenderType rt) {
 	return aux;
 }
 
+float lerp(float a, float b, float f){
+	return a + f * (b - a);
+}
+
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
@@ -41,6 +45,40 @@ ST::RenderTarget::RenderTarget(){
 	visualMode = 0;
 
 	createQuadToRender();
+
+	std::uniform_real_distribution<float> randomFloats(0.0, 1.0); // random floats between [0.0, 1.0]
+	std::default_random_engine generator;
+	for (unsigned int i = 0; i < 64; ++i){
+		glm::vec3 sample(
+			randomFloats(generator) * 2.0 - 1.0,
+			randomFloats(generator) * 2.0 - 1.0,
+			randomFloats(generator)
+		);
+		sample = glm::normalize(sample);
+		sample *= randomFloats(generator);
+
+		float scale = (float)i / 64.0;
+		scale = lerp(0.1f, 1.0f, scale * scale);
+		sample *= scale;
+		ssaoKernel.push_back(sample);
+	}
+
+	std::vector<glm::vec3> ssaoNoise;
+	for (unsigned int i = 0; i < 16; i++){
+		glm::vec3 noise(
+			randomFloats(generator) * 2.0 - 1.0,
+			randomFloats(generator) * 2.0 - 1.0,
+			0.0f);
+		ssaoNoise.push_back(noise);
+	}
+
+	glGenTextures(1, &noiseTexture);
+	glBindTexture(GL_TEXTURE_2D, noiseTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void ST::RenderTarget::addTexture(int w, int h, const char* name, ST::Texture::Format f, ST::Texture::Format internalf, ST::Texture::DataType dt, ST::Texture::TextType t){
@@ -130,13 +168,6 @@ void ST::RenderTarget::createQuadToRender(){
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-	/*glBindFramebuffer(GL_FRAMEBUFFER, internalID);
-	unsigned int rboDepth;
-	glGenRenderbuffers(1, &rboDepth);
-	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width_, height_);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);*/
 }
 
 void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader, std::vector<ST::LightsStruct>* lights){
@@ -166,12 +197,6 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
-
-
-		gm.framebufferSSAOProgram->use();
-		glUniformMatrix4fv(Shader.getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
 
 		if (lights) {		
 
@@ -280,6 +305,37 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_+1); // si es 0, es que no hay luz.
 
 				glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
+		}
+
+		// ------ SSAO PASS ------
+		if (visualMode == 0) {
+
+			glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
+			glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+
+			gm.framebufferSSAOProgram->use();
+
+			for (int i = 0; i < textureCount(); i++) {
+				glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+			}
+
+			glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), 5);
+			glActiveTexture(GL_TEXTURE0 + 5);
+			glBindTexture(GL_TEXTURE_2D, noiseTexture);
+
+			glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
+
+			glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
+			glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
+
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render FrameBuffer SSAO PASS-> OpenGL Error: %d\n", error);
 			}
 		}
 	}

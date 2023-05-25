@@ -101,6 +101,12 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
 
+	ST::GameObj wall = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	wall.getComponent<ST::NameComponent>()->setName("Wall01");
+	wall.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
+	wall.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,0.0f,10.0f });
+	wall.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
+
 	ST::GameObj testObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
 	testObj.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("helmet"));

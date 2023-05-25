@@ -3,6 +3,7 @@
 
 #include <st_texture.h>
 #include <vector>
+#include <vec3.hpp>
 #include <memory>
 
 
@@ -65,6 +66,10 @@ namespace ST {
 		std::vector<const char*> texturesUniformName_;
 
 		GLuint internalID;
+
+		// SSAO
+		std::vector<glm::vec3> ssaoKernel;
+		unsigned int noiseTexture;
 
 		GLuint quadID;
 	};

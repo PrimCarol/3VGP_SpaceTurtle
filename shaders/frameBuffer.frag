@@ -181,7 +181,7 @@ void main(){
         //color = pow(color, vec3(1.0/2.2));
 
         FragColor = vec4(color * shadow, 1.0);
-        //FragColor = vec4(color * shadow * ambientOcclusion, 1.0);
+        //FragColor = vec4(1.0);
     
     }else if(visualMode == 1){
         /*if(gl_FragCoord.x < 400){
