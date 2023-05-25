@@ -41,6 +41,8 @@ ST::RenderTarget::RenderTarget(){
 
 	visualMode = 0;
 
+	createQuadToRender();
+
 	// SSAO
 	glGenFramebuffers(1, &ssaoFBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);

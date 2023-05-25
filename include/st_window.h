@@ -54,6 +54,7 @@ namespace ST {
 		void ColorBg(float r, float g, float b, float a = 0);
 
 		// ------ Delta Time ------
+		float CountTime() const;
 		float DeltaTime() const;
 		double FPS(const float time) const;
 

@@ -608,6 +608,10 @@ void ST::Window::ColorBg(float r, float g, float b, float a){
     color[3] = a;
 }
 
+float ST::Window::CountTime() const {
+    return clock();
+}
+
 float ST::Window::DeltaTime() const{
     return ((float)deltaTime)/1000;
 }

@@ -109,7 +109,7 @@ void main(){
     //Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
     Diffuse = pow(texture(gAlbedoSpec, TexCoords).rgb, vec3(2.2));
     Specular = texture(gAlbedoSpec, TexCoords).a;
-    Metallic = 1.0 - texture(gMetalRough, TexCoords).r;
+    Metallic = texture(gMetalRough, TexCoords).r;
     Roughness = texture(gMetalRough, TexCoords).g;
     FragPos = texture(gPosition, TexCoords).rgb;
     Normal = texture(gNormal, TexCoords).rgb;

@@ -48,11 +48,24 @@ int main() {
 	assets->saveTexture("../others/pbr/basecolor_02.png");
 	assets->saveTexture("../others/pbr/basecolor_03.png");
 	assets->saveTexture("../others/pbr/basecolor_04.png");
+	assets->saveTexture("../others/pbr/basecolor_05_01.png");
+	assets->saveTexture("../others/pbr/basecolor_05_02.png");
+	assets->saveTexture("../others/pbr/basecolor_05_03.png");
+	assets->saveTexture("../others/pbr/basecolor_05_04.png");
+	assets->saveTexture("../others/pbr/basecolor_05_05.png");
+	assets->saveTexture("../others/pbr/basecolor_05_06.png");
+	assets->saveTexture("../others/pbr/basecolor_06.png");
+	assets->saveTexture("../others/pbr/basecolor_07.png");
+	assets->saveTexture("../others/pbr/basecolor_08.png");
 
 	assets->saveTexture("../others/pbr/metallic_01.png");
 	assets->saveTexture("../others/pbr/metallic_02.png");
 	assets->saveTexture("../others/pbr/metallic_03.png");
 	assets->saveTexture("../others/pbr/metallic_04.png");
+	assets->saveTexture("../others/pbr/metallic_05.png");
+	assets->saveTexture("../others/pbr/metallic_06.png");
+	assets->saveTexture("../others/pbr/metallic_07.png");
+	assets->saveTexture("../others/pbr/metallic_08.png");
 
 	assets->saveTexture("../others/pbr/normal_01.png");
 	assets->saveTexture("../others/pbr/normal_02.png");
@@ -63,6 +76,10 @@ int main() {
 	assets->saveTexture("../others/pbr/roughness_02.png");
 	assets->saveTexture("../others/pbr/roughness_03.png");
 	assets->saveTexture("../others/pbr/roughness_04.png");
+	assets->saveTexture("../others/pbr/roughness_05.png");
+	assets->saveTexture("../others/pbr/roughness_06.png");
+	assets->saveTexture("../others/pbr/roughness_07.png");
+	assets->saveTexture("../others/pbr/roughness_08.png");
 	
 	// ---------------- Demo 1 -----------------
 
@@ -74,7 +91,7 @@ int main() {
 	// ----- Camera ------
 	ST::GameObj camera = gm.back()->createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
 	camera.getComponent<ST::NameComponent>()->setName("Camera");
-	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -5.0f);
+	camera.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, -10.0f);
 	camera.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 
 	// --- SKYBOX ----
@@ -147,21 +164,102 @@ int main() {
 		//objects.back().getComponent<ST::TransformComponent>()->setScale(1.0f, 1.0f, 1.0f);
 	}
 	
-	//int countX = 7;
-	//int countY = 7;
-	//float offset = 2.0f;
-	//for (int y = 0; y < countY; y++){
-	//	float posY = (y - (countY-1) * 0.5f) * offset;
-	//	for (int x = 0; x < countX; x++) {
-	//		float posX = (x - (countY - 1) * 0.5f) * offset;
-	//		ST::GameObj sphere = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	//		sphere.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
-	//		sphere.getComponent<ST::TransformComponent>()->setPosition(posX, posY, 20.0f);
-	//		sphere.getComponent<ST::RenderComponent>()->material.setColor(1.0f,0.0f,0.0f);
-	//		sphere.getComponent<ST::RenderComponent>()->material.roughness_ = (float)(x + 1) / countX;
-	//		sphere.getComponent<ST::RenderComponent>()->material.metallic_ = (float)(y + 1) / countY;
-	//	}
-	//}
+	// ---------------- Demo 3 -----------------
+	ST::GameObj_Manager demo3;
+	gm.push_back(&demo3);
+	gm.back()->assets_ = assets;
+
+	// ----- Camera ------
+	ST::GameObj camera3 = gm.back()->createGameObj(ST::TransformComponent{}, ST::CameraComponent{});
+	camera3.getComponent<ST::NameComponent>()->setName("Camera");
+	camera3.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
+	camera3.getComponent<ST::CameraComponent>()->setPerspective(90.0f, 1600.0f / 900.0f, 1.0f, 1000.0f);
+
+	ST::GameObj light = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	light.getComponent<ST::LightComponent>()->quadratic_ = 0.01f;	
+	light.getComponent<ST::NameComponent>()->setName("light00");
+
+	ST::GameObj light1 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	//light1.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	light1.getComponent<ST::LightComponent>()->quadratic_ = 0.01f;
+	light1.getComponent<ST::NameComponent>()->setName("light01");
+
+	ST::GameObj sphere1 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere1.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere1.getComponent<ST::TransformComponent>()->setPosition(-4.0f, 4.0f, 5.0f);
+	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_01.png"));
+	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_01.png"));
+	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_01.png"));
+
+	ST::GameObj sphere2 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere2.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere2.getComponent<ST::TransformComponent>()->setPosition(0.0f, 4.0f, 5.0f);
+	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_03.png"));
+	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_03.png"));
+	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_03.png"));
+
+	ST::GameObj sphere3 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere3.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere3.getComponent<ST::TransformComponent>()->setPosition(4.0f, 4.0f, 5.0f);
+	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_06.png"));
+	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_06.png"));
+	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_06.png"));
+
+	ST::GameObj sphere4 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere4.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere4.getComponent<ST::TransformComponent>()->setPosition(0.0f, 0.0f, 5.0f);
+	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_08.png"));
+	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_08.png"));
+	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_08.png"));
+
+	ST::GameObj sphere5 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere5.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere5.getComponent<ST::TransformComponent>()->setPosition(4.0f, 0.0f, 5.0f);
+	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_02.png"));
+	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_02.png"));
+	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_02.png"));
+
+	ST::GameObj sphere6 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere6.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere6.getComponent<ST::TransformComponent>()->setPosition(-4.0f, 0.0f, 5.0f);
+	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_07.png"));
+	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_07.png"));
+	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_07.png"));
+
+	ST::GameObj sphere_human_01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere_human_01.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere_human_01.getComponent<ST::TransformComponent>()->setPosition(4.0f, -4.0f, 5.0f);
+	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_01.png"));
+	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
+	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+	ST::GameObj sphere_human_02 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere_human_02.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere_human_02.getComponent<ST::TransformComponent>()->setPosition(0.0f, -4.0f, 5.0f);
+	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_02.png"));
+	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
+	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+	ST::GameObj sphere_human_03 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	sphere_human_03.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+	sphere_human_03.getComponent<ST::TransformComponent>()->setPosition(-4.0f, -4.0f, 5.0f);
+	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_03.png"));
+	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
+	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+
+	int countX = 7;
+	int countY = 7;
+	float offset = 3.0f;
+	for (int y = 0; y < countY; y++){
+		float posY = (y - (countY-1) * 0.5f) * offset;
+		for (int x = 0; x < countX; x++) {
+			float posX = (x - (countY - 1) * 0.5f) * offset;
+			ST::GameObj sphere = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+			sphere.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
+			sphere.getComponent<ST::TransformComponent>()->setPosition(posX, posY, 10.0f);
+			sphere.getComponent<ST::RenderComponent>()->material.setColor(1.0f,0.0f,0.0f);
+			sphere.getComponent<ST::RenderComponent>()->material.roughness_ = (float)(x + 1) / countX;
+			sphere.getComponent<ST::RenderComponent>()->material.metallic_ = (float)(y + 1) / countY;
+		}
+	}
 
 	//for (int i = 0; i < 100; i++){
 	//	ST::GameObj a = gm.createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
@@ -189,7 +287,6 @@ int main() {
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gPosition", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Position
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gNormal", ST::Texture::F_RGBA, ST::Texture::F_RGBA16, ST::Texture::DT_FLOAT); // Normal
 	myRenderTarget.addTexture(w.getWindowsWidth(), w.getWindowsHeight(), "gDepth", ST::Texture::F_DEPTH, ST::Texture::F_DEPTH, ST::Texture::DT_FLOAT); // Depth
-	myRenderTarget.createQuadToRender(); // que lo haga solo?
 	
 	int demoIndex = 0;
 	bool indexPressed = false;
@@ -217,6 +314,8 @@ int main() {
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
 
 		sunDemo2.getComponent<ST::TransformComponent>()->setRotateX(sunDemo2.getComponent<ST::TransformComponent>()->getRotation().x + (w.DeltaTime() * 20.0f));
+
+		light1.getComponent<ST::TransformComponent>()->setPosition({sinf(w.CountTime()/1000) * 10.0f, cosf(w.CountTime()/1000) * 10.0f, 0.0f });
 
 		// ---- Camera ----
 		ST::SystemCamera::Movemment(*gm.at(demoIndex), w);
