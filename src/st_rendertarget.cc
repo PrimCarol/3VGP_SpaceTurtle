@@ -153,6 +153,9 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 	
 	if (quadID != 0 && gm.mainCameraID() >= 0) {
 
+		auto camTrans = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
+		auto camComp = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
+
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR) {
 			printf("Render FrameBuffer-> OpenGL Error: %d\n", error);
@@ -164,10 +167,13 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_ONE, GL_ONE);
 
-		if (lights) {
 
-			auto camTrans = gm.getComponentVector<ST::TransformComponent>()->at(gm.mainCameraID()).value();
-			auto camComp = gm.getComponentVector<ST::CameraComponent>()->at(gm.mainCameraID()).value();
+		gm.framebufferSSAOProgram->use();
+		glUniformMatrix4fv(Shader.getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+		if (lights) {		
 
 			// ----- Light Pass ------
 			Shader.use();
