@@ -19,6 +19,7 @@
   - Picking System <br>
   - Deferred Pipeline <br>
   - PBR Materials <br>
+  - Normal Mapping <br>
   - Assets System <br>
   - SSAO <br>
 
