@@ -23,7 +23,7 @@ void main(){
     vec4 wordlPos   = texture(gPosition, TexCoords);
 
     vec3 fragPos   = (viewMatrix * vec4(wordlPos.xyz, 1.0)).xyz;
-    vec3 normal    = (viewMatrix * vec4(texture(gNormal, TexCoords).xyz, 0.0)).xyz;
+    vec3 normal    = (viewMatrix * vec4((texture(gNormal, TexCoords).xyz * 2.0 - 1.0), 0.0)).xyz;
     vec3 randomVec = texture(ssaoNoise, TexCoords * noiseScale).xyz;  
     
     vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));

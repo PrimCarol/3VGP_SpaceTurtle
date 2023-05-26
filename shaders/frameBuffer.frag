@@ -120,7 +120,7 @@ void main(){
     float shadow = 1.0;
 
     // -----------------
-    vec3 normals = normalize(Normal);
+    vec3 normals = normalize(Normal * 2.0 - 1.0);
     vec3 viewDir = normalize(viewPos - FragPos);
 
     // Aqui iria el skybox? en el primer MIX
@@ -178,7 +178,7 @@ void main(){
         //vec3 color = (ambient + Lo);
         //color = color / (color + vec3(1.0));
         // Gamma Correction
-        //color = pow(color, vec3(1.0/2.2));
+        color = pow(color, vec3(1.0/2.2));
 
         FragColor = vec4(color * shadow, 1.0);
         //FragColor = vec4(1.0);
@@ -279,7 +279,7 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
 
     float dotNV = max(dot(N, V), 0.0);
 
-    vec3 radiance = light.ambient * vec3(10.0); // Provisional
+    vec3 radiance = light.ambient * vec3(5.0); // Provisional
 
     float ndf = distributionGGX(N, H, Roughness);
     float thisgeometry = geometrySmith(N, V, LightDirToObj, Roughness);
@@ -310,7 +310,7 @@ vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Ro
         float attenuation = 1.0 / (1.0 + light.linear * distance +
     				            light.quadratic * (distance * distance));
 
-        vec3 radiance = light.ambient * attenuation * vec3(10.0); // Provisional
+        vec3 radiance = light.ambient * attenuation * vec3(5.0); // Provisional
 
         float ndf = distributionGGX(N, H, Roughness);
         float thisgeometry = geometrySmith(N, V, LightDirToObj, Roughness);
@@ -348,7 +348,7 @@ vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Rou
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);float ndf = distributionGGX(N, H, Roughness);
     float thisgeometry = geometrySmith(N, V, LightDirToObj, Roughness);
     
-    vec3 radiance = light.ambient * attenuation * intensity * vec3(10.0); // Provisional
+    vec3 radiance = light.ambient * attenuation * intensity * vec3(5.0); // Provisional
     
     vec3 fresnel = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
