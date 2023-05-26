@@ -11,7 +11,7 @@
   - Hierarchy Transformations <br>
   - Load OBJ <br>
   - Lights (Directional, Point & Spot)<br>
-  - ShadowMapping <br>
+  - ShadowMapping (Directional and Spotlight)<br>
   - Load Textures <br>
   - Texture Atlas <br>
   - Material Configuration <br>
