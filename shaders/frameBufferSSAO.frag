@@ -16,7 +16,7 @@ uniform mat4 viewMatrix;
 const vec2 noiseScale = vec2(1600.0/4.0, 900.0/4.0);
 
 float radius = 0.5;
-float bias = 0.05;
+float bias = 0.08;
 float kernelSize = 64.0;
 
 void main(){ 

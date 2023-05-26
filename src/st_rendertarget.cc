@@ -308,36 +308,36 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 			}
 		}
 
-		//// ------ SSAO PASS ------
-		//if (visualMode == 0) {
+		// ------ SSAO PASS ------
+		if (visualMode == 0) {
+			//glDisable(GL_BLEND);
+			glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
+			glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 
-		//	glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
-		//	glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			gm.framebufferSSAOProgram->use();
 
-		//	gm.framebufferSSAOProgram->use();
+			for (int i = 0; i < textureCount(); i++) {
+				glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
+				glActiveTexture(GL_TEXTURE0 + i);
+				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
+			}
 
-		//	for (int i = 0; i < textureCount(); i++) {
-		//		glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), texturesUniformName_.at(i)), i);
-		//		glActiveTexture(GL_TEXTURE0 + i);
-		//		glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
-		//	}
+			glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), 5);
+			glActiveTexture(GL_TEXTURE0 + 5);
+			glBindTexture(GL_TEXTURE_2D, noiseTexture);
 
-		//	glUniform1i(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "ssaoNoise"), 5);
-		//	glActiveTexture(GL_TEXTURE0 + 5);
-		//	glBindTexture(GL_TEXTURE_2D, noiseTexture);
+			glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
 
-		//	glUniform3fv(glGetUniformLocation(gm.framebufferSSAOProgram->getID(), "samples"), 64, &ssaoKernel.front().x);
+			glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
+			glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
 
-		//	glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
-		//	glUniformMatrix4fv(gm.framebufferSSAOProgram->getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		//	GLenum error = glGetError();
-		//	if (error != GL_NO_ERROR) {
-		//		printf("Render FrameBuffer SSAO PASS-> OpenGL Error: %d\n", error);
-		//	}
-		//}
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR) {
+				printf("Render FrameBuffer SSAO PASS-> OpenGL Error: %d\n", error);
+			}
+		}
 	}
 
 	GLenum error = glGetError();

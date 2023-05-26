@@ -113,8 +113,8 @@ int main() {
 	wall.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
 	wall.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,0.0f,10.0f });
 	wall.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
-	wall.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("bricks_albedo.png"));
-	wall.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("bricks_normal.png"));
+	//wall.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("bricks_albedo.png"));
+	//wall.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("bricks_normal.png"));
 
 	ST::GameObj testObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");

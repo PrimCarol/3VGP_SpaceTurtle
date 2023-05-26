@@ -127,8 +127,16 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 	GLuint actualProgram = 0;
 	GLuint actualMeshRendering = 0;
 	
-	bool actualhaveTexture = false;
-	GLuint actualTextureRendering = 0;
+	bool actualhaveTextureAlbedo = false;
+	bool actualhaveTextureNormal = false;
+	bool actualhaveTextureSpecular = false;
+	bool actualhaveTextureRoughness = false;
+	bool actualhaveTextureMetallic = false;
+	GLuint actualTextureAlbedo = 0;
+	GLuint actualTextureNormal = 0;
+	GLuint actualTextureSpecular = 0;
+	GLuint actualTextureRoughness = 0;
+	GLuint actualTextureMetallic = 0;
 
 	int lastIndice = 0;
 	bool firstTime = true;
@@ -147,9 +155,26 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 			}
 			actualMeshRendering = objs[i].render_->mesh->getID();
 			if (objs[i].render_->material.haveAlbedo) {
-				actualhaveTexture = true;
-				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+				actualhaveTextureAlbedo = true;
+				actualTextureAlbedo = objs[i].render_->material.getAlbedo()->getID();
 			}
+			if (objs[i].render_->material.haveNormal) {
+				actualhaveTextureNormal = true;
+				actualTextureNormal = objs[i].render_->material.getNormal()->getID();
+			}
+			if (objs[i].render_->material.haveSpecular) {
+				actualhaveTextureSpecular = true;
+				actualTextureSpecular = objs[i].render_->material.getSpecular()->getID();
+			}
+			if (objs[i].render_->material.haveRoughness) {
+				actualhaveTextureRoughness = true;
+				actualTextureRoughness = objs[i].render_->material.getRoughness()->getID();
+			}
+			if (objs[i].render_->material.haveMetallic) {
+				actualhaveTextureMetallic = true;
+				actualTextureMetallic = objs[i].render_->material.getMetallic()->getID();
+			}
+
 			firstTime = false;
 		}
 
@@ -164,20 +189,92 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 
 		// Si unos tenian textura y este no, o al reves.
 		if (objs[i].render_->material.haveAlbedo) {
-			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureRendering) {
-				actualTextureRendering = objs[i].render_->material.getAlbedo()->getID();
+			if (objs[i].render_->material.getAlbedo()->getID() != actualhaveTextureAlbedo) {
+				actualTextureAlbedo = objs[i].render_->material.getAlbedo()->getID();
 				popInstances = true;
 			}
-			if (objs[i].render_->material.haveAlbedo != actualhaveTexture) {
+			if (objs[i].render_->material.haveAlbedo != actualhaveTextureAlbedo) {
 				popInstances = true;
 			}
-			actualhaveTexture = objs[i].render_->material.haveAlbedo;
+			actualhaveTextureAlbedo = objs[i].render_->material.haveAlbedo;
 		} else {
-			if (actualhaveTexture) {
+			if (actualhaveTextureAlbedo) {
 				popInstances = true;
-				actualTextureRendering = 0;
+				actualTextureAlbedo = 0;
 			}
-			actualhaveTexture = false;
+			actualhaveTextureAlbedo = false;
+		}
+
+		if (objs[i].render_->material.haveNormal) {
+			if (objs[i].render_->material.getNormal()->getID() != actualhaveTextureNormal) {
+				actualTextureNormal = objs[i].render_->material.getNormal()->getID();
+				popInstances = true;
+			}
+			if (objs[i].render_->material.haveNormal != actualhaveTextureNormal) {
+				popInstances = true;
+			}
+			actualhaveTextureNormal = objs[i].render_->material.haveNormal;
+		}
+		else {
+			if (actualhaveTextureNormal) {
+				popInstances = true;
+				actualTextureNormal = 0;
+			}
+			actualhaveTextureNormal = false;
+		}
+
+		if (objs[i].render_->material.haveSpecular) {
+			if (objs[i].render_->material.getSpecular()->getID() != actualhaveTextureSpecular) {
+				actualTextureSpecular = objs[i].render_->material.getSpecular()->getID();
+				popInstances = true;
+			}
+			if (objs[i].render_->material.haveSpecular != actualhaveTextureSpecular) {
+				popInstances = true;
+			}
+			actualhaveTextureSpecular = objs[i].render_->material.haveSpecular;
+		}
+		else {
+			if (actualhaveTextureSpecular) {
+				popInstances = true;
+				actualTextureSpecular = 0;
+			}
+			actualhaveTextureSpecular = false;
+		}
+
+		if (objs[i].render_->material.haveRoughness) {
+			if (objs[i].render_->material.getRoughness()->getID() != actualhaveTextureRoughness) {
+				actualTextureRoughness = objs[i].render_->material.getRoughness()->getID();
+				popInstances = true;
+			}
+			if (objs[i].render_->material.haveRoughness != actualhaveTextureRoughness) {
+				popInstances = true;
+			}
+			actualhaveTextureRoughness = objs[i].render_->material.haveRoughness;
+		}
+		else {
+			if (actualhaveTextureRoughness) {
+				popInstances = true;
+				actualTextureRoughness = 0;
+			}
+			actualhaveTextureRoughness = false;
+		}
+
+		if (objs[i].render_->material.haveMetallic) {
+			if (objs[i].render_->material.getMetallic()->getID() != actualhaveTextureMetallic) {
+				actualTextureMetallic = objs[i].render_->material.getMetallic()->getID();
+				popInstances = true;
+			}
+			if (objs[i].render_->material.haveMetallic != actualhaveTextureMetallic) {
+				popInstances = true;
+			}
+			actualhaveTextureMetallic = objs[i].render_->material.haveMetallic;
+		}
+		else {
+			if (actualhaveTextureMetallic) {
+				popInstances = true;
+				actualTextureMetallic = 0;
+			}
+			actualhaveTextureMetallic = false;
 		}
 
 		// Si tienen una mesh distinta.
@@ -230,74 +327,62 @@ bool ST::SystemRender::setUpUniforms(ST::Material& mat, ST::TransformComponent* 
 	const ST::Program* p = nullptr;
 
 	p = mat.getProgram();
-	//if (p) {
-		p->use();
 
-		// ------ Camara -------
-		GLuint camPos = p->getUniform("u_view_pos");
-		glm::vec3 camTransPos = cam.transform_->getPosition();
-		glUniform3fv(camPos, 1, &camTransPos.x);
-		GLuint camView = p->getUniform("u_view_matrix");
-		glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.cam_->view[0][0]);
-		GLuint camProjection = p->getUniform("u_projection_matrix");
-		glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.cam_->projection[0][0]);
-		GLuint camVP = p->getUniform("u_vp_matrix");
-		glm::mat4 cam_m_vp = cam.cam_->projection * cam.cam_->view;
-		glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
-		// ------ Camara -------
+	p->use();
+
+	// ------ Camara -------
+	GLuint camPos = p->getUniform("u_view_pos");
+	glm::vec3 camTransPos = cam.transform_->getPosition();
+	glUniform3fv(camPos, 1, &camTransPos.x);
+	GLuint camView = p->getUniform("u_view_matrix");
+	glUniformMatrix4fv(camView, 1, GL_FALSE, &cam.cam_->view[0][0]);
+	GLuint camProjection = p->getUniform("u_projection_matrix");
+	glUniformMatrix4fv(camProjection, 1, GL_FALSE, &cam.cam_->projection[0][0]);
+	GLuint camVP = p->getUniform("u_vp_matrix");
+	glm::mat4 cam_m_vp = cam.cam_->projection * cam.cam_->view;
+	glUniformMatrix4fv(camVP, 1, GL_FALSE, &cam_m_vp[0][0]);
+	// ------ Camara -------
 
 
-		// Material
-		glUniform1i(p->getUniform("u_haveAlbedo"), mat.haveAlbedo);
-		glUniform1i(p->getUniform("u_haveSpecular"), mat.haveSpecular);
-		glUniform1i(p->getUniform("u_haveNormal"), mat.haveNormal);
-		glUniform1i(p->getUniform("u_haveRoughness"), mat.haveRoughness);
-		glUniform1i(p->getUniform("u_haveMetallic"), mat.haveMetallic);
+	// Material
+	glUniform1i(p->getUniform("u_haveAlbedo"), mat.haveAlbedo);
+	glUniform1i(p->getUniform("u_haveSpecular"), mat.haveSpecular);
+	glUniform1i(p->getUniform("u_haveNormal"), mat.haveNormal);
+	glUniform1i(p->getUniform("u_haveRoughness"), mat.haveRoughness);
+	glUniform1i(p->getUniform("u_haveMetallic"), mat.haveMetallic);
 
-		if (mat.haveAlbedo) {
-			glUniform1i(p->getUniform("rows"), mat.getAlbedo()->getRows());
-			glUniform1i(p->getUniform("cols"), mat.getAlbedo()->getCols());
-			glUniform1i(p->getUniform("sizeTileX"), mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
-			glUniform1i(p->getUniform("sizeTileY"), mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
+	if (mat.haveAlbedo) {
+		glUniform1i(p->getUniform("rows"), mat.getAlbedo()->getRows());
+		glUniform1i(p->getUniform("cols"), mat.getAlbedo()->getCols());
+		glUniform1i(p->getUniform("sizeTileX"), mat.getAlbedo()->width() / mat.getAlbedo()->getCols());
+		glUniform1i(p->getUniform("sizeTileY"), mat.getAlbedo()->height() / mat.getAlbedo()->getRows());
 
-			glUniform1i(p->getUniform("u_tex_Albedo"), 0);
-			glActiveTexture(GL_TEXTURE0 + 0);
-			glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
-		}
-		if (mat.haveNormal) {
-			glUniform1i(p->getUniform("u_tex_Normal"), 1);
-			glActiveTexture(GL_TEXTURE0 + 1);
-			glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
-		}
-		if (mat.haveSpecular) {
-			glUniform1i(p->getUniform("u_tex_Specular"), 2);
-			glActiveTexture(GL_TEXTURE0 + 2);
-			glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());			
-		}
-		if (mat.haveRoughness) {
-			glUniform1i(p->getUniform("u_tex_Roughness"), 3);
-			glActiveTexture(GL_TEXTURE0 + 3);
-			glBindTexture(GL_TEXTURE_2D, mat.getRoughness()->getID());
-		}
-		if (mat.haveMetallic) {
-			glUniform1i(p->getUniform("u_tex_Metallic"), 4);
-			glActiveTexture(GL_TEXTURE0 + 4);
-			glBindTexture(GL_TEXTURE_2D, mat.getMetallic()->getID());
-		}
-
-		// Shadow Mapping
-		/*glUniform1i(p->getUniform("u_haveShadowMap"), gm.haveShadowMap_);
-		
-		glUniform1i(p->getUniform("shadowMap"), 3);
+		glUniform1i(p->getUniform("u_tex_Albedo"), 0);
+		glActiveTexture(GL_TEXTURE0 + 0);
+		glBindTexture(mat.getAlbedo()->getTypeGL(), mat.getAlbedo()->getID());
+	}
+	if (mat.haveNormal) {
+		glUniform1i(p->getUniform("u_tex_Normal"), 1);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, mat.getNormal()->getID());
+	}
+	if (mat.haveSpecular) {
+		glUniform1i(p->getUniform("u_tex_Specular"), 2);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, mat.getSpecular()->getID());			
+	}
+	if (mat.haveRoughness) {
+		glUniform1i(p->getUniform("u_tex_Roughness"), 3);
 		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, gm.shadowMap.textureID());
+		glBindTexture(GL_TEXTURE_2D, mat.getRoughness()->getID());
+	}
+	if (mat.haveMetallic) {
+		glUniform1i(p->getUniform("u_tex_Metallic"), 4);
+		glActiveTexture(GL_TEXTURE0 + 4);
+		glBindTexture(GL_TEXTURE_2D, mat.getMetallic()->getID());
+	}
 
-		GLuint lighSpaceMatrix = p->getUniform("lightSpaceMatrix");
-		glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &gm.shadowMappingMatTest[0][0]);*/
-
-		return true;
-	//}
-	//return false;
+	return true;
 }
 
 void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {

@@ -146,34 +146,36 @@ void SetDepthTest(ST::DepthMode d) {
 
 void ST::Mesh::CalculateTangentBitangent() {
 	for (size_t i = 0; i < indices_.size(); i += 3){
-		VertexInfo& v0 = vertices_[indices_[i]];
-		VertexInfo& v1 = vertices_[indices_[i + 1]];
-		VertexInfo& v2 = vertices_[indices_[i + 2]];
+		if (indices_[i] < vertices_.size() && indices_[i+1] < vertices_.size() && indices_[i+2] < vertices_.size()) {
+			VertexInfo& v0 = vertices_[indices_[i]];
+			VertexInfo& v1 = vertices_[indices_[i + 1]];
+			VertexInfo& v2 = vertices_[indices_[i + 2]];
 
-		glm::vec3 edge1 = v1.pos - v0.pos;
-		glm::vec3 edge2 = v2.pos - v0.pos;
-		glm::vec2 deltaUV1 = v1.uv - v0.uv;
-		glm::vec2 deltaUV2 = v2.uv - v0.uv;
+			glm::vec3 edge1 = v1.pos - v0.pos;
+			glm::vec3 edge2 = v2.pos - v0.pos;
+			glm::vec2 deltaUV1 = v1.uv - v0.uv;
+			glm::vec2 deltaUV2 = v2.uv - v0.uv;
 
-		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
 
-		glm::vec3 tangent, bitangent;
+			glm::vec3 tangent, bitangent;
 
-		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+			tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+			tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+			tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
 
-		bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-		bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-		bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+			bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+			bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+			bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
 
-		v0.tangent += tangent;
-		v1.tangent += tangent;
-		v2.tangent += tangent;
+			v0.tangent += tangent;
+			v1.tangent += tangent;
+			v2.tangent += tangent;
 
-		v0.bitangent += bitangent;
-		v1.bitangent += bitangent;
-		v2.bitangent += bitangent;
+			v0.bitangent += bitangent;
+			v1.bitangent += bitangent;
+			v2.bitangent += bitangent;
+		}
 	}
 
 	// Normalización de las tangentes y bitangentes
@@ -514,7 +516,7 @@ void ST::Circle::changeRebolutions(int r){
 
 		float angle = (3.1415926535f * 2.0f) / (rebolutions_ - 1);
 
-		for (int i = 0; i < rebolutions_ - 1; i++) {
+		for (int i = 0; i < rebolutions_ -1; i++) {
 			VertexInfo vertices;
 			// Pos
 			vertices.pos.x = (float)cos(angle * i);
