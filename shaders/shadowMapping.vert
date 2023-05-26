@@ -1,8 +1,8 @@
 #version 330 core
 // Mesh
-layout (location=0) in vec3 a_position;
+layout (location = 0) in vec3 a_position;
 // Instancing Transformations
-layout (location = 3) in mat4 instance_Matrix;
+layout (location = 5) in mat4 instance_Matrix;
 
 uniform mat4 u_lightSpaceMatrix;
 

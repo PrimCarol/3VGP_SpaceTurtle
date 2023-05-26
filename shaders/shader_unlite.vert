@@ -4,11 +4,14 @@
 layout (location=0) in vec3 a_position;
 layout (location=1) in vec3 a_normal;
 layout (location=2) in vec2 a_uv;
-// Instancing Transformations
-layout (location = 3) in mat4 instance_Matrix;
-layout (location = 7) in vec4 instance_Color;
-layout (location = 8) in ivec2 instance_TexIndex;
-layout (location = 9) in float instance_MatShininess;
+layout (location=3) in vec3 a_tangent;
+layout (location=4) in vec3 a_bitangent;
+
+layout (location = 5) in mat4 instance_Matrix;
+layout (location = 9) in vec4 instance_Color;
+layout (location = 10) in ivec2 instance_TexIndex; // Texture Atlas
+layout (location = 11) in float instance_MatRoughness;
+layout (location = 12) in float instance_MatMetallic;
 
 // Basic Info
 uniform mat4 u_view_matrix;
@@ -35,7 +38,7 @@ out float shininess;
 
 void main(){
 	color = instance_Color;
-	shininess = instance_MatShininess;
+	//shininess = instance_MatShininess;
 
 	float row = instance_TexIndex.y % rows;
 	float column = instance_TexIndex.x % cols;

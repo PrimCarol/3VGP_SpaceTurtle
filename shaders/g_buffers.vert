@@ -3,18 +3,22 @@
 layout (location=0) in vec3 a_position;
 layout (location=1) in vec3 a_normal;
 layout (location=2) in vec2 a_uv;
+layout (location=3) in vec3 a_tangent;
+layout (location=4) in vec3 a_bitangent;
 
-layout (location = 3) in mat4 instance_Matrix;
-layout (location = 7) in vec4 instance_Color;
-layout (location = 8) in ivec2 instance_TexIndex; // Texture Atlas
-layout (location = 9) in float instance_MatRoughness;
-layout (location = 10) in float instance_MatMetallic;
+layout (location = 5) in mat4 instance_Matrix;
+layout (location = 9) in vec4 instance_Color;
+layout (location = 10) in ivec2 instance_TexIndex; // Texture Atlas
+layout (location = 11) in float instance_MatRoughness;
+layout (location = 12) in float instance_MatMetallic;
 
 out vec3 FragPos;
 out vec2 TexCoords;
 out vec3 Normal;
 out float Roughness;
 out float Metallic;
+
+out mat3 TBN;
 
 out vec4 color;
 
@@ -49,6 +53,12 @@ void main(){
 	TexCoords = tempUV;
     //TexCoords = a_uv;
 	// ----------------------
+
+	// Tangent and Bitangent
+	vec3 T = normalize(mat3(instance_Matrix) * a_tangent);
+    vec3 B = normalize(mat3(instance_Matrix) * a_bitangent);
+    vec3 N = normalize(mat3(instance_Matrix) * a_normal);
+    TBN = mat3(T, B, N);
 
 	Roughness = instance_MatRoughness;
 	Metallic = instance_MatMetallic;

@@ -295,7 +295,12 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
 
     vec3 thisspecular = numerator / max(denominator,0.001);
 
-    return (kD * Albedo / PI + thisspecular) * radiance * dotNL;
+    float spec = pow(max(dot(N, H), 0.0), 64.0);
+    vec3 specularColor = vec3(0.3) * spec * light.specular; 
+    vec3 specularResult = Specular * specularColor;
+
+
+    return (kD * Albedo / PI + (thisspecular * specularResult)) * radiance * dotNL;
 }
 
 vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 F0){
@@ -326,7 +331,12 @@ vec3 CalcLight(PointLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Ro
 
         vec3 thisspecular = numerator / max(denominator,0.001);
 
-        return (kD * Albedo / PI + thisspecular) * radiance * dotNL;
+        float spec = pow(max(dot(N, H), 0.0), 64.0);
+        vec3 specularColor = vec3(0.3) * spec * light.specular; 
+        vec3 specularResult = Specular * specularColor;
+
+
+        return (kD * Albedo / PI + (thisspecular * specularResult)) * radiance * dotNL;
 
     }
     discard;
@@ -362,7 +372,12 @@ vec3 CalcLight(SpotLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Rou
 
     vec3 thisspecular = numerator / max(denominator,0.001);
 
-    return (kD * Albedo / PI + thisspecular) * radiance * dotNL;
+    float spec = pow(max(dot(N, H), 0.0), 64.0);
+    vec3 specularColor = vec3(0.3) * spec * light.specular; 
+    vec3 specularResult = Specular * specularColor;
+
+
+    return (kD * Albedo / PI + (thisspecular * specularResult)) * radiance * dotNL;
 }
 
 // Shadows

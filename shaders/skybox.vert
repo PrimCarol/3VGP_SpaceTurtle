@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec3 a_position;
 
-layout (location = 3) in mat4 instance_Matrix;
+layout (location = 5) in mat4 instance_Matrix;
 
 out vec3 TexCoords;
 

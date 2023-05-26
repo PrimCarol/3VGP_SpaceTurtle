@@ -35,6 +35,9 @@ int main() {
 	assets->saveTexture("../others/Cat_diffuse.jpg", true);
 	assets->saveTexture("../others/Cat_specular.png", true);
 
+	assets->saveTexture("../others/bricks_albedo.png");
+	assets->saveTexture("../others/bricks_normal.png");
+
 	assets->saveMesh("../others/cat_petit.obj");
 
 	assets->saveMesh("../others/pbr/helmet/helmet.obj");
@@ -69,6 +72,10 @@ int main() {
 	assets->saveTexture("../others/pbr/normal_02.png");
 	assets->saveTexture("../others/pbr/normal_03.png");
 	assets->saveTexture("../others/pbr/normal_04.png");
+	assets->saveTexture("../others/pbr/normal_05.png");
+	assets->saveTexture("../others/pbr/normal_06.png");
+	assets->saveTexture("../others/pbr/normal_07.png");
+	assets->saveTexture("../others/pbr/normal_08.png");
 
 	assets->saveTexture("../others/pbr/roughness_01.png");
 	assets->saveTexture("../others/pbr/roughness_02.png");
@@ -106,6 +113,8 @@ int main() {
 	wall.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
 	wall.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,0.0f,10.0f });
 	wall.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
+	wall.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("bricks_albedo.png"));
+	wall.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("bricks_normal.png"));
 
 	ST::GameObj testObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
@@ -139,6 +148,7 @@ int main() {
 
 	ST::GameObj sunDemo2 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	sunDemo2.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	sunDemo2.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
 
 	int HOWMANY = 200000;
 	std::vector<ST::GameObj> objects;
@@ -188,6 +198,7 @@ int main() {
 	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_01.png"));
 	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_01.png"));
 	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_01.png"));
+	sphere1.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_01.png"));
 
 	ST::GameObj sphere2 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere2.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -195,6 +206,7 @@ int main() {
 	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_03.png"));
 	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_03.png"));
 	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_03.png"));
+	sphere2.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_03.png"));
 
 	ST::GameObj sphere3 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere3.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -202,6 +214,7 @@ int main() {
 	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_06.png"));
 	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_06.png"));
 	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_06.png"));
+	sphere3.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_06.png"));
 
 	ST::GameObj sphere4 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere4.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -209,6 +222,7 @@ int main() {
 	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_08.png"));
 	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_08.png"));
 	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_08.png"));
+	sphere4.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_08.png"));
 
 	ST::GameObj sphere5 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere5.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -216,6 +230,7 @@ int main() {
 	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_02.png"));
 	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_02.png"));
 	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_02.png"));
+	sphere5.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_02.png"));
 
 	ST::GameObj sphere6 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere6.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -223,6 +238,7 @@ int main() {
 	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_07.png"));
 	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_07.png"));
 	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_07.png"));
+	sphere6.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_07.png"));
 
 	ST::GameObj sphere_human_01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere_human_01.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
@@ -230,18 +246,21 @@ int main() {
 	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_01.png"));
 	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
 	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+	sphere_human_01.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_05.png"));
 	ST::GameObj sphere_human_02 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere_human_02.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
 	sphere_human_02.getComponent<ST::TransformComponent>()->setPosition(0.0f, -4.0f, 5.0f);
 	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_02.png"));
 	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
 	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+	sphere_human_02.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_05.png"));
 	ST::GameObj sphere_human_03 = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	sphere_human_03.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("sphere"));
 	sphere_human_03.getComponent<ST::TransformComponent>()->setPosition(-4.0f, -4.0f, 5.0f);
 	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("basecolor_05_03.png"));
 	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Roughness(assets->getTexture("roughness_05.png"));
 	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("metallic_05.png"));
+	sphere_human_03.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_05.png"));
 
 	int countX = 7;
 	int countY = 7;
@@ -259,16 +278,16 @@ int main() {
 		}
 	}
 
-	//for (int i = 0; i < 100; i++){
+	//for (int i = 0; i < 20; i++){
 	//	ST::GameObj a = gm.at(0)->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
 
 	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
 	//	a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
-	//	//a.getComponent<ST::RenderComponent>()->material.setProgram(gm.unliteProgram);
-	//	//a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("halo_light.png"));
-	//	//a.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
-	//	//a.getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	//a.getComponent<ST::RenderComponent>()->castShadow_ = false;
+	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.at(0)->unliteProgram);
+	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("halo_light.png"));
+	//	a.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
+	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
+	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
 	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
 	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
 	//	//a.getComponent<ST::LightComponent>()->linear_ = 0.7f;
@@ -310,8 +329,6 @@ int main() {
 
 		// ---- Update ----
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
-
-		sunDemo2.getComponent<ST::TransformComponent>()->setRotateX(sunDemo2.getComponent<ST::TransformComponent>()->getRotation().x + (w.DeltaTime() * 20.0f));
 
 		light1.getComponent<ST::TransformComponent>()->setPosition({sinf(w.CountTime()/1000) * 10.0f, cosf(w.CountTime()/1000) * 10.0f, 0.0f });
 

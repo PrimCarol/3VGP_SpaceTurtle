@@ -10,6 +10,8 @@ in vec3 Normal;
 in float Roughness;
 in float Metallic;
 
+in mat3 TBN;
+
 in vec4 color;
 
 uniform bool u_haveAlbedo;
@@ -25,29 +27,37 @@ uniform sampler2D u_tex_Metallic;
 
 void main(){
     
-    // store the fragment position vector in the first gbuffer texture
     gPosition = FragPos;
     
-    // also store the per-fragment normals into the gbuffer
-    gNormal = normalize(Normal);
-    if(u_haveNormal){ gNormal = texture(u_tex_Normal, TexCoords).rgb;}
-    gNormal = gNormal * 0.5 + 0.5;
+    // NORMALS
+    //gNormal = normalize(Normal);
+    //if(u_haveNormal){ gNormal = texture(u_tex_Normal, TexCoords).rgb;}
+    //gNormal = gNormal * 0.5 + 0.5;
 
-    // and the diffuse per-fragment color
+    vec3 normal = normalize(Normal);
+    if(u_haveNormal){
+        normal = texture(u_tex_Normal, TexCoords).rgb;
+        normal = normalize(TBN * (normal * 2.0 - 1.0));
+    }else{
+        normal = normal * 0.5 + 0.5;
+    }
+    gNormal = normal;
+
+    // COLOR
     vec4 TextureColor = color;
     gAlbedoSpec = color;
 	if(u_haveAlbedo){ gAlbedoSpec.rgb = (pow(texture(u_tex_Albedo, TexCoords), vec4(vec3(2.2),1.0)) * color).rgb;}
 
-    // store specular intensity in gAlbedoSpec's alpha component
+    // SPECULAR
 	gAlbedoSpec.a = 1.0;
 	if(u_haveSpecular){	gAlbedoSpec.a = texture(u_tex_Specular, TexCoords).r;}
 
+    // METALLIC
     gMetalRough.r = Metallic; // Metalic 0.0 a 1.0
     if(u_haveMetallic){ gMetalRough.r = texture(u_tex_Metallic, TexCoords).r; }
 
+    // ROUGHNESS
     gMetalRough.g = Roughness; // Roughtness 0.1 a 1.0
     if(Roughness < 0.1){gMetalRough.g = 0.1;}
     if(u_haveRoughness){ gMetalRough.g = texture(u_tex_Roughness, TexCoords).r; }
-
-    //
 }

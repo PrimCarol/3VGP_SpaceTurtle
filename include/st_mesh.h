@@ -12,6 +12,8 @@ namespace ST {
 		glm::vec3 pos;
 		glm::vec3 normal;
 		glm::vec2 uv;
+		glm::vec3 tangent;
+		glm::vec3 bitangent;
 
 		bool VertexInfo::operator==(const VertexInfo& other) const {
 			return (pos == other.pos && normal == other.normal && uv == other.uv);
@@ -72,6 +74,9 @@ namespace ST {
 		~Mesh();
 		//Mesh(const Mesh& o);
 	protected:
+
+		void CalculateTangentBitangent();
+
 		std::string name_;
 		GLuint internalId;
 
