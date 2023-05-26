@@ -20,10 +20,10 @@
   - Deferred Pipeline <br>
   - PBR Materials <br>
   - Assets System <br>
+  - SSAO <br>
 
 <h2>🔶 Future additions </h2>
 
-  - SSAO <br>
   - Save/Load Scene <br>
   - VR Port <br>
 
