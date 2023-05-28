@@ -105,7 +105,7 @@ void ST::Engine::createSpotLight(ST::GameObj_Manager& gm) {
 	temp.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(gm.assets_->getTexture("halo_light.png"));
 	temp.getComponent<ST::RenderComponent>()->material.translucent = true;
 	temp.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Cube"));
+	temp.getComponent<ST::RenderComponent>()->setMesh(gm.assets_->getMesh("Quad"));
 
 	gm.objectSelected = temp.getID();
 }

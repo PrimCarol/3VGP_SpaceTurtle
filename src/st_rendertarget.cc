@@ -309,10 +309,13 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 
 		// ------ SSAO PASS ------
-		if (visualMode == 0) {
-			//glDisable(GL_BLEND);
-			glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
-			glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+		if (visualMode == 0 || visualMode == 4) {
+			if (visualMode == 0) {
+				glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
+				glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			}else {
+				glDisable(GL_BLEND);
+			}
 
 			gm.framebufferSSAOProgram->use();
 

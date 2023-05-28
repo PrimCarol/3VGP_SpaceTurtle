@@ -42,6 +42,7 @@ int main() {
 
 	assets->saveMesh("../others/pbr/helmet/helmet.obj");
 	assets->saveTexture("../others/pbr/helmet/helmet_basecolor.tga", true);
+	assets->saveTexture("../others/pbr/helmet/helmet_normal.tga", true);
 	assets->saveTexture("../others/pbr/helmet/helmet_roughness.tga", true);
 	assets->saveTexture("../others/pbr/helmet/helmet_metalness.tga", true);
 
@@ -107,14 +108,10 @@ int main() {
 	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
+	ground.getComponent<ST::RenderComponent>()->material.roughness_ = 0.5f;
+	ground.getComponent<ST::RenderComponent>()->material.metallic_ = 0.6f;
+	ground.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("normal_06.png"));
 
-	ST::GameObj wall = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
-	wall.getComponent<ST::NameComponent>()->setName("Wall01");
-	wall.getComponent<ST::TransformComponent>()->setScale({ 10.0f,10.0f,1.0f });
-	wall.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,0.0f,10.0f });
-	wall.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
-	//wall.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("bricks_albedo.png"));
-	//wall.getComponent<ST::RenderComponent>()->material.setTexture_Normal(assets->getTexture("bricks_normal.png"));
 
 	ST::GameObj testObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	testObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
@@ -127,10 +124,39 @@ int main() {
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
-	ST::Engine::createDirectLight(*gm.back());
-	gm.back()->objectSelected = -1;
-
+	ST::GameObj spot01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot01.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	spot01.getComponent<ST::LightComponent>()->linear_ = 0.001f;
+	spot01.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
+	spot01.getComponent<ST::LightComponent>()->set_Color({ 1.0f,0.0f,0.0f });
 	
+	spot01.getComponent<ST::TransformComponent>()->setRotateX(-45.0f);
+	spot01.getComponent<ST::TransformComponent>()->setPosition({0.0f,4.0f,-15.0f});
+
+	ST::GameObj spot02 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot02.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	spot02.getComponent<ST::LightComponent>()->linear_ = 0.001f;
+	spot02.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
+	spot02.getComponent<ST::LightComponent>()->set_Color({ 0.0f,1.0f,0.0f });
+
+	spot02.getComponent<ST::TransformComponent>()->setRotateX(-45.0f);
+	spot02.getComponent<ST::TransformComponent>()->setRotateY(-80.0f);
+	spot02.getComponent<ST::TransformComponent>()->setPosition({ -15.0f,4.0f,0.0f });
+
+	ST::GameObj spot03 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot03.getComponent<ST::LightComponent>()->type_ = ST::Spot;
+	spot03.getComponent<ST::LightComponent>()->linear_ = 0.001f;
+	spot03.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
+	spot03.getComponent<ST::LightComponent>()->set_Color({ 0.0f,0.0f,1.0f });
+
+	spot03.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
+	spot03.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,15.0f,0.0f });
+	
+	ST::GameObj sun01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	sun01.getComponent<ST::LightComponent>()->type_ = ST::Directional;
+	sun01.getComponent<ST::LightComponent>()->set_Color({ 0.3f,0.3f,0.3f });
+	sun01.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
+
 	// ---------------- Demo 2 -----------------
 	ST::GameObj_Manager demo2;
 	gm.push_back(&demo2);

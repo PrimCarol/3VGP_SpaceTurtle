@@ -87,14 +87,6 @@ float geometrySmith(vec3 normal, vec3 viewDir, vec3 lightDir, float roughness);
 vec3 fresnelSchlick(float cosTheta, vec3 F0);
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 
-// ---- SSAO -----
-vec3 calcularSSAO();
-uniform int kernelSize;
-uniform float radius;
-uniform float bias;
-uniform int intensitySSO;
-uniform vec3 samples[64];
-
 vec3 Diffuse;
 float Specular;
 float Metallic;
@@ -120,7 +112,7 @@ void main(){
     float shadow = 1.0;
 
     // -----------------
-    vec3 normals = normalize(Normal * 2.0 - 1.0);
+    vec3 normals = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
 
     // Aqui iria el skybox? en el primer MIX
@@ -132,9 +124,6 @@ void main(){
     F0 = mix(F0, Diffuse, Metallic);
 
     vec3 outRadiance = vec3(0.0);
-
-    //vec3 ambientOcclusion = calcularSSAO();
-    //Diffuse *= ambientOcclusion;
 
     if(visualMode == 0){
         if(u_lightType == 1){ // DirLight
@@ -177,6 +166,7 @@ void main(){
         color = color / (color + 1.0);
         //vec3 color = (ambient + Lo);
         //color = color / (color + vec3(1.0));
+       
         // Gamma Correction
         color = pow(color, vec3(1.0/2.2));
 
@@ -184,34 +174,11 @@ void main(){
         //FragColor = vec4(1.0);
     
     }else if(visualMode == 1){
-        /*if(gl_FragCoord.x < 400){
-            FragColor = vec4(normals,1.0);
-        }
-        if(gl_FragCoord.x >= 400 && gl_FragCoord.x < 800){
-            FragColor = vec4(vec3(Specular),1.0);
-        }
-        if(gl_FragCoord.x >= 800 && gl_FragCoord.x < 1200){
-            FragColor = vec4(vec3(Metallic),1.0);
-        }
-        if(gl_FragCoord.x >= 1200 && gl_FragCoord.x < 1600){
-            FragColor = vec4(vec3(Roughness),1.0);
-        }*/
-        if(gl_FragCoord.x < 800){
-            if(gl_FragCoord.y < 450){
-                FragColor = vec4(normals,1.0);
-            }else{
-                FragColor = vec4(vec3(Specular),1.0);
-            }
-        }else{
-            if(gl_FragCoord.y < 450){
-                FragColor = vec4(vec3(Metallic),1.0);
-            }else{
-                FragColor = vec4(vec3(Roughness),1.0);
-            }
-        }
+       FragColor = vec4(normals,1.0);
     }else if(visualMode == 2){
-        //vec3 ambientOcclusion = calcularSSAO();
-        //FragColor = vec4(vec3(ambientOcclusion),1.0);
+        FragColor = vec4(vec3(Metallic),1.0);
+    }else if(visualMode == 3){
+        FragColor = vec4(vec3(Roughness),1.0);
     }
 
 //    if(gl_FragCoord.x < 800){
@@ -426,94 +393,4 @@ float CalcShadow(vec3 lightPos, vec3 objPosition, samplerCube shadowMap){
     float shadow = currentDepth - bias > closestDepth ? 0.0 : 1.0;
 
 	return clamp(shadow, 0.0, 1.0);
-}
-
-vec3 calcularSSAO(){
-
-    const vec2 noiseScale = vec2(1600.0/4.0, 900.0/4.0);
-    //int kernelSize = 64;
-    //float radius = 0.5;
-    //float bias = 0.025;
-
-//    vec4 fragPos   = texture(gPosition, TexCoords);
-//    vec3 normal    = texture(gNormal, TexCoords).rgb;
-//    vec3 randomVec = normalize(texture(ssaoNoise, TexCoords * noiseScale)).xyz;  
-//    
-//    vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));
-//    vec3 bitangent = cross(normal, tangent);
-//    mat3 TBN       = mat3(tangent, bitangent, normal);  
-    
-    
-//    float occlusion = 0.0;
-//    for(int i = 0; i < kernelSize; ++i){
-//    	vec3 samplePos = TBN * samples[i];
-//    	samplePos = fragPos + samplePos * radius; 
-//    	
-//    	vec4 offset = vec4(samplePos, 1.0);	
-//    	offset      = viewMatrix * offset;
-//    	offset.xyz /= offset.w;
-//    	offset.xyz  = offset.xyz * 0.5 + 0.5;
-//    
-//    	float sampleDepth = texture(gPosition, offset.xy).z;
-//    
-//    	occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0);
-//        //float rangeCheck = abs(fragPos.z - sampleDepth) < radius ? 1.0 : 0.0;
-//        //occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;
-//    }
-//    //occlusion = 1.0 - (occlusion / kernelSize);
-    
-//    float occlusion = 0.0;
-//
-//    vec3 samplePos = fragPos + (TBN * vec3(1.0)) * radius;
-//
-//    vec4 offset = vec4(samplePos, 1.0);	
-//    offset      = projMatrix * offset;
-//    offset.xyz /= offset.w;
-//    //offset.xyz  = offset.xyz * 0.5 + 0.5;
-//
-//    float sampleDepth = texture(gPosition, offset.xy).z;
-//    //occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0);
-//
-//    return vec3(offset);
-
-//    vec4 wordlPos   = texture(gPosition, TexCoords);
-//    vec3 normal    = (viewMatrix * vec4(texture(gNormal, TexCoords).xyz, 0.0)).xyz;
-//    vec3 randomVec = texture(ssaoNoise, TexCoords * noiseScale).xyz;  
-//    
-//    vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));
-//    vec3 binormal = cross(normal, tangent);
-//    mat3 TBN       = mat3(tangent, binormal, normal);
-//
-//    return vec3(tangent.x);
-
-    vec4 wordlPos   = texture(gPosition, TexCoords);
-
-    vec3 fragPosSSAO = (viewMatrix * vec4(wordlPos.xyz, 1.0)).xyz;
-    vec3 normal    = (viewMatrix * vec4(texture(gNormal, TexCoords).xyz, 0.0)).xyz;
-    vec3 randomVec = texture(ssaoNoise, TexCoords * noiseScale).xyz;  
-    
-    vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));
-    vec3 binormal  = cross(normal, tangent);
-    mat3 TBN       = mat3(tangent, binormal, normal);
-    
-    float occlusion = 0.0;
-    for(int i = 0; i < kernelSize; i++){
-        vec3 thissample = fragPosSSAO + TBN * samples[i] * radius;
-        vec4 screenSample = projMatrix * vec4(thissample, 1.0);
-        screenSample.xyz /= screenSample.w;
-        screenSample.xyz = screenSample.xyz * 0.5 + 0.5;
-
-        //vec4 fragPosViewSpace = viewMatrix * vec4(FragPos, 1.0);
-        //float depthValue = abs((fragPosViewSpace.z + 1.0) * 2.0);
-
-        vec3 sampleWorldPos = texture(gPosition, screenSample.xy).xyz;
-        float sampleDepth = (viewMatrix * vec4(sampleWorldPos, 1.0)).z;
-        float rangeCheck = smoothstep(0.0,1.0, radius / abs(fragPosSSAO.z - sampleDepth));
-        occlusion += (sampleDepth >= thissample.z + bias ? 1.0 : 0.0) * rangeCheck;
-
-    }
-
-    //float result = pow(1.0 - occlusion / kernelSize, intensitySSO);
-    float result = 1.0 - occlusion / kernelSize;
-    return vec3(result,result,result);
 }

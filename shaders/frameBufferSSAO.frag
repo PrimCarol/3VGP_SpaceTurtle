@@ -16,14 +16,18 @@ uniform mat4 viewMatrix;
 const vec2 noiseScale = vec2(1600.0/4.0, 900.0/4.0);
 
 float radius = 0.5;
-float bias = 0.08;
+float bias = 0.15;
 float kernelSize = 64.0;
 
 void main(){ 
+
+    if(texture(gNormal, TexCoords).xyz == vec3(0.0)){discard;}
+
     vec4 wordlPos   = texture(gPosition, TexCoords);
 
     vec3 fragPos   = (viewMatrix * vec4(wordlPos.xyz, 1.0)).xyz;
-    vec3 normal    = (viewMatrix * vec4((texture(gNormal, TexCoords).xyz * 2.0 - 1.0), 0.0)).xyz;
+    //vec3 normal    = (viewMatrix * vec4((texture(gNormal, TexCoords).xyz * 2.0 - 1.0), 0.0)).xyz;
+    vec3 normal    = (viewMatrix * vec4((texture(gNormal, TexCoords).xyz), 0.0)).xyz;
     vec3 randomVec = texture(ssaoNoise, TexCoords * noiseScale).xyz;  
     
     vec3 tangent   = normalize(randomVec - normal * dot(randomVec, normal));

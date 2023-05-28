@@ -30,16 +30,12 @@ void main(){
     gPosition = FragPos;
     
     // NORMALS
-    //gNormal = normalize(Normal);
-    //if(u_haveNormal){ gNormal = texture(u_tex_Normal, TexCoords).rgb;}
-    //gNormal = gNormal * 0.5 + 0.5;
-
     vec3 normal = normalize(Normal);
     if(u_haveNormal){
         normal = texture(u_tex_Normal, TexCoords).rgb;
         normal = normalize(TBN * (normal * 2.0 - 1.0));
     }else{
-        normal = normal * 0.5 + 0.5;
+        normal = (normal * 2.0 - 1.0);
     }
     gNormal = normal;
 
