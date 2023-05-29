@@ -41,42 +41,43 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 			if (tempLightData.light_->type_ == ST::Directional) {
 
-				glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				//glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), cameraTransform->getUp());
+				if (tempLightData.light_->haveShadow_) {
+					glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					//glm::mat4 view = lookAt(cameraTransform->getPosition() + 20.0f * -tempLightData.light_->direction_, cameraTransform->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f), cameraTransform->getUp());
 
-				// ----- Hight Res Shadow -----
-				glm::mat4 orthoHigh = glm::ortho(-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_,
-												-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_,
-												-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_);
-				tempLightData.light_->matrixlighShadowHigh_ = (orthoHigh * view);
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowHigh_[0][0]);
-				//Render Scene.
-				tempLightData.light_->shadowHigh->start();
-				setUpRender(gm);
-				tempLightData.light_->shadowHigh->end();
+					// ----- Hight Res Shadow -----
+					glm::mat4 orthoHigh = glm::ortho(-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_,
+						-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_,
+						-tempLightData.light_->shadowHighRadius_, tempLightData.light_->shadowHighRadius_);
+					tempLightData.light_->matrixlighShadowHigh_ = (orthoHigh * view);
+					glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowHigh_[0][0]);
+					//Render Scene.
+					tempLightData.light_->shadowHigh->start();
+					setUpRender(gm);
+					tempLightData.light_->shadowHigh->end();
 
-				// ----- Mid Res Shadow -----
-				glm::mat4 orthoMedium = glm::ortho(-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_,
-													-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_,
-													-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_);
-				tempLightData.light_->matrixlighShadowMedium_ = (orthoMedium * view);
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowMedium_[0][0]);
-				//Render Scene.
-				tempLightData.light_->shadowMedium->start();
-				setUpRender(gm);
-				tempLightData.light_->shadowMedium->end();
+					// ----- Mid Res Shadow -----
+					glm::mat4 orthoMedium = glm::ortho(-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_,
+						-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_,
+						-tempLightData.light_->shadowMediumRadius_, tempLightData.light_->shadowMediumRadius_);
+					tempLightData.light_->matrixlighShadowMedium_ = (orthoMedium * view);
+					glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowMedium_[0][0]);
+					//Render Scene.
+					tempLightData.light_->shadowMedium->start();
+					setUpRender(gm);
+					tempLightData.light_->shadowMedium->end();
 
-				// ----- Low Res Shadow -----
-				glm::mat4 orthoLow = glm::ortho(-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_,
-												-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_,
-												-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_);
-				tempLightData.light_->matrixlighShadowLow_ = (orthoLow * view);
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowLow_[0][0]);
-				//Render Scene.
-				tempLightData.light_->shadowLow->start();
-				setUpRender(gm);
-				tempLightData.light_->shadowLow->end();
-
+					// ----- Low Res Shadow -----
+					glm::mat4 orthoLow = glm::ortho(-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_,
+						-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_,
+						-tempLightData.light_->shadowLowRadius_, tempLightData.light_->shadowLowRadius_);
+					tempLightData.light_->matrixlighShadowLow_ = (orthoLow * view);
+					glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowLow_[0][0]);
+					//Render Scene.
+					tempLightData.light_->shadowLow->start();
+					setUpRender(gm);
+					tempLightData.light_->shadowLow->end();
+				}
 			}
 			else if (tempLightData.light_->type_ == ST::Point) {
 
@@ -129,17 +130,19 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 					renderComps.at(n).value().material.setColor(tempLightData.light_->color_.x, tempLightData.light_->color_.y, tempLightData.light_->color_.z);
 				}
 
-				ST::CameraComponent cam;				
-				cam.setPerspective(120.0f, 1.0f, 1.0f, 100.0f);
-				cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), tempTransform.getUp());
+				if (tempLightData.light_->haveShadow_) {
+					ST::CameraComponent cam;
+					cam.setPerspective(120.0f, 1.0f, 1.0f, 100.0f);
+					cam.lookAt(tempLightData.light_->position_, tempLightData.light_->position_ + tempTransform.getForward(), tempTransform.getUp());
 
-				tempLightData.light_->matrixlighShadowHigh_ = (cam.projection * cam.view);
-				glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowHigh_[0][0]);
+					tempLightData.light_->matrixlighShadowHigh_ = (cam.projection * cam.view);
+					glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.light_->matrixlighShadowHigh_[0][0]);
 
-				//Render Scene.
-				tempLightData.light_->shadowHigh->start();
-				setUpRender(gm);
-				tempLightData.light_->shadowHigh->end();
+					//Render Scene.
+					tempLightData.light_->shadowHigh->start();
+					setUpRender(gm);
+					tempLightData.light_->shadowHigh->end();
+				}
 			}
 
 			lights_.push_back(tempLightData);

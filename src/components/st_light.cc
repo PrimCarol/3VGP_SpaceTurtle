@@ -19,17 +19,7 @@ ST::LightComponent::LightComponent(){
 
 	type_ = Point;
 
-	shadowHighRadius_ = 50.0f;
-	shadowHigh = std::make_shared<ST::ShadowMapping>();
-	shadowHigh->setUp( 4096, 4096);
-
-	shadowMediumRadius_ = 100.0f;
-	shadowMedium = std::make_shared<ST::ShadowMapping>();
-	shadowMedium->setUp(1024, 1024);
-
-	shadowLowRadius_ = 200.0f;
-	shadowLow = std::make_shared<ST::ShadowMapping>();
-	shadowLow->setUp(512, 512);
+	haveShadow_ = false;
 }
 
 void ST::LightComponent::set_Color(const glm::vec3 c){
@@ -44,6 +34,24 @@ void ST::LightComponent::set_Color(const float r, const float g, const float b){
 	ambient_ = color_;
 	diffuse_ = color_;
 	specular_ = color_;
+}
+
+void ST::LightComponent::activeShadows(){
+	if (!haveShadow_) {
+		haveShadow_ = true;
+
+		shadowHighRadius_ = 50.0f;
+		shadowHigh = std::make_shared<ST::ShadowMapping>();
+		shadowHigh->setUp(4096, 4096);
+
+		shadowMediumRadius_ = 100.0f;
+		shadowMedium = std::make_shared<ST::ShadowMapping>();
+		shadowMedium->setUp(1024, 1024);
+
+		shadowLowRadius_ = 200.0f;
+		shadowLow = std::make_shared<ST::ShadowMapping>();
+		shadowLow->setUp(512, 512);
+	}
 }
 
 ST::LightComponent::~LightComponent(){

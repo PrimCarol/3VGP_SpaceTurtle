@@ -66,6 +66,9 @@ namespace ST {
 		std::shared_ptr<ST::ShadowMapping> shadowLow;
 		glm::mat4 matrixlighShadowLow_;
 
+		bool haveShadow_;
+		void activeShadows();
+
 		glm::vec3 color_;
 
 		~LightComponent();

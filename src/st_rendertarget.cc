@@ -247,22 +247,24 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, std::vector<ST::L
 					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
 					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
 
-					// ShadowMapping
-					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[0]"), tempLight->shadowHighRadius_);
-					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
-					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
-					glActiveTexture(GL_TEXTURE0 + 7);
-					glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
-					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[1]"), tempLight->shadowMediumRadius_);
-					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &tempLight->matrixlighShadowMedium_[0][0]);
-					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[1]"), 8);
-					glActiveTexture(GL_TEXTURE0 + 8);
-					glBindTexture(GL_TEXTURE_2D, tempLight->shadowMedium->textureID());
-					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[2]"), tempLight->shadowLowRadius_);
-					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &tempLight->matrixlighShadowLow_[0][0]);
-					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[2]"), 9);
-					glActiveTexture(GL_TEXTURE0 + 9);
-					glBindTexture(GL_TEXTURE_2D, tempLight->shadowLow->textureID());
+					if (tempLight->haveShadow_) {
+						// ShadowMapping
+						glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[0]"), tempLight->shadowHighRadius_);
+						glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
+						glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
+						glActiveTexture(GL_TEXTURE0 + 7);
+						glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
+						glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[1]"), tempLight->shadowMediumRadius_);
+						glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &tempLight->matrixlighShadowMedium_[0][0]);
+						glUniform1i(gm.framebufferProgram->getUniform("shadowMap[1]"), 8);
+						glActiveTexture(GL_TEXTURE0 + 8);
+						glBindTexture(GL_TEXTURE_2D, tempLight->shadowMedium->textureID());
+						glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[2]"), tempLight->shadowLowRadius_);
+						glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &tempLight->matrixlighShadowLow_[0][0]);
+						glUniform1i(gm.framebufferProgram->getUniform("shadowMap[2]"), 9);
+						glActiveTexture(GL_TEXTURE0 + 9);
+						glBindTexture(GL_TEXTURE_2D, tempLight->shadowLow->textureID());
+					}
 				}
 				// Point
 				if (tempLight->type_ == ST::Point) {
@@ -300,11 +302,13 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, std::vector<ST::L
 					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
 					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
 
-					// ShadowMapping
-					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
-					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
-					glActiveTexture(GL_TEXTURE0 + 7);
-					glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
+					if (tempLight->haveShadow_) {
+						// ShadowMapping
+						glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
+						glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
+						glActiveTexture(GL_TEXTURE0 + 7);
+						glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
+					}
 				}
 
 				glUniform1i(gm.framebufferProgram->getUniform("u_lightType"), tempLight->type_+1); // si es 0, es que no hay luz.

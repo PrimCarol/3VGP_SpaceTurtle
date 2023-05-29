@@ -174,11 +174,11 @@ void main(){
         //FragColor = vec4(1.0);
     
     }else if(visualMode == 1){
-       FragColor = vec4(normals,1.0);
+        FragColor = vec4(texture(gAlbedoSpec, TexCoords).rgb,1.0);
     }else if(visualMode == 2){
-        FragColor = vec4(vec3(Metallic),1.0);
+        FragColor = vec4(normals,1.0);
     }else if(visualMode == 3){
-        FragColor = vec4(vec3(Roughness),1.0);
+        FragColor = vec4(FragPos,1.0);
     }
 
 //    if(gl_FragCoord.x < 800){

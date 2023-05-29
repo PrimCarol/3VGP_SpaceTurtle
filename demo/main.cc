@@ -126,6 +126,7 @@ int main() {
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
 
 	ST::GameObj spot01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot01.getComponent<ST::LightComponent>()->activeShadows();
 	spot01.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	spot01.getComponent<ST::LightComponent>()->linear_ = 0.001f;
 	spot01.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
@@ -135,6 +136,7 @@ int main() {
 	spot01.getComponent<ST::TransformComponent>()->setPosition({0.0f,4.0f,-15.0f});
 
 	ST::GameObj spot02 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot02.getComponent<ST::LightComponent>()->activeShadows();
 	spot02.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	spot02.getComponent<ST::LightComponent>()->linear_ = 0.001f;
 	spot02.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
@@ -144,6 +146,7 @@ int main() {
 	spot02.getComponent<ST::TransformComponent>()->setPosition({ -15.0f,4.0f,0.0f });
 
 	ST::GameObj spot03 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	spot03.getComponent<ST::LightComponent>()->activeShadows();
 	spot03.getComponent<ST::LightComponent>()->type_ = ST::Spot;
 	spot03.getComponent<ST::LightComponent>()->linear_ = 0.001f;
 	spot03.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
@@ -153,6 +156,7 @@ int main() {
 	spot03.getComponent<ST::TransformComponent>()->setPosition({ 15.0f,4.0f,0.0f });
 	
 	ST::GameObj sun01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
+	sun01.getComponent<ST::LightComponent>()->activeShadows();
 	sun01.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	sun01.getComponent<ST::LightComponent>()->set_Color({ 0.3f,0.3f,0.3f });
 	sun01.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
