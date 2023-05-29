@@ -14,6 +14,7 @@
   - ShadowMapping (Directional and Spotlight)<br>
   - Load Textures <br>
   - Texture Atlas <br>
+  - Skybox/CubeMap <br>
   - Material Configuration <br>
   - Translucent <br>
   - Picking System <br>
