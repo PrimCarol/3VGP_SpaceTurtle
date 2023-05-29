@@ -31,13 +31,8 @@ namespace ST {
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
 		int textureCount();
 
-		/*void setUp(int w, int h,
-			ST::Texture::Format f = ST::Texture::Format::F_RGBA,
-			ST::Texture::DataType dt = ST::Texture::DT_U_BYTE,
-			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
-			*/
-
 		void nextVisualMode();
+		void activateSSAO(bool a);
 
 		void createQuadToRender();
 		void renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader,
@@ -58,6 +53,7 @@ namespace ST {
 		int height_;
 
 		int visualMode;
+		bool ssaoActive;
 
 		GLint last_viewport[4];
 

@@ -43,6 +43,7 @@ ST::RenderTarget::RenderTarget(){
 	quadID = 0;
 
 	visualMode = 0;
+	ssaoActive = true;
 
 	createQuadToRender();
 
@@ -137,6 +138,10 @@ void ST::RenderTarget::nextVisualMode(){
 	if (visualMode >= textureCount()) {
 		visualMode = 0;
 	}
+}
+
+void ST::RenderTarget::activateSSAO(bool a){
+	ssaoActive = a;
 }
 
 void ST::RenderTarget::createQuadToRender(){
@@ -309,10 +314,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		}
 
 		// ------ SSAO PASS ------
-		if (visualMode == 0 || visualMode == 4) {
+		if (visualMode == 0 && ssaoActive || visualMode == 4) {
 			if (visualMode == 0) {
 				glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
-				glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+				glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);		
 			}else {
 				glDisable(GL_BLEND);
 			}

@@ -39,6 +39,7 @@ int main() {
 	assets->saveTexture("../others/bricks_normal.png");
 
 	assets->saveMesh("../others/cat_petit.obj");
+	assets->saveMesh("../others/sponza.obj");
 
 	assets->saveMesh("../others/pbr/helmet/helmet.obj");
 	assets->saveTexture("../others/pbr/helmet/helmet_basecolor.tga", true);
@@ -105,7 +106,7 @@ int main() {
 
 	ST::GameObj ground = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 	ground.getComponent<ST::NameComponent>()->setName("Ground");
-	ground.getComponent<ST::TransformComponent>()->setScale({ 100.0f,0.2f,100.0f });
+	ground.getComponent<ST::TransformComponent>()->setScale({ 80.0f,0.2f,80.0f });
 	ground.getComponent<ST::TransformComponent>()->setPosition({0.0f,-5.0f,0.0f});
 	ground.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cube"));
 	ground.getComponent<ST::RenderComponent>()->material.roughness_ = 0.5f;
@@ -139,8 +140,7 @@ int main() {
 	spot02.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
 	spot02.getComponent<ST::LightComponent>()->set_Color({ 0.0f,1.0f,0.0f });
 
-	spot02.getComponent<ST::TransformComponent>()->setRotateX(-45.0f);
-	spot02.getComponent<ST::TransformComponent>()->setRotateY(-80.0f);
+	spot02.getComponent<ST::TransformComponent>()->setRotateY(-90.0f);
 	spot02.getComponent<ST::TransformComponent>()->setPosition({ -15.0f,4.0f,0.0f });
 
 	ST::GameObj spot03 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
@@ -149,13 +149,27 @@ int main() {
 	spot03.getComponent<ST::LightComponent>()->quadratic_ = 0.00001f;
 	spot03.getComponent<ST::LightComponent>()->set_Color({ 0.0f,0.0f,1.0f });
 
-	spot03.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
-	spot03.getComponent<ST::TransformComponent>()->setPosition({ 0.0f,15.0f,0.0f });
+	spot03.getComponent<ST::TransformComponent>()->setRotateY(90.0f);
+	spot03.getComponent<ST::TransformComponent>()->setPosition({ 15.0f,4.0f,0.0f });
 	
 	ST::GameObj sun01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	sun01.getComponent<ST::LightComponent>()->type_ = ST::Directional;
 	sun01.getComponent<ST::LightComponent>()->set_Color({ 0.3f,0.3f,0.3f });
 	sun01.getComponent<ST::TransformComponent>()->setRotateX(-90.0f);
+
+	for (int i = 0; i < 100; i++) {
+		ST::GameObj cat = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+
+		cat.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("cat_petit"));
+		cat.getComponent<ST::ColliderComponent>()->setMaxPoint(cat.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+		cat.getComponent<ST::ColliderComponent>()->setMinPoint(cat.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+		cat.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Cat_diffuse.jpg"));
+		cat.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-100.0f, 100.0f), ST::Engine::getRandom(5.0f, 55.0f), ST::Engine::getRandom(-100.0f, 100.0f)));
+		cat.getComponent<ST::TransformComponent>()->setRotateX(ST::Engine::getRandom(0.0f, 360.0f));
+		cat.getComponent<ST::TransformComponent>()->setRotateY(ST::Engine::getRandom(0.0f, 360.0f));
+		cat.getComponent<ST::TransformComponent>()->setRotateZ(ST::Engine::getRandom(0.0f, 360.0f));
+		cat.getComponent<ST::TransformComponent>()->setScale(0.5f, 0.5f, 0.5f);
+	}
 
 	// ---------------- Demo 2 -----------------
 	ST::GameObj_Manager demo2;
@@ -304,22 +318,6 @@ int main() {
 		}
 	}
 
-	//for (int i = 0; i < 20; i++){
-	//	ST::GameObj a = gm.at(0)->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{}, ST::LightComponent{});
-
-	//	a.getComponent<ST::TransformComponent>()->setPosition(glm::vec3(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 5.0f), ST::Engine::getRandom(-50.0f, 50.0f)));
-	//	a.getComponent<ST::TransformComponent>()->setScale(glm::vec3(0.2f, 0.2f, 0.2f));
-	//	a.getComponent<ST::RenderComponent>()->material.setProgram(gm.at(0)->unliteProgram);
-	//	a.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("halo_light.png"));
-	//	a.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
-	//	a.getComponent<ST::RenderComponent>()->material.translucent = true;
-	//	a.getComponent<ST::RenderComponent>()->castShadow_ = false;
-	//	a.getComponent<ST::LightComponent>()->color_ = { ST::Engine::getRandom(0.0f,1.0f),ST::Engine::getRandom(0.0f,1.0f), ST::Engine::getRandom(0.0f, 1.0f) };
-	//	a.getComponent<ST::LightComponent>()->type_ = ST::Point;
-	//	//a.getComponent<ST::LightComponent>()->linear_ = 0.7f;
-	//	//a.getComponent<ST::LightComponent>()->quadratic_ = 1.0f;
-	//}
-
 	// --------------------------
 	// **************** TEST *****************
 	ST::SystemLight lightSystem;
@@ -333,6 +331,9 @@ int main() {
 	
 	int demoIndex = 0;
 	bool indexPressed = false;
+
+	bool activeSSAO = true;
+	bool SSAOPressed = false;
 
 	bool changeMode = false;
 	bool hideHud = false;
@@ -353,9 +354,18 @@ int main() {
 			indexPressed = false;
 		}
 
+		//----- Active SSAO -----
+		if (w.inputPressed('O') && !SSAOPressed) {
+			activeSSAO = activeSSAO == true ? false : true;
+			myRenderTarget.activateSSAO(activeSSAO);
+			SSAOPressed = true;
+		}
+		if (w.inputReleased('O')) {
+			SSAOPressed = false;
+		}
+
 		// ---- Update ----
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
-
 		light1.getComponent<ST::TransformComponent>()->setPosition({sinf(w.CountTime()/1000) * 10.0f, cosf(w.CountTime()/1000) * 10.0f, 0.0f });
 
 		// ---- Camera ----
