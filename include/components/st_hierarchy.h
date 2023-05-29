@@ -9,17 +9,38 @@ namespace ST {
 
 	class HierarchyComponent {
 	public:
+		/**
+		* @brief Constructor
+		*/
 		HierarchyComponent();
-		/* We pass the object that we want to be its parent */
+		
+		/**
+		* @brief We pass the object that we want to be its parent
+		*/
 		void setParent(const ST::GameObj& g);
+		/**
+		* @brief Remove the parent of this GameObj
+		*/
 		void removeParent(ST::GameObj& thischild);
 
+		/**
+		* @brief Add the GameObj to child
+		*/
 		void addChild(const ST::GameObj& g);
 
-		/* Return the ID of his parent. Return -1 if don't have. */
+		/**
+		* @brief Return the ID of his parent. Return -1 if don't have.
+		*/
 		const int getParentID() const;
 
+		/**
+		* @brief Return the ID of the child in index
+		* @param index of the child
+		*/
 		const int getChildID(int index) const;
+		/**
+		* @brief Return the size of the childrens.
+		*/
 		const int childSize() const;
 
 		~HierarchyComponent();

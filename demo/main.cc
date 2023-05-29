@@ -382,7 +382,7 @@ int main() {
 		myRenderTarget.start();
 		ST::SystemRender::Render(*gm.at(demoIndex), *gm.at(demoIndex)->g_buffer);
 		myRenderTarget.end();
-		myRenderTarget.renderOnScreen(*gm.at(demoIndex), *gm.at(demoIndex)->framebufferProgram, &lightSystem.lights_);
+		myRenderTarget.renderOnScreen(*gm.at(demoIndex), &lightSystem.lights_);
 		
 		ST::SystemRender::Render(*gm.at(demoIndex), *gm.at(demoIndex)->skyboxProgram);
 		ST::SystemRender::Render(*gm.at(demoIndex), *gm.at(demoIndex)->unliteProgram);

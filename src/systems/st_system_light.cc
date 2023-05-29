@@ -10,188 +10,14 @@
 #include <st_program.h>
 
 ST::SystemLight::SystemLight(){
-	textureSize_ = glm::ivec2(2048);
-}
 
-//void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm, ST::Program& thisProgram){
-//
-//	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
-//	auto& renderComps = *gm.getComponentVector<ST::RenderComponent>();
-//	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
-//
-//	char buffer[50];
-//
-//	thisProgram.use();
-//
-//	int countDirectionalLights = 0;
-//	int countPointLights = 0;
-//	int countSpotLights = 0;
-//
-//	GLint idUniform = -1;
-//
-//	for (int n = 0; n < lightComps.size(); n++) {
-//		if (lightComps.at(n).has_value()) {
-//			ST::LightComponent thisLight = lightComps.at(n).value();
-//
-//			// ---- Lights ----
-//
-//			glm::vec3 dirLight(0.0f,-1.0f,0.0f);
-//
-//			if (transformComps.at(n).has_value()) {
-//				dirLight = -transformComps.at(n)->getUp();
-//				if (gm.mainCameraID() != -1) {
-//					transformComps.at(n)->m_transform_ = glm::lookAt(transformComps.at(n)->getPosition(), transformComps.at(gm.mainCameraID())->getPosition(), glm::vec3(0.0f,1.0f,0.0f));
-//					transformComps.at(n)->m_transform_ = glm::inverse(transformComps.at(n)->m_transform_);
-//				}
-//				//thisLight.dirLight_.x = sinf(transformComps->at(n).value().getRotation().x);
-//				//thisLight.dirLight_.y = sinf(transformComps->at(n).value().getRotation().y);
-//				//thisLight.dirLight_.z = sinf(transformComps->at(n).value().getRotation().z);
-//			}
-//
-//			if (thisLight.type_ == ST::Directional) {
-//				/*
-//
-//				Creamos una camara (CameraComponent) en orthografic, para saber lo que ve la camara.
-//
-//				*/
-//				//ST::CameraComponent cam;
-//
-//				snprintf(buffer, 50, "u_DirectLight[%d].direction", countDirectionalLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, dirLight.x, dirLight.y, dirLight.z);
-//
-//				snprintf(buffer, 50, "u_DirectLight[%d].ambient", countDirectionalLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.ambient_.x, thisLight.ambient_.y, thisLight.ambient_.z);
-//
-//				snprintf(buffer, 50, "u_DirectLight[%d].diffuse", countDirectionalLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.diffuse_.x, thisLight.diffuse_.y, thisLight.diffuse_.z);
-//
-//				snprintf(buffer, 50, "u_DirectLight[%d].specular", countDirectionalLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.specular_.x, thisLight.specular_.y, thisLight.specular_.z);
-//
-//				countDirectionalLights++;
-//
-//			} else if (thisLight.type_ == ST::Point) {
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].position", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, transformComps.at(n).value().getPosition().x, transformComps.at(n).value().getPosition().y, transformComps.at(n).value().getPosition().z);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].ambient", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].diffuse", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].specular", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].constant", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.constant_);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].linear", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.linear_);
-//
-//				snprintf(buffer, 50, "u_PointLight[%d].quadratic", countPointLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.quadratic_);
-//
-//				countPointLights++;
-//
-//			} else if (thisLight.type_ == ST::Spot){
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].position", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, transformComps.at(n).value().getPosition().x, transformComps.at(n).value().getPosition().y, transformComps.at(n).value().getPosition().z);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].ambient", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].diffuse", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].specular", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].constant", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.constant_);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].linear", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.linear_);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].quadratic", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.quadratic_);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].direction", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform3f(idUniform, transformComps.at(n).value().getRotation().x, transformComps.at(n).value().getRotation().y, transformComps.at(n).value().getRotation().z);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].cutOff", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.cutOff_);
-//
-//				snprintf(buffer, 50, "u_SpotLight[%d].outerCutOff", countSpotLights);
-//				idUniform = thisProgram.getUniform(buffer);
-//				glUniform1f(idUniform, thisLight.outerCutOff_);
-//
-//				countSpotLights++;
-//			}
-//
-//			if (renderComps.at(n).has_value()) {
-//				renderComps.at(n).value().material.setColor(thisLight.color_.x, thisLight.color_.y, thisLight.color_.z);
-//			}
-//
-//		} // if Have Light
-//	} // For Lights
-//	
-//	idUniform = thisProgram.getUniform("u_numDirectLights");
-//	glUniform1i(idUniform, countDirectionalLights);
-//
-//	idUniform = thisProgram.getUniform("u_numPointLights");
-//	glUniform1i(idUniform, countPointLights);
-//
-//	idUniform = thisProgram.getUniform("u_numSpotLights");
-//	glUniform1i(idUniform, countSpotLights);
-//
-//	// Shadow Mapping
-//	//if (shadowMaps_.size() > 0) {
-//	//	glUniform1i(thisProgram.getUniform("u_haveShadowMap"), true);
-//
-//	//	glUniform1i(thisProgram.getUniform("shadowMap"), 3);
-//	//	glActiveTexture(GL_TEXTURE0 + 3);
-//	//	glBindTexture(GL_TEXTURE_2D, shadowMaps_[0].renderTarget_[0].textureID()); // <------- REVISAR
-//
-//	//	GLuint lighSpaceMatrix = thisProgram.getUniform("lightSpaceMatrix");
-//	//	glUniformMatrix4fv(lighSpaceMatrix, 1, GL_FALSE, &shadowMaps_[0].matrix_[0][0]);
-//	//}else {
-//	//	glUniform1i(thisProgram.getUniform("u_haveShadowMap"), false);
-//	//}
-//
-//	//glUseProgram(0);
-//}
+}
 
 void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 
 	auto& lightComps = *gm.getComponentVector<ST::LightComponent>();
 	auto& transformComps = *gm.getComponentVector<ST::TransformComponent>();
 	auto& renderComps = *gm.getComponentVector<ST::RenderComponent>();
-	
-	//static glm::vec2 camShadowSize = glm::vec2(100.0f, 100.0f);
-	//static glm::vec2 camShadowDistance = glm::vec2(-20.0f, 100.0f); // Temporal <-------------------
 
 	lights_.clear();
 	gm.shadowMapping->use();
@@ -292,49 +118,6 @@ void ST::SystemLight::CompileLights(ST::GameObj_Manager& gm) {
 				pointLightShadow.end();
 
 				tempLightData.renderTarget_.push_back(pointLightShadow);*/
-			
-
-				//ST::ShadowMapping pointShadowForward;
-				//pointShadowForward.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowForward);
-
-				//ST::ShadowMapping pointShadowBackward;
-				//pointShadowBackward.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowBackward);
-
-				//ST::ShadowMapping pointShadowBottom;
-				//pointShadowBottom.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowBottom);
-
-				//ST::ShadowMapping pointShadowUp;
-				//pointShadowUp.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowUp);
-
-				//ST::ShadowMapping pointShadowRight;
-				//pointShadowRight.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowRight);
-
-				//ST::ShadowMapping pointShadowLeft;
-				//pointShadowLeft.setUp(textureSize_.x, textureSize_.y);
-				//tempLightData.renderTarget_.emplace_back(pointShadowLeft);
-
-				//glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), 1.0f, 1.0f, 25.0f);
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(1, 0, 0), glm::vec3(0, -1, 0)));
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0)));
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 1, 0), glm::vec3(0, 0, 1)));
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, -1, 0), glm::vec3(0, 0, -1)));
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 0, 1), glm::vec3(0, -1, 0)));
-				//tempLightData.matrix_.push_back(shadowProj * glm::lookAt(tempTransform.getPosition(), tempTransform.getPosition() + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0)));
-
-				//for (unsigned int i = 0; i < tempLightData.renderTarget_.size(); ++i) {
-				//	glUniformMatrix4fv(gm.shadowMapping->getUniform("u_lightSpaceMatrix"), 1, GL_FALSE, &tempLightData.matrix_[i][0][0]);
-
-				//	//Render Scene.
-				//	tempLightData.renderTarget_[i].start();
-				//	setUpRender(gm);
-				//	tempLightData.renderTarget_[i].end();
-				//}
-
 			}
 			else if (tempLightData.light_->type_ == ST::Spot) {
 				
@@ -386,11 +169,6 @@ void ST::SystemLight::setUpRender(ST::GameObj_Manager& gm){
 	
 	glDisable(GL_BLEND);
 	doRender(objs_opaque);
-
-	/*GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("Post DoRender-> OpenGL Error: %d\n", error);
-	}*/
 
 	objs_opaque.clear();
 }

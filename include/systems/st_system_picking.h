@@ -3,7 +3,6 @@
 
 #include <st_window.h>
 #include <st_camera.h>
-//#include <st_gameobj_manager.h>
 
 namespace ST {
 
@@ -12,9 +11,9 @@ namespace ST {
 
 	class SystemPicking {
 	public:
-		/* Return the reference of the object.
-		Don't work correctly with Herarchy.*/
-		//static ST::GameObj tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm, const ST::Camera* c = nullptr);
+		/**
+		*@brief Return the reference of the object.
+		*/
 		static int tryPickObj(const ST::Window& w, const ST::GameObj_Manager& gm);
 	private:
 		SystemPicking();

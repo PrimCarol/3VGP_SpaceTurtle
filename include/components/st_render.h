@@ -11,28 +11,21 @@ namespace ST {
 	public:
 		RenderComponent();
 
-		/* Assigns the mesh reference.
-		If we pass null to it, it will no longer have a mesh. */
+		/**
+		* @brief Assigns the mesh reference. If we pass null to it, it will no longer have a mesh.
+		*/
 		void setMesh(ST::Mesh *m);
 
-		/* Set the unique material. Basic already has one. */
-		//void setMaterial(std::unique_ptr<ST::Material>& m);
-
-		//std::unique_ptr<ST::Material> material;
 		ST::Material material;
 		ST::Mesh* mesh;
 
 		CullMode thiscullmode_;
 		DepthMode thisdepthmode_;
-		//RenderComponent(const RenderComponent& o);
 
 		bool visible_;
 		bool castShadow_;
 
 		~RenderComponent();
-	private:
-		//RenderComponent(RenderComponent&&) = default;
-		//RenderComponent& operator=(RenderComponent&&) = default;
 	};
 }
 

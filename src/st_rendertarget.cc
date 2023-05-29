@@ -36,7 +36,7 @@ float lerp(float a, float b, float f){
 ST::RenderTarget::RenderTarget(){
 	glGenFramebuffers(1, &internalID);
 	glGetIntegerv(GL_VIEWPORT, last_viewport);
-	//renderType_ = RT_Color;
+	
 	width_ = 0;
 	height_ = 0;
 
@@ -175,7 +175,7 @@ void ST::RenderTarget::createQuadToRender(){
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shader, std::vector<ST::LightsStruct>* lights){
+void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, std::vector<ST::LightsStruct>* lights){
 
 	auto camVector = gm.getComponentVector<ST::CameraComponent>();
 	if (gm.mainCameraID() == -1) {
@@ -206,10 +206,10 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 		if (lights) {		
 
 			// ----- Light Pass ------
-			Shader.use();
+			gm.framebufferProgram->use();
 
 			for (int i = 0; i < textureCount(); i++) {
-				glUniform1i(glGetUniformLocation(Shader.getID(), texturesUniformName_.at(i)), i);
+				glUniform1i(glGetUniformLocation(gm.framebufferProgram->getID(), texturesUniformName_.at(i)), i);
 				glActiveTexture(GL_TEXTURE0 + i);
 				glBindTexture(GL_TEXTURE_2D, textureToRender_.at(i)->getID());
 			}
@@ -221,7 +221,7 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 					skyboxTrans->setPosition(camTrans.getPosition());
 				}
 				if (skyboxRender && skyboxRender->material.haveAlbedo) {
-					glUniform1i(Shader.getUniform("gSkybox"), 6);
+					glUniform1i(gm.framebufferProgram->getUniform("gSkybox"), 6);
 					glActiveTexture(GL_TEXTURE0 + 6);
 					glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxRender->material.getAlbedo()->getID());
 				}
@@ -229,11 +229,11 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 
 			// Temporal <--------------------------------
 			glm::vec3 viewPos = camTrans.getPosition();
-			glUniform1i(glGetUniformLocation(Shader.getID(), "visualMode"), visualMode);
-			glUniform3fv(glGetUniformLocation(Shader.getID(), "viewPos"), 1, &viewPos.x);
+			glUniform1i(glGetUniformLocation(gm.framebufferProgram->getID(), "visualMode"), visualMode);
+			glUniform3fv(glGetUniformLocation(gm.framebufferProgram->getID(), "viewPos"), 1, &viewPos.x);
 			//View Matrix
-			glUniformMatrix4fv(Shader.getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
-			glUniformMatrix4fv(Shader.getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
+			glUniformMatrix4fv(gm.framebufferProgram->getUniform("viewMatrix"), 1, GL_FALSE, &camComp.view[0][0]);
+			glUniformMatrix4fv(gm.framebufferProgram->getUniform("projMatrix"), 1, GL_FALSE, &camComp.projection[0][0]);
 
 			for (int i = 0; i < lights->size(); i++){
 				//Uniforms
@@ -242,40 +242,40 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				// Directional
 				if (tempLight->type_ == ST::Directional) {
 					
-					glUniform3f(Shader.getUniform("u_DirectLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
-					glUniform3f(Shader.getUniform("u_DirectLight.ambient"), tempLight->ambient_.x, tempLight->ambient_.y, tempLight->ambient_.z);
-					glUniform3f(Shader.getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
-					glUniform3f(Shader.getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.ambient"), tempLight->ambient_.x, tempLight->ambient_.y, tempLight->ambient_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.diffuse"), tempLight->diffuse_.x, tempLight->diffuse_.y, tempLight->diffuse_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_DirectLight.specular"), tempLight->specular_.x, tempLight->specular_.y, tempLight->specular_.z);
 
 					// ShadowMapping
-					glUniform1f(Shader.getUniform("cascadeEndShadow[0]"), tempLight->shadowHighRadius_);
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
-					glUniform1i(Shader.getUniform("shadowMap[0]"), 7);
+					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[0]"), tempLight->shadowHighRadius_);
+					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
+					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
 					glActiveTexture(GL_TEXTURE0 + 7);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
-					glUniform1f(Shader.getUniform("cascadeEndShadow[1]"), tempLight->shadowMediumRadius_);
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &tempLight->matrixlighShadowMedium_[0][0]);
-					glUniform1i(Shader.getUniform("shadowMap[1]"), 8);
+					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[1]"), tempLight->shadowMediumRadius_);
+					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[1]"), 1, GL_FALSE, &tempLight->matrixlighShadowMedium_[0][0]);
+					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[1]"), 8);
 					glActiveTexture(GL_TEXTURE0 + 8);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowMedium->textureID());
-					glUniform1f(Shader.getUniform("cascadeEndShadow[2]"), tempLight->shadowLowRadius_);
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &tempLight->matrixlighShadowLow_[0][0]);
-					glUniform1i(Shader.getUniform("shadowMap[2]"), 9);
+					glUniform1f(gm.framebufferProgram->getUniform("cascadeEndShadow[2]"), tempLight->shadowLowRadius_);
+					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[2]"), 1, GL_FALSE, &tempLight->matrixlighShadowLow_[0][0]);
+					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[2]"), 9);
 					glActiveTexture(GL_TEXTURE0 + 9);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowLow->textureID());
 				}
 				// Point
 				if (tempLight->type_ == ST::Point) {
 
-					glUniform3f(Shader.getUniform("u_PointLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
-					glUniform3f(Shader.getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform3f(Shader.getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform3f(Shader.getUniform("u_PointLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform1f(Shader.getUniform("u_PointLight.linear"), tempLight->linear_);
-					glUniform1f(Shader.getUniform("u_PointLight.quadratic"), tempLight->quadratic_);
+					glUniform3f(gm.framebufferProgram->getUniform("u_PointLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_PointLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_PointLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_PointLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(gm.framebufferProgram->getUniform("u_PointLight.linear"), tempLight->linear_);
+					glUniform1f(gm.framebufferProgram->getUniform("u_PointLight.quadratic"), tempLight->quadratic_);
 					const float maxBrightness = std::fmaxf(std::fmaxf(tempLight->color_.r, tempLight->color_.g), tempLight->color_.b);
 					float radius = (-tempLight->linear_ + std::sqrt(tempLight->linear_ * tempLight->linear_ - 4 * tempLight->quadratic_ * (1.0 - (256.0f / 5.0f) * maxBrightness))) / (2.0f * tempLight->quadratic_);
-					glUniform1f(Shader.getUniform("u_PointLight.radius"), radius);
+					glUniform1f(gm.framebufferProgram->getUniform("u_PointLight.radius"), radius);
 
 					// ShadowMapping
 					/*glUniform1f(Shader.getUniform("far_plane"), 25.0f);
@@ -290,24 +290,24 @@ void ST::RenderTarget::renderOnScreen(ST::GameObj_Manager& gm, ST::Program& Shad
 				}
 				// Spot
 				if (tempLight->type_ == ST::Spot) {
-					glUniform3f(Shader.getUniform("u_SpotLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
-					glUniform3f(Shader.getUniform("u_SpotLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform3f(Shader.getUniform("u_SpotLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform3f(Shader.getUniform("u_SpotLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
-					glUniform1f(Shader.getUniform("u_SpotLight.linear"), tempLight->linear_);
-					glUniform1f(Shader.getUniform("u_SpotLight.quadratic"), tempLight->quadratic_);
-					glUniform3f(Shader.getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
-					glUniform1f(Shader.getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
-					glUniform1f(Shader.getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
+					glUniform3f(gm.framebufferProgram->getUniform("u_SpotLight.position"), tempLight->position_.x, tempLight->position_.y, tempLight->position_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_SpotLight.ambient"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_SpotLight.diffuse"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform3f(gm.framebufferProgram->getUniform("u_SpotLight.specular"), tempLight->color_.x, tempLight->color_.y, tempLight->color_.z);
+					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.linear"), tempLight->linear_);
+					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.quadratic"), tempLight->quadratic_);
+					glUniform3f(gm.framebufferProgram->getUniform("u_SpotLight.direction"), tempLight->direction_.x, tempLight->direction_.y, tempLight->direction_.z);
+					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.cutOff"), tempLight->cutOff_);
+					glUniform1f(gm.framebufferProgram->getUniform("u_SpotLight.outerCutOff"), tempLight->outerCutOff_);
 
 					// ShadowMapping
-					glUniformMatrix4fv(Shader.getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
-					glUniform1i(Shader.getUniform("shadowMap[0]"), 7);
+					glUniformMatrix4fv(gm.framebufferProgram->getUniform("lightSpaceMatrix[0]"), 1, GL_FALSE, &tempLight->matrixlighShadowHigh_[0][0]);
+					glUniform1i(gm.framebufferProgram->getUniform("shadowMap[0]"), 7);
 					glActiveTexture(GL_TEXTURE0 + 7);
 					glBindTexture(GL_TEXTURE_2D, tempLight->shadowHigh->textureID());
 				}
 
-				glUniform1i(Shader.getUniform("u_lightType"), tempLight->type_+1); // si es 0, es que no hay luz.
+				glUniform1i(gm.framebufferProgram->getUniform("u_lightType"), tempLight->type_+1); // si es 0, es que no hay luz.
 
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}

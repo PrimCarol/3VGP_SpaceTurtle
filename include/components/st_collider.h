@@ -7,20 +7,37 @@ namespace ST {
 
 	class ColliderComponent {
 	public:
+		/**
+		* @brief Constructor
+		*/
 		ColliderComponent();
 
+		/**
+		* @brief Get the min point of the collider
+		*/
 		glm::vec3 getMinPoint() const;
+		/**
+		* @brief Get the max point of the collider
+		*/
 		glm::vec3 getMaxPoint() const;
 
+		/**
+		* @brief Set the min point of the collider
+		*/
 		void setMinPoint(const glm::vec3 xyz);
+		/**
+		* @brief Set the max point of the collider
+		*/
 		void setMaxPoint(const glm::vec3 xyz);
 		
-		void draw() const;
+		//void draw() const;
 
 		bool active_;
 
+		/**
+		* @brief Destructor
+		*/
 		~ColliderComponent();
-		//ColliderComponent(const ColliderComponent& o);
 	
 	private:
 		/*glm::vec3 center_;

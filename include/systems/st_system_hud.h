@@ -10,9 +10,21 @@ namespace ST {
 
 	class SystemHUD {
 	public:
+		/**
+		*@brief Call it to show NavBar (Posibility to create objects)
+		*/
 		static void NavBar(ST::GameObj_Manager& gm);
+		/**
+		*@brief Call it to show Inspector (Show information of the object selected)
+		*/
 		static void Inspector(ST::GameObj_Manager& gm);
+		/**
+		*@brief Call it to show Hierarchy (Objects on the scene)
+		*/
 		static void Hierarchy(ST::GameObj_Manager& gm);
+		/**
+		*@brief Call it to show Stats (Basic info of the scene)
+		*/
 		static void Stats(const ST::Window& w, const ST::GameObj_Manager& gm);
 		
 	private:

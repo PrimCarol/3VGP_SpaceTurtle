@@ -27,20 +27,26 @@ namespace ST {
 
 	class SystemLight {
 	public:
+		/**
+		*@brief Constructor
+		*/
 		SystemLight();
 
-		//void CompileShadows(ST::GameObj_Manager& gm);
-		//void CompileLights(ST::GameObj_Manager& gm, ST::Program& p);
+		/**
+		*@brief Calculate all the lights and shadows.
+		*/
 		void CompileLights(ST::GameObj_Manager& gm);
 
-		glm::ivec2 textureSize_; // Temporal, poner en cada luz.
-
+		/**
+		*@brief The calculated data light
+		*/
 		std::vector<LightsStruct> lights_;
 
+		/**
+		*@brief Destructor
+		*/
 		~SystemLight();
 	private:
-
-		//std::vector<Light_ShadowMap> shadowMaps_;
 
 		// ******* Temporal *********
 		void setUpRender(ST::GameObj_Manager& gm);

@@ -10,35 +10,79 @@ namespace ST {
 		TransformComponent();
 
 		//----------------- Transforms ------------------
-		// Moves based on your current position. (Preferably use DeltaTime() from ST::Window)
+		/**
+		*@brief Moves based on your current position. (Preferably use DeltaTime() from ST::Window)
+		*/ 
 		void Move(const glm::vec3 newPos);
-		/* Add rotation on your current rotation X axis in radiants*/
+		/**
+		*@brief Add rotation on your current rotation X axis in degrees
+		*/
 		void RotateX(const float r);
-		/* Add rotation on your current rotation Y axis in radiants*/
+		/**
+		*@brief Add rotation on your current rotation Y axis in degrees
+		*/
 		void RotateY(const float r);
-		/* Add rotation on your current rotation Z axis in radiants*/
+		/**
+		*@brief Add rotation on your current rotation Z axis in degrees
+		*/
 		void RotateZ(const float r);
 
-		/* Set a forced position */
+		/**
+		*@brief Set a forced position
+		*/
 		void setPosition(const glm::vec3 pos);
+		/**
+		*@brief Set a forced position
+		*/
 		void setPosition(const float posX, const float posY, const float posZ);
-		/* Set a forced scale */
+		
+		/**
+		*@brief Set a forced scale
+		*/
 		void setScale(const glm::vec3 newScale);
+		/**
+		*@brief Set a forced scale
+		*/
 		void setScale(const float scaleX, const float scaleY, const float scaleZ);
-		/* Set a forced rotation X axis in radiants */
+
+		/**
+		*@brief Set a forced rotation X axis in degrees
+		*/
 		void setRotateX(const float r);
-		/* Set a forced rotation Y axis in radiants */
+		/**
+		*@brief Set a forced rotation Y axis in degrees
+		*/
 		void setRotateY(const float r);
-		/* Set a forced rotation Z axis in radiants */
+		/**
+		*@brief Set a forced rotation Z axis in degrees
+		*/
 		void setRotateZ(const float r);
 
 		/* Getters */
+		/**
+		*@brief Get position
+		*/
 		const glm::vec3 getPosition() const;
+		/**
+		*@brief Get scale
+		*/
 		const glm::vec3 getScale() const;
+		/**
+		*@brief Get Rotation
+		*/
 		const glm::vec3 getRotation() const;
 
+		/**
+		*@brief Get Forward vector
+		*/
 		const glm::vec3 getForward() const;
+		/**
+		*@brief Get Up vector
+		*/
 		const glm::vec3 getUp() const;
+		/**
+		*@brief Get Right vector
+		*/
 		const glm::vec3 getRight() const;
 
 		glm::mat4 m_transform_;
@@ -50,10 +94,9 @@ namespace ST {
 		glm::mat4 m_World_Position_;
 		glm::mat4 m_World_Rotation_;
 
-		void updateDirectionalVectors();
-
 		bool dirty;
 
+		void updateDirectionalVectors();
 		~TransformComponent();
 	private:
 

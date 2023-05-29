@@ -7,6 +7,9 @@ namespace ST {
 
 	class SystemTransform {
 	public:
+		/**
+		*@brief Update the transforms components.
+		*/
 		static void UpdateTransforms(ST::GameObj_Manager &gm);
 	private:
 		SystemTransform();

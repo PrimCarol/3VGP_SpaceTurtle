@@ -9,6 +9,9 @@
 
 namespace ST {
 
+	/**
+	* @brief Light Type
+	*/
 	enum LightType{
 		Directional,
 		Point,
@@ -17,9 +20,18 @@ namespace ST {
 
 	class LightComponent {
 	public:
+		/**
+		* @brief Constructor
+		*/
 		LightComponent();
 
+		/**
+		* @brief Set Color Light
+		*/
 		void set_Color(const glm::vec3 c);
+		/**
+		* @brief Set Color Light
+		*/
 		void set_Color(const float r, const float g, const float b);
 
 		LightType type_;

@@ -7,7 +7,13 @@ namespace ST {
 	public:
 		NameComponent();
 
+		/**
+		* @brief Set Name of GameObj
+		*/
 		void setName(const char* name);
+		/**
+		* @brief Get Name of GameObj
+		*/
 		const char* getName() const;
 
 		~NameComponent();

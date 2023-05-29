@@ -6,6 +6,9 @@
 
 #include <st_texture.h>
 
+/**
+*@brief Internal Texture type to change
+*/
 enum class TextureToChange{
 	TTC_None,
 	TTC_Albedo,
@@ -24,14 +27,31 @@ namespace ST {
 
 	class SytemAssets {
 	public:
+		/**
+		*@brief Constructor
+		*/
 		SytemAssets();
 		
 		// ------ Textures ------
+		/**
+		* @brief Save texture
+		* @param std::string path the path of the file
+		* @param bool fliped is want to flip texture
+		*/
 		void saveTexture(std::string path, bool fliped = false,
 			ST::Texture::TextType t = ST::Texture::TextType::T_2D);
+		/**
+		*@brief Save texture CubeMap
+		*/
 		void saveTextureCubeMap(std::string name, std::vector<std::string> paths);
 
+		/**
+		*@brief Get the texture with the name
+		*/
 		ST::Texture* getTexture(std::string name);
+		/**
+		*@brief Get the texture cubeMap with the name
+		*/
 		ST::Texture* getCubeMap(std::string name);
 
 		// ---- Texture Selector ----
@@ -45,7 +65,14 @@ namespace ST {
 		void popUpCubeMapSelector(GameObj_Manager& gm);
 
 		// ------ Mesh ------
+		/**
+		* @brief Save Mesh
+		* @param std::string path the path of the file
+		*/
 		void saveMesh(std::string path);
+		/**
+		*@brief Get the mesh with the name
+		*/
 		ST::Mesh* getMesh(std::string name);
 
 		// ---- Mesh Selector ----
