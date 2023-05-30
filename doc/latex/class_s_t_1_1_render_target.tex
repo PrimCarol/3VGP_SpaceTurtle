@@ -1,0 +1,108 @@
+\hypertarget{class_s_t_1_1_render_target}{}\doxysection{ST\+::Render\+Target Class Reference}
+\label{class_s_t_1_1_render_target}\index{ST::RenderTarget@{ST::RenderTarget}}
+
+
+A class for handling the rendering target in the Space Turtle project.  
+
+
+
+
+{\ttfamily \#include $<$st\+\_\+rendertarget.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_aef5e3b39ed08786467d34a2fa21d1a72}\label{class_s_t_1_1_render_target_aef5e3b39ed08786467d34a2fa21d1a72}} 
+enum \mbox{\hyperlink{class_s_t_1_1_render_target_aef5e3b39ed08786467d34a2fa21d1a72}{Render\+Type}} \{ {\bfseries R\+T\+\_\+\+Color}, 
+{\bfseries R\+T\+\_\+\+Depth}, 
+{\bfseries R\+T\+\_\+\+Stencil}
+ \}
+\begin{DoxyCompactList}\small\item\em Type of rendering\+: color, depth, stencil. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a6cb0311d278128c1fe0a2ea695507e8e}\label{class_s_t_1_1_render_target_a6cb0311d278128c1fe0a2ea695507e8e}} 
+\mbox{\hyperlink{class_s_t_1_1_render_target_a6cb0311d278128c1fe0a2ea695507e8e}{Render\+Target}} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_ab4240b667e31f0c29257df32ae122015}{add\+Texture}} (int w, int h, const char $\ast$name, S\+T\+::\+Texture\+::\+Format f=S\+T\+::\+Texture\+::\+Format\+::\+F\+\_\+\+R\+G\+BA, S\+T\+::\+Texture\+::\+Format internalf=S\+T\+::\+Texture\+::\+Format\+::\+F\+\_\+\+R\+G\+BA, S\+T\+::\+Texture\+::\+Data\+Type dt=S\+T\+::\+Texture\+::\+D\+T\+\_\+\+U\+\_\+\+B\+Y\+TE, S\+T\+::\+Texture\+::\+Text\+Type t=S\+T\+::\+Texture\+::\+Text\+Type\+::\+T\+\_\+2D)
+\begin{DoxyCompactList}\small\item\em Adds texture to the render target. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_abd6be0a66d4f0e958289e5e3a96fa3ef}\label{class_s_t_1_1_render_target_abd6be0a66d4f0e958289e5e3a96fa3ef}} 
+int \mbox{\hyperlink{class_s_t_1_1_render_target_abd6be0a66d4f0e958289e5e3a96fa3ef}{texture\+Count}} ()
+\begin{DoxyCompactList}\small\item\em Returns the count of textures. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a688d71a5d7a08f835f66bcf2f54a8ca0}\label{class_s_t_1_1_render_target_a688d71a5d7a08f835f66bcf2f54a8ca0}} 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_a688d71a5d7a08f835f66bcf2f54a8ca0}{next\+Visual\+Mode}} ()
+\begin{DoxyCompactList}\small\item\em Switches to the next visual mode. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_ac7225ffeee5b906459ff16ee50b77059}\label{class_s_t_1_1_render_target_ac7225ffeee5b906459ff16ee50b77059}} 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_ac7225ffeee5b906459ff16ee50b77059}{activate\+S\+S\+AO}} (bool a)
+\begin{DoxyCompactList}\small\item\em Activates or deactivates S\+S\+AO. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a2c44d3b1ac4492f13ad87eea1c8272a2}\label{class_s_t_1_1_render_target_a2c44d3b1ac4492f13ad87eea1c8272a2}} 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_a2c44d3b1ac4492f13ad87eea1c8272a2}{render\+On\+Screen}} (\mbox{\hyperlink{class_s_t_1_1_game_obj___manager}{S\+T\+::\+Game\+Obj\+\_\+\+Manager}} \&gm, std\+::vector$<$ \mbox{\hyperlink{struct_s_t_1_1_lights_struct}{S\+T\+::\+Lights\+Struct}} $>$ $\ast$lights)
+\begin{DoxyCompactList}\small\item\em Renders on the screen. @parem \mbox{\hyperlink{class_s_t_1_1_game_obj___manager}{S\+T\+::\+Game\+Obj\+\_\+\+Manager}} the game\+Manager @parem \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} the shader used. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a148d8b1886b04a6c1dd2c356753d27ce}\label{class_s_t_1_1_render_target_a148d8b1886b04a6c1dd2c356753d27ce}} 
+G\+Luint \mbox{\hyperlink{class_s_t_1_1_render_target_a148d8b1886b04a6c1dd2c356753d27ce}{get\+ID}} ()
+\begin{DoxyCompactList}\small\item\em Returns the ID of the render target. \end{DoxyCompactList}\item 
+G\+Luint \mbox{\hyperlink{class_s_t_1_1_render_target_aeacb60589f1af657fa49a95994c87d1e}{texture\+ID}} (int index)
+\begin{DoxyCompactList}\small\item\em Returns the ID of a texture at a specified index. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_af2de189055271d5cb4221b1586c76808}\label{class_s_t_1_1_render_target_af2de189055271d5cb4221b1586c76808}} 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_af2de189055271d5cb4221b1586c76808}{start}} ()
+\begin{DoxyCompactList}\small\item\em Starts rendering. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a0cfd08db2010fb28d27a0ada1df67f18}\label{class_s_t_1_1_render_target_a0cfd08db2010fb28d27a0ada1df67f18}} 
+void \mbox{\hyperlink{class_s_t_1_1_render_target_a0cfd08db2010fb28d27a0ada1df67f18}{end}} ()
+\begin{DoxyCompactList}\small\item\em Ends rendering. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_a4e0edb6bd9034c81e6f1c394c957c610}\label{class_s_t_1_1_render_target_a4e0edb6bd9034c81e6f1c394c957c610}} 
+\mbox{\hyperlink{class_s_t_1_1_render_target_a4e0edb6bd9034c81e6f1c394c957c610}{Render\+Target}} (const \mbox{\hyperlink{class_s_t_1_1_render_target}{Render\+Target}} \&o)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_render_target_afcf3b5f2a1558d450ba9028341f297a7}\label{class_s_t_1_1_render_target_afcf3b5f2a1558d450ba9028341f297a7}} 
+\mbox{\hyperlink{class_s_t_1_1_render_target_afcf3b5f2a1558d450ba9028341f297a7}{$\sim$\+Render\+Target}} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class for handling the rendering target in the Space Turtle project. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_s_t_1_1_render_target_ab4240b667e31f0c29257df32ae122015}\label{class_s_t_1_1_render_target_ab4240b667e31f0c29257df32ae122015}} 
+\index{ST::RenderTarget@{ST::RenderTarget}!addTexture@{addTexture}}
+\index{addTexture@{addTexture}!ST::RenderTarget@{ST::RenderTarget}}
+\doxysubsubsection{\texorpdfstring{addTexture()}{addTexture()}}
+{\footnotesize\ttfamily void S\+T\+::\+Render\+Target\+::add\+Texture (\begin{DoxyParamCaption}\item[{int}]{w,  }\item[{int}]{h,  }\item[{const char $\ast$}]{name,  }\item[{S\+T\+::\+Texture\+::\+Format}]{f = {\ttfamily ST\+:\+:Texture\+:\+:Format\+:\+:F\+\_\+RGBA},  }\item[{S\+T\+::\+Texture\+::\+Format}]{internalf = {\ttfamily ST\+:\+:Texture\+:\+:Format\+:\+:F\+\_\+RGBA},  }\item[{S\+T\+::\+Texture\+::\+Data\+Type}]{dt = {\ttfamily ST\+:\+:Texture\+:\+:DT\+\_\+U\+\_\+BYTE},  }\item[{S\+T\+::\+Texture\+::\+Text\+Type}]{t = {\ttfamily ST\+:\+:Texture\+:\+:TextType\+:\+:T\+\_\+2D} }\end{DoxyParamCaption})}
+
+
+
+Adds texture to the render target. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em int} & w is the witdh of \mbox{\hyperlink{class_s_t_1_1_texture}{Texture}} \\
+\hline
+{\em int} & h is the height of \mbox{\hyperlink{class_s_t_1_1_texture}{Texture}} \\
+\hline
+{\em S\+T\+::\+Texture\+::\+Format} & f is the channels do you want \\
+\hline
+{\em S\+T\+::\+Texture\+::\+Format} & internalf is the internal channels do you want \\
+\hline
+{\em S\+T\+::\+Texture\+::\+Data\+Type} & dt the datatype of the \mbox{\hyperlink{class_s_t_1_1_texture}{Texture}} \\
+\hline
+{\em S\+T\+::\+Texture\+::\+Text\+Type} & t the Texture\+Type of the \mbox{\hyperlink{class_s_t_1_1_texture}{Texture}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_s_t_1_1_render_target_aeacb60589f1af657fa49a95994c87d1e}\label{class_s_t_1_1_render_target_aeacb60589f1af657fa49a95994c87d1e}} 
+\index{ST::RenderTarget@{ST::RenderTarget}!textureID@{textureID}}
+\index{textureID@{textureID}!ST::RenderTarget@{ST::RenderTarget}}
+\doxysubsubsection{\texorpdfstring{textureID()}{textureID()}}
+{\footnotesize\ttfamily G\+Luint S\+T\+::\+Render\+Target\+::texture\+ID (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption})}
+
+
+
+Returns the ID of a texture at a specified index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of the texture \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/st\+\_\+rendertarget.\+h\end{DoxyCompactItemize}

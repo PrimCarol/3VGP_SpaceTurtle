@@ -1,0 +1,76 @@
+\hypertarget{class_s_t_1_1_mesh}{}\doxysection{ST\+::Mesh Class Reference}
+\label{class_s_t_1_1_mesh}\index{ST::Mesh@{ST::Mesh}}
+Inheritance diagram for ST\+::Mesh\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_s_t_1_1_mesh}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a7ac5ce6984c82991a85f5c477957ccba}\label{class_s_t_1_1_mesh_a7ac5ce6984c82991a85f5c477957ccba}} 
+const G\+Luint {\bfseries get\+ID} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a2b1c66b33d75e727fe468f2345961c91}\label{class_s_t_1_1_mesh_a2b1c66b33d75e727fe468f2345961c91}} 
+const char $\ast$ {\bfseries get\+Name} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a96c52b4ba04b4b2a452536c87ef63caf}\label{class_s_t_1_1_mesh_a96c52b4ba04b4b2a452536c87ef63caf}} 
+void {\bfseries set\+Name} (char $\ast$n)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ae2857dd4b8f5499441dd6d4a1cae3ab0}\label{class_s_t_1_1_mesh_ae2857dd4b8f5499441dd6d4a1cae3ab0}} 
+glm\+::vec3 {\bfseries get\+Min\+Point} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a5572bd84fb3f65f477b3fae9d0f6fe49}\label{class_s_t_1_1_mesh_a5572bd84fb3f65f477b3fae9d0f6fe49}} 
+glm\+::vec3 {\bfseries get\+Max\+Point} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ac13427449f8cca5bd6fc6fcd062319ca}\label{class_s_t_1_1_mesh_ac13427449f8cca5bd6fc6fcd062319ca}} 
+virtual void {\bfseries set\+Instance\+Data} (const std\+::vector$<$ \mbox{\hyperlink{struct_s_t_1_1_instance_info}{Instance\+Info}} $>$ \&data)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a213a9ca77bc2341d0c783773f6a10bf0}\label{class_s_t_1_1_mesh_a213a9ca77bc2341d0c783773f6a10bf0}} 
+virtual void {\bfseries render} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a1c98ff0640a7c65ea64c09159eb0e830}\label{class_s_t_1_1_mesh_a1c98ff0640a7c65ea64c09159eb0e830}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{class_s_t_1_1_mesh}{Mesh}} \&rhs)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a67bcf1698dad182f92b245e0f80beeea}\label{class_s_t_1_1_mesh_a67bcf1698dad182f92b245e0f80beeea}} 
+std\+::vector$<$ \mbox{\hyperlink{struct_s_t_1_1_vertex_info}{Vertex\+Info}} $>$ {\bfseries vertices\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ae814ca03dbc9c0931d0b3990dbe408cb}\label{class_s_t_1_1_mesh_ae814ca03dbc9c0931d0b3990dbe408cb}} 
+std\+::vector$<$ unsigned int $>$ {\bfseries indices\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a217cb5e6b341f46d8f08db46eed5fe8f}\label{class_s_t_1_1_mesh_a217cb5e6b341f46d8f08db46eed5fe8f}} 
+Cull\+Mode {\bfseries cullmode\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ab9e830d02f4527b5e9d065adea26a376}\label{class_s_t_1_1_mesh_ab9e830d02f4527b5e9d065adea26a376}} 
+Depth\+Mode {\bfseries depthmode\+\_\+}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a61d7e1172ab5b2c0f1386aa09ab1fed4}\label{class_s_t_1_1_mesh_a61d7e1172ab5b2c0f1386aa09ab1fed4}} 
+void {\bfseries Calculate\+Tangent\+Bitangent} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ab58635ebff74b9f43f39b9d1dafcddb7}\label{class_s_t_1_1_mesh_ab58635ebff74b9f43f39b9d1dafcddb7}} 
+std\+::string {\bfseries name\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a3f3c949819e39a81532a1d37a26ae581}\label{class_s_t_1_1_mesh_a3f3c949819e39a81532a1d37a26ae581}} 
+G\+Luint {\bfseries internal\+Id}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_a298c6fadb9551ede8ae6a21616ad1523}\label{class_s_t_1_1_mesh_a298c6fadb9551ede8ae6a21616ad1523}} 
+G\+Luint {\bfseries instance\+Buffer}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_mesh_ac5d0593a4f2fb238866c25b775503f32}\label{class_s_t_1_1_mesh_ac5d0593a4f2fb238866c25b775503f32}} 
+int {\bfseries num\+Instances}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/st\+\_\+mesh.\+h\end{DoxyCompactItemize}

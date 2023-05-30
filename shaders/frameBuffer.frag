@@ -240,6 +240,12 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
+vec3 GetSkyboxReflection(vec3 V, vec3 N) {
+    vec3 R = reflect(-V, N);
+    vec3 skyboxColor = texture(gSkybox, R).rgb;
+    return skyboxColor;
+}
+
 vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roughness, float Metallic, vec3 F0){
     vec3 LightDirToObj = normalize(-light.direction);
     vec3 H = normalize(V + LightDirToObj);
@@ -266,7 +272,11 @@ vec3 CalcLight(DirLight light, vec3 V, vec3 N, vec3 Pos, vec3 Albedo, float Roug
     vec3 specularColor = vec3(0.3) * spec * light.specular; 
     vec3 specularResult = Specular * specularColor;
 
-
+    // new
+//    vec3 skyboxColor = GetSkyboxReflection(V,N);
+//    vec3 finalColor = mix((kD * Albedo / PI + (thisspecular * specularResult)) * radiance * dotNL, skyboxColor, fresnel);
+//
+//    return finalColor;
     return (kD * Albedo / PI + (thisspecular * specularResult)) * radiance * dotNL;
 }
 

@@ -1,0 +1,116 @@
+\hypertarget{class_s_t_1_1_camera_component}{}\doxysection{ST\+::Camera\+Component Class Reference}
+\label{class_s_t_1_1_camera_component}\index{ST::CameraComponent@{ST::CameraComponent}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a77dfc8bc30f6526b3c84ff504968fb93}\label{class_s_t_1_1_camera_component_a77dfc8bc30f6526b3c84ff504968fb93}} 
+\mbox{\hyperlink{class_s_t_1_1_camera_component_a77dfc8bc30f6526b3c84ff504968fb93}{Camera\+Component}} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_s_t_1_1_camera_component_a5da6c943e7191070f76d19f7dad94e56}{set\+Perspective}} (float fov, float ratio, float near\+Plane, float far\+Plane)
+\begin{DoxyCompactList}\small\item\em Set the camera to Perspective. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_s_t_1_1_camera_component_a02ef51c526e1d8ac5b91b481f0b825ba}{set\+Orthographic}} (float h, float v, float near\+Plane, float far\+Plane)
+\begin{DoxyCompactList}\small\item\em Set the camera to Orthographic. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a20a7d3b9efa24cfad3325ff403a55826}\label{class_s_t_1_1_camera_component_a20a7d3b9efa24cfad3325ff403a55826}} 
+S\+T\+::\+Camera\+Type \mbox{\hyperlink{class_s_t_1_1_camera_component_a20a7d3b9efa24cfad3325ff403a55826}{get\+Camera\+Type}} () const
+\begin{DoxyCompactList}\small\item\em Return the type of the camera. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_s_t_1_1_camera_component_a03dc5458b67883d5280d00d128f1d90e}{look\+At}} (glm\+::vec3 my\+Pos, glm\+::vec3 target, glm\+::vec3 up\+Cam\+Vector)
+\begin{DoxyCompactList}\small\item\em Make camera look to some point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a2d078d3f5a65d27a081446a68f4f748d}\label{class_s_t_1_1_camera_component_a2d078d3f5a65d27a081446a68f4f748d}} 
+glm\+::mat4 {\bfseries view}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a0a799276dd85774079c101f61353deab}\label{class_s_t_1_1_camera_component_a0a799276dd85774079c101f61353deab}} 
+glm\+::mat4 {\bfseries projection}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_ab6624a062c7c02e438ba121d9d64dec1}\label{class_s_t_1_1_camera_component_ab6624a062c7c02e438ba121d9d64dec1}} 
+Camera\+Type {\bfseries type}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a7f7aceb65d7cec217fc665e1d81e21fa}\label{class_s_t_1_1_camera_component_a7f7aceb65d7cec217fc665e1d81e21fa}} 
+float {\bfseries fov\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_afa2c6d123a5e1cbe0d7e87c0f1f27eb1}\label{class_s_t_1_1_camera_component_afa2c6d123a5e1cbe0d7e87c0f1f27eb1}} 
+float {\bfseries ratio\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a0bd32a7858369602c1bf68aaa9cfc9d4}\label{class_s_t_1_1_camera_component_a0bd32a7858369602c1bf68aaa9cfc9d4}} 
+float {\bfseries horizontal\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a7fb8b6c80ee2f2576e940e85eb51cfc9}\label{class_s_t_1_1_camera_component_a7fb8b6c80ee2f2576e940e85eb51cfc9}} 
+float {\bfseries vertical\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_acf8910380d04feba2fb63836fefebf89}\label{class_s_t_1_1_camera_component_acf8910380d04feba2fb63836fefebf89}} 
+float {\bfseries near\+Plane\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_af3efce77bfb8f6a796d9dfdf33dca88d}\label{class_s_t_1_1_camera_component_af3efce77bfb8f6a796d9dfdf33dca88d}} 
+float {\bfseries far\+Plane\+\_\+}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a03dc5458b67883d5280d00d128f1d90e}\label{class_s_t_1_1_camera_component_a03dc5458b67883d5280d00d128f1d90e}} 
+\index{ST::CameraComponent@{ST::CameraComponent}!lookAt@{lookAt}}
+\index{lookAt@{lookAt}!ST::CameraComponent@{ST::CameraComponent}}
+\doxysubsubsection{\texorpdfstring{lookAt()}{lookAt()}}
+{\footnotesize\ttfamily void S\+T\+::\+Camera\+Component\+::look\+At (\begin{DoxyParamCaption}\item[{glm\+::vec3}]{my\+Pos,  }\item[{glm\+::vec3}]{target,  }\item[{glm\+::vec3}]{up\+Cam\+Vector }\end{DoxyParamCaption})}
+
+
+
+Make camera look to some point. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em glm\+::vec3} & my\+Pos the position of the start point \\
+\hline
+{\em glm\+::vec3} & target the position the target to look \\
+\hline
+{\em glm\+::vec3} & up\+Cam\+Vector Up\+Vector \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a02ef51c526e1d8ac5b91b481f0b825ba}\label{class_s_t_1_1_camera_component_a02ef51c526e1d8ac5b91b481f0b825ba}} 
+\index{ST::CameraComponent@{ST::CameraComponent}!setOrthographic@{setOrthographic}}
+\index{setOrthographic@{setOrthographic}!ST::CameraComponent@{ST::CameraComponent}}
+\doxysubsubsection{\texorpdfstring{setOrthographic()}{setOrthographic()}}
+{\footnotesize\ttfamily void S\+T\+::\+Camera\+Component\+::set\+Orthographic (\begin{DoxyParamCaption}\item[{float}]{h,  }\item[{float}]{v,  }\item[{float}]{near\+Plane,  }\item[{float}]{far\+Plane }\end{DoxyParamCaption})}
+
+
+
+Set the camera to Orthographic. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em float} & horizontal \\
+\hline
+{\em float} & vertical \\
+\hline
+{\em float} & near\+Plane \\
+\hline
+{\em float} & far\+Plane \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_s_t_1_1_camera_component_a5da6c943e7191070f76d19f7dad94e56}\label{class_s_t_1_1_camera_component_a5da6c943e7191070f76d19f7dad94e56}} 
+\index{ST::CameraComponent@{ST::CameraComponent}!setPerspective@{setPerspective}}
+\index{setPerspective@{setPerspective}!ST::CameraComponent@{ST::CameraComponent}}
+\doxysubsubsection{\texorpdfstring{setPerspective()}{setPerspective()}}
+{\footnotesize\ttfamily void S\+T\+::\+Camera\+Component\+::set\+Perspective (\begin{DoxyParamCaption}\item[{float}]{fov,  }\item[{float}]{ratio,  }\item[{float}]{near\+Plane,  }\item[{float}]{far\+Plane }\end{DoxyParamCaption})}
+
+
+
+Set the camera to Perspective. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em float} & fov \\
+\hline
+{\em float} & ratio \\
+\hline
+{\em float} & near\+Plane \\
+\hline
+{\em float} & far\+Plane \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/components/st\+\_\+camera.\+h\end{DoxyCompactItemize}

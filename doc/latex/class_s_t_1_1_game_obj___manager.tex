@@ -1,0 +1,103 @@
+\hypertarget{class_s_t_1_1_game_obj___manager}{}\doxysection{ST\+::Game\+Obj\+\_\+\+Manager Class Reference}
+\label{class_s_t_1_1_game_obj___manager}\index{ST::GameObj\_Manager@{ST::GameObj\_Manager}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a5397d3a224215e8988dd4324deb0eb1f}\label{class_s_t_1_1_game_obj___manager_a5397d3a224215e8988dd4324deb0eb1f}} 
+{\footnotesize template$<$typename C $>$ }\\void {\bfseries add\+Component\+Class} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a13a7b8f76829c47dae75a2037af2fda5}\label{class_s_t_1_1_game_obj___manager_a13a7b8f76829c47dae75a2037af2fda5}} 
+{\footnotesize template$<$typename... Cs$>$ }\\\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} {\bfseries create\+Game\+Obj} (Cs... components)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_ae7ba47ba8161638a151a47bb738a58fa}\label{class_s_t_1_1_game_obj___manager_ae7ba47ba8161638a151a47bb738a58fa}} 
+void {\bfseries delete\+Game\+Obj} (int Obj\+ID)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a6671efb47dfd4ac78547c53b8a5940e1}\label{class_s_t_1_1_game_obj___manager_a6671efb47dfd4ac78547c53b8a5940e1}} 
+{\footnotesize template$<$typename C $>$ }\\\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} {\bfseries get\+Game\+Obj} (const C \&component) const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a8b50121cc520648d106c6ce5cc277148}\label{class_s_t_1_1_game_obj___manager_a8b50121cc520648d106c6ce5cc277148}} 
+{\footnotesize template$<$typename C $>$ }\\bool {\bfseries add\+Component} (\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} ref, C component)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a20bcc5132ae6db8bce7abfd6f141f84a}\label{class_s_t_1_1_game_obj___manager_a20bcc5132ae6db8bce7abfd6f141f84a}} 
+{\footnotesize template$<$typename C $>$ }\\bool {\bfseries add\+Component} (size\+\_\+t Obj\+ID)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a067c30067c5394e2d472bb25c6014704}\label{class_s_t_1_1_game_obj___manager_a067c30067c5394e2d472bb25c6014704}} 
+{\footnotesize template$<$typename C $>$ }\\bool {\bfseries remove\+Component} (size\+\_\+t Obj\+ID)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_aa8b2dbafb18496b32e7a710483e51064}\label{class_s_t_1_1_game_obj___manager_aa8b2dbafb18496b32e7a710483e51064}} 
+{\footnotesize template$<$typename C $>$ }\\C $\ast$ {\bfseries get\+Component} (\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} ref)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a7dfccd074187c9a8fefc2349807f6dd4}\label{class_s_t_1_1_game_obj___manager_a7dfccd074187c9a8fefc2349807f6dd4}} 
+{\footnotesize template$<$typename C $>$ }\\C $\ast$ {\bfseries get\+Component} (size\+\_\+t Obj\+ID)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_ae9daad3f725532ded22e009e33fb4374}\label{class_s_t_1_1_game_obj___manager_ae9daad3f725532ded22e009e33fb4374}} 
+{\footnotesize template$<$class T $>$ }\\std\+::vector$<$ std\+::optional$<$ T $>$ $>$ $\ast$ {\bfseries get\+Component\+Vector} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a9958f892280b15eae4e775bdfe08da37}\label{class_s_t_1_1_game_obj___manager_a9958f892280b15eae4e775bdfe08da37}} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_ad4eb19a8ec4b4a5f823ac18ea24d3e2b}\label{class_s_t_1_1_game_obj___manager_ad4eb19a8ec4b4a5f823ac18ea24d3e2b}} 
+void {\bfseries set\+Main\+Camera} (const \mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} \&cam)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a2a19dceee3e7a41f2ee9eac234b7254f}\label{class_s_t_1_1_game_obj___manager_a2a19dceee3e7a41f2ee9eac234b7254f}} 
+int {\bfseries main\+Camera\+ID} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a84a851ba486107304526effd618f2c3e}\label{class_s_t_1_1_game_obj___manager_a84a851ba486107304526effd618f2c3e}} 
+void {\bfseries delete\+Main\+Camera} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a1e97a0ce1df73ebb2173e10593b085b1}\label{class_s_t_1_1_game_obj___manager_a1e97a0ce1df73ebb2173e10593b085b1}} 
+void {\bfseries set\+Skybox\+Texture} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_af9e560ae27030abb7f8c934954914dd9}\label{class_s_t_1_1_game_obj___manager_af9e560ae27030abb7f8c934954914dd9}} 
+{\footnotesize template$<$typename C $>$ }\\std\+::vector$<$ std\+::optional$<$ C $>$ $>$ $\ast$ {\bfseries get\+Component\+Vector} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a193fd9b0f167d4adb297a90bea38a661}\label{class_s_t_1_1_game_obj___manager_a193fd9b0f167d4adb297a90bea38a661}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries unlite\+Program}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a427fc7d62c0a9ce74ab8b59283bec7b3}\label{class_s_t_1_1_game_obj___manager_a427fc7d62c0a9ce74ab8b59283bec7b3}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries normals\+Program}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a4d6eeba1394c56715792af22b4422faa}\label{class_s_t_1_1_game_obj___manager_a4d6eeba1394c56715792af22b4422faa}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries shadow\+Mapping}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_ae23dbb02dcb5fb6be1853b8c55c2b8c9}\label{class_s_t_1_1_game_obj___manager_ae23dbb02dcb5fb6be1853b8c55c2b8c9}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries shadow\+Mapping\+Point}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a8a45ab06d0acc688cce6d062dae12e5b}\label{class_s_t_1_1_game_obj___manager_a8a45ab06d0acc688cce6d062dae12e5b}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries framebuffer\+Program}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a2bc2ce8790b2aaf8b9ba40e890f91afe}\label{class_s_t_1_1_game_obj___manager_a2bc2ce8790b2aaf8b9ba40e890f91afe}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries framebuffer\+S\+S\+A\+O\+Program}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a553af9343984e11c78b2f0f1cc646768}\label{class_s_t_1_1_game_obj___manager_a553af9343984e11c78b2f0f1cc646768}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries postproces\+\_\+blur}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_ac45898172251c588e6f2769b834e169a}\label{class_s_t_1_1_game_obj___manager_ac45898172251c588e6f2769b834e169a}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries g\+\_\+buffer}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a86b23e14be840b7871b12b0d3fbd249c}\label{class_s_t_1_1_game_obj___manager_a86b23e14be840b7871b12b0d3fbd249c}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ {\bfseries skybox\+Program}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a67c4d1f78b90996c6050726665a3fc28}\label{class_s_t_1_1_game_obj___manager_a67c4d1f78b90996c6050726665a3fc28}} 
+int {\bfseries drawcalls\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a69042852695cec6de47f0f73ddaac840}\label{class_s_t_1_1_game_obj___manager_a69042852695cec6de47f0f73ddaac840}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_sytem_assets}{S\+T\+::\+Sytem\+Assets}} $>$ {\bfseries assets\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_af1b9fc9dc05d3c8ac8f737de85400b57}\label{class_s_t_1_1_game_obj___manager_af1b9fc9dc05d3c8ac8f737de85400b57}} 
+size\+\_\+t {\bfseries object\+Selected}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a813a1e27c43b694c1916e4292c3a4130}\label{class_s_t_1_1_game_obj___manager_a813a1e27c43b694c1916e4292c3a4130}} 
+\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} {\bfseries root} = create\+Game\+Obj()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_game_obj___manager_a46ae70223f7a1e6585ab778d282e6cbb}\label{class_s_t_1_1_game_obj___manager_a46ae70223f7a1e6585ab778d282e6cbb}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} $>$ {\bfseries skybox\+\_\+}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/st\+\_\+gameobj\+\_\+manager.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,159 @@
+\hypertarget{class_s_t_1_1_texture}{}\doxysection{ST\+::Texture Class Reference}
+\label{class_s_t_1_1_texture}\index{ST::Texture@{ST::Texture}}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a4083429132eccc4a2ead29ae80405b5f}\label{class_s_t_1_1_texture_a4083429132eccc4a2ead29ae80405b5f}} 
+enum {\bfseries Text\+Type} \{ {\bfseries T\+\_\+1D}, 
+{\bfseries T\+\_\+2D}, 
+{\bfseries T\+\_\+3D}, 
+{\bfseries T\+\_\+\+C\+U\+B\+E\+M\+AP}
+ \}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a5d5eb73b2e1dd56766907bd33562203e}\label{class_s_t_1_1_texture_a5d5eb73b2e1dd56766907bd33562203e}} 
+enum {\bfseries Format} \{ \newline
+{\bfseries F\+\_\+\+None}, 
+{\bfseries F\+\_\+R}, 
+{\bfseries F\+\_\+\+RG}, 
+{\bfseries F\+\_\+\+R\+GB}, 
+\newline
+{\bfseries F\+\_\+\+R\+G\+BA}, 
+{\bfseries F\+\_\+\+R\+G\+B\+A16}, 
+{\bfseries F\+\_\+\+B\+GR}, 
+{\bfseries F\+\_\+\+B\+G\+RA}, 
+\newline
+{\bfseries F\+\_\+\+D\+E\+P\+TH}, 
+{\bfseries F\+\_\+\+D\+E\+P\+T\+H32}
+ \}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a466de851c4feae12a0ec433b695bfb56}\label{class_s_t_1_1_texture_a466de851c4feae12a0ec433b695bfb56}} 
+enum {\bfseries Data\+Type} \{ \newline
+{\bfseries D\+T\+\_\+\+U\+\_\+\+B\+Y\+TE}, 
+{\bfseries D\+T\+\_\+\+B\+Y\+TE}, 
+{\bfseries D\+T\+\_\+\+U\+\_\+\+S\+H\+O\+RT}, 
+{\bfseries D\+T\+\_\+\+S\+H\+O\+RT}, 
+\newline
+{\bfseries D\+T\+\_\+\+U\+\_\+\+I\+NT}, 
+{\bfseries D\+T\+\_\+\+I\+NT}, 
+{\bfseries D\+T\+\_\+\+F\+L\+O\+AT}
+ \}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_ae44f9de6d1e523e67a4651e80543c050}\label{class_s_t_1_1_texture_ae44f9de6d1e523e67a4651e80543c050}} 
+enum {\bfseries Filter} \{ \newline
+{\bfseries F\+\_\+\+N\+E\+A\+R\+E\+ST}, 
+{\bfseries F\+\_\+\+L\+I\+N\+E\+AR}, 
+{\bfseries F\+\_\+\+N\+E\+A\+R\+E\+S\+T\+\_\+\+M\+I\+P\+M\+A\+P\+\_\+\+N\+E\+A\+R\+E\+ST}, 
+{\bfseries F\+\_\+\+L\+I\+N\+E\+A\+R\+\_\+\+M\+I\+P\+M\+A\+P\+\_\+\+N\+E\+A\+R\+E\+ST}, 
+\newline
+{\bfseries F\+\_\+\+N\+E\+A\+R\+E\+S\+T\+\_\+\+M\+I\+P\+M\+A\+P\+\_\+\+L\+I\+N\+E\+AR}, 
+{\bfseries F\+\_\+\+L\+I\+N\+E\+A\+R\+\_\+\+M\+I\+P\+M\+A\+P\+\_\+\+L\+I\+N\+E\+AR}
+ \}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_abb8413c0df86268326e15205599e105c}\label{class_s_t_1_1_texture_abb8413c0df86268326e15205599e105c}} 
+enum {\bfseries Wrap} \{ {\bfseries W\+\_\+\+R\+E\+P\+E\+AT}, 
+{\bfseries W\+\_\+\+M\+I\+R\+R\+O\+R\+E\+D\+\_\+\+R\+E\+P\+E\+AT}, 
+{\bfseries W\+\_\+\+C\+L\+A\+M\+P\+\_\+\+T\+O\+\_\+\+E\+D\+GE}, 
+{\bfseries W\+\_\+\+C\+L\+A\+M\+P\+\_\+\+T\+O\+\_\+\+B\+O\+R\+D\+ER}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a3652031d27068824b6ab7676703d9bea}\label{class_s_t_1_1_texture_a3652031d27068824b6ab7676703d9bea}} 
+bool {\bfseries load\+Source} (const char $\ast$path, bool flip=false, Text\+Type t=Text\+Type\+::\+T\+\_\+2D)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a702082d41ac79f35375f760dce5693fb}\label{class_s_t_1_1_texture_a702082d41ac79f35375f760dce5693fb}} 
+bool {\bfseries load\+Cubemap} (const char $\ast$path, unsigned int face=0)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a6db25ea2dec3a7fb2c4a5d3a05a171bb}\label{class_s_t_1_1_texture_a6db25ea2dec3a7fb2c4a5d3a05a171bb}} 
+void {\bfseries init} (int width, int height, Text\+Type t=Text\+Type\+::\+T\+\_\+2D, Data\+Type dt=D\+T\+\_\+\+U\+\_\+\+B\+Y\+TE, Format f=Format\+::\+F\+\_\+\+R\+G\+BA, Format internalf=Format\+::\+F\+\_\+\+R\+G\+BA)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a42f39970189dae559bedbcb155791011}\label{class_s_t_1_1_texture_a42f39970189dae559bedbcb155791011}} 
+void {\bfseries bind} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a4be465ce8d9f274d15b8ea416b3aeff8}\label{class_s_t_1_1_texture_a4be465ce8d9f274d15b8ea416b3aeff8}} 
+void {\bfseries unbind} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_ae858429b6209ca5453ae14fdf5f2355c}\label{class_s_t_1_1_texture_ae858429b6209ca5453ae14fdf5f2355c}} 
+void {\bfseries set\+\_\+\+Type} (Text\+Type t)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_afceb16684d04633063bca1e903d59c3d}\label{class_s_t_1_1_texture_afceb16684d04633063bca1e903d59c3d}} 
+void {\bfseries set\+\_\+data\+Type} (Data\+Type dt)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_ab756aa319cbc599db86779bb37a76e25}\label{class_s_t_1_1_texture_ab756aa319cbc599db86779bb37a76e25}} 
+void {\bfseries set\+\_\+min\+\_\+filter} (Filter f)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_af493945110431999f0660f4af4ccffde}\label{class_s_t_1_1_texture_af493945110431999f0660f4af4ccffde}} 
+void {\bfseries set\+\_\+mag\+\_\+filter} (Filter f)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a3fd93c16d613f3ec86d7c44c163c0e71}\label{class_s_t_1_1_texture_a3fd93c16d613f3ec86d7c44c163c0e71}} 
+void {\bfseries set\+\_\+wrap\+\_\+s} (Wrap c)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a9ba2863684afaf036b5d8417897aef52}\label{class_s_t_1_1_texture_a9ba2863684afaf036b5d8417897aef52}} 
+void {\bfseries set\+\_\+wrap\+\_\+t} (Wrap c)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a4308faf162f4048b28f7a96e55245703}\label{class_s_t_1_1_texture_a4308faf162f4048b28f7a96e55245703}} 
+void {\bfseries set\+\_\+wrap\+\_\+r} (Wrap c)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a9daaef106515bbee106ced95a640e503}\label{class_s_t_1_1_texture_a9daaef106515bbee106ced95a640e503}} 
+void {\bfseries set\+Rows} (int num)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_adf2b3736d09f137baed74e8e578893b0}\label{class_s_t_1_1_texture_adf2b3736d09f137baed74e8e578893b0}} 
+void {\bfseries set\+Cols} (int num)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_ab7c22c96ef0e6ea6a02ab87b4e7b8d30}\label{class_s_t_1_1_texture_ab7c22c96ef0e6ea6a02ab87b4e7b8d30}} 
+const G\+Luint {\bfseries get\+ID} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a5b2dcbf6cbd5603459ad0f17aae7beac}\label{class_s_t_1_1_texture_a5b2dcbf6cbd5603459ad0f17aae7beac}} 
+const Text\+Type {\bfseries get\+Type} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a07cf0063f708b7f78675d1bf3facf2f4}\label{class_s_t_1_1_texture_a07cf0063f708b7f78675d1bf3facf2f4}} 
+const G\+Lenum {\bfseries get\+Type\+GL} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a34def879cef1c3c6ef45f57fb72303d6}\label{class_s_t_1_1_texture_a34def879cef1c3c6ef45f57fb72303d6}} 
+const Format {\bfseries get\+Format} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a2932e1156323a8e4024f28b5599b3642}\label{class_s_t_1_1_texture_a2932e1156323a8e4024f28b5599b3642}} 
+const G\+Lenum {\bfseries get\+Format\+GL} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a31bc7bb3fc415fac9ddb3737a2b240b6}\label{class_s_t_1_1_texture_a31bc7bb3fc415fac9ddb3737a2b240b6}} 
+const Data\+Type {\bfseries get\+Data\+Type} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a4198b027798d75423943c1533c07b005}\label{class_s_t_1_1_texture_a4198b027798d75423943c1533c07b005}} 
+const G\+Lenum {\bfseries get\+Data\+Type\+GL} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a619da8aa8d9e2e6e35a49f7af4461da3}\label{class_s_t_1_1_texture_a619da8aa8d9e2e6e35a49f7af4461da3}} 
+const int {\bfseries width} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_ad36279ca4fbdbc4abe35479fab401482}\label{class_s_t_1_1_texture_ad36279ca4fbdbc4abe35479fab401482}} 
+const int {\bfseries height} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a7cc5a8c9af49950b64290f056df19747}\label{class_s_t_1_1_texture_a7cc5a8c9af49950b64290f056df19747}} 
+const int {\bfseries get\+Rows} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a317465f7b4125fa5b3280744731ce67f}\label{class_s_t_1_1_texture_a317465f7b4125fa5b3280744731ce67f}} 
+const int {\bfseries get\+Cols} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a2197a55940ad01fe2953bcc1380207f7}\label{class_s_t_1_1_texture_a2197a55940ad01fe2953bcc1380207f7}} 
+void {\bfseries set\+\_\+data} (const void $\ast$data)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a18e410c9188972e890e6100333b15899}\label{class_s_t_1_1_texture_a18e410c9188972e890e6100333b15899}} 
+{\bfseries Texture} (const \mbox{\hyperlink{class_s_t_1_1_texture}{Texture}} \&o)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a55aecf02f68fa7aef35a61f34d60318e}\label{class_s_t_1_1_texture_a55aecf02f68fa7aef35a61f34d60318e}} 
+bool {\bfseries generate\+Mipmap}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_a7c46b4ede1f5e6f933a744013b07eee1}\label{class_s_t_1_1_texture_a7c46b4ede1f5e6f933a744013b07eee1}} 
+bool {\bfseries force\+No\+Mipmap}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_texture_af7bbbe33cdf9f9dd8eeb3d18358e9f51}\label{class_s_t_1_1_texture_af7bbbe33cdf9f9dd8eeb3d18358e9f51}} 
+float {\bfseries border\+Color} \mbox{[}4\mbox{]}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/st\+\_\+texture.\+h\end{DoxyCompactItemize}

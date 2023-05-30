@@ -1,0 +1,48 @@
+\hypertarget{class_s_t_1_1_hierarchy_component}{}\doxysection{ST\+::Hierarchy\+Component Class Reference}
+\label{class_s_t_1_1_hierarchy_component}\index{ST::HierarchyComponent@{ST::HierarchyComponent}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a1fbd1c21decb34a7556e8ac1865c2ef1}\label{class_s_t_1_1_hierarchy_component_a1fbd1c21decb34a7556e8ac1865c2ef1}} 
+\mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a1fbd1c21decb34a7556e8ac1865c2ef1}{Hierarchy\+Component}} ()
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a2212f25101eddc10f6148fcf93cd3e71}\label{class_s_t_1_1_hierarchy_component_a2212f25101eddc10f6148fcf93cd3e71}} 
+void \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a2212f25101eddc10f6148fcf93cd3e71}{set\+Parent}} (const \mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} \&g)
+\begin{DoxyCompactList}\small\item\em We pass the object that we want to be its parent. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a12df7ae30488a8a86bcd2134696b8cda}\label{class_s_t_1_1_hierarchy_component_a12df7ae30488a8a86bcd2134696b8cda}} 
+void \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a12df7ae30488a8a86bcd2134696b8cda}{remove\+Parent}} (\mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} \&thischild)
+\begin{DoxyCompactList}\small\item\em Remove the parent of this \mbox{\hyperlink{class_s_t_1_1_game_obj}{Game\+Obj}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a691d6bb49f7aee274581b5a298553552}\label{class_s_t_1_1_hierarchy_component_a691d6bb49f7aee274581b5a298553552}} 
+void \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a691d6bb49f7aee274581b5a298553552}{add\+Child}} (const \mbox{\hyperlink{class_s_t_1_1_game_obj}{S\+T\+::\+Game\+Obj}} \&g)
+\begin{DoxyCompactList}\small\item\em Add the \mbox{\hyperlink{class_s_t_1_1_game_obj}{Game\+Obj}} to child. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a8a27b95239a3a3871caf0629f92a74b4}\label{class_s_t_1_1_hierarchy_component_a8a27b95239a3a3871caf0629f92a74b4}} 
+const int \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a8a27b95239a3a3871caf0629f92a74b4}{get\+Parent\+ID}} () const
+\begin{DoxyCompactList}\small\item\em Return the ID of his parent. Return -\/1 if don\textquotesingle{}t have. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_ad561080cbba21959ae3c0238fa65d988}{get\+Child\+ID}} (int index) const
+\begin{DoxyCompactList}\small\item\em Return the ID of the child in index. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_a943ffb920cda92aa06cc9eef3f23ce76}\label{class_s_t_1_1_hierarchy_component_a943ffb920cda92aa06cc9eef3f23ce76}} 
+const int \mbox{\hyperlink{class_s_t_1_1_hierarchy_component_a943ffb920cda92aa06cc9eef3f23ce76}{child\+Size}} () const
+\begin{DoxyCompactList}\small\item\em Return the size of the childrens. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_s_t_1_1_hierarchy_component_ad561080cbba21959ae3c0238fa65d988}\label{class_s_t_1_1_hierarchy_component_ad561080cbba21959ae3c0238fa65d988}} 
+\index{ST::HierarchyComponent@{ST::HierarchyComponent}!getChildID@{getChildID}}
+\index{getChildID@{getChildID}!ST::HierarchyComponent@{ST::HierarchyComponent}}
+\doxysubsubsection{\texorpdfstring{getChildID()}{getChildID()}}
+{\footnotesize\ttfamily const int S\+T\+::\+Hierarchy\+Component\+::get\+Child\+ID (\begin{DoxyParamCaption}\item[{int}]{index }\end{DoxyParamCaption}) const}
+
+
+
+Return the ID of the child in index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & of the child \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/components/st\+\_\+hierarchy.\+h\end{DoxyCompactItemize}

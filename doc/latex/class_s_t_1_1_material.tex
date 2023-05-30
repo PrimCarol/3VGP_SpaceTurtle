@@ -1,0 +1,103 @@
+\hypertarget{class_s_t_1_1_material}{}\doxysection{ST\+::Material Class Reference}
+\label{class_s_t_1_1_material}\index{ST::Material@{ST::Material}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_af30e5cbb7fff2d3cc2e4fb5acb4a5630}\label{class_s_t_1_1_material_af30e5cbb7fff2d3cc2e4fb5acb4a5630}} 
+void {\bfseries set\+Color} (glm\+::vec4 rgb)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a665cd665779d5a231c49c36fb03eb013}\label{class_s_t_1_1_material_a665cd665779d5a231c49c36fb03eb013}} 
+void {\bfseries set\+Color} (float r, float g, float b, float a=1.\+0f)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a8f8b63dbf07472c0c25005a7ca138715}\label{class_s_t_1_1_material_a8f8b63dbf07472c0c25005a7ca138715}} 
+const glm\+::vec4 {\bfseries get\+Color} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_aff28bd242da9f46b5c27073d9a74013b}\label{class_s_t_1_1_material_aff28bd242da9f46b5c27073d9a74013b}} 
+const \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $\ast$ {\bfseries get\+Program} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a1499ddd0a5a31c442916418c3338ee8b}\label{class_s_t_1_1_material_a1499ddd0a5a31c442916418c3338ee8b}} 
+void {\bfseries set\+Program} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_s_t_1_1_program}{S\+T\+::\+Program}} $>$ \&p)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a49bc2da34925523d3d1f6b0520a81aa7}\label{class_s_t_1_1_material_a49bc2da34925523d3d1f6b0520a81aa7}} 
+\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$ {\bfseries get\+Albedo} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a1afc38206101536f939b1e9a6780c4e0}\label{class_s_t_1_1_material_a1afc38206101536f939b1e9a6780c4e0}} 
+void {\bfseries set\+Texture\+\_\+\+Albedo} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex\+Albedo)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_aecda1267b45322f07beda6b1ed29fcb3}\label{class_s_t_1_1_material_aecda1267b45322f07beda6b1ed29fcb3}} 
+void {\bfseries remove\+Albedo} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a9e14c552ffd0dacf4f22b94ce23a657c}\label{class_s_t_1_1_material_a9e14c552ffd0dacf4f22b94ce23a657c}} 
+\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$ {\bfseries get\+Normal} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a2d9d429e233cc05bd0007c9f92e1ca8c}\label{class_s_t_1_1_material_a2d9d429e233cc05bd0007c9f92e1ca8c}} 
+void {\bfseries set\+Texture\+\_\+\+Normal} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex\+Normal)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a3b495fd240d5d0fc3b6627298b9f9920}\label{class_s_t_1_1_material_a3b495fd240d5d0fc3b6627298b9f9920}} 
+void {\bfseries remove\+Normal} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a71566bc9466fc38fdd28d8eb7e51ab94}\label{class_s_t_1_1_material_a71566bc9466fc38fdd28d8eb7e51ab94}} 
+\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$ {\bfseries get\+Specular} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_aa84c7c7944339dc41862810c0df81715}\label{class_s_t_1_1_material_aa84c7c7944339dc41862810c0df81715}} 
+void {\bfseries set\+Texture\+\_\+\+Specular} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex\+Specular)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a1f1f04ad17302b5f49166c090e77c664}\label{class_s_t_1_1_material_a1f1f04ad17302b5f49166c090e77c664}} 
+void {\bfseries remove\+Specular} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a1f24050d1535a08470d86efa191739f4}\label{class_s_t_1_1_material_a1f24050d1535a08470d86efa191739f4}} 
+\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$ {\bfseries get\+Roughness} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_ade326304c5a291d5820881bff08f4499}\label{class_s_t_1_1_material_ade326304c5a291d5820881bff08f4499}} 
+void {\bfseries set\+Texture\+\_\+\+Roughness} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex\+Roughness)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a1cfa4c0b3c9d64ab528914bd5a987b4f}\label{class_s_t_1_1_material_a1cfa4c0b3c9d64ab528914bd5a987b4f}} 
+void {\bfseries remove\+Roughness} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a010e3fddf3bffe03823beb81ac48d4f7}\label{class_s_t_1_1_material_a010e3fddf3bffe03823beb81ac48d4f7}} 
+\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$ {\bfseries get\+Metallic} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a3f2f6518fbe18f1d6370aa9143addab1}\label{class_s_t_1_1_material_a3f2f6518fbe18f1d6370aa9143addab1}} 
+void {\bfseries set\+Texture\+\_\+\+Metallic} (\mbox{\hyperlink{class_s_t_1_1_texture}{S\+T\+::\+Texture}} $\ast$tex\+Metallic)
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a588d56b153237a065921e4763b15d083}\label{class_s_t_1_1_material_a588d56b153237a065921e4763b15d083}} 
+void {\bfseries remove\+Metallic} ()
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_affdf85059215a6635e35fc4e958194ab}\label{class_s_t_1_1_material_affdf85059215a6635e35fc4e958194ab}} 
+const glm\+::ivec2 {\bfseries get\+Tex\+Index} () const
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_ae6fe595633e01ce0e1b5004149135bd1}\label{class_s_t_1_1_material_ae6fe595633e01ce0e1b5004149135bd1}} 
+void {\bfseries set\+Tex\+Index} (glm\+::ivec2 tex\+Index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a7b3307c4008b0c556ad074d7ab72463a}\label{class_s_t_1_1_material_a7b3307c4008b0c556ad074d7ab72463a}} 
+bool {\bfseries have\+Albedo}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a9b02ec3c376f6450b6dca2ac11b60b54}\label{class_s_t_1_1_material_a9b02ec3c376f6450b6dca2ac11b60b54}} 
+bool {\bfseries have\+Normal}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_af728d655e3c1dedcebc759ff6b3532e4}\label{class_s_t_1_1_material_af728d655e3c1dedcebc759ff6b3532e4}} 
+bool {\bfseries have\+Specular}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a32867d422c3c5da1c452bdc413747b0a}\label{class_s_t_1_1_material_a32867d422c3c5da1c452bdc413747b0a}} 
+bool {\bfseries have\+Roughness}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_aa8c6f9db87cc61b6f931e65ad446eed8}\label{class_s_t_1_1_material_aa8c6f9db87cc61b6f931e65ad446eed8}} 
+float {\bfseries roughness\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_a4bb3f6ff204cab8243a8d10836e48066}\label{class_s_t_1_1_material_a4bb3f6ff204cab8243a8d10836e48066}} 
+bool {\bfseries have\+Metallic}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_af7cc1d1ab200bfb25f9f823119d2aa7b}\label{class_s_t_1_1_material_af7cc1d1ab200bfb25f9f823119d2aa7b}} 
+float {\bfseries metallic\+\_\+}
+\item 
+\mbox{\Hypertarget{class_s_t_1_1_material_aa24a7f2729470f5526b4e6eb34a9d9fb}\label{class_s_t_1_1_material_aa24a7f2729470f5526b4e6eb34a9d9fb}} 
+bool {\bfseries translucent}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/st\+\_\+material.\+h\end{DoxyCompactItemize}

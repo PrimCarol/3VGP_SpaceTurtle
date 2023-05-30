@@ -57,6 +57,8 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 				ST::TransformComponent* t = &transformVector.at(i).value();
 				//printf("[%d] Tiene transform\n", i);
 
+				//t->dirty = true;
+
 				if (t->dirty) {
 
 					// ------- Local -------
@@ -112,6 +114,14 @@ void ST::SystemTransform::UpdateTransforms(ST::GameObj_Manager &gm){
 
 							//t->m_World_Position_ = gm.transformComponentList_[h->getParentID()]->m_Position_ * t->m_Position_;
 							//t->m_World_Rotation_ = gm.transformComponentList_[h->getParentID()]->m_Rotation_ * t->m_Rotation_;
+						}
+						if (h->childSize() > 0) {
+							for (int ch = 0; ch < h->childSize(); ch++){
+								if (transformVector.at(h->getChildID(ch)).has_value()) {
+									auto& tchild = transformVector.at(h->getChildID(ch)).value();
+									tchild.dirty = true;
+								}
+							}
 						}
 					}
 

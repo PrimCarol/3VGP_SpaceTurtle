@@ -41,6 +41,11 @@ int main() {
 	assets->getTexture("tileRTS.png")->setCols(71);
 	assets->getTexture("tileRTS.png")->setRows(19);
 
+	assets->saveTexture("../others/DinoSprites_walk.png");
+	assets->getTexture("DinoSprites_walk.png")->set_mag_filter(ST::Texture::F_NEAREST);
+	assets->getTexture("DinoSprites_walk.png")->set_min_filter(ST::Texture::F_NEAREST);
+	assets->getTexture("DinoSprites_walk.png")->setCols(6);
+
 	assets->saveTexture("../others/Cat_diffuse.jpg", true);
 	assets->saveTexture("../others/Cat_specular.png", true);
 
@@ -132,6 +137,21 @@ int main() {
 	testObj.getComponent<ST::RenderComponent>()->material.setTexture_Metallic(assets->getTexture("helmet_metalness.tga"));
 	testObj.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
 	testObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
+
+	ST::GameObj rotateCenterObj = gm.back()->createGameObj(ST::TransformComponent{});
+	rotateCenterObj.getComponent<ST::TransformComponent>()->RotateX(90.0f);
+
+	ST::GameObj rotateObj = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	rotateObj.getComponent<ST::NameComponent>()->setName("CoreOBJ");
+	rotateObj.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("Cat_petit"));
+	rotateObj.getComponent<ST::ColliderComponent>()->setMaxPoint(rotateObj.getComponent<ST::RenderComponent>()->mesh->getMaxPoint());
+	rotateObj.getComponent<ST::ColliderComponent>()->setMinPoint(rotateObj.getComponent<ST::RenderComponent>()->mesh->getMinPoint());
+	rotateObj.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(assets->getTexture("Cat_diffuse.jpg"));
+	rotateObj.getComponent<ST::TransformComponent>()->setScale({ 0.7f,0.7f,0.7f });
+	rotateObj.getComponent<ST::TransformComponent>()->setPosition({ 8.0f,0.0f,0.0f });
+	rotateObj.getComponent<ST::TransformComponent>()->RotateX(-90.0f);
+
+	rotateObj.getComponent<ST::HierarchyComponent>()->setParent(rotateCenterObj);
 
 	ST::GameObj spot01 = gm.back()->createGameObj(ST::TransformComponent{}, ST::LightComponent{});
 	spot01.getComponent<ST::LightComponent>()->activeShadows();
@@ -343,6 +363,15 @@ int main() {
 
 	gm.back()->setSkyboxTexture(assets->getCubeMap("Skybox Snow"));
 
+	ST::GameObj tileAnim = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
+	tileAnim.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
+	tileAnim.getComponent<ST::RenderComponent>()->material.translucent = true;
+	tileAnim.getComponent<ST::RenderComponent>()->material.setProgram(gm.back()->unliteProgram);
+	tileAnim.getComponent<ST::RenderComponent>()->thiscullmode_ = ST::kCull_Disable;
+	tileAnim.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(gm.back()->assets_->getTexture("DinoSprites_walk.png"));
+	tileAnim.getComponent<ST::TransformComponent>()->setPosition(0.0f,0.0f,0.0f);
+	tileAnim.getComponent<ST::TransformComponent>()->setScale({ 5.0f,5.0f,5.0f });
+
 	for (int i = 0; i < 20000; i++) {
 		ST::GameObj tile = gm.back()->createGameObj(ST::TransformComponent{}, ST::RenderComponent{}, ST::ColliderComponent{});
 		tile.getComponent<ST::RenderComponent>()->setMesh(assets->getMesh("quad"));
@@ -352,9 +381,8 @@ int main() {
 		tile.getComponent<ST::RenderComponent>()->material.setTexture_Albedo(gm.back()->assets_->getTexture("tileRTS.png"));
 		tile.getComponent<ST::RenderComponent>()->material.setTexIndex({(int)ST::Engine::getRandom(0.0f, gm.back()->assets_->getTexture("tileRTS.png")->getRows()),
 																		(int)ST::Engine::getRandom(0.0f, gm.back()->assets_->getTexture("tileRTS.png")->getCols())});
-		tile.getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f));
+		tile.getComponent<ST::TransformComponent>()->setPosition(ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(-50.0f, 50.0f), ST::Engine::getRandom(0.0f, 100.0f));
 		tile.getComponent<ST::TransformComponent>()->setScale({0.5f,0.5f,0.5f});
-
 	}
 
 	// --------------------------
@@ -378,6 +406,12 @@ int main() {
 	bool hideHud = false;
 	bool hideHudPress = false;
 	// **************** TEST *****************
+
+	// ****** Values *****
+	int indexAnim = 0;
+	float speedAnim = 10.0f;
+	float countAnim = 0.0f;
+	// ****** Values *****
 
 	while (w.isOpen() && !w.inputPressed(ST::ST_INPUT_ESCAPE)) {
 		w.Clear();
@@ -405,7 +439,18 @@ int main() {
 
 		// ---- Update ----
 		testObj.getComponent<ST::TransformComponent>()->setRotateZ(testObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * 20.0f));	
+		rotateCenterObj.getComponent<ST::TransformComponent>()->setRotateZ(rotateCenterObj.getComponent<ST::TransformComponent>()->getRotation().z + (w.DeltaTime() * -40.0f));
+		
 		light1.getComponent<ST::TransformComponent>()->setPosition({sinf(w.CountTime()/1000) * 10.0f, cosf(w.CountTime()/1000) * 10.0f, 0.0f });
+		
+		
+		tileAnim.getComponent<ST::RenderComponent>()->material.setTexIndex({ indexAnim,0 });
+
+		if (countAnim >= 1.0f) {
+			indexAnim++;
+			countAnim = 0.0f;
+		}
+		countAnim += w.DeltaTime() * speedAnim;
 
 		// ---- Camera ----
 		ST::SystemCamera::Movemment(*gm.at(demoIndex), w);
