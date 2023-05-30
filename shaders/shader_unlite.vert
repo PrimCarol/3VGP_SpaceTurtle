@@ -40,23 +40,24 @@ void main(){
 	color = instance_Color;
 	//shininess = instance_MatShininess;
 
+	// ----- UV's and Atlas ------
 	float row = instance_TexIndex.y % rows;
 	float column = instance_TexIndex.x % cols;
 
 	float atlas_width = sizeTileX*cols;
-	float atlas_height= sizeTileY*rows;
+	float atlas_height = sizeTileY*rows;
 	float offset_width = 0.5 / atlas_width;
 	float offset_height = 0.5 / atlas_height;
 	
 	float tempUVx = a_uv.x;
 	float tempUVy = a_uv.y;
 
-	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width);
+	if(cols > 1){	tempUVx = tempUVx < 0.5 ? offset_width : (1 - offset_width); }
 
 	vec2 tempUV = vec2((tempUVx/cols) + (column / cols), (tempUVy/rows) + (row / rows));
 	texCoords = tempUV;
-
-	//texCoords = a_uv;
+    //TexCoords = a_uv;
+	// ----------------------
 
 	modelPosition = (instance_Matrix * vec4(a_position,1)).xyz;
 	normals = normalize((instance_Matrix * vec4(a_normal,0.0)).xyz);

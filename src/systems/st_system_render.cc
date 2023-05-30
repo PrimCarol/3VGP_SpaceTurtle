@@ -189,7 +189,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 
 		// Si unos tenian textura y este no, o al reves.
 		if (objs[i].render_->material.haveAlbedo) {
-			if (objs[i].render_->material.getAlbedo()->getID() != actualhaveTextureAlbedo) {
+			if (objs[i].render_->material.getAlbedo()->getID() != actualTextureAlbedo) {
 				actualTextureAlbedo = objs[i].render_->material.getAlbedo()->getID();
 				popInstances = true;
 			}
@@ -206,7 +206,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		if (objs[i].render_->material.haveNormal) {
-			if (objs[i].render_->material.getNormal()->getID() != actualhaveTextureNormal) {
+			if (objs[i].render_->material.getNormal()->getID() != actualTextureNormal) {
 				actualTextureNormal = objs[i].render_->material.getNormal()->getID();
 				popInstances = true;
 			}
@@ -224,7 +224,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		if (objs[i].render_->material.haveSpecular) {
-			if (objs[i].render_->material.getSpecular()->getID() != actualhaveTextureSpecular) {
+			if (objs[i].render_->material.getSpecular()->getID() != actualTextureSpecular) {
 				actualTextureSpecular = objs[i].render_->material.getSpecular()->getID();
 				popInstances = true;
 			}
@@ -242,7 +242,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		if (objs[i].render_->material.haveRoughness) {
-			if (objs[i].render_->material.getRoughness()->getID() != actualhaveTextureRoughness) {
+			if (objs[i].render_->material.getRoughness()->getID() != actualTextureRoughness) {
 				actualTextureRoughness = objs[i].render_->material.getRoughness()->getID();
 				popInstances = true;
 			}
@@ -260,7 +260,7 @@ void ST::SystemRender::doRender(std::vector<MyObjToRender>& objs, MyCamera& cam,
 		}
 
 		if (objs[i].render_->material.haveMetallic) {
-			if (objs[i].render_->material.getMetallic()->getID() != actualhaveTextureMetallic) {
+			if (objs[i].render_->material.getMetallic()->getID() != actualTextureMetallic) {
 				actualTextureMetallic = objs[i].render_->material.getMetallic()->getID();
 				popInstances = true;
 			}
@@ -492,46 +492,48 @@ void ST::SystemRender::Render(ST::GameObj_Manager& gm, const ST::Program& p) {
 			}
 
 			// ----- Translucidos -----
-			//bool sortTranslucents = false; // <---------- Temporal
+			bool sortTranslucents = true; // <---------- Temporal
 
-			//if (sortTranslucents) {
-			//	std::map<float, int> sorted;
-			//	for (int i = 0; i < objs_translucent.size(); i++) {
-			//		glm::mat4 objWorldPos = objs_translucent[i].transform_->m_world_transform_;
-			//		glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
-			//		float distance = glm::length(cam.transform_->getPosition() - worldPos);
-			//		sorted[distance] = i;
-			//	}
+			if (sortTranslucents && objs_translucent.size() > 0) {
+				std::map<float, int> sorted;
+				for (int i = 0; i < objs_translucent.size(); i++) {
+					glm::mat4 objWorldPos = objs_translucent[i].transform_->m_transform_;
+					glm::vec3 worldPos(objWorldPos[3][0], objWorldPos[3][1], objWorldPos[3][2]);
+					float distance = glm::length(cam.transform_->getPosition() - worldPos);
+					sorted[distance] = i;
+				}
 
-			//	std::vector<MyObjToRender> objs_translucent_sorted;
+				std::vector<MyObjToRender> objs_translucent_sorted;
 
-			//	for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
-			//		objs_translucent_sorted.push_back(objs_translucent[it->second]);
-			//	}
+				for (std::map<float, int>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it) {
+					objs_translucent_sorted.push_back(objs_translucent[it->second]);
+				}
 
-			//	// Por defecto de momento.
-			//	glEnable(GL_BLEND);
-			//	glBlendEquation(GL_FUNC_ADD);
-			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			//	doRender(objs_translucent_sorted, cam, gm);
+				// Por defecto de momento.
+				glEnable(GL_BLEND);
+				glBlendEquation(GL_FUNC_ADD);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				doRender(objs_translucent_sorted, cam, gm);
 
-			//	objs_translucent_sorted.clear();
-			//}
-			//else {
-			//	// Por defecto de momento.
-			//	glEnable(GL_BLEND);
-			//	glBlendEquation(GL_FUNC_ADD);
-			//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			//	doRender(objs_translucent, cam, gm);
-			//}
+				objs_translucent_sorted.clear();
+			}
+			else {
+				// Por defecto de momento.
+				glEnable(GL_BLEND);
+				glBlendEquation(GL_FUNC_ADD);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				doRender(objs_translucent, cam, gm);
+				
+				objs_translucent.clear();
+			}
 
-			glEnable(GL_BLEND);
-			glBlendEquation(GL_FUNC_ADD);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			doRender(objs_translucent, cam, gm);
+			//glEnable(GL_BLEND);
+			//glBlendEquation(GL_FUNC_ADD);
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//doRender(objs_translucent, cam, gm);
 
 			objs_opaque.clear();
-			objs_translucent.clear();
+			//objs_translucent.clear();
 
 		}
 	}

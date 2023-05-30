@@ -52,8 +52,6 @@ namespace ST {
 		bool haveMetallic;
 		float metallic_;
 
-
-
 		bool translucent;
 
 	private:
