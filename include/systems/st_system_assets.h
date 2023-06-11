@@ -5,7 +5,7 @@
 #include <memory>
 
 #include <st_texture.h>
-
+#include <string>
 /**
 *@brief Internal Texture type to change
 */
